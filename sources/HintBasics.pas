@@ -3,8 +3,7 @@ unit HintBasics;
 interface
 
   uses
-    classes,
-    Vcl.Forms;
+    classes,    Vcl.Forms;
 
   type
     TOPPHintDialogCompletion = reference to procedure(form: TForm);
