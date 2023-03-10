@@ -1,0 +1,13 @@
+﻿[CheckBox1]
+Coordinates=123,10,95,51
+
+[Button1]
+Coordinates=60,10,53,51
+
+[Edit1]
+Coordinates=10,10,40,51
+
+[]
+Coordinates=10,71,85,33
+Visible=True
+
