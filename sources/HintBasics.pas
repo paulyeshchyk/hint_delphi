@@ -16,6 +16,7 @@ interface
     end;
 
     WideCharHelper = record helper for String
+
     public
       function toWideChar: PWideChar;
     end;
