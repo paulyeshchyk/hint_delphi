@@ -1,3 +1,4 @@
+﻿*.~*
 *.dcu
 *.local
 *.exe
@@ -6,3 +7,4 @@
 *.bpl
 *.skincfg
 *.tvsconfig
+__recovery/
