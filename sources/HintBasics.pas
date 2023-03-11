@@ -3,8 +3,7 @@ unit HintBasics;
 interface
 
   uses
-    classes,
-    Vcl.Forms;
+    classes,    Vcl.Forms;
 
   type
     TOPPHintDialogCompletion = reference to procedure(form: TForm);
@@ -16,7 +15,6 @@ interface
     end;
 
     WideCharHelper = record helper for String
-
     public
       function toWideChar: PWideChar;
     end;

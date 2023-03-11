@@ -129,6 +129,7 @@
         </DCCReference>
         <DCCReference Include="sources\HintBasics.pas"/>
         <DCCReference Include="sources\HintReader.pas"/>
+        <None Include="sources\docs\readme.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -181,7 +182,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Win32\Debug\OPPHint.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\OPPHint.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHint.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
