@@ -8,3 +8,7 @@
 *.skincfg
 *.tvsconfig
 __recovery/
+*.bpi
+*.dcp
+*.lib
+*.dsk
