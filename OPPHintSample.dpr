@@ -3,7 +3,11 @@ program OPPHintSample;
 uses
   Vcl.Forms,
   sampleForm1 in 'sources\sampleForm1.pas' {SampleForm},
-  HintBasics in 'sources\HintBasics.pas';
+  OPP.System in 'sources\OPP.System.pas',
+  OPP.VCL.Controls in 'sources\OPP.VCL.Controls.pas',
+  OPP.Hint in 'sources\OPP.Hint.pas',
+  OPP.VCL.Forms in 'sources\OPP.VCL.Forms.pas',
+  OPP.dxRichEdit in 'sources\OPP.dxRichEdit.pas';
 
 {$R *.res}
 
