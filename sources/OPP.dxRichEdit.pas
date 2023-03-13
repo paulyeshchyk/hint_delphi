@@ -109,7 +109,7 @@ begin
   for fHintMeta in hintsMetaList do
   begin
     fHint := GetHint(fHintMeta);
-    if not fHint.isEmpty() then
+    if not fHint.data.isEmpty() then
     begin
       result.add(fHint);
     end;

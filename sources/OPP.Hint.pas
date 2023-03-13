@@ -26,7 +26,7 @@ type
     data: TOPPHintData;
   end;
 
-  TOPPHintHelper = record helper for TOPPHint
+  TOPPHintHelper = record helper for TOPPHintData
     function isEmpty(): Boolean;
   end;
 
@@ -38,7 +38,7 @@ implementation
 
 function TOPPHintHelper.isEmpty(): Boolean;
 begin
-  result := (Length(data.text) = 0);
+  result := (Length(text) = 0) or (Length(rtf) = 0);
 end;
 
 end.
