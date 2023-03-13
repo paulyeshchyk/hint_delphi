@@ -10,7 +10,9 @@ object SampleForm: TSampleForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   OnCreate = FormCreate
+  PixelsPerInch = 96
   TextHeight = 13
   object Button1: TButton
     Left = 264
@@ -41,23 +43,32 @@ object SampleForm: TSampleForm
     TabOrder = 2
     Text = 'Text1BookmarkFixed'
   end
-  object RichEdit1: TRichEdit
-    Left = 40
-    Top = 376
-    Width = 889
-    Height = 89
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
+  object cxRichEdit1: TcxRichEdit
+    Left = 16
+    Top = 128
     Lines.Strings = (
-      'RichEdit1')
-    ParentFont = False
+      'cxRichEdit1')
     TabOrder = 3
+    Height = 89
+    Width = 889
   end
-  object docServer: TdxRichEditDocumentServer
-    Left = 400
-    Top = 112
+  object cxHintStyleController1: TcxHintStyleController
+    HintStyleClassName = 'TcxHintStyle'
+    HintStyle.CallOutPosition = cxbpAuto
+    HintStyle.CaptionFont.Charset = DEFAULT_CHARSET
+    HintStyle.CaptionFont.Color = clWindowText
+    HintStyle.CaptionFont.Height = -11
+    HintStyle.CaptionFont.Name = 'Tahoma'
+    HintStyle.CaptionFont.Style = []
+    HintStyle.Font.Charset = DEFAULT_CHARSET
+    HintStyle.Font.Color = clWindowText
+    HintStyle.Font.Height = -11
+    HintStyle.Font.Name = 'Tahoma'
+    HintStyle.Font.Style = []
+    HintStyle.IconSize = cxisSmall
+    HintStyle.IconType = cxhiQuestion
+    OnShowHintEx = cxHintStyleController1ShowHintEx
+    Left = 568
+    Top = 64
   end
 end

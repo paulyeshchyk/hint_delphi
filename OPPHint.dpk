@@ -32,8 +32,8 @@ requires
   vcl,
   vclwinx,
   dbrtl,
-  dxCoreRS28,
-  cxLibraryRS28,
-  dxGDIPlusRS28;
+  dxCoreRS25,
+  cxLibraryRS25,
+  dxGDIPlusRS25;
 
 end.

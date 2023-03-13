@@ -33,7 +33,7 @@ type
     function GetHintData(identifier: TOPPHintIdentifierType): TOPPHintData;
     function GetHint(hintMeta: TOPPHintMeta): TOPPHint; overload;
     function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHint>; overload;
-    function GetHints(control: TControl): TList<TOPPHint>; overload;
+    function GetHints(Control: TControl): TList<TOPPHint>; overload;
   end;
 
 implementation
@@ -63,8 +63,7 @@ begin
     loadResult.error := nil;
     fLoaded := true;
   except
-    on E: Exception do
-    begin
+    on E: Exception do begin
       loadResult.error := Exception.Create(E.Message);
     end;
   end;
@@ -106,21 +105,19 @@ var
   fHint: TOPPHint;
 begin
   result := TList<TOPPHint>.Create;
-  for fHintMeta in hintsMetaList do
-  begin
+  for fHintMeta in hintsMetaList do begin
     fHint := GetHint(fHintMeta);
-    if not fHint.data.isEmpty() then
-    begin
+    if not fHint.data.isEmpty() then begin
       result.add(fHint);
     end;
   end;
 end;
 
-function OPPRichEditHintServer.GetHints(control: TControl): TList<TOPPHint>;
+function OPPRichEditHintServer.GetHints(Control: TControl): TList<TOPPHint>;
 var
   fHintsMeta: TList<TOPPHintMeta>;
 begin
-  fHintsMeta := control.GetControlHintsMeta();
+  fHintsMeta := Control.GetControlHintsMeta();
   result := self.GetHints(fHintsMeta);
 end;
 

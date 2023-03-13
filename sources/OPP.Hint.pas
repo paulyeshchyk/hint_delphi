@@ -3,7 +3,8 @@ unit OPP.Hint;
 interface
 
 uses
-  System.SysUtils, System.Generics.Collections;
+  System.SysUtils, System.Generics.Collections,
+  OPP.System;
 
 type
 
@@ -38,7 +39,7 @@ implementation
 
 function TOPPHintHelper.isEmpty(): Boolean;
 begin
-  result := (Length(text) = 0) or (Length(rtf) = 0);
+  result := text.isEmpty() or rtf.isEmpty();
 end;
 
 end.

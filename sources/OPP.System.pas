@@ -3,15 +3,14 @@ unit OPP.System;
 interface
 
 type
-
-  WideCharHelper = record helper for
-    String public
+  StringHelper = record helper for String
+    function isEmpty(): Boolean;
     function toWideChar: PWideChar;
   end;
 
 implementation
 
-function WideCharHelper.toWideChar: PWideChar;
+function StringHelper.toWideChar: PWideChar;
 var
   oleStr: PWideChar;
 begin
@@ -22,6 +21,11 @@ begin
   finally
     FreeMem(oleStr);
   end;
+end;
+
+function StringHelper.isEmpty: Boolean;
+begin
+  result := (Length(self) = 0);
 end;
 
 end.

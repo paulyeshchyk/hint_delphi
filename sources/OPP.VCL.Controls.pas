@@ -2,22 +2,25 @@ unit OPP.VCL.Controls;
 
 interface
 
-uses system.classes, system.TypInfo, system.Generics.Collections,
+uses
+  system.classes, system.TypInfo, system.Generics.Collections,
   VCL.Controls,
+  OPP.System,
   OPP.Hint;
 
 type
   TComponentHintEnumerator = class helper for TControl
   public
+
+    /// <summary>
+    /// this is test summary
+    /// </summary>
+    /// <remarks> this is test remark</remarks>
     function GetControlHintsMeta(propertyName: String = 'name'): TList<TOPPHintMeta>;
   end;
 
 implementation
 
-{$REGION 'Documentation'}
-/// <summary>this is test summary </summary>
-/// <remarks> this is test remark</remarks>
-{$ENDREGION}
 function TComponentHintEnumerator.GetControlHintsMeta(propertyName: String): TList<TOPPHintMeta>;
 var
   child: TComponent;
@@ -27,13 +30,11 @@ var
 begin
   result := TList<TOPPHintMeta>.create();
 
-  for i := 0 to ComponentCount - 1 do
-  begin
+  for i := 0 to ComponentCount - 1 do begin
     child := self.Components[i];
-    if (child is TControl) and (IsPublishedProp(child, propertyName)) then
-    begin
+    if (child is TControl) and (IsPublishedProp(child, propertyName)) then begin
       fBookmarkIdentifier := String(GetPropValue(child, propertyName));
-      if Length(fBookmarkIdentifier) <> 0 then begin
+      if not fBookmarkIdentifier.isEmpty() then begin
         fControlHint.propertyName := propertyName;
         fControlHint.hintIdentifier := fBookmarkIdentifier;
         result.Add(fControlHint);
