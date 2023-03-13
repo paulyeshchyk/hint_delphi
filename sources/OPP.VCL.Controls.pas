@@ -3,9 +3,9 @@ unit OPP.VCL.Controls;
 interface
 
 uses
-  system.classes, system.TypInfo, system.Generics.Collections,
+  system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
   VCL.Controls,
-  OPP.System,
+  OPP.system,
   OPP.Hint;
 
 type
@@ -13,10 +13,14 @@ type
   public
 
     /// <summary>
-    /// this is test summary
+    /// Возворащает список TOPPHintMeta, применимых для данного компонента.
+    ///
+    /// Ключ для TOPPHintMeta берётся из значения свойства компонента, указанного в аргументе propertyName
+    ///
     /// </summary>
-    /// <remarks> this is test remark</remarks>
+    /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
     function GetControlHintsMeta(propertyName: String = 'name'): TList<TOPPHintMeta>;
+    function FindFirst(propertyName: String; propertyValue: String): TControl;
   end;
 
 implementation
@@ -42,6 +46,29 @@ begin
       result.AddRange(TControl(child).GetControlHintsMeta());
     end;
   end;
+end;
+
+function TComponentHintEnumerator.FindFirst(propertyName: String; propertyValue: String): TControl;
+var
+  i: Integer;
+  child: TComponent;
+  valueToCompare: String;
+  found: Boolean;
+begin
+  found := false;
+  result := nil;
+  for i := 0 to ComponentCount - 1 do begin
+    child := self.Components[i];
+    if (child is TControl) and (IsPublishedProp(child, propertyName)) then begin
+      valueToCompare := String(GetPropValue(child, propertyName));
+      found := CompareStr(valueToCompare, propertyValue) = 0;
+      if found then begin
+        result := TControl(child);
+        break;
+      end;
+    end;
+  end;
+
 end;
 
 end.

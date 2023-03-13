@@ -29,10 +29,34 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    /// <summary>
+    ///  Загружает файл справочной информации
+    ///
+    /// </summary>
+    /// <remarks> Загружаемый документ должен быть в формате rtf</remarks>
     function loadFromFile(AFileName: String): TOPPHintServerLoadResultType;
-    function GetHintData(identifier: TOPPHintIdentifierType): TOPPHintData;
-    function GetHint(hintMeta: TOPPHintMeta): TOPPHint; overload;
+
+    /// <summary>
+    ///  Возвращает список подсказок, применимых для списка идентификаторов, взятых из компонента.
+    ///
+    /// </summary>
+    /// <remarks> </remarks>
     function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHint>; overload;
+
+    function GetHintData(identifier: TOPPHintIdentifierType): TOPPHintData;
+
+    /// <summary>
+    ///  Возвращает подсказку для компонента, метаданные которого указаны в параметре hintMeta.
+    ///
+    /// </summary>
+    /// <remarks> </remarks>
+    function GetHint(hintMeta: TOPPHintMeta): TOPPHint; overload;
+
+    /// <summary>
+    ///  Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
+    ///
+    /// </summary>
+    /// <remarks> </remarks>
     function GetHints(Control: TControl): TList<TOPPHint>; overload;
   end;
 
