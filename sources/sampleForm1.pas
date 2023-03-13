@@ -106,6 +106,8 @@ begin
   fTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
   fTipLink.ScreenTip := fTip;
   fTipLink.Control := fControl;
+
+  //  //screenTipStyle := TdxScreenTipStyle(cxHintController.HintStyle);
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);

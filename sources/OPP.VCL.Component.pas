@@ -54,11 +54,6 @@ type
     override;
   end;
 
-  THintHelper = class helper for TComponent
-  public
-    function oppHint(): String;
-  end;
-
 implementation
 
 procedure TdxBarStyler.restyle;
@@ -106,15 +101,6 @@ end;
 procedure TOPPStyler.restyle;
 begin
   // nothing todo here; it is a virtual method
-end;
-
-function THintHelper.oppHint(): String;
-var
-  obj: TComponent;
-begin
-  result := '';
-  obj := TdxBarManager.Create(nil);
-  obj.restyle;
 end;
 
 end.
