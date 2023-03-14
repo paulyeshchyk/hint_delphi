@@ -8,7 +8,10 @@ uses
   OPP.Hint in 'sources\OPP.Hint.pas',
   OPP.VCL.Forms in 'sources\OPP.VCL.Forms.pas',
   OPP.dxRichEdit in 'sources\OPP.dxRichEdit.pas',
-  OPP.VCL.Component in 'sources\OPP.VCL.Component.pas';
+  OPP.VCL.Component in 'sources\OPP.VCL.Component.pas',
+  OPP.VCL.StdCtrls in 'sources\OPP.VCL.StdCtrls.pas',
+  OPP.VCL.Form.Help in 'sources\OPP.VCL.Form.Help.pas' {OPPFormHelp},
+  AcroPDFLib_TLB in 'C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas';
 
 {$R *.res}
 
@@ -16,5 +19,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TSampleForm, SampleForm);
+  Application.CreateForm(TOPPFormHelp, OPPFormHelp);
   Application.Run;
 end.

@@ -19,8 +19,8 @@ type
     ///
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
-    function GetControlHintsMeta(propertyName: String = 'name'): TList<TOPPHintMeta>;
-    function FindFirst(propertyName: String; propertyValue: String): TControl;
+    function GetControlHintsMeta(propertyName: String = 'HelpKeyword'): TList<TOPPHintMeta>;
+    function OPPFindComponent(propertyName: String; propertyValue: String): TControl;
   end;
 
 implementation
@@ -48,10 +48,10 @@ begin
   end;
 end;
 
-function TComponentHintEnumerator.FindFirst(propertyName: String; propertyValue: String): TControl;
+function TComponentHintEnumerator.OPPFindComponent(propertyName: String; propertyValue: String): TControl;
 var
   i: Integer;
-  child: TComponent;
+  child, nextLevelChild: TComponent;
   valueToCompare: String;
   found: Boolean;
 begin
@@ -59,13 +59,23 @@ begin
   result := nil;
   for i := 0 to ComponentCount - 1 do begin
     child := self.Components[i];
-    if (child is TControl) and (IsPublishedProp(child, propertyName)) then begin
+    if not (child is TControl) then
+      continue;
+    if (IsPublishedProp(child, propertyName)) then begin
       valueToCompare := String(GetPropValue(child, propertyName));
       found := CompareStr(valueToCompare, propertyValue) = 0;
       if found then begin
         result := TControl(child);
         break;
       end;
+
+      //recursion
+      nextLevelChild := TControl(child).OPPFindComponent(propertyName, propertyValue);
+      if assigned(nextLevelChild) then begin
+        result := TControl(nextLevelChild);
+        break;
+      end;
+
     end;
   end;
 

@@ -112,6 +112,11 @@
         <DCCReference Include="sources\OPP.VCL.Forms.pas"/>
         <DCCReference Include="sources\OPP.dxRichEdit.pas"/>
         <DCCReference Include="sources\OPP.VCL.Component.pas"/>
+        <DCCReference Include="sources\OPP.VCL.StdCtrls.pas"/>
+        <DCCReference Include="sources\OPP.VCL.Form.Help.pas">
+            <Form>OPPFormHelp</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -1,10 +1,4 @@
 ﻿[]
-Coordinates=60,10,53,51
-Visible=True
-
-[LinkToText]
-Coordinates=123,10,95,51
-
-[Text1BookmarkFixed]
 Coordinates=10,10,40,51
+Visible=True
 
