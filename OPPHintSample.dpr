@@ -11,7 +11,9 @@ uses
   OPP.VCL.Component in 'sources\OPP.VCL.Component.pas',
   OPP.VCL.StdCtrls in 'sources\OPP.VCL.StdCtrls.pas',
   OPP.VCL.Form.Help in 'sources\OPP.VCL.Form.Help.pas' {OPPFormHelp},
-  AcroPDFLib_TLB in 'C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas';
+  AcroPDFLib_TLB in 'C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas',
+  OPP.VCL.Form.Help.Thread in 'sources\OPP.VCL.Form.Help.Thread.pas',
+  OPP.Help.Map in 'sources\OPP.Help.Map.pas';
 
 {$R *.res}
 
@@ -19,6 +21,5 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TSampleForm, SampleForm);
-  Application.CreateForm(TOPPFormHelp, OPPFormHelp);
   Application.Run;
 end.

@@ -2,8 +2,8 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = 'SampleForm'
-  ClientHeight = 676
-  ClientWidth = 1002
+  ClientHeight = 693
+  ClientWidth = 631
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,34 +12,26 @@ object SampleForm: TSampleForm
   Font.Style = []
   OldCreateOrder = True
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Button2: TButton
-    Left = 793
-    Top = 252
-    Width = 75
-    Height = 25
-    Caption = #1089#1090#1080#1083#1080
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 0
-    OnClick = Button2Click
-  end
   object dxDockSite1: TdxDockSite
     Left = 0
     Top = 0
     Width = 449
-    Height = 676
+    Height = 652
     ParentColor = True
     Align = alLeft
+    ExplicitHeight = 676
     DockingType = 5
     OriginalWidth = 449
-    OriginalHeight = 676
+    OriginalHeight = 652
     object dxLayoutDockSite1: TdxLayoutDockSite
       Left = 0
       Top = 0
       Width = 449
-      Height = 676
+      Height = 652
+      ExplicitHeight = 676
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -48,7 +40,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 449
-      Height = 676
+      Height = 652
       HelpType = htKeyword
       HelpKeyword = 'KodOKPD2'
       ParentColor = True
@@ -59,6 +51,7 @@ object SampleForm: TSampleForm
       Caption = #1050#1086#1076' '#1054#1050#1055#1044
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
+      ExplicitHeight = 676
       DockingType = 0
       OriginalWidth = 369
       OriginalHeight = 140
@@ -66,7 +59,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 445
-        Height = 648
+        Height = 624
         HelpType = htKeyword
         Align = alClient
         BevelKind = bkFlat
@@ -75,6 +68,7 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
+        ExplicitHeight = 648
         object Kod_OKWED: TCheckBox
           Left = 8
           Top = 12
@@ -136,27 +130,26 @@ object SampleForm: TSampleForm
       end
     end
   end
-  object Button1: TButton
-    Left = 568
-    Top = 224
-    Width = 75
-    Height = 25
-    Caption = 'Button1'
-    TabOrder = 2
-    OnClick = Button1Click
-  end
-  object gtPDFSearchPanel1: TgtPDFSearchPanel
-    Left = 496
-    Top = 661
-    Width = 262
-    Height = 528
-    About = 'Gnostice PDFtoolkit (www.gnostice.com)'
-    Active = False
-    Constraints.MinHeight = 160
-    Constraints.MinWidth = 262
-    Color = clWhite
-    TabOrder = 3
-    Version = '5.0.0.872'
+  object Panel1: TPanel
+    Left = 0
+    Top = 652
+    Width = 631
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
+    ExplicitLeft = 528
+    ExplicitTop = 616
+    ExplicitWidth = 185
+    object Button1: TButton
+      Left = 544
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = #1055#1086#1084#1086#1097#1100
+      TabOrder = 0
+      OnClick = Button1Click
+    end
   end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
@@ -172,9 +165,5 @@ object SampleForm: TSampleForm
     Left = 560
     Top = 88
     PixelsPerInch = 96
-  end
-  object PopupMenu1: TPopupMenu
-    Left = 696
-    Top = 24
   end
 end

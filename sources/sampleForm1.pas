@@ -24,19 +24,21 @@ uses
 
   cxHintEditor,
 
+  OPP.Help.Map,
+  OPP.Vcl.Form.Help,
   OPP.System,
   OPP.Hint,
   OPP.Vcl.Controls,
   OPP.Vcl.Component,
   OPP.dxRichEdit, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.StdActns, System.Actions, Vcl.ActnList, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridLevel,
-  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel;
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
+  Vcl.Menus;
 
 type
 
   TSampleForm = class(TForm)
     cxHintController: TcxHintStyleController;
-    Button2: TButton;
     tipsRepo: TdxScreenTipRepository;
     dxDockPanel1: TdxDockPanel;
     dxDockSite1: TdxDockSite;
@@ -50,10 +52,11 @@ type
     cxGrid2TableView1Column3: TcxGridColumn;
     cxGrid2Level1: TcxGridLevel;
     dxLayoutDockSite1: TdxLayoutDockSite;
+    Panel1: TPanel;
     Button1: TButton;
     procedure Button1Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
     procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
   private
@@ -61,9 +64,23 @@ type
 
     hintServer: OPPRichEditHintServer;
     hints: TList<TOPPHint>;
+    fOnHelp: THelpEvent;
+    fOriginalOnHelp: THelpEvent;
+    fMap: TDictionary<String, TOPPHelpMap>;
+
+    helpForm: TOPPFormHelp;
+
+    pdfMemoryStream: TMemoryStream;
+    procedure initPDFStream;
 
     procedure addTip(Hint: TOPPHint);
     procedure fillGrid();
+    function fh(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+
+    procedure loadMap();
+    procedure loadHint();
+
+    property OnHelp: THelpEvent read fOnHelp write fOnHelp;
   public
     { Public declarations }
   end;
@@ -78,11 +95,81 @@ implementation
 {$C +}
 {$ENDIF}
 
-uses OPP.VCL.Form.Help;
+uses
+  dxPDFViewer;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
+begin
+
+  pdfMemoryStream := TMemoryStream.Create;
+  initPDFStream;
+
+  helpForm := TOPPFormHelp.Create(self);
+  helpForm.stream := pdfMemoryStream;
+
+  fOriginalOnHelp := Application.OnHelp;
+  Application.OnHelp := fh;
+
+  fillGrid;
+
+  loadMap;
+  loadHint;
+
+  self.restyle();
+end;
+
+procedure TSampleForm.FormDestroy(Sender: TObject);
+begin
+  Application.OnHelp := fOriginalOnHelp;
+
+  pdfMemoryStream.Free;
+  FreeAndNil(helpForm);
+end;
+
+function TSampleForm.fh(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+var
+  s: String;
+  obj: TOPPHelpMap;
+begin
+  s := String(Data);
+  try
+    fMap.TryGetValue(s, obj);
+  finally
+    helpForm.textForSearch := obj.SearchPattern;
+    helpForm.ShowModal;
+  end;
+
+  //
+  CallHelp := false;
+  result := true;
+end;
+
+procedure TSampleForm.initPDFStream;
+begin
+  pdfMemoryStream.loadFromFile('docs\гольфстрим_руководство пользователя.pdf');
+  pdfMemoryStream.Position := 0;
+end;
+
+procedure TSampleForm.loadMap;
+var
+  map1: TOPPHelpMap;
+  map2: TOPPHelpMap;
+  map3: TOPPHelpMap;
+begin
+  fMap := TDictionary<String, TOPPHelpMap>.Create();
+
+  map1 := TOPPHelpMap.add('Kod_MKC', 'совокупность свойств продукции, обусловливающих её пригодность');
+  map2 := TOPPHelpMap.add('Kod_OKWED', '(ОКВЭД 2) ОК 029-2014');
+  map3 := TOPPHelpMap.add('KodOKPD2', 'Рисунок 1303');
+
+  fMap.add(map1.HelpKeyword, map1);
+  fMap.add(map2.HelpKeyword, map2);
+  fMap.add(map3.HelpKeyword, map3);
+end;
+
+procedure TSampleForm.loadHint;
 const
-  filepath: String = 'gulfstream_manual_rtf.rtf';
+  filepath: String = 'docs\gulfstream_manual_rtf.rtf';
 var
   loadResult: TOPPHintServerLoadResultType;
   fHints: TList<TOPPHint>;
@@ -90,10 +177,7 @@ var
   fStream, fcxStream: TStringStream;
   fHint: TOPPHint;
 begin
-
-  fillGrid;
-
-  hintServer := OPPRichEditHintServer.create;
+  hintServer := OPPRichEditHintServer.Create;
   loadResult := hintServer.loadFromFile(filepath);
   if loadResult.error = nil then begin
     fHints := hintServer.GetHints(self);
@@ -101,8 +185,6 @@ begin
       self.addTip(fHint);
     end;
   end;
-
-  self.restyle();
 end;
 
 procedure TSampleForm.fillGrid;
@@ -125,7 +207,7 @@ begin
   if not assigned(fControl) then
     exit;
 
-  fTip := tipsRepo.Items.Add;
+  fTip := tipsRepo.Items.add;
   fTip.Header.PlainText := true;
   fTip.Header.Text := 'Заголовок';
 
@@ -135,21 +217,15 @@ begin
   fTip.Footer.PlainText := true;
   fTip.Footer.Text := 'Подвал';
 
-  fTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
+  fTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.add;
   fTipLink.ScreenTip := fTip;
   fTipLink.Control := fControl;
 end;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
-var helpForm: TOPPFormHelp;
 begin
-  helpForm := TOPPFormHelp.Create(self);
+  helpForm.openPage(3);
   helpForm.ShowModal;
-end;
-
-procedure TSampleForm.Button2Click(Sender: TObject);
-begin
-  ShowHintStyleEditor(cxHintController);
 end;
 
 procedure TSampleForm.cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
