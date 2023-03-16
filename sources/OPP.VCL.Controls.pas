@@ -6,7 +6,7 @@ uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
   VCL.Controls,
   OPP.system,
-  OPP.Hint;
+  OPP.Help.HintMapping;
 
 type
   TComponentHintEnumerator = class helper for TControl
@@ -20,7 +20,7 @@ type
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
     function GetControlHintsMeta(propertyName: String = 'HelpKeyword'): TList<TOPPHintMeta>;
-    function OPPFindComponent(propertyName: String; propertyValue: String): TControl;
+    function OPPFindControl(propertyName: String; propertyValue: String): TControl;
   end;
 
 implementation
@@ -48,7 +48,7 @@ begin
   end;
 end;
 
-function TComponentHintEnumerator.OPPFindComponent(propertyName: String; propertyValue: String): TControl;
+function TComponentHintEnumerator.OPPFindControl(propertyName: String; propertyValue: String): TControl;
 var
   i: Integer;
   child, nextLevelChild: TComponent;
@@ -70,7 +70,7 @@ begin
       end;
 
       //recursion
-      nextLevelChild := TControl(child).OPPFindComponent(propertyName, propertyValue);
+      nextLevelChild := TControl(child).OPPFindControl(propertyName, propertyValue);
       if assigned(nextLevelChild) then begin
         result := TControl(nextLevelChild);
         break;

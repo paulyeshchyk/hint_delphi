@@ -22,7 +22,6 @@ object SampleForm: TSampleForm
     Height = 652
     ParentColor = True
     Align = alLeft
-    ExplicitHeight = 676
     DockingType = 5
     OriginalWidth = 449
     OriginalHeight = 652
@@ -31,7 +30,6 @@ object SampleForm: TSampleForm
       Top = 0
       Width = 449
       Height = 652
-      ExplicitHeight = 676
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -51,7 +49,6 @@ object SampleForm: TSampleForm
       Caption = #1050#1086#1076' '#1054#1050#1055#1044
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitHeight = 676
       DockingType = 0
       OriginalWidth = 369
       OriginalHeight = 140
@@ -68,7 +65,6 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
-        ExplicitHeight = 648
         object Kod_OKWED: TCheckBox
           Left = 8
           Top = 12
@@ -138,9 +134,6 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 528
-    ExplicitTop = 616
-    ExplicitWidth = 185
     object Button1: TButton
       Left = 544
       Top = 6
