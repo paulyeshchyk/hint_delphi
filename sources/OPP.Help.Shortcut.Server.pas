@@ -121,7 +121,7 @@ var
   helpData: String;
   mapping: TOPPHelpMap;
 begin
-  helpData := request.activeControl.HelpKeyword;
+  helpData := request.getHelpData();
   try
     fShortcutHelpMatrix.TryGetValue(helpData, mapping);
   finally

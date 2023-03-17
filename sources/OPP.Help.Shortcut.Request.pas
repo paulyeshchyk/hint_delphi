@@ -15,7 +15,9 @@ type
   public
     property msg: TWMHelp read fMsg;
     property activeControl: TWinControl read fActiveControl;
+
     constructor create(activeControl: TWinControl; msg: TWMHelp);
+    function getHelpData(): String;
   end;
 
 implementation
@@ -25,6 +27,11 @@ begin
   inherited create;
   fMsg := msg;
   fActiveControl := activeControl;
+end;
+
+function TOPPHelpShortcutRequest.getHelpData(): String;
+begin
+  result := fActiveControl.HelpKeyword;
 end;
 
 end.
