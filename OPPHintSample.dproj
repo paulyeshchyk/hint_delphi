@@ -108,7 +108,7 @@
         </DCCReference>
         <DCCReference Include="sources\OPP.System.pas"/>
         <DCCReference Include="sources\OPP.VCL.Controls.pas"/>
-        <DCCReference Include="sources\OPP.Help.HintMapping.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Mapping.pas"/>
         <DCCReference Include="sources\OPP.VCL.Component.pas"/>
         <DCCReference Include="sources\OPP.Help.LargeForm.pas">
             <Form>OPPHelpLargeForm</Form>
@@ -116,10 +116,11 @@
         </DCCReference>
         <DCCReference Include="C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas"/>
         <DCCReference Include="sources\OPP.VCL.Form.Help.Thread.pas"/>
-        <DCCReference Include="sources\OPP.Help.ShortcutMapping.pas"/>
-        <DCCReference Include="sources\OPP.Help.HintFormHelper.pas"/>
-        <DCCReference Include="sources\OPP.Help.HintServer.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.FormHelper.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Server.pas"/>
         <DCCReference Include="sources\OPP.Help.Shortcut.Server.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Request.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

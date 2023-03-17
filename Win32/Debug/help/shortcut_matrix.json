@@ -1,11 +1,11 @@
 {
-  "type":"OPP.Help.ShortcutMapping.TOPPHelpMapList",
+  "type":"OPP.Help.Shortcut.Mapping.TOPPHelpMapList",
   "id":1,
   "fields":
   {
     "fList":
     {
-      "type":"System.Generics.Collections.TList<OPP.Help.ShortcutMapping.TOPPHelpMap>",
+      "type":"System.Generics.Collections.TList<OPP.Help.Shortcut.Mapping.TOPPHelpMap>",
       "id":2,
       "fields":
       {
@@ -17,7 +17,7 @@
         "FItems":
         [
                     {
-            "type":"OPP.Help.ShortcutMapping.TOPPHelpMap",
+            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpMap",
             "id":3,
             "fields":
             {
@@ -29,7 +29,7 @@
 ,
           
           {
-            "type":"OPP.Help.ShortcutMapping.TOPPHelpMap",
+            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpMap",
             "id":4,
             "fields":
             {
@@ -41,7 +41,7 @@
 ,
           
           {
-            "type":"OPP.Help.ShortcutMapping.TOPPHelpMap",
+            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpMap",
             "id":5,
             "fields":
             {

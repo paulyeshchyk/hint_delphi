@@ -6,7 +6,7 @@ uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
   VCL.Controls,
   OPP.system,
-  OPP.Help.HintMapping;
+  OPP.Help.Hint.Mapping;
 
 type
   TComponentHintEnumerator = class helper for TControl

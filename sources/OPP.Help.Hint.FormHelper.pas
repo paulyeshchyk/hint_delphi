@@ -1,4 +1,4 @@
-unit OPP.Help.HintFormHelper;
+unit OPP.Help.Hint.FormHelper;
 
 interface
 
@@ -8,8 +8,8 @@ uses
   dxCustomHint, dxScreenTip,
 
   OPP.Vcl.Controls,
-  OPP.Help.HintMapping,
-  OPP.Help.HintServer;
+  OPP.Help.Hint.Mapping,
+  OPP.Help.Hint.Server;
 
 type
   TOPPHintDialogCompletion = reference to procedure(Form: TForm);

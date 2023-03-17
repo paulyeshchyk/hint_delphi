@@ -15,7 +15,7 @@ uses
   dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxBar, cxClasses,
   cxPC, dxDockControl, dxDockPanel, cxControls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxPDFDocument,
   dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, VCL.ComCtrls, VCL.WinXCtrls, VCL.ExtCtrls,
-  OPP.Help.ShortcutMapping,
+  OPP.Help.Shortcut.Mapping,
   OPP.VCL.Form.Help.Thread;
 
 type

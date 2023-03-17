@@ -8,19 +8,10 @@ uses
   WinAPI.Messages,
   WinAPI.Windows,
   Vcl.Controls, Vcl.Forms,
-  OPP.System, OPP.Help.ShortcutMapping;
+  OPP.Help.Shortcut.Request,
+  OPP.System, OPP.Help.Shortcut.Mapping;
 
 type
-  TOPPHelpShortcutRequest = class
-  private
-    fMsg: TWMHelp;
-    fActiveControl: TWinControl;
-  public
-    property msg: TWMHelp read fMsg;
-    property activeControl: TWinControl read fActiveControl;
-    constructor create(activeControl: TWinControl; msg: TWMHelp);
-  end;
-
   IOPPHelpShortcutServer = interface
     function showHelp(request: TOPPHelpShortcutRequest): Boolean;
     function showManual(pageIndex: Integer): Boolean;
@@ -53,13 +44,6 @@ const
 var
   fLock: TCriticalSection;
   fHelpServer: IOPPHelpShortcutServer;
-
-constructor TOPPHelpShortcutRequest.create(activeControl: TWinControl; msg: TWMHelp);
-begin
-  inherited create;
-  fMsg := msg;
-  fActiveControl := activeControl;
-end;
 
 function helpShortcutServer: IOPPHelpShortcutServer;
 begin

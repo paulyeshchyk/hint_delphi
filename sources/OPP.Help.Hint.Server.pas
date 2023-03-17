@@ -1,4 +1,4 @@
-unit OPP.Help.HintServer;
+unit OPP.Help.Hint.Server;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   System.SysUtils, System.Classes, System.Generics.Collections,
   dxRichEdit.Control, dxRichEdit.NativeAPI,
   VCL.Controls,
-  OPP.Help.HintMapping,
+  OPP.Help.Hint.Mapping,
   OPP.VCL.Controls;
 
 const

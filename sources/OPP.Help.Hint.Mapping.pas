@@ -1,4 +1,4 @@
-unit OPP.Help.HintMapping;
+unit OPP.Help.Hint.Mapping;
 
 interface
 
