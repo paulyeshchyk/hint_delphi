@@ -1,0 +1,59 @@
+{
+  "type":"OPP.Help.ShortcutMapping.TOPPHelpMapList",
+  "id":1,
+  "fields":
+  {
+    "fList":
+    {
+      "type":"System.Generics.Collections.TList<OPP.Help.ShortcutMapping.TOPPHelpMap>",
+      "id":2,
+      "fields":
+      {
+        "FListHelper":
+        [
+          3
+        ]
+,
+        "FItems":
+        [
+                    {
+            "type":"OPP.Help.ShortcutMapping.TOPPHelpMap",
+            "id":3,
+            "fields":
+            {
+              "fHelpKeyword":"Kod_MKC",
+              "fSearchPattern":"совокупность свойств продукции, обусловливающих её пригодность",
+              "fTestData":""
+            }
+          }
+,
+          
+          {
+            "type":"OPP.Help.ShortcutMapping.TOPPHelpMap",
+            "id":4,
+            "fields":
+            {
+              "fHelpKeyword":"Kod_OKWED",
+              "fSearchPattern":"(ОКВЭД 2) ОК 029-2014",
+              "fTestData":""
+            }
+          }
+,
+          
+          {
+            "type":"OPP.Help.ShortcutMapping.TOPPHelpMap",
+            "id":5,
+            "fields":
+            {
+              "fHelpKeyword":"KodOKPD2",
+              "fSearchPattern":"Рисунок 1303",
+              "fTestData":""
+            }
+          }
+,
+          null
+        ]
+      }
+    }
+  }
+}
