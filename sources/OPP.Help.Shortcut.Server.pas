@@ -89,8 +89,12 @@ begin
         OutputDebugString(error.ClassName.toWideChar);
         exit;
       end;
-      for map in AList do begin
-        self.fShortcutHelpMatrix.add(map.HelpKeyword, map);
+      for map in AList do
+      begin
+        if Assigned(map) then
+        begin
+          self.fShortcutHelpMatrix.add(map.HelpKeyword, map);
+        end;
       end;
     end;
 
