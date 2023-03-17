@@ -7,23 +7,48 @@ uses
   System.JSON, System.IOUtils;
 
 type
-  TOPPHelpMap = class
+  TOPPHelpMap = class(TObject)
   private
     fHelpKeyword: String;
     fSearchPattern: String;
+    fTestData: String;
   public
     constructor Create(AHelpKeyword: String; ASearchPattern: String);
 
+    property TestData: String read fTestData write fTestData;
     property HelpKeyword: String read fHelpKeyword write fHelpKeyword;
     property SearchPattern: String read fSearchPattern write fSearchPattern;
   end;
 
-  TOPPHelpMapFileReader = class helper for TOPPHelpMap
+  TOPPHelpMapList = class(TObject)
+  private
+    fList: TList<TOPPHelpMap>;
   public
-    class function readJSON(AFileName: String): TList<TOPPHelpMap>;
+    property list: TList<TOPPHelpMap> read fList write fList;
+
+    constructor Create(AList: TList<TOPPHelpMap>);
+  end;
+
+  TOPPHelpMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpMap>; error: Exception);
+
+  TOPPHelpMapFileReader = class helper for TOPPHelpMap
+  private
+    class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpMapJSONReadCallback = nil);
+  public
+    class procedure readJSON(AFileName: String; callback: TOPPHelpMapJSONReadCallback);
+    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
   end;
 
 implementation
+
+uses
+  DBXJSON, DBXJSONReflect, REST.JSON;
+
+constructor TOPPHelpMapList.Create(AList: TList<TOPPHelpMap>);
+begin
+  fList := TList<TOPPHelpMap>.Create;
+  fList.AddRange(AList);
+end;
 
 constructor TOPPHelpMap.Create(AHelpKeyword: String; ASearchPattern: String);
 begin
@@ -32,34 +57,83 @@ begin
   fSearchPattern := ASearchPattern;
 end;
 
-class function TOPPHelpMapFileReader.readJSON(AFileName: String): TList<TOPPHelpMap>;
+class function TOPPHelpMapFileReader.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
 var
-  s: String;
-  bytes: TArray<System.Byte>;
-  ja: TJSONArray;
-  i: Integer;
-  jo: TJSONObject;
-  hc, sp: String;
+  serializer: TJSONMarshal;
+  jsonObj: TJSONObject;
+  jsonString: String;
 begin
-  result := TList<TOPPHelpMap>.Create;
+  //
+  serializer := TJSONMarshal.Create;
 
+  jsonObj := serializer.marshal(TOPPHelpMapList.Create(AList)) as TJSONObject;
   try
-    s := TFile.ReadAllText(AFileName);
-  finally
-    bytes := TEncoding.UTF8.GetBytes(s);
-    ja := TJSONObject.ParseJSONValue(bytes, 0) as TJSONArray;
-    if assigned(ja) then begin
-      if ja.Count <> 0 then begin
-        for i := 0 to ja.Count - 1 do begin
-          jo := ja.Items[i] as TJSONObject;
-          hc := jo.Get('HelpKeyword').JsonValue.Value;
-          sp := jo.Get('SearchPattern').JsonValue.Value;
-          result.add(TOPPHelpMap.Create(hc, sp))
-        end;
+    jsonString := TJson.Format(jsonObj); // formatted
+    // jsonString := jsonObj.ToString;//unformatted
+    try
+      TFile.WriteAllText(AFileName, jsonString);
+    except
+      on E: Exception do begin
+        //
       end;
-      ja.Free;
     end;
+  finally
+    jsonObj.free;
+    FreeAndNil(serializer);
   end;
+
+  result := 0;
+end;
+
+class procedure TOPPHelpMapFileReader.readJSON(AFileName: String; callback: TOPPHelpMapJSONReadCallback);
+var
+  bytes: System.TArray<System.Byte>;
+begin
+  try
+    try
+      bytes := TFile.ReadAllBytes(AFileName);
+    except
+      on E: Exception do begin
+
+      end;
+
+    end;
+  finally
+    parseJSONBytes(bytes, true, callback);
+  end;
+end;
+
+class procedure TOPPHelpMapFileReader.parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPHelpMapJSONReadCallback);
+var
+  deSerializer: TJSONUnMarshal;
+  jsonObject: TJSONObject;
+  mapList: TOPPHelpMapList;
+  list: TList<TOPPHelpMap>;
+  error: Exception;
+begin
+  error := nil;
+  deSerializer := TJSONUnMarshal.Create;
+  list := TList<TOPPHelpMap>.Create;
+  try
+    jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
+    try
+      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpMapList;
+      list.AddRange(mapList.list);
+      FreeAndNil(mapList);
+    except
+      on E: Exception do begin
+        error := E;
+      end;
+    end;
+  finally
+    if assigned(callback) then begin
+      callback(list, error);
+    end;
+    FreeAndNil(jsonObject);
+    FreeAndNil(list);
+    FreeAndNil(deSerializer);
+  end;
+
 end;
 
 end.

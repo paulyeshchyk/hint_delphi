@@ -33,7 +33,7 @@ uses
   Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.StdActns, System.Actions, Vcl.ActnList, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
-  Vcl.Menus;
+  Vcl.Menus, dxBar, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan, Vcl.ToolWin, Vcl.ActnCtrls, Datasnap.DBClient;
 
 type
   TSampleForm = class(TForm)
@@ -53,6 +53,22 @@ type
     dxLayoutDockSite1: TdxLayoutDockSite;
     Panel1: TPanel;
     Button1: TButton;
+    ActionList1: TActionList;
+    FileOpen1: TFileOpen;
+    FileSaveAs1: TFileSaveAs;
+    FileExit1: TFileExit;
+    ActionManager1: TActionManager;
+    Action1: TAction;
+    Action2: TAction;
+    Action3: TAction;
+    dxDockPanel2: TdxDockPanel;
+    dxDockSite2: TdxDockSite;
+    dxLayoutDockSite3: TdxLayoutDockSite;
+    Panel3: TPanel;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    cxGrid1: TcxGrid;
+    ClientDataSet1: TClientDataSet;
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);

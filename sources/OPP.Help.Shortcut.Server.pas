@@ -3,9 +3,10 @@ unit OPP.Help.Shortcut.Server;
 interface
 
 uses
-  System.SyncObjs, System.Generics.Collections, System.Classes,
+  System.SysUtils, System.SyncObjs, System.Generics.Collections, System.Classes,
   Vcl.Controls, Vcl.Forms,
-  OPP.Help.ShortcutMapping;
+  WinAPI.Windows,
+  OPP.System, OPP.Help.ShortcutMapping;
 
 type
   IOPPHelpShortcutServer = interface
@@ -55,33 +56,42 @@ begin
   end;
 end;
 
-{ }
+// ---
 
 constructor TOPPHelpShortcutServer.Create;
 begin
   inherited Create;
-
+  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.Create;
   loadMapping(shortcutJSONFileName);
   loadPDF(pdfFileName);
 end;
 
 destructor TOPPHelpShortcutServer.Destroy;
 begin
+  fShortcutHelpMatrix.Free;
   fPDFMemoryStream.Free;
   inherited Destroy;
 end;
 
 procedure TOPPHelpShortcutServer.loadMapping(AFileName: String);
 var
-  shortcut_matrix: TList<TOPPHelpMap>;
-  map: TOPPHelpMap;
+  callback: TOPPHelpMapJSONReadCallback;
 begin
-  shortcut_matrix := TOPPHelpMap.readJSON(AFileName);
-  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.Create();
-  for map in shortcut_matrix do begin
-    fShortcutHelpMatrix.add(map.HelpKeyword, map);
-  end;
-  shortcut_matrix.Free;
+  callback := procedure(AList: TList<TOPPHelpMap>; error: Exception)
+    var
+      map: TOPPHelpMap;
+    begin
+      fShortcutHelpMatrix.Clear;
+      if Assigned(error) then begin
+        OutputDebugString(error.ClassName.toWideChar);
+        exit;
+      end;
+      for map in AList do begin
+        self.fShortcutHelpMatrix.add(map.HelpKeyword, map);
+      end;
+    end;
+
+  TOPPHelpMap.readJSON(AFileName, callback);
 end;
 
 procedure TOPPHelpShortcutServer.loadPDF(AFileName: String);
