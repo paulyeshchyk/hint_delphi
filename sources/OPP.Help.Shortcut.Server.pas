@@ -6,11 +6,12 @@ uses
   System.SysUtils, System.SyncObjs, System.Generics.Collections, System.Classes,
   Vcl.Controls, Vcl.Forms,
   WinAPI.Windows,
+  // Data.DB, DataSnap.DBClient,
   OPP.System, OPP.Help.ShortcutMapping;
 
 type
   IOPPHelpShortcutServer = interface
-    function showHelp(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+    function showHelp(Owner: TComponent; Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
     function showManual(pageIndex: Integer): Boolean;
   end;
 
@@ -21,7 +22,7 @@ type
     procedure loadMapping(AFileName: String);
     procedure loadPDF(AFileName: String);
   public
-    function showHelp(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+    function showHelp(Owner: TComponent; Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
     function showManual(pageIndex: Integer): Boolean;
 
     constructor Create;
@@ -61,6 +62,7 @@ end;
 constructor TOPPHelpShortcutServer.Create;
 begin
   inherited Create;
+
   fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.Create;
   loadMapping(shortcutJSONFileName);
   loadPDF(pdfFileName);
@@ -112,7 +114,7 @@ begin
   result := true;
 end;
 
-function TOPPHelpShortcutServer.showHelp(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+function TOPPHelpShortcutServer.showHelp(Owner: TComponent; Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
 var
   helpForm: TOPPHelpLargeForm;
   helpData: String;

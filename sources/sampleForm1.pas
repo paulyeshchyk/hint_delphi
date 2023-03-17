@@ -129,7 +129,7 @@ end;
 
 function TSampleForm.fOnHelpEventHandler(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
 begin
-  result := helpShortcutServer.showHelp(command, data, callHelp);
+  result := helpShortcutServer.showHelp(self, command, data, callHelp);
 end;
 
 procedure TSampleForm.fillGrid;
