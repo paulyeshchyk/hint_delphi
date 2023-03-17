@@ -53,14 +53,6 @@ type
     dxLayoutDockSite1: TdxLayoutDockSite;
     Panel1: TPanel;
     Button1: TButton;
-    ActionList1: TActionList;
-    FileOpen1: TFileOpen;
-    FileSaveAs1: TFileSaveAs;
-    FileExit1: TFileExit;
-    ActionManager1: TActionManager;
-    Action1: TAction;
-    Action2: TAction;
-    Action3: TAction;
     dxDockPanel2: TdxDockPanel;
     dxDockSite2: TdxDockSite;
     dxLayoutDockSite3: TdxLayoutDockSite;
@@ -68,9 +60,7 @@ type
     cxGrid1DBTableView1: TcxGridDBTableView;
     cxGrid1Level1: TcxGridLevel;
     cxGrid1: TcxGrid;
-    ClientDataSet1: TClientDataSet;
     procedure Button1Click(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
@@ -82,8 +72,8 @@ type
     fOnHelp: THelpEvent;
     fOriginalOnHelp: THelpEvent;
 
+    procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure fillGrid();
-    function fOnHelpEventHandler(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
 
     property OnHelp: THelpEvent read fOnHelp write fOnHelp;
   public
@@ -109,27 +99,25 @@ begin
   helpShortcutServer.showManual(3);
 end;
 
+procedure TSampleForm.WMHELP(var Msg: TWMHelp);
+var
+  request: TOPPHelpShortcutRequest;
+begin
+  request := TOPPHelpShortcutRequest.create(Screen.ActiveControl, Msg);
+  helpShortcutServer.showHelp(request);
+end;
+
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
   fOriginalOnHelp := Application.OnHelp;
-  Application.OnHelp := fOnHelpEventHandler;
+//  Application.OnHelp := fOnHelpEventHandler;
 
   fillGrid;
 
   loadHint(tipsRepo, cxHintController.HintStyle);
 
   self.restyle();
-end;
-
-procedure TSampleForm.FormDestroy(Sender: TObject);
-begin
-  Application.OnHelp := fOriginalOnHelp;
-end;
-
-function TSampleForm.fOnHelpEventHandler(Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
-begin
-  result := helpShortcutServer.showHelp(self, command, data, callHelp);
 end;
 
 procedure TSampleForm.fillGrid;

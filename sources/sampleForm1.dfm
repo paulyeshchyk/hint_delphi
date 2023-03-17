@@ -12,7 +12,6 @@ object SampleForm: TSampleForm
   Font.Style = []
   OldCreateOrder = True
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object dxDockSite1: TdxDockSite
@@ -22,7 +21,6 @@ object SampleForm: TSampleForm
     Height = 592
     ParentColor = True
     Align = alLeft
-    ExplicitHeight = 652
     DockingType = 5
     OriginalWidth = 449
     OriginalHeight = 592
@@ -31,7 +29,6 @@ object SampleForm: TSampleForm
       Top = 0
       Width = 449
       Height = 592
-      ExplicitHeight = 652
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -50,7 +47,6 @@ object SampleForm: TSampleForm
       AutoHide = False
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitHeight = 652
       DockingType = 0
       OriginalWidth = 369
       OriginalHeight = 140
@@ -67,7 +63,6 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
-        ExplicitHeight = 624
         object Kod_OKWED: TCheckBox
           Left = 8
           Top = 12
@@ -137,8 +132,6 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 652
-    ExplicitWidth = 631
     object Button1: TButton
       Left = 544
       Top = 6
@@ -155,9 +148,6 @@ object SampleForm: TSampleForm
     Width = 300
     Height = 592
     Align = alRight
-    ExplicitLeft = 496
-    ExplicitTop = 386
-    ExplicitHeight = 200
     DockingType = 5
     OriginalWidth = 300
     OriginalHeight = 592
@@ -180,8 +170,6 @@ object SampleForm: TSampleForm
       Caption = 'dxDockPanel2'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitWidth = 185
-      ExplicitHeight = 140
       DockingType = 0
       OriginalWidth = 185
       OriginalHeight = 140
@@ -193,10 +181,6 @@ object SampleForm: TSampleForm
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 0
-        ExplicitLeft = 111
-        ExplicitTop = 224
-        ExplicitWidth = 185
-        ExplicitHeight = 41
         object cxGrid1: TcxGrid
           Left = 1
           Top = 1
@@ -204,10 +188,6 @@ object SampleForm: TSampleForm
           Height = 562
           Align = alClient
           TabOrder = 0
-          ExplicitLeft = 24
-          ExplicitTop = 184
-          ExplicitWidth = 250
-          ExplicitHeight = 200
           object cxGrid1DBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.Summary.DefaultGroupSummaryItems = <>
@@ -235,58 +215,5 @@ object SampleForm: TSampleForm
     Left = 560
     Top = 88
     PixelsPerInch = 96
-  end
-  object ActionList1: TActionList
-    Left = 520
-    Top = 160
-    object FileOpen1: TFileOpen
-      Category = 'File'
-      Caption = '&Open...'
-      Dialog.Ctl3D = False
-      Dialog.DefaultExt = '*.json'
-      Dialog.Filter = 'OPPHint Configuration|*.json'
-      Hint = 'Open|Opens an existing file'
-      ImageIndex = 7
-      ShortCut = 16463
-    end
-    object FileSaveAs1: TFileSaveAs
-      Category = 'File'
-      Caption = 'Save &As...'
-      Dialog.DefaultExt = '*.json'
-      Dialog.Filter = 'OPPHint Configuration|*.json'
-      Hint = 'Save As|Saves the active file with a new name'
-      ImageIndex = 30
-      ShortCut = 16467
-    end
-    object FileExit1: TFileExit
-      Category = 'File'
-      Caption = 'E&xit'
-      Hint = 'Exit|Quits the application'
-      ImageIndex = 43
-      ShortCut = 32883
-    end
-  end
-  object ActionManager1: TActionManager
-    Left = 312
-    Top = 224
-    StyleName = 'Platform Default'
-    object Action1: TAction
-      Caption = 'Action1'
-    end
-    object Action2: TAction
-      Caption = 'Action2'
-    end
-    object Action3: TAction
-      Caption = 'Action3'
-    end
-  end
-  object ClientDataSet1: TClientDataSet
-    Aggregates = <>
-    FieldDefs = <>
-    IndexDefs = <>
-    Params = <>
-    StoreDefs = True
-    Left = 488
-    Top = 320
   end
 end

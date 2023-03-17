@@ -4,14 +4,25 @@ interface
 
 uses
   System.SysUtils, System.SyncObjs, System.Generics.Collections, System.Classes,
-  Vcl.Controls, Vcl.Forms,
+  System.Messaging,
+  WinAPI.Messages,
   WinAPI.Windows,
-  // Data.DB, DataSnap.DBClient,
+  Vcl.Controls, Vcl.Forms,
   OPP.System, OPP.Help.ShortcutMapping;
 
 type
+  TOPPHelpShortcutRequest = class
+  private
+    fMsg: TWMHelp;
+    fActiveControl: TWinControl;
+  public
+    property msg: TWMHelp read fMsg;
+    property activeControl: TWinControl read fActiveControl;
+    constructor create(activeControl: TWinControl; msg: TWMHelp);
+  end;
+
   IOPPHelpShortcutServer = interface
-    function showHelp(Owner: TComponent; Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+    function showHelp(request: TOPPHelpShortcutRequest): Boolean;
     function showManual(pageIndex: Integer): Boolean;
   end;
 
@@ -22,10 +33,9 @@ type
     procedure loadMapping(AFileName: String);
     procedure loadPDF(AFileName: String);
   public
-    function showHelp(Owner: TComponent; Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+    function showHelp(request: TOPPHelpShortcutRequest): Boolean;
     function showManual(pageIndex: Integer): Boolean;
-
-    constructor Create;
+    constructor create;
     destructor Destroy; override;
   end;
 
@@ -44,12 +54,19 @@ var
   fLock: TCriticalSection;
   fHelpServer: IOPPHelpShortcutServer;
 
+constructor TOPPHelpShortcutRequest.create(activeControl: TWinControl; msg: TWMHelp);
+begin
+  inherited create;
+  fMsg := msg;
+  fActiveControl := activeControl;
+end;
+
 function helpShortcutServer: IOPPHelpShortcutServer;
 begin
   fLock.Acquire;
   try
     if not Assigned(fHelpServer) then begin
-      fHelpServer := TOPPHelpShortcutServer.Create;
+      fHelpServer := TOPPHelpShortcutServer.create;
     end;
     result := fHelpServer;
   finally
@@ -59,11 +76,11 @@ end;
 
 // ---
 
-constructor TOPPHelpShortcutServer.Create;
+constructor TOPPHelpShortcutServer.create;
 begin
-  inherited Create;
+  inherited create;
 
-  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.Create;
+  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.create;
   loadMapping(shortcutJSONFileName);
   loadPDF(pdfFileName);
 end;
@@ -98,7 +115,7 @@ end;
 
 procedure TOPPHelpShortcutServer.loadPDF(AFileName: String);
 begin
-  fPDFMemoryStream := TMemoryStream.Create;
+  fPDFMemoryStream := TMemoryStream.create;
   fPDFMemoryStream.loadFromFile(AFileName);
   fPDFMemoryStream.Position := 0;
 end;
@@ -107,40 +124,38 @@ function TOPPHelpShortcutServer.showManual(pageIndex: Integer): Boolean;
 var
   helpForm: TOPPHelpLargeForm;
 begin
-  helpForm := TOPPHelpLargeForm.Create(nil);
+  helpForm := TOPPHelpLargeForm.create(nil);
   helpForm.stream := fPDFMemoryStream;
   helpForm.openPage(3);
   helpForm.ShowModal;
   result := true;
 end;
 
-function TOPPHelpShortcutServer.showHelp(Owner: TComponent; Command: Word; Data: THelpEventData; var CallHelp: Boolean): Boolean;
+function TOPPHelpShortcutServer.showHelp(request: TOPPHelpShortcutRequest): Boolean;
 var
   helpForm: TOPPHelpLargeForm;
   helpData: String;
   mapping: TOPPHelpMap;
 begin
-  helpData := String(Data);
+  helpData := request.activeControl.HelpKeyword;
   try
     fShortcutHelpMatrix.TryGetValue(helpData, mapping);
   finally
     if Assigned(mapping) then begin
-      helpForm := TOPPHelpLargeForm.Create(nil);
+      helpForm := TOPPHelpLargeForm.create(nil);
       helpForm.stream := fPDFMemoryStream;
       helpForm.map := mapping;
       helpForm.ShowModal;
+      result := true;
     end else begin
-      // ShowMessage('Help not found');
+      result := false;
     end;
   end;
-
-  CallHelp := false;
-  result := true;
 end;
 
 initialization
 
-fLock := TCriticalSection.Create;
+fLock := TCriticalSection.create;
 
 finalization
 

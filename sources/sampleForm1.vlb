@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=0,212,103,36
+Coordinates=467,221,78,36
 Visible=True
 
 [dxLayoutDockSite1]
@@ -49,28 +49,4 @@ Coordinates=304,221,40,36
 
 [cxGrid2TableView1Column3]
 Coordinates=467,111,177,36
-
-[FileSaveAs1]
-Coordinates=467,166,87,36
-
-[Action2]
-Coordinates=245,248,58,36
-
-[FileExit1]
-Coordinates=176,248,64,36
-
-[ActionList1]
-Coordinates=467,221,78,36
-
-[FileOpen1]
-Coordinates=388,248,74,36
-
-[Action1]
-Coordinates=117,248,58,36
-
-[ActionManager1]
-Coordinates=682,56,108,36
-
-[Action3]
-Coordinates=467,276,58,36
 
