@@ -14,7 +14,8 @@ uses
   OPP.Help.Hint.FormHelper in 'sources\OPP.Help.Hint.FormHelper.pas',
   OPP.Help.Hint.Server in 'sources\OPP.Help.Hint.Server.pas',
   OPP.Help.Shortcut.Server in 'sources\OPP.Help.Shortcut.Server.pas',
-  OPP.Help.Shortcut.Request in 'sources\OPP.Help.Shortcut.Request.pas';
+  OPP.Help.Shortcut.Request in 'sources\OPP.Help.Shortcut.Request.pas',
+  OPP.Help.Shortcut.Dataset in 'sources\OPP.Help.Shortcut.Dataset.pas';
 
 {$R *.res}
 

@@ -8,6 +8,7 @@ uses
   WinAPI.Messages,
   WinAPI.Windows,
   Vcl.Controls, Vcl.Forms,
+  OPP.Help.Shortcut.Dataset,
   OPP.Help.Shortcut.Request,
   OPP.System, OPP.Help.Shortcut.Mapping;
 
@@ -19,6 +20,7 @@ type
 
   TOPPHelpShortcutServer = class(TInterfacedObject, IOPPHelpShortcutServer)
   private
+    fShortcutDataset: TOPPHelpShortcutDataset;
     fShortcutHelpMatrix: TDictionary<String, TOPPHelpMap>;
     fPDFMemoryStream: TMemoryStream;
     procedure loadMapping(AFileName: String);
@@ -28,6 +30,7 @@ type
     function showManual(pageIndex: Integer): Boolean;
     constructor create;
     destructor Destroy; override;
+    property ShortcutDataset: TOPPHelpShortcutDataset read fShortcutDataset write fShortcutDataset;
   end;
 
 function helpShortcutServer: IOPPHelpShortcutServer;
@@ -64,13 +67,16 @@ constructor TOPPHelpShortcutServer.create;
 begin
   inherited create;
 
+  fShortcutDataset := TOPPHelpShortcutDataset.Create;
   fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.create;
+  fShortcutDataset.load(shortcutJSONFileName);
   loadMapping(shortcutJSONFileName);
   loadPDF(pdfFileName);
 end;
 
 destructor TOPPHelpShortcutServer.Destroy;
 begin
+  fShortcutDataset.Free;
   fShortcutHelpMatrix.Free;
   fPDFMemoryStream.Free;
   inherited Destroy;
