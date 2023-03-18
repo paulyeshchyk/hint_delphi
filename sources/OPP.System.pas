@@ -3,7 +3,8 @@ unit OPP.System;
 interface
 
 type
-  StringHelper = record helper for String
+  StringHelper = record helper for
+    String
     function isEmpty(): Boolean;
     function toWideChar: PWideChar;
   end;

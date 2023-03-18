@@ -34,7 +34,9 @@ uses
   Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.StdActns, System.Actions, Vcl.ActnList, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
-  Vcl.Menus, dxBar, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan, Vcl.ToolWin, Vcl.ActnCtrls, Datasnap.DBClient;
+  Vcl.Menus, dxBar, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan, Vcl.ToolWin, Vcl.ActnCtrls, Datasnap.DBClient,
+  dxSkinBasic, dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray, dxSkinOffice2019White,
+  dxSkinTheBezier, dxDateRanges, dxScrollbarAnnotations;
 
 type
   TSampleForm = class(TForm)
@@ -61,10 +63,12 @@ type
     cxGrid1DBTableView1: TcxGridDBTableView;
     cxGrid1Level1: TcxGridLevel;
     cxGrid1: TcxGrid;
+    Edit1: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
+    procedure Edit1KeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
 
@@ -102,17 +106,14 @@ end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
 var
-  request: TOPPHelpShortcutRequest;
+  Request: TOPPHelpShortcutRequest;
 begin
-  request := TOPPHelpShortcutRequest.create(Screen.ActiveControl, Msg);
-  helpShortcutServer.showHelp(request);
+  Request := TOPPHelpShortcutRequest.create(Screen.ActiveControl, Msg);
+  helpShortcutServer.showHelp(Request);
 end;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
-
-  fOriginalOnHelp := Application.OnHelp;
-//  Application.OnHelp := fOnHelpEventHandler;
 
   fillGrid;
 
@@ -122,7 +123,8 @@ begin
 end;
 
 procedure TSampleForm.fillGrid;
-var fControl: TControl;
+var
+  fControl: TControl;
 begin
 
   cxGrid2TableView1.DataController.Append;
@@ -140,6 +142,14 @@ end;
 procedure TSampleForm.cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
 begin
   HintInfo.ReshowTimeout := MaxInt;
+end;
+
+procedure TSampleForm.Edit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  if (Key = #13) or (Key = #10) then
+  begin
+    Edit1.SelectAll;
+  end;
 end;
 
 initialization

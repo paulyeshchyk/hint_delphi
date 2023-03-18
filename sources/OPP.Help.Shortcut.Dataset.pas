@@ -4,13 +4,13 @@ interface
 
 uses
   System.Generics.Collections,
+  OPP.System,
   OPP.Help.Shortcut.Mapping;
 
 type
   TOPPHelpShortcutDataset = class
   private
     fShortcutHelpMatrix: TDictionary<String, TOPPHelpMap>;
-
   public
     constructor Create;
     function load(AFilename: String): Integer;
@@ -52,7 +52,6 @@ begin
     end;
 
   TOPPHelpMap.readJSON(AFilename, callback);
-
   result := 0;
 end;
 
@@ -75,5 +74,6 @@ begin
     result := Mapping;
   end;
 end;
+
 
 end.

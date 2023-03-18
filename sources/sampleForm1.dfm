@@ -2,33 +2,33 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = 'SampleForm'
-  ClientHeight = 633
-  ClientWidth = 990
+  ClientHeight = 821
+  ClientWidth = 1226
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object dxDockSite1: TdxDockSite
     Left = 0
     Top = 0
     Width = 449
-    Height = 592
+    Height = 780
     ParentColor = True
     Align = alLeft
+    ExplicitHeight = 559
     DockingType = 5
     OriginalWidth = 449
-    OriginalHeight = 592
+    OriginalHeight = 780
     object dxLayoutDockSite1: TdxLayoutDockSite
       Left = 0
       Top = 0
       Width = 449
-      Height = 592
+      Height = 780
+      ExplicitHeight = 559
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -37,7 +37,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 449
-      Height = 592
+      Height = 780
       HelpType = htKeyword
       HelpKeyword = 'KodOKPD2'
       ParentColor = True
@@ -47,6 +47,7 @@ object SampleForm: TSampleForm
       AutoHide = False
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
+      ExplicitHeight = 559
       DockingType = 0
       OriginalWidth = 369
       OriginalHeight = 140
@@ -54,7 +55,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 445
-        Height = 564
+        Height = 738
         HelpType = htKeyword
         Align = alClient
         BevelKind = bkFlat
@@ -63,6 +64,7 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
+        ExplicitHeight = 517
         object Kod_OKWED: TCheckBox
           Left = 8
           Top = 12
@@ -79,7 +81,7 @@ object SampleForm: TSampleForm
           Left = 111
           Top = 12
           Width = 121
-          Height = 21
+          Height = 40
           Hint = 'cxHint test'
           HelpType = htKeyword
           HelpKeyword = 'Kod_MKC'
@@ -98,6 +100,7 @@ object SampleForm: TSampleForm
           TabOrder = 2
           object cxGrid2TableView1: TcxGridTableView
             Navigator.Buttons.CustomButtons = <>
+            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -126,12 +129,14 @@ object SampleForm: TSampleForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 592
-    Width = 990
+    Top = 780
+    Width = 1226
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 559
+    ExplicitWidth = 976
     object Button1: TButton
       Left = 544
       Top = 6
@@ -143,19 +148,22 @@ object SampleForm: TSampleForm
     end
   end
   object dxDockSite2: TdxDockSite
-    Left = 690
+    Left = 926
     Top = 0
     Width = 300
-    Height = 592
+    Height = 780
     Align = alRight
+    ExplicitLeft = 676
+    ExplicitHeight = 559
     DockingType = 5
     OriginalWidth = 300
-    OriginalHeight = 592
+    OriginalHeight = 780
     object dxLayoutDockSite3: TdxLayoutDockSite
       Left = 0
       Top = 0
       Width = 300
-      Height = 592
+      Height = 780
+      ExplicitHeight = 559
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -164,12 +172,13 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 300
-      Height = 592
+      Height = 780
       AllowFloating = True
       AutoHide = False
       Caption = 'dxDockPanel2'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
+      ExplicitHeight = 559
       DockingType = 0
       OriginalWidth = 185
       OriginalHeight = 140
@@ -177,19 +186,22 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 296
-        Height = 564
+        Height = 738
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 0
+        ExplicitHeight = 517
         object cxGrid1: TcxGrid
           Left = 1
           Top = 1
           Width = 294
-          Height = 562
+          Height = 736
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 515
           object cxGrid1DBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
+            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
@@ -200,6 +212,15 @@ object SampleForm: TSampleForm
         end
       end
     end
+  end
+  object Edit1: TEdit
+    Left = 498
+    Top = 58
+    Width = 359
+    Height = 21
+    TabOrder = 3
+    Text = 'opphint://Kod_MKC'
+    OnKeyPress = Edit1KeyPress
   end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
