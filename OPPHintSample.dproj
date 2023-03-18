@@ -115,7 +115,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas"/>
-        <DCCReference Include="sources\OPP.VCL.Form.Help.Thread.pas"/>
+        <DCCReference Include="sources\OPP.Help.Thread.pas"/>
         <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.FormHelper.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.Server.pas"/>
@@ -125,6 +125,9 @@
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Dataset.pas"/>
+        <DCCReference Include="sources\OPP.Help.Error.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

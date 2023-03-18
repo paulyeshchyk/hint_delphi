@@ -1,4 +1,4 @@
-unit OPP.Help.Hint.FormHelper;
+п»їunit OPP.Help.Hint.FormHelper;
 
 interface
 
@@ -45,13 +45,13 @@ begin
 
   fTip := tipsRepo.Items.add;
   fTip.Header.PlainText := true;
-  fTip.Header.Text := 'Заголовок';
+  fTip.Header.Text := 'Р—Р°РіРѕР»РѕРІРѕРє';
 
   fTip.Description.PlainText := false;
   fTip.Description.Text := Hint.Data.rtf;
 
   fTip.Footer.PlainText := true;
-  fTip.Footer.Text := 'Подвал';
+  fTip.Footer.Text := 'РџРѕРґРІР°Р»';
 
   fTipLink := TdxScreenTipStyle(hintStyle).ScreenTipLinks.add;
   fTipLink.ScreenTip := fTip;
