@@ -5,7 +5,7 @@ uses
   sampleForm1 in 'sources\sampleForm1.pas' {SampleForm},
   OPP.System in 'sources\OPP.System.pas',
   OPP.VCL.Controls in 'sources\OPP.VCL.Controls.pas',
-  OPP.Help.Hint.Mapping in 'sources\OPP.Help.Hint.Mapping.pas',
+  OPP.Help.Hint in 'sources\OPP.Help.Hint.pas',
   OPP.VCL.Component in 'sources\OPP.VCL.Component.pas',
   OPP.Help.LargeForm in 'sources\OPP.Help.LargeForm.pas' {OPPHelpLargeForm},
   AcroPDFLib_TLB in 'C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas',

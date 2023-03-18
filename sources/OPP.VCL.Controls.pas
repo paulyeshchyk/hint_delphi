@@ -6,7 +6,7 @@ uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
   VCL.Controls,
   OPP.system,
-  OPP.Help.Hint.Mapping;
+  OPP.Help.Hint;
 
 type
   TComponentHintEnumerator = class helper for TControl
@@ -55,7 +55,6 @@ var
   valueToCompare: String;
   found: Boolean;
 begin
-  found := false;
   result := nil;
   for i := 0 to ComponentCount - 1 do begin
     child := self.Components[i];

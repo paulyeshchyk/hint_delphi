@@ -36,8 +36,6 @@ type
     procedure Timer1Timer(Sender: TObject);
   private
     { Private declarations }
-    fPDFViewer: TdxPDFViewer;
-    fThread: TOPPHelpThread;
     fHasContent: Bool;
     fStream: TMemoryStream;
     fMap: TOPPHelpShortcutMap;
@@ -75,8 +73,6 @@ uses
 
 
 procedure TOPPHelpLargeForm.FormCreate(Sender: TObject);
-var
-  semiTransparent: TAlphaColorRec;
 begin
   fHasContent := false;
   SetWindowPos(Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NoMove or SWP_NoSize);

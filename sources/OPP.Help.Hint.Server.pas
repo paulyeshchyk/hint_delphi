@@ -7,7 +7,7 @@ uses
   System.SysUtils, System.Classes, System.Generics.Collections,
   dxRichEdit.Control, dxRichEdit.NativeAPI,
   VCL.Controls,
-  OPP.Help.Hint.Mapping,
+  OPP.Help.Hint,
   OPP.VCL.Controls;
 
 const

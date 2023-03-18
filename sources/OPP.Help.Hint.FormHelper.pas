@@ -8,7 +8,7 @@ uses
   dxCustomHint, dxScreenTip,
 
   OPP.Vcl.Controls,
-  OPP.Help.Hint.Mapping,
+  OPP.Help.Hint,
   OPP.Help.Hint.Server;
 
 type

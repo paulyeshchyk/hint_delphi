@@ -108,7 +108,7 @@
         </DCCReference>
         <DCCReference Include="sources\OPP.System.pas"/>
         <DCCReference Include="sources\OPP.VCL.Controls.pas"/>
-        <DCCReference Include="sources\OPP.Help.Hint.Mapping.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.pas"/>
         <DCCReference Include="sources\OPP.VCL.Component.pas"/>
         <DCCReference Include="sources\OPP.Help.LargeForm.pas">
             <Form>OPPHelpLargeForm</Form>

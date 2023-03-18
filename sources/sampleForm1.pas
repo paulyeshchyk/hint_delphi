@@ -24,19 +24,20 @@ uses
 
   cxHintEditor,
   System.JSON, System.IOUtils,
-  OPP.Help.Hint.Mapping,
-  OPP.Help.Hint.Server,
-  OPP.Help.Hint.FormHelper,
-  OPP.System,
-  OPP.Vcl.Controls,
-  OPP.Vcl.Component,
-  OPP.Help.Shortcut.Request,
   Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.StdActns, System.Actions, Vcl.ActnList, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
   Vcl.Menus, dxBar, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan, Vcl.ToolWin, Vcl.ActnCtrls, Datasnap.DBClient,
   dxSkinBasic, dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray, dxSkinOffice2019White,
-  dxSkinTheBezier, dxDateRanges, dxScrollbarAnnotations;
+  dxSkinTheBezier, dxDateRanges, dxScrollbarAnnotations,
+
+  OPP.Vcl.Controls,
+  OPP.Vcl.Component,
+  OPP.Help.Shortcut.Request,
+  OPP.Help.Hint,
+  OPP.Help.Hint.Server,
+  OPP.Help.Hint.FormHelper,
+  OPP.System;
 
 type
   TSampleForm = class(TForm)
@@ -72,15 +73,8 @@ type
   private
     { Private declarations }
 
-    hintServer: TOPPHelpHintServer;
-    hints: TList<TOPPHint>;
-    fOnHelp: THelpEvent;
-    fOriginalOnHelp: THelpEvent;
-
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure fillGrid();
-
-    property OnHelp: THelpEvent read fOnHelp write fOnHelp;
   public
     { Public declarations }
   end;
@@ -123,8 +117,6 @@ begin
 end;
 
 procedure TSampleForm.fillGrid;
-var
-  fControl: TControl;
 begin
 
   cxGrid2TableView1.DataController.Append;
