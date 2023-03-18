@@ -21,7 +21,7 @@ type
     property SearchPattern: String read fSearchPattern write fSearchPattern;
   end;
 
-  TOPPHelpMapList = class(TObject)
+  TOPPHelpShortcutMapSet = class(TObject)
   private
     fList: TList<TOPPHelpShortcutMap>;
   public
@@ -45,7 +45,7 @@ implementation
 uses
   DBXJSON, DBXJSONReflect, REST.JSON;
 
-constructor TOPPHelpMapList.Create(AList: TList<TOPPHelpShortcutMap>);
+constructor TOPPHelpShortcutMapSet.Create(AList: TList<TOPPHelpShortcutMap>);
 begin
   fList := TList<TOPPHelpShortcutMap>.Create;
   fList.AddRange(AList);
@@ -67,7 +67,7 @@ begin
   //
   serializer := TJSONMarshal.Create;
 
-  jsonObj := serializer.marshal(TOPPHelpMapList.Create(AList)) as TJSONObject;
+  jsonObj := serializer.marshal(TOPPHelpShortcutMapSet.Create(AList)) as TJSONObject;
   try
     jsonString := TJson.Format(jsonObj); // formatted
     // jsonString := jsonObj.ToString;//unformatted
@@ -108,7 +108,7 @@ class procedure TOPPHelpMapFileReader.parseJSONBytes(ABytes: System.TArray<Syste
 var
   deSerializer: TJSONUnMarshal;
   jsonObject: TJSONObject;
-  mapList: TOPPHelpMapList;
+  mapList: TOPPHelpShortcutMapSet;
   list: TList<TOPPHelpShortcutMap>;
   error: Exception;
 begin
@@ -118,7 +118,7 @@ begin
   try
     jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
     try
-      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpMapList;
+      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpShortcutMapSet;
       list.AddRange(mapList.list);
       FreeAndNil(mapList);
     except
