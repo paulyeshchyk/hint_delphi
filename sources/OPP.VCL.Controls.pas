@@ -19,20 +19,20 @@ type
     ///
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
-    function GetControlHintsMeta(propertyName: String = 'HelpKeyword'): TList<TOPPHintMeta>;
+    function GetControlHintsMeta(propertyName: String = 'HelpKeyword'): TList<TOPPHelpHintMeta>;
     function OPPFindControl(propertyName: String; propertyValue: String): TControl;
   end;
 
 implementation
 
-function TComponentHintEnumerator.GetControlHintsMeta(propertyName: String): TList<TOPPHintMeta>;
+function TComponentHintEnumerator.GetControlHintsMeta(propertyName: String): TList<TOPPHelpHintMeta>;
 var
   child: TComponent;
   i: Integer;
   fBookmarkIdentifier: String;
-  fControlHint: TOPPHintMeta;
+  fControlHint: TOPPHelpHintMeta;
 begin
-  result := TList<TOPPHintMeta>.create();
+  result := TList<TOPPHelpHintMeta>.create();
 
   for i := 0 to ComponentCount - 1 do begin
     child := self.Components[i];

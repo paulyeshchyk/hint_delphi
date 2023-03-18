@@ -10,34 +10,34 @@ type
 
   TOPPHintIdentifierType = String;
 
-  TOPPHintMeta = record
+  TOPPHelpHintMeta = record
     propertyName: String;
     hintIdentifier: TOPPHintIdentifierType;
   end;
 
-  TOPPHintData = record
+  TOPPHelpHintData = record
     text: String;
     rtf: String;
   end;
 
-  TOPPHintIdList = TList<TOPPHintMeta>;
+  TOPPHintIdList = TList<TOPPHelpHintMeta>;
 
-  TOPPHint = record
-    meta: TOPPHintMeta;
-    data: TOPPHintData;
+  TOPPHelpHint = record
+    meta: TOPPHelpHintMeta;
+    data: TOPPHelpHintData;
   end;
 
-  TOPPHintHelper = record helper for TOPPHintData
+  TOPPHelpHintHelper = record helper for TOPPHelpHintData
     function isEmpty(): Boolean;
   end;
 
-  TOPPHintServerLoadResultType = record
+  TOPPHelpHintServerLoadResultType = record
     error: Exception;
   end;
 
 implementation
 
-function TOPPHintHelper.isEmpty(): Boolean;
+function TOPPHelpHintHelper.isEmpty(): Boolean;
 begin
   result := text.isEmpty() or rtf.isEmpty();
 end;

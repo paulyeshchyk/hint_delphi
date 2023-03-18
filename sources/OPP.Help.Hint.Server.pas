@@ -15,9 +15,9 @@ const
 
 type
   IOPPHelpHintServer = interface
-    function GetHint(hintMeta: TOPPHintMeta): TOPPHint;
-    function GetHints(Control: TControl): TList<TOPPHint>; overload;
-    function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHint>; overload;
+    function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
+    function GetHints(Control: TControl): TList<TOPPHelpHint>; overload;
+    function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHelpHint>; overload;
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -43,30 +43,30 @@ type
     ///
     /// </summary>
     /// <remarks> «агружаемый документ должен быть в формате rtf</remarks>
-    function loadFromFile(AFileName: String): TOPPHintServerLoadResultType;
+    function loadFromFile(AFileName: String): TOPPHelpHintServerLoadResultType;
 
     /// <summary>
     /// ¬озвращает список подсказок, применимых дл€ списка идентификаторов, вз€тых из компонента.
     ///
     /// </summary>
     /// <remarks> </remarks>
-    function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHint>; overload;
+    function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHelpHint>; overload;
 
-    function GetHintData(identifier: TOPPHintIdentifierType): TOPPHintData;
+    function GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
 
     /// <summary>
     /// ¬озвращает подсказку дл€ компонента, метаданные которого указаны в параметре hintMeta.
     ///
     /// </summary>
     /// <remarks> </remarks>
-    function GetHint(hintMeta: TOPPHintMeta): TOPPHint; overload;
+    function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint; overload;
 
     /// <summary>
     /// ¬озвращает список подсказок, применимых дл€ компонента, указанного в параметре Control.
     ///
     /// </summary>
     /// <remarks> </remarks>
-    function GetHints(Control: TControl): TList<TOPPHint>; overload;
+    function GetHints(Control: TControl): TList<TOPPHelpHint>; overload;
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -104,9 +104,9 @@ end;
 
 { public }
 
-function TOPPHelpHintServer.loadFromFile(AFileName: String): TOPPHintServerLoadResultType;
+function TOPPHelpHintServer.loadFromFile(AFileName: String): TOPPHelpHintServerLoadResultType;
 var
-  loadResult: TOPPHintServerLoadResultType;
+  loadResult: TOPPHelpHintServerLoadResultType;
 begin
   try
     fRichEditControl.LoadDocument(AFileName, fDocumentFormat);
@@ -120,7 +120,7 @@ begin
   result := loadResult;
 end;
 
-function TOPPHelpHintServer.GetHintData(identifier: TOPPHintIdentifierType): TOPPHintData;
+function TOPPHelpHintServer.GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
 var
   bookmark: IdxRichEditBookmark;
   fragmentOpt: TdxRichEditTextFragmentOptions;
@@ -142,18 +142,18 @@ begin
   result.rtf := document.GetRtfText(paragraph.range);
 end;
 
-function TOPPHelpHintServer.GetHint(hintMeta: TOPPHintMeta): TOPPHint;
+function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
 begin
   result.data := GetHintData(hintMeta.hintIdentifier);
   result.meta := hintMeta;
 end;
 
-function TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHint>;
+function TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHelpHint>;
 var
-  fHintMeta: TOPPHintMeta;
-  fHint: TOPPHint;
+  fHintMeta: TOPPHelpHintMeta;
+  fHint: TOPPHelpHint;
 begin
-  result := TList<TOPPHint>.Create;
+  result := TList<TOPPHelpHint>.Create;
   for fHintMeta in hintsMetaList do begin
     fHint := GetHint(fHintMeta);
     if not fHint.data.isEmpty() then begin
@@ -162,9 +162,9 @@ begin
   end;
 end;
 
-function TOPPHelpHintServer.GetHints(Control: TControl): TList<TOPPHint>;
+function TOPPHelpHintServer.GetHints(Control: TControl): TList<TOPPHelpHint>;
 var
-  fHintsMeta: TList<TOPPHintMeta>;
+  fHintsMeta: TList<TOPPHelpHintMeta>;
 begin
   fHintsMeta := Control.GetControlHintsMeta();
   result := self.GetHints(fHintsMeta);

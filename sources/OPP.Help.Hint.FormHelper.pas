@@ -17,15 +17,15 @@ type
   TOPPHelpHintFormHelper = class helper for TForm
   public
     procedure loadHint(tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
-    procedure addTip(Hint: TOPPHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
+    procedure addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
   end;
 
 implementation
 
 procedure TOPPHelpHintFormHelper.loadHint(tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
 var
-  fHints: TList<TOPPHint>;
-  fHint: TOPPHint;
+  fHints: TList<TOPPHelpHint>;
+  fHint: TOPPHelpHint;
 begin
   fHints := helpHintServer.getHints(self);
   for fHint in fHints do begin
@@ -33,7 +33,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpHintFormHelper.addTip(Hint: TOPPHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
+procedure TOPPHelpHintFormHelper.addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
 var
   fTip: TdxScreenTip;
   fTipLink: TdxScreenTipLink;
