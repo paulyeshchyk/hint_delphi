@@ -14,19 +14,17 @@ uses
 
 type
   IOPPHelpShortcutServer = interface
-    function showHelp(request: TOPPHelpShortcutRequest): Boolean;
+    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;
     function showManual(pageIndex: Integer): Boolean;
   end;
 
   TOPPHelpShortcutServer = class(TInterfacedObject, IOPPHelpShortcutServer)
   private
     fShortcutDataset: TOPPHelpShortcutDataset;
-    fShortcutHelpMatrix: TDictionary<String, TOPPHelpMap>;
     fPDFMemoryStream: TMemoryStream;
-    procedure loadMapping(AFileName: String);
     procedure loadPDF(AFileName: String);
   public
-    function showHelp(request: TOPPHelpShortcutRequest): Boolean;
+    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;
     function showManual(pageIndex: Integer): Boolean;
     constructor create;
     destructor Destroy; override;
@@ -42,7 +40,7 @@ uses
 
 const
   shortcutJSONFileName: String = 'help\shortcut_matrix.json';
-  pdfFileName: String          = 'docs\readme.pdf';
+  pdfFileName: String = 'docs\readme.pdf';
 
 var
   fLock: TCriticalSection;
@@ -52,7 +50,8 @@ function helpShortcutServer: IOPPHelpShortcutServer;
 begin
   fLock.Acquire;
   try
-    if not Assigned(fHelpServer) then begin
+    if not Assigned(fHelpServer) then
+    begin
       fHelpServer := TOPPHelpShortcutServer.create;
     end;
     result := fHelpServer;
@@ -67,44 +66,16 @@ constructor TOPPHelpShortcutServer.create;
 begin
   inherited create;
 
-  fShortcutDataset := TOPPHelpShortcutDataset.Create;
-  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.create;
+  fShortcutDataset := TOPPHelpShortcutDataset.create;
   fShortcutDataset.load(shortcutJSONFileName);
-  loadMapping(shortcutJSONFileName);
   loadPDF(pdfFileName);
 end;
 
 destructor TOPPHelpShortcutServer.Destroy;
 begin
   fShortcutDataset.Free;
-  fShortcutHelpMatrix.Free;
   fPDFMemoryStream.Free;
   inherited Destroy;
-end;
-
-procedure TOPPHelpShortcutServer.loadMapping(AFileName: String);
-var
-  callback: TOPPHelpMapJSONReadCallback;
-begin
-  callback := procedure(AList: TList<TOPPHelpMap>; error: Exception)
-    var
-      map: TOPPHelpMap;
-    begin
-      fShortcutHelpMatrix.Clear;
-      if Assigned(error) then begin
-        OutputDebugString(error.ClassName.toWideChar);
-        exit;
-      end;
-      for map in AList do
-      begin
-        if Assigned(map) then
-        begin
-          self.fShortcutHelpMatrix.add(map.HelpKeyword, map);
-        end;
-      end;
-    end;
-
-  TOPPHelpMap.readJSON(AFileName, callback);
 end;
 
 procedure TOPPHelpShortcutServer.loadPDF(AFileName: String);
@@ -125,25 +96,23 @@ begin
   result := true;
 end;
 
-function TOPPHelpShortcutServer.showHelp(request: TOPPHelpShortcutRequest): Boolean;
+function TOPPHelpShortcutServer.showHelp(Request: TOPPHelpShortcutRequest): Boolean;
 var
   helpForm: TOPPHelpLargeForm;
   helpData: String;
-  mapping: TOPPHelpMap;
+  Mapping: TOPPHelpMap;
 begin
-  helpData := request.getHelpData();
-  try
-    fShortcutHelpMatrix.TryGetValue(helpData, mapping);
-  finally
-    if Assigned(mapping) then begin
-      helpForm := TOPPHelpLargeForm.create(nil);
-      helpForm.stream := fPDFMemoryStream;
-      helpForm.map := mapping;
-      helpForm.ShowModal;
-      result := true;
-    end else begin
-      result := false;
-    end;
+  helpData := Request.getHelpData();
+  Mapping := fShortcutDataset.getMapping(helpData);
+  if Assigned(Mapping) then
+  begin
+    helpForm := TOPPHelpLargeForm.create(nil);
+    helpForm.stream := fPDFMemoryStream;
+    helpForm.map := Mapping;
+    helpForm.ShowModal;
+    result := true;
+  end else begin
+    result := false;
   end;
 end;
 

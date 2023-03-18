@@ -14,6 +14,7 @@ type
   public
     constructor Create;
     function load(AFilename: String): Integer;
+    function getMapping(key: String): TOPPHelpMap;
   end;
 
 implementation
@@ -24,7 +25,7 @@ uses
 
 constructor TOPPHelpShortcutDataset.Create;
 begin
-  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.create;
+  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.Create;
 end;
 
 function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
@@ -38,7 +39,7 @@ begin
       fShortcutHelpMatrix.Clear;
       if Assigned(error) then
       begin
-        //OutputDebugString(error.ClassName.toWideChar);
+        // OutputDebugString(error.ClassName.toWideChar);
         exit;
       end;
       for map in AList do
@@ -53,6 +54,26 @@ begin
   TOPPHelpMap.readJSON(AFilename, callback);
 
   result := 0;
+end;
+
+function TOPPHelpShortcutDataset.getMapping(key: string): TOPPHelpMap;
+var
+  Mapping: TOPPHelpMap;
+begin
+  try
+    Mapping := nil;
+    try
+      fShortcutHelpMatrix.TryGetValue(key, Mapping);
+    except
+      on e: Exception do
+      begin
+        //
+      end;
+    end;
+
+  finally
+    result := Mapping;
+  end;
 end;
 
 end.
