@@ -5,7 +5,7 @@
   {
     "fList":
     {
-      "type":"System.Generics.Collections.TList<OPP.Help.Shortcut.Mapping.TOPPHelpMap>",
+      "type":"System.Generics.Collections.TList<OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap>",
       "id":2,
       "fields":
       {
@@ -17,7 +17,7 @@
         "FItems":
         [
                     {
-            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpMap",
+            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
             "id":3,
             "fields":
             {
@@ -29,7 +29,7 @@
 ,
           
           {
-            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpMap",
+            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
             "id":4,
             "fields":
             {
@@ -41,7 +41,7 @@
 ,
           
           {
-            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpMap",
+            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
             "id":5,
             "fields":
             {

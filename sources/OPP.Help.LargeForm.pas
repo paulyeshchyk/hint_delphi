@@ -40,11 +40,11 @@ type
     fThread: TOPPHelpThread;
     fHasContent: Bool;
     fStream: TMemoryStream;
-    fMap: TOPPHelpMap;
+    fMap: TOPPHelpShortcutMap;
     fProgress: Integer;
     function getPDFDocument(): TdxPDFDocument;
     procedure setStream(AStream: TMemoryStream);
-    procedure setMap(AMap: TOPPHelpMap);
+    procedure setMap(AMap: TOPPHelpShortcutMap);
     procedure doSearchIfPossible;
     procedure threadFinishedWork;
     procedure SearchJob;
@@ -54,7 +54,7 @@ type
   public
     { Public declarations }
     property stream: TMemoryStream read fStream write setStream;
-    property Map: TOPPHelpMap read fMap write setMap;
+    property Map: TOPPHelpShortcutMap read fMap write setMap;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
     property pdfViewer: TdxPDFViewer read getPDFViewer;
 
@@ -165,7 +165,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpLargeForm.setMap(AMap: TOPPHelpMap);
+procedure TOPPHelpLargeForm.setMap(AMap: TOPPHelpShortcutMap);
 begin
   fMap := AMap;
   doSearchIfPossible;

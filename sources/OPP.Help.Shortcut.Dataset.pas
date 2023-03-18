@@ -10,11 +10,11 @@ uses
 type
   TOPPHelpShortcutDataset = class
   private
-    fShortcutHelpMatrix: TDictionary<String, TOPPHelpMap>;
+    fShortcutHelpMatrix: TDictionary<String, TOPPHelpShortcutMap>;
   public
     constructor Create;
     function load(AFilename: String): Integer;
-    function getMapping(key: String): TOPPHelpMap;
+    function getMapping(key: String): TOPPHelpShortcutMap;
   end;
 
 implementation
@@ -25,16 +25,16 @@ uses
 
 constructor TOPPHelpShortcutDataset.Create;
 begin
-  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.Create;
+  fShortcutHelpMatrix := TDictionary<String, TOPPHelpShortcutMap>.Create;
 end;
 
 function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
 var
   callback: TOPPHelpMapJSONReadCallback;
 begin
-  callback := procedure(AList: TList<TOPPHelpMap>; error: Exception)
+  callback := procedure(AList: TList<TOPPHelpShortcutMap>; error: Exception)
     var
-      map: TOPPHelpMap;
+      map: TOPPHelpShortcutMap;
     begin
       fShortcutHelpMatrix.Clear;
       if Assigned(error) then
@@ -51,13 +51,13 @@ begin
       end;
     end;
 
-  TOPPHelpMap.readJSON(AFilename, callback);
+  TOPPHelpShortcutMap.readJSON(AFilename, callback);
   result := 0;
 end;
 
-function TOPPHelpShortcutDataset.getMapping(key: string): TOPPHelpMap;
+function TOPPHelpShortcutDataset.getMapping(key: string): TOPPHelpShortcutMap;
 var
-  Mapping: TOPPHelpMap;
+  Mapping: TOPPHelpShortcutMap;
 begin
   try
     Mapping := nil;

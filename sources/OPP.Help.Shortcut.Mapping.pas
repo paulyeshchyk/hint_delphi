@@ -8,7 +8,7 @@ uses
 
 type
 
-  TOPPHelpMap = class(TObject)
+  TOPPHelpShortcutMap = class(TObject)
   private
     fHelpKeyword: String;
     fSearchPattern: String;
@@ -23,21 +23,21 @@ type
 
   TOPPHelpMapList = class(TObject)
   private
-    fList: TList<TOPPHelpMap>;
+    fList: TList<TOPPHelpShortcutMap>;
   public
-    property list: TList<TOPPHelpMap> read fList write fList;
+    property list: TList<TOPPHelpShortcutMap> read fList write fList;
 
-    constructor Create(AList: TList<TOPPHelpMap>);
+    constructor Create(AList: TList<TOPPHelpShortcutMap>);
   end;
 
-  TOPPHelpMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpMap>; error: Exception);
+  TOPPHelpMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpShortcutMap>; error: Exception);
 
-  TOPPHelpMapFileReader = class helper for TOPPHelpMap
+  TOPPHelpMapFileReader = class helper for TOPPHelpShortcutMap
   private
     class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpMapJSONReadCallback = nil);
   public
     class procedure readJSON(AFileName: String; callback: TOPPHelpMapJSONReadCallback);
-    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+    class function saveJSON(AList: TList<TOPPHelpShortcutMap>; AFileName: String): Integer;
   end;
 
 implementation
@@ -45,20 +45,20 @@ implementation
 uses
   DBXJSON, DBXJSONReflect, REST.JSON;
 
-constructor TOPPHelpMapList.Create(AList: TList<TOPPHelpMap>);
+constructor TOPPHelpMapList.Create(AList: TList<TOPPHelpShortcutMap>);
 begin
-  fList := TList<TOPPHelpMap>.Create;
+  fList := TList<TOPPHelpShortcutMap>.Create;
   fList.AddRange(AList);
 end;
 
-constructor TOPPHelpMap.Create(AHelpKeyword: String; ASearchPattern: String);
+constructor TOPPHelpShortcutMap.Create(AHelpKeyword: String; ASearchPattern: String);
 begin
   inherited Create;
   fHelpKeyword := AHelpKeyword;
   fSearchPattern := ASearchPattern;
 end;
 
-class function TOPPHelpMapFileReader.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+class function TOPPHelpMapFileReader.saveJSON(AList: TList<TOPPHelpShortcutMap>; AFileName: String): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -109,12 +109,12 @@ var
   deSerializer: TJSONUnMarshal;
   jsonObject: TJSONObject;
   mapList: TOPPHelpMapList;
-  list: TList<TOPPHelpMap>;
+  list: TList<TOPPHelpShortcutMap>;
   error: Exception;
 begin
   error := nil;
   deSerializer := TJSONUnMarshal.Create;
-  list := TList<TOPPHelpMap>.Create;
+  list := TList<TOPPHelpShortcutMap>.Create;
   try
     jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
     try

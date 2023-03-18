@@ -100,7 +100,7 @@ function TOPPHelpShortcutServer.showHelp(Request: TOPPHelpShortcutRequest): Bool
 var
   helpForm: TOPPHelpLargeForm;
   helpData: String;
-  Mapping: TOPPHelpMap;
+  Mapping: TOPPHelpShortcutMap;
 begin
   helpData := Request.getHelpData();
   Mapping := fShortcutDataset.getMapping(helpData);
