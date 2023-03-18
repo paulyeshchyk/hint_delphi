@@ -21,7 +21,8 @@ implementation
 
 uses
   System.SysUtils,
-  Winapi.Windows;
+  Winapi.Windows,
+  OPP.Help.Shortcut.Mapping.Filereader;
 
 constructor TOPPHelpShortcutDataset.Create;
 begin
@@ -30,7 +31,7 @@ end;
 
 function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
 var
-  callback: TOPPHelpMapJSONReadCallback;
+  callback: TOPPHelpShortcutMapJSONReadCallback;
 begin
   callback := procedure(AList: TList<TOPPHelpShortcutMap>; error: Exception)
     var

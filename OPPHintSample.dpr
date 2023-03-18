@@ -16,7 +16,8 @@ uses
   OPP.Help.Shortcut.Server in 'sources\OPP.Help.Shortcut.Server.pas',
   OPP.Help.Shortcut.Request in 'sources\OPP.Help.Shortcut.Request.pas',
   OPP.Help.Shortcut.Dataset in 'sources\OPP.Help.Shortcut.Dataset.pas',
-  OPP.Help.Error in 'sources\OPP.Help.Error.pas';
+  OPP.Help.Error in 'sources\OPP.Help.Error.pas',
+  OPP.Help.Shortcut.Mapping.Filereader in 'sources\OPP.Help.Shortcut.Mapping.Filereader.pas';
 
 {$R *.res}
 
