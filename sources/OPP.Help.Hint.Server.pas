@@ -8,8 +8,9 @@ uses
   dxRichEdit.Control, dxRichEdit.NativeAPI,
   VCL.Controls,
   OPP.Help.Hint,
-  OPP.Help.Hint.Document,
-  OPP.VCL.Controls;
+  OPP.VCL.Controls,
+  //
+  OPP.Help.Hint.Reader;
 
 const
   filepath: String = 'docs\gulfstream_manual_rtf.rtf';
@@ -26,7 +27,7 @@ type
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
   private
     fLoaded: Boolean;
-    fHintDocument: IOPPHelpHintDocument;
+    fHintReader: IOPPHelpHintReader;
     procedure reloadIfNeed();
 
   public
@@ -83,12 +84,12 @@ end;
 
 constructor TOPPHelpHintServer.Create;
 begin
-  fHintDocument := TOPPHelpHintDocument.Create;
+  fHintReader := TOPPHelpRichtextHintReader.Create;
 end;
 
 destructor TOPPHelpHintServer.Destroy;
 begin
-  fHintDocument := nil;
+  fHintReader := nil;
   inherited Destroy;
 end;
 
@@ -99,7 +100,7 @@ begin
   if fLoaded then
     exit;
 
-  fLoaded := (fHintDocument.loadFromFile(filepath).error = nil);
+  fLoaded := (fHintReader.loadData(filepath).error = nil);
 end;
 
 { public }
@@ -111,7 +112,7 @@ begin
   if not fLoaded then
     exit;
 
-  result := fHintDocument.GetHintData(identifier);
+  result := fHintReader.FindHintDataForBookmarkIdentifier(identifier);
 end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;

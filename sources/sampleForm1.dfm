@@ -2,8 +2,8 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = 'SampleForm'
-  ClientHeight = 821
-  ClientWidth = 1226
+  ClientHeight = 788
+  ClientWidth = 1212
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,13 +17,12 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 449
-    Height = 780
+    Height = 747
     ParentColor = True
     Align = alLeft
-    ExplicitHeight = 747
     DockingType = 5
     OriginalWidth = 449
-    OriginalHeight = 780
+    OriginalHeight = 747
     object dxLayoutDockSite1: TdxLayoutDockSite
       Left = 0
       Top = 0
@@ -130,14 +129,12 @@ object SampleForm: TSampleForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 780
-    Width = 1226
+    Top = 747
+    Width = 1212
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 747
-    ExplicitWidth = 1212
     object Button1: TButton
       Left = 544
       Top = 6
@@ -149,16 +146,14 @@ object SampleForm: TSampleForm
     end
   end
   object dxDockSite2: TdxDockSite
-    Left = 926
+    Left = 912
     Top = 0
     Width = 300
-    Height = 780
+    Height = 747
     Align = alRight
-    ExplicitLeft = 912
-    ExplicitHeight = 747
     DockingType = 5
     OriginalWidth = 300
-    OriginalHeight = 780
+    OriginalHeight = 747
     object dxLayoutDockSite3: TdxLayoutDockSite
       Left = 0
       Top = 0
