@@ -108,7 +108,7 @@ begin
   begin
     helpForm := TOPPHelpLargeForm.create(nil);
     helpForm.stream := fPDFMemoryStream;
-    helpForm.map := Mapping;
+    helpForm.shortcutMap := Mapping;
     helpForm.ShowModal;
     result := true;
   end else begin

@@ -17,7 +17,9 @@ uses
   dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, VCL.ComCtrls, VCL.WinXCtrls, VCL.ExtCtrls,
   dxSkinBasic, dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray,
   dxSkinOffice2019White, dxSkinTheBezier, dxPDFCore, dxPDFBase, dxPDFText, dxPDFRecognizedObject, dxPDFDocumentViewer,
-  OPP.Help.Shortcut.Mapping;
+
+  OPP.Help.Shortcut.Mapping,
+  OPP.System.Thread;
 
 type
 
@@ -37,21 +39,21 @@ type
     { Private declarations }
     fHasContent: Bool;
     fStream: TMemoryStream;
-    fMap: TOPPHelpShortcutMap;
+    fShortcutMap: TOPPHelpShortcutMap;
     fProgress: Integer;
     function getPDFDocument(): TdxPDFDocument;
     procedure setStream(AStream: TMemoryStream);
-    procedure setMap(AMap: TOPPHelpShortcutMap);
+    procedure setShortcutMap(AMap: TOPPHelpShortcutMap);
     procedure doSearchIfPossible;
-    procedure threadFinishedWork;
-    procedure SearchJob;
+    procedure threadFinishedWork(AResult: Integer);
+    procedure SearchJob(onFinish: TOPPHelpThreadOnFinish);
     procedure pdfChangedThePage;
     function getPDFViewer: TdxPDFViewer;
     function doIncrementPosition(): Integer;
   public
     { Public declarations }
     property stream: TMemoryStream read fStream write setStream;
-    property Map: TOPPHelpShortcutMap read fMap write setMap;
+    property shortcutMap: TOPPHelpShortcutMap read fShortcutMap write setShortcutMap;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
     property pdfViewer: TdxPDFViewer read getPDFViewer;
 
@@ -66,11 +68,9 @@ implementation
 {$R *.dfm}
 
 uses
-  System.UITypes,
-  OPP.System.Thread;
+  System.UITypes;
 
-  // file://docs/гольфстрим_руководство пользователя.pdf?page=1&text=
-
+// file://docs/гольфстрим_руководство пользователя.pdf?page=1&text=
 
 procedure TOPPHelpLargeForm.FormCreate(Sender: TObject);
 begin
@@ -113,11 +113,11 @@ procedure TOPPHelpLargeForm.doSearchIfPossible;
 begin
   if not fHasContent then
     exit;
-  if not assigned(fMap) then
+  if not assigned(shortcutMap) then
     exit;
-  if Length(fMap.SearchPattern) = 0 then
+  if Length(shortcutMap.SearchPattern) = 0 then
     exit;
-  TOPPSystemThread.Create(self.SearchJob, self.threadFinishedWork);
+  TOPPSystemThread.Create(SearchJob, threadFinishedWork);
 end;
 
 procedure TOPPHelpLargeForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -126,17 +126,17 @@ begin
   self.pdfViewer.ChangePage(pdfChangedThePage);
 end;
 
-procedure TOPPHelpLargeForm.SearchJob;
+procedure TOPPHelpLargeForm.SearchJob(onFinish: TOPPHelpThreadOnFinish);
 var
   searchResult: TdxPDFDocumentTextSearchResult;
 begin
   Timer1.Enabled := true;
 
-  searchResult := pdfDocument.FindText(fMap.SearchPattern);
+  searchResult := pdfDocument.FindText(shortcutMap.SearchPattern);
   self.pdfViewer.SelPageIndex := searchResult.range.pageIndex;
   self.pdfViewer.ChangePage(pdfChangedThePage);
-  Timer1.Enabled := false;
-  ProgressBar1.Position := 0;
+  if assigned(onFinish) then
+    onFinish(0);
 end;
 
 procedure TOPPHelpLargeForm.pdfChangedThePage;
@@ -144,23 +144,25 @@ begin
 
 end;
 
-procedure TOPPHelpLargeForm.threadFinishedWork;
+procedure TOPPHelpLargeForm.threadFinishedWork(AResult: Integer);
 begin
-  //
+  Timer1.Enabled := false;
+  ProgressBar1.Position := 0;
 end;
 
 function TOPPHelpLargeForm.getPDFDocument(): TdxPDFDocument;
 begin
-  if assigned(self.pdfViewer) then begin
+  if assigned(self.pdfViewer) then
+  begin
     result := self.pdfViewer.Document;
   end else begin
     result := nil;
   end;
 end;
 
-procedure TOPPHelpLargeForm.setMap(AMap: TOPPHelpShortcutMap);
+procedure TOPPHelpLargeForm.setShortcutMap(AMap: TOPPHelpShortcutMap);
 begin
-  fMap := AMap;
+  fShortcutMap := AMap;
   doSearchIfPossible;
 end;
 

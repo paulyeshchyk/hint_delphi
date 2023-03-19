@@ -10,6 +10,7 @@ object SampleForm: TSampleForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Position = poDesigned
   OnCreate = FormCreate
   TextHeight = 13
   object dxDockSite1: TdxDockSite
@@ -19,7 +20,7 @@ object SampleForm: TSampleForm
     Height = 780
     ParentColor = True
     Align = alLeft
-    ExplicitHeight = 559
+    ExplicitHeight = 747
     DockingType = 5
     OriginalWidth = 449
     OriginalHeight = 780
@@ -28,7 +29,7 @@ object SampleForm: TSampleForm
       Top = 0
       Width = 449
       Height = 780
-      ExplicitHeight = 559
+      ExplicitHeight = 747
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -47,7 +48,7 @@ object SampleForm: TSampleForm
       AutoHide = False
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitHeight = 559
+      ExplicitHeight = 747
       DockingType = 0
       OriginalWidth = 369
       OriginalHeight = 140
@@ -64,7 +65,7 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
-        ExplicitHeight = 517
+        ExplicitHeight = 705
         object Kod_OKWED: TCheckBox
           Left = 8
           Top = 12
@@ -135,8 +136,8 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 559
-    ExplicitWidth = 976
+    ExplicitTop = 747
+    ExplicitWidth = 1212
     object Button1: TButton
       Left = 544
       Top = 6
@@ -153,8 +154,8 @@ object SampleForm: TSampleForm
     Width = 300
     Height = 780
     Align = alRight
-    ExplicitLeft = 676
-    ExplicitHeight = 559
+    ExplicitLeft = 912
+    ExplicitHeight = 747
     DockingType = 5
     OriginalWidth = 300
     OriginalHeight = 780
@@ -163,7 +164,7 @@ object SampleForm: TSampleForm
       Top = 0
       Width = 300
       Height = 780
-      ExplicitHeight = 559
+      ExplicitHeight = 747
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -178,7 +179,7 @@ object SampleForm: TSampleForm
       Caption = 'dxDockPanel2'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitHeight = 559
+      ExplicitHeight = 747
       DockingType = 0
       OriginalWidth = 185
       OriginalHeight = 140
@@ -190,7 +191,7 @@ object SampleForm: TSampleForm
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 0
-        ExplicitHeight = 517
+        ExplicitHeight = 705
         object cxGrid1: TcxGrid
           Left = 1
           Top = 1
@@ -198,7 +199,7 @@ object SampleForm: TSampleForm
           Height = 736
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 515
+          ExplicitHeight = 703
           object cxGrid1DBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             ScrollbarAnnotations.CustomAnnotations = <>

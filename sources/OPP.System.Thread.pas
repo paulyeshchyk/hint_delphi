@@ -7,22 +7,23 @@ uses
 
 type
 
-  TOPPHelpThreadJob = procedure of object;
+  TOPPHelpThreadOnFinish = reference to procedure(AResult: Integer);
+  TOPPHelpThreadJob = reference to procedure(onFinish: TOPPHelpThreadOnFinish);
 
   TOPPSystemThread = class(TThread)
   private
     fJob: TOPPHelpThreadJob;
-    fOnFinish: TOPPHelpThreadJob;
+    fOnFinish: TOPPHelpThreadOnFinish;
   public
-    constructor Create(job: TOPPHelpThreadJob; AOnFinish: TOPPHelpThreadJob);
+    constructor Create(job: TOPPHelpThreadJob; AOnFinish: TOPPHelpThreadOnFinish);
     procedure Execute; override;
     property job: TOPPHelpThreadJob read fJob write fJob;
-    property onFinish: TOPPHelpThreadJob read fOnFinish write fOnFinish;
+    property onFinish: TOPPHelpThreadOnFinish read fOnFinish write fOnFinish;
   end;
 
 implementation
 
-constructor TOPPSystemThread.Create(job: TOPPHelpThreadJob; AOnFinish: TOPPHelpThreadJob);
+constructor TOPPSystemThread.Create(job: TOPPHelpThreadJob; AOnFinish: TOPPHelpThreadOnFinish);
 begin
   inherited Create;
   fJob := job;
@@ -32,10 +33,11 @@ end;
 procedure TOPPSystemThread.Execute;
 begin
   inherited;
-  if Assigned(fJob) then
-  begin
-    fJob;
-  end;
+
+  if not assigned(fJob) then
+    exit;
+
+  fJob(onFinish);
 end;
 
 end.

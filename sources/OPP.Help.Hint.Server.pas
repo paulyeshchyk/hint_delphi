@@ -15,15 +15,15 @@ const
   filepath: String = 'docs\gulfstream_manual_rtf.rtf';
 
 type
+  TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
 
   IOPPHelpHintServer = interface
     function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
-    function GetHints(Control: TControl): TList<TOPPHelpHint>; overload;
-    function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHelpHint>; overload;
+    procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
+    procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
-
   private
     fLoaded: Boolean;
     fHintDocument: IOPPHelpHintDocument;
@@ -35,14 +35,21 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    function GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
+
     /// <summary>
     /// Возвращает список подсказок, применимых для списка идентификаторов, взятых из компонента.
     ///
     /// </summary>
     /// <remarks> </remarks>
-    function GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHelpHint>; overload;
+    procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
 
-    function GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
+    /// <summary>
+    /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
+    ///
+    /// </summary>
+    /// <remarks> </remarks>
+    procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
 
     /// <summary>
     /// Возвращает подсказку для компонента, метаданные которого указаны в параметре hintMeta.
@@ -50,13 +57,6 @@ type
     /// </summary>
     /// <remarks> </remarks>
     function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint; overload;
-
-    /// <summary>
-    /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
-    function GetHints(Control: TControl): TList<TOPPHelpHint>; overload;
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -120,17 +120,20 @@ begin
   result.meta := hintMeta;
 end;
 
-function TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList): TList<TOPPHelpHint>;
+procedure TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion);
 var
   fHintMeta: TOPPHelpHintMeta;
   fHint: TOPPHelpHint;
+  result: TList<TOPPHelpHint>;
 begin
-
-  result := nil;
 
   self.reloadIfNeed();
   if not fLoaded then
+  begin
+    if Assigned(completion) then
+      completion(nil);
     exit;
+  end;
 
   result := TList<TOPPHelpHint>.Create;
   for fHintMeta in hintsMetaList do
@@ -141,19 +144,26 @@ begin
       result.add(fHint);
     end;
   end;
+  completion(result);
 end;
 
-function TOPPHelpHintServer.GetHints(Control: TControl): TList<TOPPHelpHint>;
+procedure TOPPHelpHintServer.GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion);
 var
   fHintsMeta: TList<TOPPHelpHintMeta>;
 begin
-  result := nil;
+
   self.reloadIfNeed();
   if not fLoaded then
+  begin
+    if Assigned(completion) then
+      completion(nil);
     exit;
+  end;
 
   fHintsMeta := Control.GetControlHintsMeta();
-  result := self.GetHints(fHintsMeta);
+
+  self.GetHints(fHintsMeta, completion);
+
 end;
 
 { private }

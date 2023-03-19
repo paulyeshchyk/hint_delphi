@@ -23,14 +23,18 @@ type
 implementation
 
 procedure TOPPHelpHintFormHelper.loadHint(tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
-var
-  fHints: TList<TOPPHelpHint>;
-  fHint: TOPPHelpHint;
 begin
-  fHints := helpHintServer.getHints(self);
-  for fHint in fHints do begin
-    self.addTip(fHint, tipsRepo, hintStyle);
-  end;
+
+  helpHintServer.getHints(self,
+    procedure(hints: TList<TOPPHelpHint>)
+    var
+      fHint: TOPPHelpHint;
+    begin
+      for fHint in hints do
+      begin
+        self.addTip(fHint, tipsRepo, hintStyle);
+      end;
+    end);
 end;
 
 procedure TOPPHelpHintFormHelper.addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
