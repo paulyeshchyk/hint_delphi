@@ -104,8 +104,6 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
       3E0D0A3C2F7376673E0D0A}
     OptionsZoom.ZoomMode = pzmPageWidth
     OnDocumentLoaded = dxPDFViewer1DocumentLoaded
-    ExplicitWidth = 621
-    ExplicitHeight = 492
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET

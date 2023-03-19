@@ -101,6 +101,7 @@ begin
 
   fLoaded := (fHintDocument.loadFromFile(filepath).error = nil);
 end;
+
 { public }
 
 function TOPPHelpHintServer.GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;

@@ -110,8 +110,6 @@ begin
 end;
 
 procedure TOPPHelpLargeForm.doSearchIfPossible;
-var
-  fThread: TOPPHelpThread;
 begin
   if not fHasContent then
     exit;
@@ -119,8 +117,7 @@ begin
     exit;
   if Length(fMap.SearchPattern) = 0 then
     exit;
-  fThread := TOPPHelpThread.Create(self.SearchJob, self.threadFinishedWork);
-  fThread.resume;
+  TOPPHelpThread.Create(self.SearchJob, self.threadFinishedWork);
 end;
 
 procedure TOPPHelpLargeForm.FormClose(Sender: TObject; var Action: TCloseAction);
