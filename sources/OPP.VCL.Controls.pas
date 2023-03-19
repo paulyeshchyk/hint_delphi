@@ -1,4 +1,4 @@
-unit OPP.VCL.Controls;
+п»їunit OPP.VCL.Controls;
 
 interface
 
@@ -13,12 +13,12 @@ type
   public
 
     /// <summary>
-    /// Возворащает список TOPPHintMeta, применимых для данного компонента.
+    /// Р’РѕР·РІРѕСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє TOPPHintMeta, РїСЂРёРјРµРЅРёРјС‹С… РґР»СЏ РґР°РЅРЅРѕРіРѕ РєРѕРјРїРѕРЅРµРЅС‚Р°.
     ///
-    /// Ключ для TOPPHintMeta берётся из значения свойства компонента, указанного в аргументе propertyName
+    /// РљР»СЋС‡ РґР»СЏ TOPPHintMeta Р±РµСЂС‘С‚СЃСЏ РёР· Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РєРѕРјРїРѕРЅРµРЅС‚Р°, СѓРєР°Р·Р°РЅРЅРѕРіРѕ РІ Р°СЂРіСѓРјРµРЅС‚Рµ propertyName
     ///
     /// </summary>
-    /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
+    /// <remarks> Р·РЅР°С‡РµРЅРёРµ propertyName РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ 'name'</remarks>
     function GetControlHintsMeta(propertyName: String = 'HelpKeyword'): TList<TOPPHelpHintMeta>;
     function OPPFindControl(propertyName: String; propertyValue: String): TControl;
   end;

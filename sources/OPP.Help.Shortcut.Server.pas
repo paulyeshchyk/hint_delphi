@@ -1,4 +1,4 @@
-unit OPP.Help.Shortcut.Server;
+﻿unit OPP.Help.Shortcut.Server;
 
 interface
 

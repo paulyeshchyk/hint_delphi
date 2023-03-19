@@ -8,12 +8,14 @@ uses
   dxRichEdit.Control, dxRichEdit.NativeAPI,
   VCL.Controls,
   OPP.Help.Hint,
+  OPP.Help.Hint.Document,
   OPP.VCL.Controls;
 
 const
   filepath: String = 'docs\gulfstream_manual_rtf.rtf';
 
 type
+
   IOPPHelpHintServer = interface
     function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
     function GetHints(Control: TControl): TList<TOPPHelpHint>; overload;
@@ -21,29 +23,17 @@ type
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
+
   private
     fLoaded: Boolean;
-    fRichEditControl: TdxRichEditControl;
-
-  const
-    fDocumentFormat: TdxRichEditDocumentFormat = TdxRichEditDocumentFormat.rtf;
-
-    function getDocument(): IdxRichEditDocument;
+    fHintDocument: IOPPHelpHintDocument;
+    procedure reloadIfNeed();
 
   public
-
-    property document: IdxRichEditDocument read getDocument;
     property loaded: Boolean read fLoaded;
 
     constructor Create;
     destructor Destroy; override;
-
-    /// <summary>
-    /// Загружает файл справочной информации
-    ///
-    /// </summary>
-    /// <remarks> Загружаемый документ должен быть в формате rtf</remarks>
-    function loadFromFile(AFileName: String): TOPPHelpHintServerLoadResultType;
 
     /// <summary>
     /// Возвращает список подсказок, применимых для списка идентификаторов, взятых из компонента.
@@ -81,7 +71,8 @@ function helpHintServer: IOPPHelpHintServer;
 begin
   fLock.Acquire;
   try
-    if not Assigned(fHelpHintServer) then begin
+    if not Assigned(fHelpHintServer) then
+    begin
       fHelpHintServer := TOPPHelpHintServer.Create;
     end;
     result := fHelpHintServer;
@@ -92,54 +83,34 @@ end;
 
 constructor TOPPHelpHintServer.Create;
 begin
-  fRichEditControl := TdxRichEditControl.Create(nil);
-  fLoaded := (loadFromFile(filepath).error = nil)
+  fHintDocument := TOPPHelpHintDocument.Create;
 end;
 
 destructor TOPPHelpHintServer.Destroy;
 begin
-  FreeAndNil(fRichEditControl);
+  fHintDocument := nil;
   inherited Destroy;
 end;
 
+{ private }
+
+procedure TOPPHelpHintServer.reloadIfNeed();
+begin
+  if fLoaded then
+    exit;
+
+  fLoaded := (fHintDocument.loadFromFile(filepath).error = nil);
+end;
 { public }
 
-function TOPPHelpHintServer.loadFromFile(AFileName: String): TOPPHelpHintServerLoadResultType;
-var
-  loadResult: TOPPHelpHintServerLoadResultType;
-begin
-  try
-    fRichEditControl.LoadDocument(AFileName, fDocumentFormat);
-    loadResult.error := nil;
-    fLoaded := true;
-  except
-    on E: Exception do begin
-      loadResult.error := Exception.Create(E.Message);
-    end;
-  end;
-  result := loadResult;
-end;
-
 function TOPPHelpHintServer.GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
-var
-  bookmark: IdxRichEditBookmark;
-  fragmentOpt: TdxRichEditTextFragmentOptions;
-  paragraph: IdxRichEditParagraph;
 begin
+
+  self.reloadIfNeed();
   if not fLoaded then
     exit;
 
-  bookmark := document.bookmarks.items[identifier];
-  if not Assigned(bookmark) then
-    exit;
-
-  paragraph := document.Paragraphs.Get(bookmark.range.Start);
-
-  fragmentOpt := TdxRichEditTextFragmentOptions.Create;
-  fragmentOpt.AllowExtendingDocumentRange := true;
-
-  result.text := document.GetText(paragraph.range, fragmentOpt);
-  result.rtf := document.GetRtfText(paragraph.range);
+  result := fHintDocument.GetHintData(identifier);
 end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
@@ -153,10 +124,19 @@ var
   fHintMeta: TOPPHelpHintMeta;
   fHint: TOPPHelpHint;
 begin
+
+  result := nil;
+
+  self.reloadIfNeed();
+  if not fLoaded then
+    exit;
+
   result := TList<TOPPHelpHint>.Create;
-  for fHintMeta in hintsMetaList do begin
+  for fHintMeta in hintsMetaList do
+  begin
     fHint := GetHint(fHintMeta);
-    if not fHint.data.isEmpty() then begin
+    if not fHint.data.isEmpty() then
+    begin
       result.add(fHint);
     end;
   end;
@@ -166,16 +146,16 @@ function TOPPHelpHintServer.GetHints(Control: TControl): TList<TOPPHelpHint>;
 var
   fHintsMeta: TList<TOPPHelpHintMeta>;
 begin
+  result := nil;
+  self.reloadIfNeed();
+  if not fLoaded then
+    exit;
+
   fHintsMeta := Control.GetControlHintsMeta();
   result := self.GetHints(fHintsMeta);
 end;
 
 { private }
-
-function TOPPHelpHintServer.getDocument(): IdxRichEditDocument;
-begin
-  result := fRichEditControl.document;
-end;
 
 initialization
 

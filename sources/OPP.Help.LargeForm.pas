@@ -1,4 +1,4 @@
-unit OPP.Help.LargeForm;
+п»їunit OPP.Help.LargeForm;
 
 interface
 
@@ -69,7 +69,7 @@ implementation
 uses
   System.UITypes;
 
-  // file://docs/гольфстрим_руководство пользователя.pdf?page=1&text=
+  // file://docs/РіРѕР»СЊС„СЃС‚СЂРёРј_СЂСѓРєРѕРІРѕРґСЃС‚РІРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.pdf?page=1&text=
 
 
 procedure TOPPHelpLargeForm.FormCreate(Sender: TObject);

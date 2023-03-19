@@ -3,8 +3,8 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
   Top = 0
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'OPPHelpLargeForm'
-  ClientHeight = 537
-  ClientWidth = 621
+  ClientHeight = 570
+  ClientWidth = 635
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,20 +17,20 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
   TextHeight = 13
   object ProgressBar1: TProgressBar
     Left = 0
-    Top = 520
-    Width = 621
+    Top = 553
+    Width = 635
     Height = 17
     Align = alBottom
     Position = 76
     TabOrder = 4
-    ExplicitTop = 553
-    ExplicitWidth = 635
+    ExplicitTop = 520
+    ExplicitWidth = 621
   end
   object dxPDFViewer1: TdxPDFViewer
     Left = 0
     Top = 28
-    Width = 621
-    Height = 492
+    Width = 635
+    Height = 525
     Align = alClient
     OptionsNavigationPane.Attachments.Glyph.SourceDPI = 96
     OptionsNavigationPane.Attachments.Glyph.Data = {
@@ -104,8 +104,8 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
       3E0D0A3C2F7376673E0D0A}
     OptionsZoom.ZoomMode = pzmPageWidth
     OnDocumentLoaded = dxPDFViewer1DocumentLoaded
-    ExplicitWidth = 635
-    ExplicitHeight = 525
+    ExplicitWidth = 621
+    ExplicitHeight = 492
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET

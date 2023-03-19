@@ -1,4 +1,4 @@
-unit sampleForm1;
+Ôªøunit sampleForm1;
 
 interface
 
@@ -122,7 +122,7 @@ begin
   cxGrid2TableView1.DataController.Append;
   cxGrid2TableView1.DataController.Values[0, 0] := '888.09.Test';
   cxGrid2TableView1.DataController.Values[0, 1] := '-';
-  cxGrid2TableView1.DataController.Values[0, 2] := '»Á‰ÂÎËÂ';
+  cxGrid2TableView1.DataController.Values[0, 2] := '–ò–∑–¥–µ–ª–∏–µ';
   cxGrid2TableView1.DataController.PostEditingData;
 end;
 
