@@ -108,10 +108,6 @@
         <DCCReference Include="dxCoreRS25.dcp"/>
         <DCCReference Include="cxLibraryRS25.dcp"/>
         <DCCReference Include="dxGDIPlusRS25.dcp"/>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Thread;
+﻿unit OPP.System.Thread;
 
 interface
 
@@ -9,7 +9,7 @@ type
 
   TOPPHelpThreadJob = procedure of object;
 
-  TOPPHelpThread = class(TThread)
+  TOPPSystemThread = class(TThread)
   private
     fJob: TOPPHelpThreadJob;
     fOnFinish: TOPPHelpThreadJob;
@@ -22,14 +22,14 @@ type
 
 implementation
 
-constructor TOPPHelpThread.Create(job: TOPPHelpThreadJob; AOnFinish: TOPPHelpThreadJob);
+constructor TOPPSystemThread.Create(job: TOPPHelpThreadJob; AOnFinish: TOPPHelpThreadJob);
 begin
   inherited Create;
   fJob := job;
   fOnFinish := AOnFinish;
 end;
 
-procedure TOPPHelpThread.Execute;
+procedure TOPPSystemThread.Execute;
 begin
   inherited;
   if Assigned(fJob) then

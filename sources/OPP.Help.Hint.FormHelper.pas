@@ -35,27 +35,27 @@ end;
 
 procedure TOPPHelpHintFormHelper.addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
 var
-  fTip: TdxScreenTip;
-  fTipLink: TdxScreenTipLink;
+  fScreenTip: TdxScreenTip;
+  fScreenTipLink: TdxScreenTipLink;
   fControl: TControl;
 begin
   fControl := OPPFindControl(Hint.meta.propertyName, Hint.meta.hintIdentifier);
   if not assigned(fControl) then
     exit;
 
-  fTip := tipsRepo.Items.add;
-  fTip.Header.PlainText := true;
-  fTip.Header.Text := 'Заголовок';
+  fScreenTip := tipsRepo.Items.add;
+  fScreenTip.Header.PlainText := true;
+  fScreenTip.Header.Text := 'Заголовок';
 
-  fTip.Description.PlainText := false;
-  fTip.Description.Text := Hint.Data.rtf;
+  fScreenTip.Description.PlainText := false;
+  fScreenTip.Description.Text := Hint.Data.rtf;
 
-  fTip.Footer.PlainText := true;
-  fTip.Footer.Text := 'Подвал';
+  fScreenTip.Footer.PlainText := true;
+  fScreenTip.Footer.Text := 'Подвал';
 
-  fTipLink := TdxScreenTipStyle(hintStyle).ScreenTipLinks.add;
-  fTipLink.ScreenTip := fTip;
-  fTipLink.Control := fControl;
+  fScreenTipLink := TdxScreenTipStyle(hintStyle).ScreenTipLinks.add;
+  fScreenTipLink.ScreenTip := fScreenTip;
+  fScreenTipLink.Control := fControl;
 end;
 
 end.

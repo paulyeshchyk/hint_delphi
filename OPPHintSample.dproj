@@ -115,18 +115,14 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas"/>
-        <DCCReference Include="sources\OPP.Help.Thread.pas"/>
+        <DCCReference Include="sources\OPP.System.Thread.pas"/>
         <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.FormHelper.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.Server.pas"/>
         <DCCReference Include="sources\OPP.Help.Shortcut.Server.pas"/>
         <DCCReference Include="sources\OPP.Help.Shortcut.Request.pas"/>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
         <DCCReference Include="sources\OPP.Help.Shortcut.Dataset.pas"/>
-        <DCCReference Include="sources\OPP.Help.Error.pas"/>
+        <DCCReference Include="sources\OPP.System.Error.pas"/>
         <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.Document.pas"/>
         <BuildConfiguration Include="Base">
@@ -134,6 +130,10 @@
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>

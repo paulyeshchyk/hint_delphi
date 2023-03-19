@@ -17,8 +17,7 @@ uses
   dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, VCL.ComCtrls, VCL.WinXCtrls, VCL.ExtCtrls,
   dxSkinBasic, dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray,
   dxSkinOffice2019White, dxSkinTheBezier, dxPDFCore, dxPDFBase, dxPDFText, dxPDFRecognizedObject, dxPDFDocumentViewer,
-  OPP.Help.Shortcut.Mapping,
-  OPP.Help.Thread;
+  OPP.Help.Shortcut.Mapping;
 
 type
 
@@ -67,7 +66,8 @@ implementation
 {$R *.dfm}
 
 uses
-  System.UITypes;
+  System.UITypes,
+  OPP.System.Thread;
 
   // file://docs/гольфстрим_руководство пользователя.pdf?page=1&text=
 
@@ -117,7 +117,7 @@ begin
     exit;
   if Length(fMap.SearchPattern) = 0 then
     exit;
-  TOPPHelpThread.Create(self.SearchJob, self.threadFinishedWork);
+  TOPPSystemThread.Create(self.SearchJob, self.threadFinishedWork);
 end;
 
 procedure TOPPHelpLargeForm.FormClose(Sender: TObject; var Action: TCloseAction);

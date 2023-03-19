@@ -1,15 +1,15 @@
-﻿unit OPP.Help.Error;
+﻿unit OPP.System.Error;
 
 interface
 
 type
-  IOPPHelpError = interface
+  IOPPSystemError = interface
     function errorCode(): Integer;
     function errorMessage(): String;
     function errorClass(): String;
   end;
 
-  TOPPHelpShortcutDatasetError = class(TInterfacedObject, IOPPHelpError)
+  TOPPHelpShortcutDatasetError = class(TInterfacedObject, IOPPSystemError)
   public
     constructor Create(errorCode: Integer; errorMessage: String; errorClass: String);
     function errorCode(): Integer;
