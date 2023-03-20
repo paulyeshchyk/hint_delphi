@@ -1,0 +1,12 @@
+unit OPP.Help;
+
+interface
+
+type
+  TOPPHelpJSON<T,L> = class(TObject)
+
+  end;
+implementation
+
+
+end.

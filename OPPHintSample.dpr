@@ -18,7 +18,10 @@ uses
   OPP.Help.Shortcut.Dataset in 'sources\OPP.Help.Shortcut.Dataset.pas',
   OPP.System.Error in 'sources\OPP.System.Error.pas',
   OPP.Help.Shortcut.Mapping.Filereader in 'sources\OPP.Help.Shortcut.Mapping.Filereader.pas',
-  OPP.Help.Hint.Reader in 'sources\OPP.Help.Hint.Reader.pas';
+  OPP.Help.Hint.Reader in 'sources\OPP.Help.Hint.Reader.pas',
+  OPP.Help.Hint.Mapping in 'sources\OPP.Help.Hint.Mapping.pas',
+  OPP.Help in 'sources\OPP.Help.JSON',
+  OPP.Help.Hint.Mapping.Filereader in 'sources\OPP.Help.Hint.Mapping.Filereader.pas';
 
 {$R *.res}
 

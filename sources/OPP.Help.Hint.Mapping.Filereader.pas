@@ -1,22 +1,21 @@
-﻿unit OPP.Help.Shortcut.Mapping.Filereader;
+unit OPP.Help.Hint.Mapping.Filereader;
 
 interface
-
 uses
   System.Generics.Collections,
   System.SysUtils,
   System.JSON, System.IOUtils,
-  OPP.Help.Shortcut.Mapping;
+  OPP.Help.Hint.Mapping;
 
 type
-  TOPPHelpShortcutMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpShortcutMap>; error: Exception);
+  TOPPHelpHintMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpHintMap>; error: Exception);
 
-  TOPPHelpShortcutMapFileReader = class helper for TOPPHelpShortcutMap
+  TOPPHelpHintMapFileReader = class helper for TOPPHelpHintMap
   private
-    class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpShortcutMapJSONReadCallback = nil);
+    class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpHintMapJSONReadCallback = nil);
   public
-    class procedure readJSON(AFileName: String; callback: TOPPHelpShortcutMapJSONReadCallback);
-    class function saveJSON(AList: TList<TOPPHelpShortcutMap>; AFileName: String): Integer;
+    class procedure readJSON(AFileName: String; callback: TOPPHelpHintMapJSONReadCallback);
+    class function saveJSON(AList: TList<TOPPHelpHintMap>; AFileName: String): Integer;
   end;
 
 implementation
@@ -24,21 +23,21 @@ implementation
 uses
   DBXJSONReflect, REST.JSON;
 
-class procedure TOPPHelpShortcutMapFileReader.parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPHelpShortcutMapJSONReadCallback);
+class procedure TOPPHelpHintMapFileReader.parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPHelpHintMapJSONReadCallback);
 var
   deSerializer: TJSONUnMarshal;
   jsonObject: TJSONObject;
-  mapList: TOPPHelpShortcutMapSet;
-  list: TList<TOPPHelpShortcutMap>;
+  mapList: TOPPHelpHintMapSet;
+  list: TList<TOPPHelpHintMap>;
   error: Exception;
 begin
   error := nil;
   deSerializer := TJSONUnMarshal.Create;
-  list := TList<TOPPHelpShortcutMap>.Create;
+  list := TList<TOPPHelpHintMap>.Create;
   try
     jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
     try
-      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpShortcutMapSet;
+      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpHintMapSet;
       list.AddRange(mapList.list);
       FreeAndNil(mapList);
     except
@@ -58,7 +57,7 @@ begin
   end;
 end;
 
-class procedure TOPPHelpShortcutMapFileReader.readJSON(AFileName: String; callback: TOPPHelpShortcutMapJSONReadCallback);
+class procedure TOPPHelpHintMapFileReader.readJSON(AFileName: String; callback: TOPPHelpHintMapJSONReadCallback);
 var
   bytes: System.TArray<System.Byte>;
 begin
@@ -77,7 +76,7 @@ begin
   end;
 end;
 
-class function TOPPHelpShortcutMapFileReader.saveJSON(AList: TList<TOPPHelpShortcutMap>; AFileName: String): Integer;
+class function TOPPHelpHintMapFileReader.saveJSON(AList: TList<TOPPHelpHintMap>; AFileName: String): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -86,7 +85,7 @@ begin
   //
   serializer := TJSONMarshal.Create;
 
-  jsonObj := serializer.marshal(TOPPHelpShortcutMapSet.Create(AList)) as TJSONObject;
+  jsonObj := serializer.marshal(TOPPHelpHintMapSet.Create(AList)) as TJSONObject;
   try
     jsonString := TJson.Format(jsonObj); // formatted
     // jsonString := jsonObj.ToString;//unformatted

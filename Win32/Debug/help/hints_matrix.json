@@ -1,0 +1,49 @@
+{
+  "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMapSet",
+  "id": 1,
+  "fields": {
+    "fList": {
+      "type": "System.Generics.Collections.TList<OPP.Help.Hint.Mapping.TOPPHelpHintMap>",
+      "id": 2,
+      "fields": {
+        "FListHelper": [
+          4
+        ],
+        "FItems": [
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 6,
+            "fields": {
+              "fHelpKeyword": "Kod_MKC",
+              "fFilename": "gulfstream_manual_rtf.rtf"
+            }
+          },
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 5,
+            "fields": {
+              "fHelpKeyword": "Kod_OKWED",
+              "fFilename": "gulfstream_manual_rtf.rtf"
+            }
+          },
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 3,
+            "fields": {
+              "fHelpKeyword": "KodOKPD2",
+              "fFilename": "gulfstream_manual_rtf.rtf"
+            }
+          },
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 4,
+            "fields": {
+              "fHelpKeyword": "Kod_KWED2",
+              "fFilename": "gulfstream_manual_rtf.rtf"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

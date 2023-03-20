@@ -3,14 +3,14 @@
 interface
 
 uses
-  System.SysUtils, System.SyncObjs, System.Generics.Collections, System.Classes,
-  System.Messaging,
+  System.SysUtils, System.SyncObjs, System.Classes,
+
   WinAPI.Messages,
   WinAPI.Windows,
   Vcl.Controls, Vcl.Forms,
   OPP.Help.Shortcut.Dataset,
   OPP.Help.Shortcut.Request,
-  OPP.System, OPP.Help.Shortcut.Mapping;
+  OPP.Help.Shortcut.Mapping;
 
 type
   IOPPHelpShortcutServer = interface

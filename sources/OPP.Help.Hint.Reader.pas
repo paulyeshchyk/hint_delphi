@@ -8,7 +8,7 @@ uses
   OPP.Help.Hint;
 
 type
-  IOPPHelpHintReader = interface
+  IOPPHelpHintDataReader = interface
 
     /// <summary>
     /// Загружает файл подсказок
@@ -19,7 +19,7 @@ type
     function FindHintDataForBookmarkIdentifier(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
   end;
 
-  TOPPHelpRichtextHintReader = class(TInterfacedObject, IOPPHelpHintReader)
+  TOPPHelpRichtextHintReader = class(TInterfacedObject, IOPPHelpHintDataReader)
   const
     fDocumentFormat: TdxRichEditDocumentFormat = TdxRichEditDocumentFormat.rtf;
   private

@@ -3,8 +3,7 @@
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Generics.Collections,
-  System.JSON, System.IOUtils;
+  System.SysUtils, System.Classes, System.Generics.Collections;
 
 type
 
