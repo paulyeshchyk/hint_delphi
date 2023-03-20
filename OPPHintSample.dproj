@@ -128,6 +128,7 @@
         <DCCReference Include="sources\OPP.Help.Hint.Mapping.pas"/>
         <DCCReference Include="sources\OPP.Help.JSON"/>
         <DCCReference Include="sources\OPP.Help.Hint.Mapping.Filereader.pas"/>
+        <DCCReference Include="sources\OPP.Help.Nonatomic.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

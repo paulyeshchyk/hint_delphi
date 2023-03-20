@@ -3,18 +3,19 @@ unit OPP.Help.Hint.Mapping;
 interface
 
 uses
-  System.Generics.Collections;
+  System.Generics.Collections,
+  OPP.Help.Nonatomic;
 
 type
 
   TOPPHelpHintMap = class(TObject)
   private
-    fHelpKeyword: string;
+    fHelpKeyword: TOPPHelpKeyword;
     fFilename: string;
   public
-    constructor Create(AHelpKeyword: String; AFileName: String);
+    constructor Create(AHelpKeyword: TOPPHelpKeyword; AFileName: String);
 
-    property helpKeyword: string read fHelpKeyword write fHelpKeyword;
+    property helpKeyword: TOPPHelpKeyword read fHelpKeyword write fHelpKeyword;
     property filename: string read fFilename write fFilename;
   end;
 
@@ -23,13 +24,13 @@ type
     fList: TList<TOPPHelpHintMap>;
   public
     property list: TList<TOPPHelpHintMap> read fList write fList;
-    function GetMap(AHelpKeyword: String): TOPPHelpHintMap;
+    function GetMap(AHelpKeyword: TOPPHelpKeyword): TOPPHelpHintMap;
     constructor Create(AList: TList<TOPPHelpHintMap> = nil);
   end;
 
 implementation
 
-constructor TOPPHelpHintMap.Create(AHelpKeyword: String; AFileName: String);
+constructor TOPPHelpHintMap.Create(AHelpKeyword: TOPPHelpKeyword; AFileName: String);
 begin
   fHelpKeyword := AHelpKeyword;
   fFilename := AFileName;
@@ -42,13 +43,15 @@ begin
     fList.AddRange(AList);
 end;
 
-function TOPPHelpHintMapSet.GetMap(AHelpKeyword: String): TOPPHelpHintMap;
+function TOPPHelpHintMapSet.GetMap(AHelpKeyword: TOPPHelpKeyword): TOPPHelpHintMap;
 var
   item: TOPPHelpHintMap;
 begin
   result := nil;
-  for item in fList do begin
-    if item.helpKeyword = AHelpKeyword then begin
+  for item in fList do
+  begin
+    if item.helpKeyword.hashValue = AHelpKeyword.hashValue then
+    begin
       result := item;
       break;
     end;

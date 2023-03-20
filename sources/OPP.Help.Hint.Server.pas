@@ -6,6 +6,7 @@ uses
   System.SyncObjs, System.SysUtils, System.Classes, System.Generics.Collections,
   VCL.Controls, OPP.Help.Hint, OPP.VCL.Controls,
   //
+  OPP.Help.Nonatomic,
   OPP.Help.Hint.Mapping,
   OPP.Help.Hint.Reader;
 
@@ -49,7 +50,7 @@ type
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure reloadConfigurationIfNeed();
-    function findOrCreateReader(AIdentifier: String): IOPPHelpHintDataReader;
+    function findOrCreateReader(AIdentifier: TOPPHelpKeyword): IOPPHelpHintDataReader;
     function getReader(AFileName: String):IOPPHelpHintDataReader;
 
   public
@@ -58,7 +59,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    function GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
+    function GetHintData(identifier: TOPPHelpKeyword): TOPPHelpHintData;
     procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
 
@@ -112,6 +113,9 @@ procedure TOPPHelpHintServer.reloadConfigurationIfNeed();
 var
   fFileName: string;
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
+  list: TList<TOPPHelpHintMap>;
+  testValue : TOPPHelpHintMap;
+  kw : TOPPHelpKeyword;
 begin
   if fLoaded then
     exit;
@@ -129,11 +133,21 @@ begin
 
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
+
+//  kw.bookmarkID := 'bookmarkID';
+//  kw.searchPattern := 'searchPattern';
+//  kw.page := '1';
+//  testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
+//  list := TList<TOPPHelpHintMap>.create;
+//  list.Add(testValue);
+//
+//  TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
+
 end;
 
 { public }
 
-function TOPPHelpHintServer.findOrCreateReader(AIdentifier: String): IOPPHelpHintDataReader;
+function TOPPHelpHintServer.findOrCreateReader(AIdentifier: TOPPHelpKeyword): IOPPHelpHintDataReader;
 var
   fMap : TOPPHelpHintMap;
   fReader: IOPPHelpHintDataReader;
@@ -174,7 +188,7 @@ begin
   end;
 end;
 
-function TOPPHelpHintServer.GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
+function TOPPHelpHintServer.GetHintData(identifier: TOPPHelpKeyword): TOPPHelpHintData;
 var
   fReader: IOPPHelpHintDataReader;
 begin
@@ -192,8 +206,13 @@ begin
 end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
+var
+  keyword: TOPPHelpKeyword;
 begin
-  result.data := GetHintData(hintMeta.hintIdentifier);
+
+  keyword.bookmarkID := hintMeta.hintIdentifier;
+
+  result.data := GetHintData(keyword);
   result.meta := hintMeta;
 end;
 
@@ -231,6 +250,7 @@ var
   id: String;
   fMap: TOPPHelpHintMap;
   fReader: TOPPHelpRichtextHintReader;
+  fKeyword: TOPPHelpKeyword;
 begin
 
   self.reloadConfigurationIfNeed();
@@ -245,8 +265,9 @@ begin
   for fHintMeta in fHintMetaList do
   begin
     id := fHintMeta.hintIdentifier;
+    fKeyword.bookmarkID := id;
 
-    self.findOrCreateReader(id);
+    self.findOrCreateReader(fKeyword);
   end;
 
   self.GetHints(fHintMetaList, completion);

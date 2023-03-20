@@ -1,0 +1,38 @@
+{
+  "type":"OPP.Help.Hint.Mapping.TOPPHelpHintMapSet",
+  "id":1,
+  "fields":
+  {
+    "fList":
+    {
+      "type":"System.Generics.Collections.TList<OPP.Help.Hint.Mapping.TOPPHelpHintMap>",
+      "id":2,
+      "fields":
+      {
+        "FListHelper":
+        [
+          1
+        ]
+,
+        "FItems":
+        [
+                    {
+            "type":"OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id":3,
+            "fields":
+            {
+              "fHelpKeyword":
+              [
+                "bookmarkID",
+                "searchPattern",
+                "1"
+              ]
+,
+              "fFilename":"zz.rtf"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

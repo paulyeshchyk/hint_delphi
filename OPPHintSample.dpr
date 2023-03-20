@@ -21,7 +21,8 @@ uses
   OPP.Help.Hint.Reader in 'sources\OPP.Help.Hint.Reader.pas',
   OPP.Help.Hint.Mapping in 'sources\OPP.Help.Hint.Mapping.pas',
   OPP.Help in 'sources\OPP.Help.JSON',
-  OPP.Help.Hint.Mapping.Filereader in 'sources\OPP.Help.Hint.Mapping.Filereader.pas';
+  OPP.Help.Hint.Mapping.Filereader in 'sources\OPP.Help.Hint.Mapping.Filereader.pas',
+  OPP.Help.Nonatomic in 'sources\OPP.Help.Nonatomic.pas';
 
 {$R *.res}
 
