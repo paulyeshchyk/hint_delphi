@@ -1,6 +1,7 @@
 ﻿unit OPP.Help.Shortcut.Request;
 
 interface
+
 uses
   System.SysUtils, System.Classes,
   WinAPI.Messages,
@@ -35,4 +36,3 @@ begin
 end;
 
 end.
-

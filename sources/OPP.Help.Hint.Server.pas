@@ -13,7 +13,7 @@ uses
   OPP.Help.Hint.Reader;
 
 type
-  TOPPHelpHintLoadCompletion                       = reference to procedure(loadedHints: TList<TOPPHelpHint>);
+  TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
   TOPPHelpHintServerOnHintTextsFilenameRequest = reference to function(): String;
 
   IOPPHelpHintServer = interface
@@ -81,7 +81,8 @@ function helpHintServer: IOPPHelpHintServer;
 begin
   fLock.Acquire;
   try
-    if not Assigned(fHelpHintServer) then begin
+    if not Assigned(fHelpHintServer) then
+    begin
       fHelpHintServer := TOPPHelpHintServer.Create;
     end;
     result := fHelpHintServer;
@@ -144,16 +145,19 @@ var
 begin
 
   self.reloadIfNeed();
-  if not fLoaded then begin
+  if not fLoaded then
+  begin
     if Assigned(completion) then
       completion(nil);
     exit;
   end;
 
   result := TList<TOPPHelpHint>.Create;
-  for fHintMeta in hintsMetaList do begin
+  for fHintMeta in hintsMetaList do
+  begin
     fHint := GetHint(fHintMeta);
-    if not fHint.data.isEmpty() then begin
+    if not fHint.data.isEmpty() then
+    begin
       result.add(fHint);
     end;
   end;
@@ -166,7 +170,8 @@ var
 begin
 
   self.reloadIfNeed();
-  if not fLoaded then begin
+  if not fLoaded then
+  begin
     if Assigned(completion) then
       completion(nil);
     exit;

@@ -9,7 +9,7 @@ uses
 
 type
 
-  //https://en.delphipraxis.net/topic/6514-compiler-accepts-virtual-methods-in-class-helpers/
+  // https://en.delphipraxis.net/topic/6514-compiler-accepts-virtual-methods-in-class-helpers/
   TOPPStyler = class helper for TObject
   public
     procedure restyle; virtual;

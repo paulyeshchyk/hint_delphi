@@ -44,4 +44,5 @@ begin
   fHelpKeyword := AHelpKeyword;
   fSearchPattern := ASearchPattern;
 end;
+
 end.

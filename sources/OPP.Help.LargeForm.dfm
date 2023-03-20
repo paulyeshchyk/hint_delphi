@@ -26,8 +26,6 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
     Align = alBottom
     Position = 76
     TabOrder = 4
-    ExplicitTop = 520
-    ExplicitWidth = 621
   end
   object dxPDFViewer1: TdxPDFViewer
     Left = 0
@@ -37,8 +35,6 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
     Align = alClient
     OptionsZoom.ZoomMode = pzmPageWidth
     OnDocumentLoaded = dxPDFViewer1DocumentLoaded
-    ExplicitWidth = 621
-    ExplicitHeight = 492
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET

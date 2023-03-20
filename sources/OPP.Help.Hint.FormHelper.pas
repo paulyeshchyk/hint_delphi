@@ -34,7 +34,8 @@ begin
     var
       fHint: TOPPHelpHint;
     begin
-      for fHint in hints do begin
+      for fHint in hints do
+      begin
         self.addTip(fHint, tipsRepo, hintStyle);
       end;
     end);

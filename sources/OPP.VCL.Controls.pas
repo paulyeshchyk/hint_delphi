@@ -34,11 +34,14 @@ var
 begin
   result := TList<TOPPHelpHintMeta>.create();
 
-  for i := 0 to ComponentCount - 1 do begin
+  for i := 0 to ComponentCount - 1 do
+  begin
     child := self.Components[i];
-    if (child is TControl) and (IsPublishedProp(child, propertyName)) then begin
+    if (child is TControl) and (IsPublishedProp(child, propertyName)) then
+    begin
       fBookmarkIdentifier := String(GetPropValue(child, propertyName));
-      if not fBookmarkIdentifier.isEmpty() then begin
+      if not fBookmarkIdentifier.isEmpty() then
+      begin
         fControlHint.propertyName := propertyName;
         fControlHint.hintIdentifier := fBookmarkIdentifier;
         result.Add(fControlHint);
@@ -56,21 +59,25 @@ var
   found: Boolean;
 begin
   result := nil;
-  for i := 0 to ComponentCount - 1 do begin
+  for i := 0 to ComponentCount - 1 do
+  begin
     child := self.Components[i];
-    if not (child is TControl) then
+    if not(child is TControl) then
       continue;
-    if (IsPublishedProp(child, propertyName)) then begin
+    if (IsPublishedProp(child, propertyName)) then
+    begin
       valueToCompare := String(GetPropValue(child, propertyName));
       found := CompareStr(valueToCompare, propertyValue) = 0;
-      if found then begin
+      if found then
+      begin
         result := TControl(child);
         break;
       end;
 
-      //recursion
+      // recursion
       nextLevelChild := TControl(child).OPPFindControl(propertyName, propertyValue);
-      if assigned(nextLevelChild) then begin
+      if assigned(nextLevelChild) then
+      begin
         result := TControl(nextLevelChild);
         break;
       end;
