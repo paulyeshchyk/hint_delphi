@@ -19,8 +19,25 @@ type
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
 
   IOPPHelpHintServer = interface
+    /// <summary>
+    /// Возвращает подсказку для компонента, метаданные которого указаны в параметре hintMeta.
+    ///
+    /// </summary>
+    /// <remarks> </remarks>
     function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
+
+    /// <summary>
+    /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
+    ///
+    /// </summary>
+    /// <remarks> </remarks>
     procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
+
+    /// <summary>
+    /// Возвращает список подсказок, применимых для списка идентификаторов, взятых из компонента.
+    ///
+    /// </summary>
+    /// <remarks> </remarks>
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
   end;
 
@@ -37,26 +54,9 @@ type
     destructor Destroy; override;
 
     function GetHintData(identifier: TOPPHintIdentifierType): TOPPHelpHintData;
-
-    /// <summary>
-    /// Возвращает список подсказок, применимых для списка идентификаторов, взятых из компонента.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
+    procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
 
-    /// <summary>
-    /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
-    procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
-
-    /// <summary>
-    /// Возвращает подсказку для компонента, метаданные которого указаны в параметре hintMeta.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
     function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint; overload;
   end;
 
