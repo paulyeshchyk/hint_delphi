@@ -24,14 +24,17 @@ implementation
 
 procedure TOPPHelpHintFormHelper.loadHint(tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
 begin
+  helpHintServer.OnHintTextsFileNameRequest := function(): String
+    begin
+      result := 'docs\gulfstream_manual_rtf.rtf';
+    end;
 
   helpHintServer.getHints(self,
-    procedure(hints: TList<TOPPHelpHint>)
+      procedure(hints: TList<TOPPHelpHint>)
     var
       fHint: TOPPHelpHint;
     begin
-      for fHint in hints do
-      begin
+      for fHint in hints do begin
         self.addTip(fHint, tipsRepo, hintStyle);
       end;
     end);

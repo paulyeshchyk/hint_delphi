@@ -12,13 +12,12 @@ uses
   //
   OPP.Help.Hint.Reader;
 
-const
-  filepath: String = 'docs\gulfstream_manual_rtf.rtf';
-
 type
-  TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
+  TOPPHelpHintLoadCompletion                       = reference to procedure(loadedHints: TList<TOPPHelpHint>);
+  TOPPHelpHintServerOnHintTextsFilenameRequest = reference to function(): String;
 
   IOPPHelpHintServer = interface
+
     /// <summary>
     /// Возвращает подсказку для компонента, метаданные которого указаны в параметре hintMeta.
     ///
@@ -39,12 +38,18 @@ type
     /// </summary>
     /// <remarks> </remarks>
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
+
+    function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
+    procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
+    property OnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read getOnHintTextsFileNameRequest write setOnHintTextsFileNameRequest;
+
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
   private
     fLoaded: Boolean;
     fHintReader: IOPPHelpHintReader;
+    fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure reloadIfNeed();
 
   public
@@ -58,6 +63,10 @@ type
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
 
     function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint; overload;
+
+    function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
+    procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
+    property OnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read fOnHintTextsFileNameRequest write fOnHintTextsFileNameRequest;
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -72,8 +81,7 @@ function helpHintServer: IOPPHelpHintServer;
 begin
   fLock.Acquire;
   try
-    if not Assigned(fHelpHintServer) then
-    begin
+    if not Assigned(fHelpHintServer) then begin
       fHelpHintServer := TOPPHelpHintServer.Create;
     end;
     result := fHelpHintServer;
@@ -96,11 +104,18 @@ end;
 { private }
 
 procedure TOPPHelpHintServer.reloadIfNeed();
+var
+  fFileName: String;
 begin
   if fLoaded then
     exit;
 
-  fLoaded := (fHintReader.loadData(filepath).error = nil);
+  if not Assigned(fOnHintTextsFileNameRequest) then
+    exit;
+
+  fFileName := fOnHintTextsFileNameRequest();
+
+  fLoaded := (fHintReader.loadData(fFileName).error = nil);
 end;
 
 { public }
@@ -129,19 +144,16 @@ var
 begin
 
   self.reloadIfNeed();
-  if not fLoaded then
-  begin
+  if not fLoaded then begin
     if Assigned(completion) then
       completion(nil);
     exit;
   end;
 
   result := TList<TOPPHelpHint>.Create;
-  for fHintMeta in hintsMetaList do
-  begin
+  for fHintMeta in hintsMetaList do begin
     fHint := GetHint(fHintMeta);
-    if not fHint.data.isEmpty() then
-    begin
+    if not fHint.data.isEmpty() then begin
       result.add(fHint);
     end;
   end;
@@ -154,8 +166,7 @@ var
 begin
 
   self.reloadIfNeed();
-  if not fLoaded then
-  begin
+  if not fLoaded then begin
     if Assigned(completion) then
       completion(nil);
     exit;
@@ -165,6 +176,16 @@ begin
 
   self.GetHints(fHintsMeta, completion);
 
+end;
+
+function TOPPHelpHintServer.getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
+begin
+  result := fOnHintTextsFileNameRequest;
+end;
+
+procedure TOPPHelpHintServer.setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
+begin
+  fOnHintTextsFileNameRequest := value;
 end;
 
 { private }
