@@ -15,8 +15,6 @@ uses
   dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxBar, cxClasses,
   cxPC, dxDockControl, dxDockPanel, cxControls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxPDFDocument,
   dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, VCL.ComCtrls, VCL.WinXCtrls, VCL.ExtCtrls,
-  dxSkinBasic, dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray,
-  dxSkinOffice2019White, dxSkinTheBezier, dxPDFCore, dxPDFBase, dxPDFText, dxPDFRecognizedObject, dxPDFDocumentViewer,
 
   OPP.Help.Shortcut.Mapping,
   OPP.System.Thread;
