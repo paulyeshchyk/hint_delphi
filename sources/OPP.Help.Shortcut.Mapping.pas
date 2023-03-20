@@ -11,11 +11,9 @@ type
   private
     fHelpKeyword: String;
     fSearchPattern: String;
-    fTestData: String;
   public
     constructor Create(AHelpKeyword: String; ASearchPattern: String);
 
-    property TestData: String read fTestData write fTestData;
     property HelpKeyword: String read fHelpKeyword write fHelpKeyword;
     property SearchPattern: String read fSearchPattern write fSearchPattern;
   end;

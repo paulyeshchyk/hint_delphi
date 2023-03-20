@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics, Vcl.Controls, VCL.Forms, Vcl.Dialogs,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
@@ -21,11 +21,10 @@ uses
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxBar, cxClasses, cxPC, dxDockControl, dxDockPanel,
   cxControls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxPDFDocument,
-  dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, Vcl.ComCtrls,
-  Vcl.ExtCtrls, OPP.Help.Shortcut.Mapping, OPP.System.Thread;
+  dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, Vcl.ComCtrls, Vcl.ExtCtrls,
+  OPP.Help.Shortcut.Mapping, OPP.System.Thread;
 
 type
-
   TOPPHelpLargeForm = class(TForm)
     dxBarManager1: TdxBarManager;
     dxBarManager1Bar1: TdxBar;
@@ -144,7 +143,7 @@ end;
 
 procedure TOPPHelpLargeForm.pdfChangedThePage;
 begin
-
+  //
 end;
 
 procedure TOPPHelpLargeForm.threadFinishedWork(AResult: Integer);
