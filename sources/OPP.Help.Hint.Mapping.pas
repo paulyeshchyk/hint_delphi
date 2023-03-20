@@ -10,12 +10,12 @@ type
 
   TOPPHelpHintMap = class(TObject)
   private
-    fHelpKeyword: TOPPHelpKeyword;
+    fIdentifier: TOPPHelpIdentifier;
     fFilename: string;
   public
-    constructor Create(AHelpKeyword: TOPPHelpKeyword; AFileName: String);
+    constructor Create(AHelpKeyword: TOPPHelpIdentifier; AFileName: String);
 
-    property helpKeyword: TOPPHelpKeyword read fHelpKeyword write fHelpKeyword;
+    property identifier: TOPPHelpIdentifier read fIdentifier write fIdentifier;
     property filename: string read fFilename write fFilename;
   end;
 
@@ -24,16 +24,16 @@ type
     fList: TList<TOPPHelpHintMap>;
   public
     constructor Create(AList: TList<TOPPHelpHintMap> = nil);
-    function GetMap(AHelpKeyword: TOPPHelpKeyword): TOPPHelpHintMap;
+    function GetMap(AHelpKeyword: TOPPHelpIdentifier): TOPPHelpHintMap;
 
     property list: TList<TOPPHelpHintMap> read fList write fList;
   end;
 
 implementation
 
-constructor TOPPHelpHintMap.Create(AHelpKeyword: TOPPHelpKeyword; AFileName: String);
+constructor TOPPHelpHintMap.Create(AHelpKeyword: TOPPHelpIdentifier; AFileName: String);
 begin
-  fHelpKeyword := AHelpKeyword;
+  fIdentifier := AHelpKeyword;
   fFilename := AFileName;
 end;
 
@@ -44,14 +44,14 @@ begin
     fList.AddRange(AList);
 end;
 
-function TOPPHelpHintMapSet.GetMap(AHelpKeyword: TOPPHelpKeyword): TOPPHelpHintMap;
+function TOPPHelpHintMapSet.GetMap(AHelpKeyword: TOPPHelpIdentifier): TOPPHelpHintMap;
 var
   item: TOPPHelpHintMap;
 begin
   result := nil;
   for item in fList do
   begin
-    if item.helpKeyword.hashValue = AHelpKeyword.hashValue then
+    if item.identifier.hashValue = AHelpKeyword.hashValue then
     begin
       result := item;
       break;

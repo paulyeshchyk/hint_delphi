@@ -14,13 +14,12 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 11,
             "fields": {
-              "fHelpKeyword": {
-                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+              "fIdentifier": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpIdentifier",
                 "id": 21,
                 "fields": {
-                  "fBookmarkID": "Kod_MKC",
-                  "fSearchPattern": "",
-                  "fPage": ""
+                  "fValue": "Kod_MKC",
+                  "fKeywordType": "ktAny"
                 }
               },
               "fFilename": "gulfstream_manual_rtf.rtf"
@@ -30,13 +29,12 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 12,
             "fields": {
-              "fHelpKeyword": {
-                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+              "fIdentifier": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpIdentifier",
                 "id": 22,
                 "fields": {
-                  "fBookmarkID": "Kod_OKWED",
-                  "fSearchPattern": "",
-                  "fPage": ""
+                  "fValue": "Kod_OKWED",
+                  "fKeywordType": "ktAny"
                 }
               },
               "fFilename": "gulfstream_manual_rtf.rtf"
@@ -46,13 +44,12 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 13,
             "fields": {
-              "fHelpKeyword": {
-                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+              "fIdentifier": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpIdentifier",
                 "id": 23,
                 "fields": {
-                  "fBookmarkID": "KodOKPD2",
-                  "fSearchPattern": "",
-                  "fPage": ""
+                  "fValue": "KodOKPD2",
+                  "fKeywordType": "ktAny"
                 }
               },
               "fFilename": "gulfstream_manual_rtf.rtf"
@@ -62,13 +59,12 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 14,
             "fields": {
-              "fHelpKeyword": {
-                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+              "fIdentifier": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpIdentifier",
                 "id": 24,
                 "fields": {
-                  "fBookmarkID": "Kod_KWED2",
-                  "fSearchPattern": "searchPattern",
-                  "fPage": "1"
+                  "fValue": "Kod_KWED2",
+                  "fKeywordType": "ktAny"
                 }
               },
               "fFilename": "gulfstream_manual_rtf.rtf"

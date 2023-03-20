@@ -3,21 +3,21 @@ unit OPP.Help.Nonatomic;
 interface
 
 type
-  TOPPHelpKeyword = class
+  TOPPKeywordType = (ktAny, ktBookmark, ktSearch, ktPage);
+
+  TOPPHelpIdentifier = class
   private
-    fBookmarkID: String;
-    fSearchPattern: String;
-    fPage: String;
+    fValue: String;
+    fKeywordType: TOPPKeywordType;
   public
     function hashValue(): Integer;
-    property bookmarkID: String read fBookmarkID write fbookmarkID;
-    property searchPattern: String read fSearchPattern write fSearchPattern;
-    property page: String read fPage write fPage;
+    property value: String read fValue write fValue;
+    property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
   end;
 
 implementation
 
-function TOPPHelpKeyword.hashValue(): Integer;
+function TOPPHelpIdentifier.hashValue(): Integer;
 begin
   result := 0;
 end;

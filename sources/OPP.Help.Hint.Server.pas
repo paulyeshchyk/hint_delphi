@@ -50,7 +50,7 @@ type
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure reloadConfigurationIfNeed();
-    function findOrCreateReader(AIdentifier: TOPPHelpKeyword): IOPPHelpHintDataReader;
+    function findOrCreateReader(AIdentifier: TOPPHelpIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String):IOPPHelpHintDataReader;
 
   public
@@ -59,7 +59,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    function GetHintData(identifier: TOPPHelpKeyword): TOPPHelpHintData;
+    function GetHintData(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
     procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
 
@@ -148,7 +148,7 @@ end;
 
 { public }
 
-function TOPPHelpHintServer.findOrCreateReader(AIdentifier: TOPPHelpKeyword): IOPPHelpHintDataReader;
+function TOPPHelpHintServer.findOrCreateReader(AIdentifier: TOPPHelpIdentifier): IOPPHelpHintDataReader;
 var
   fMap : TOPPHelpHintMap;
   fReader: IOPPHelpHintDataReader;
@@ -189,7 +189,7 @@ begin
   end;
 end;
 
-function TOPPHelpHintServer.GetHintData(identifier: TOPPHelpKeyword): TOPPHelpHintData;
+function TOPPHelpHintServer.GetHintData(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
 var
   fReader: IOPPHelpHintDataReader;
 begin
@@ -208,12 +208,12 @@ end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
 var
-  keyword: TOPPHelpKeyword;
+  fIdentifier: TOPPHelpIdentifier;
 begin
-  keyword := TOPPHelpKeyword.Create();
-  keyword.bookmarkID := hintMeta.hintIdentifier;
+  fIdentifier := TOPPHelpIdentifier.Create();
+  fIdentifier.value := hintMeta.hintIdentifier;
 
-  result.data := GetHintData(keyword);
+  result.data := GetHintData(fIdentifier);
   result.meta := hintMeta;
 end;
 
@@ -249,7 +249,7 @@ var
   fHintMetaList: TList<TOPPHelpHintMeta>;
   fHintMeta: TOPPHelpHintMeta;
   id: String;
-  fKeyword: TOPPHelpKeyword;
+  fKeyword: TOPPHelpIdentifier;
 begin
 
   self.reloadConfigurationIfNeed();
@@ -264,8 +264,8 @@ begin
   for fHintMeta in fHintMetaList do
   begin
     id := fHintMeta.hintIdentifier;
-    fKeyword := TOPPHelpKeyword.Create();
-    fKeyword.bookmarkID := id;
+    fKeyword := TOPPHelpIdentifier.Create();
+    fKeyword.value := id;
 
     self.findOrCreateReader(fKeyword);
   end;
