@@ -36,9 +36,8 @@ begin
       end;
     end;
 
-  helpHintServer.OnHintTextsFileNameRequest := function(): string
+  helpHintServer.OnGetHintConfigurationFileNameRequest := function(): string
     begin
-      //result := 'docs\gulfstream_manual_rtf.rtf';
       result := 'help\hints_matrix.json';
     end;
 

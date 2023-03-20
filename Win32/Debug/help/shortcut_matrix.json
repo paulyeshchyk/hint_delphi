@@ -1,56 +1,42 @@
 {
-  "type":"OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMapSet",
-  "id":1,
-  "fields":
-  {
-    "fList":
-    {
-      "type":"System.Generics.Collections.TList<OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap>",
-      "id":2,
-      "fields":
-      {
-        "FListHelper":
-        [
+  "type": "OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMapSet",
+  "id": 1,
+  "fields": {
+    "fList": {
+      "type": "System.Generics.Collections.TList<OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap>",
+      "id": 2,
+      "fields": {
+        "FListHelper": [
           3
-        ]
-,
-        "FItems":
-        [
-                    {
-            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
-            "id":3,
-            "fields":
-            {
-              "fHelpKeyword":"Kod_MKC",
-              "fSearchPattern":"совокупность свойств продукции, обусловливающих её пригодность",
-              "fTestData":""
-            }
-          }
-,
-          
+        ],
+        "FItems": [
           {
-            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
-            "id":4,
-            "fields":
-            {
-              "fHelpKeyword":"Kod_OKWED",
-              "fSearchPattern":"(ОКВЭД 2) ОК 029-2014",
-              "fTestData":""
+            "type": "OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
+            "id": 3,
+            "fields": {
+              "fHelpKeyword": "Kod_MKC",
+              "fSearchPattern": "совокупность свойств продукции, обусловливающих её пригодность",
+              "fTestData": ""
             }
-          }
-,
-          
+          },
           {
-            "type":"OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
-            "id":5,
-            "fields":
-            {
-              "fHelpKeyword":"KodOKPD2",
-              "fSearchPattern":"Рисунок 1303",
-              "fTestData":""
+            "type": "OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
+            "id": 4,
+            "fields": {
+              "fHelpKeyword": "Kod_OKWED",
+              "fSearchPattern": "(ОКВЭД 2) ОК 029-2014",
+              "fTestData": ""
             }
-          }
-,
+          },
+          {
+            "type": "OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
+            "id": 5,
+            "fields": {
+              "fHelpKeyword": "KodOKPD2",
+              "fSearchPattern": "Рисунок 1303",
+              "fTestData": ""
+            }
+          },
           null
         ]
       }
