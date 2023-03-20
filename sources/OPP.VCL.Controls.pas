@@ -19,7 +19,7 @@ type
     ///
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
-    function GetControlHintsMeta(propertyName: String = 'HelpKeyword'): TList<TOPPHelpHintMeta>;
+    function GetControlHintsMeta(propertyName: String): TList<TOPPHelpHintMeta>;
     function OPPFindControl(propertyName: String; propertyValue: String): TControl;
   end;
 
@@ -46,7 +46,7 @@ begin
         fControlHint.hintIdentifier := fBookmarkIdentifier;
         result.Add(fControlHint);
       end;
-      result.AddRange(TControl(child).GetControlHintsMeta());
+      result.AddRange(TControl(child).GetControlHintsMeta('HelpKeyword'));
     end;
   end;
 end;

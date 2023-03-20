@@ -10,10 +10,8 @@ object SampleForm: TSampleForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   Position = poDesigned
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object dxDockSite1: TdxDockSite
     Left = 0
@@ -99,6 +97,7 @@ object SampleForm: TSampleForm
           TabOrder = 2
           object cxGrid2TableView1: TcxGridTableView
             Navigator.Buttons.CustomButtons = <>
+            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -191,6 +190,7 @@ object SampleForm: TSampleForm
           TabOrder = 0
           object cxGrid1DBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
+            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>

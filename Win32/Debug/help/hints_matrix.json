@@ -12,49 +12,65 @@
         "FItems": [
           {
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
-            "id": 6,
+            "id": 11,
             "fields": {
-              "fHelpKeyword": [
-                "Kod_MKC",
-                "searchPattern",
-                "1"
-              ],
+              "fHelpKeyword": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+                "id": 21,
+                "fields": {
+                  "fBookmarkID": "Kod_MKC",
+                  "fSearchPattern": "",
+                  "fPage": ""
+                }
+              },
               "fFilename": "gulfstream_manual_rtf.rtf"
             }
           },
           {
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
-            "id": 5,
+            "id": 12,
             "fields": {
-              "fHelpKeyword": [
-                "Kod_OKWED",
-                "searchPattern",
-                "1"
-              ],
+              "fHelpKeyword": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+                "id": 22,
+                "fields": {
+                  "fBookmarkID": "Kod_OKWED",
+                  "fSearchPattern": "",
+                  "fPage": ""
+                }
+              },
               "fFilename": "gulfstream_manual_rtf.rtf"
             }
           },
           {
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
-            "id": 3,
+            "id": 13,
             "fields": {
-              "fHelpKeyword": [
-                "KodOKPD2",
-                "searchPattern",
-                "1"
-              ],
+              "fHelpKeyword": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+                "id": 23,
+                "fields": {
+                  "fBookmarkID": "KodOKPD2",
+                  "fSearchPattern": "",
+                  "fPage": ""
+                }
+              },
               "fFilename": "gulfstream_manual_rtf.rtf"
             }
           },
           {
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
-            "id": 4,
+            "id": 14,
             "fields": {
-              "fHelpKeyword": [
-                "Kod_KWED2",
-                "searchPattern",
-                "1"
-              ],
+              "fHelpKeyword": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpKeyword",
+                "id": 24,
+                "fields": {
+                  "fBookmarkID": "Kod_KWED2",
+                  "fSearchPattern": "searchPattern",
+                  "fPage": "1"
+                }
+              },
               "fFilename": "gulfstream_manual_rtf.rtf"
             }
           }

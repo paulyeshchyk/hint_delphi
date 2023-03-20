@@ -23,9 +23,10 @@ type
   private
     fList: TList<TOPPHelpHintMap>;
   public
-    property list: TList<TOPPHelpHintMap> read fList write fList;
-    function GetMap(AHelpKeyword: TOPPHelpKeyword): TOPPHelpHintMap;
     constructor Create(AList: TList<TOPPHelpHintMap> = nil);
+    function GetMap(AHelpKeyword: TOPPHelpKeyword): TOPPHelpHintMap;
+
+    property list: TList<TOPPHelpHintMap> read fList write fList;
   end;
 
 implementation

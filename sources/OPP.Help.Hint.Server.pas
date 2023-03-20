@@ -113,9 +113,9 @@ procedure TOPPHelpHintServer.reloadConfigurationIfNeed();
 var
   fFileName: string;
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
-  list: TList<TOPPHelpHintMap>;
-  testValue : TOPPHelpHintMap;
-  kw : TOPPHelpKeyword;
+  //list: TList<TOPPHelpHintMap>;
+  //testValue : TOPPHelpHintMap;
+  //kw : TOPPHelpKeyword;
 begin
   if fLoaded then
     exit;
@@ -134,13 +134,14 @@ begin
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
 
+//  kw := TOPPHelpKeyword.Create();
 //  kw.bookmarkID := 'bookmarkID';
 //  kw.searchPattern := 'searchPattern';
 //  kw.page := '1';
 //  testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
 //  list := TList<TOPPHelpHintMap>.create;
 //  list.Add(testValue);
-//
+////
 //  TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
 
 end;
@@ -209,7 +210,7 @@ function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
 var
   keyword: TOPPHelpKeyword;
 begin
-
+  keyword := TOPPHelpKeyword.Create();
   keyword.bookmarkID := hintMeta.hintIdentifier;
 
   result.data := GetHintData(keyword);
@@ -248,8 +249,6 @@ var
   fHintMetaList: TList<TOPPHelpHintMeta>;
   fHintMeta: TOPPHelpHintMeta;
   id: String;
-  fMap: TOPPHelpHintMap;
-  fReader: TOPPHelpRichtextHintReader;
   fKeyword: TOPPHelpKeyword;
 begin
 
@@ -261,10 +260,11 @@ begin
     exit;
   end;
 
-  fHintMetaList := Control.GetControlHintsMeta();
+  fHintMetaList := Control.GetControlHintsMeta('HelpKeyword');
   for fHintMeta in fHintMetaList do
   begin
     id := fHintMeta.hintIdentifier;
+    fKeyword := TOPPHelpKeyword.Create();
     fKeyword.bookmarkID := id;
 
     self.findOrCreateReader(fKeyword);

@@ -30,7 +30,8 @@ uses
   OPP.Help.Shortcut.Request,
   OPP.Help.Hint,
   OPP.Help.Hint.Server,
-  OPP.Help.Hint.FormHelper, cxFilter, cxData, Data.DB;
+  OPP.Help.Hint.FormHelper, cxFilter, cxData, Data.DB, dxSkinBasic, dxSkinOffice2019Black, dxSkinOffice2019Colorful,
+  dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinTheBezier, dxDateRanges, dxScrollbarAnnotations;
 
 type
   TSampleForm = class(TForm)
