@@ -7,7 +7,7 @@ uses
   System.TypInfo,
   VCL.Controls,
   //
-  OPP.Help.Hint, OPP.VCL.Control.Hint,
+  OPP.Help.Hint, OPP.Help.Vcl.Control.Hint,
   //
   OPP.Help.Nonatomic,
   OPP.Help.Hint.Mapping,
@@ -86,7 +86,7 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
-  OPP.Help.Hint.Mapping.Filereader, Windows, OPP.System;
+  OPP.Help.Hint.Mapping.Filereader, Windows, OPP.Help.System;
 
 var
   fLock: TCriticalSection;

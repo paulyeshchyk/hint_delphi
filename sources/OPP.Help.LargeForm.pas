@@ -22,7 +22,8 @@ uses
   dxSkinXmas2008Blue, dxBar, cxClasses, cxPC, dxDockControl, dxDockPanel,
   cxControls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxPDFDocument,
   dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, Vcl.ComCtrls, Vcl.ExtCtrls,
-  OPP.Help.Shortcut.Mapping, OPP.System.Thread;
+
+  OPP.Help.Shortcut.Mapping, OPP.Help.System.Thread;
 
 type
   TOPPHelpLargeForm = class(TForm)

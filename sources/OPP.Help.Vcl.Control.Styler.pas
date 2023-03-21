@@ -1,4 +1,4 @@
-﻿unit OPP.VCL.Control.Styler;
+﻿unit OPP.Help.Vcl.Control.Styler;
 
 interface
 

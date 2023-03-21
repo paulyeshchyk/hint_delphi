@@ -1,11 +1,11 @@
-﻿unit OPP.VCL.Control.Hint;
+﻿unit OPP.Help.Vcl.Control.Hint;
 
 interface
 
 uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
   VCL.Controls, VCL.StdCtrls,
-  OPP.system,
+  OPP.Help.System,
   OPP.Help.Hint;
 
 type

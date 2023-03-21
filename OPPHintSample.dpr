@@ -16,11 +16,11 @@ uses
   OPP.Help.Shortcut.Mapping.Filereader in 'sources\OPP.Help.Shortcut.Mapping.Filereader.pas',
   OPP.Help.Shortcut.Request in 'sources\OPP.Help.Shortcut.Request.pas',
   OPP.Help.Shortcut.Server in 'sources\OPP.Help.Shortcut.Server.pas',
-  OPP.System in 'sources\OPP.System.pas',
-  OPP.System.Error in 'sources\OPP.System.Error.pas',
-  OPP.System.Thread in 'sources\OPP.System.Thread.pas',
-  OPP.VCL.Control.Hint in 'sources\OPP.VCL.Control.Hint.pas',
-  OPP.VCL.Control.Styler in 'sources\OPP.VCL.Control.Styler.pas',
+  OPP.Help.System in 'sources\OPP.Help.System.pas',
+  OPP.Help.System.Error in 'sources\OPP.Help.System.Error.pas',
+  OPP.Help.System.Thread in 'sources\OPP.Help.System.Thread.pas',
+  OPP.Help.Vcl.Control.Hint in 'sources\OPP.Help.Vcl.Control.Hint.pas',
+  OPP.Help.Vcl.Control.Styler in 'sources\OPP.Help.Vcl.Control.Styler.pas',
   sampleForm1 in 'sources\sampleForm1.pas' {SampleForm};
 
 {$R *.res}

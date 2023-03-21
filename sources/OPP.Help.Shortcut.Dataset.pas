@@ -22,7 +22,7 @@ implementation
 uses
   System.SysUtils,
   Winapi.Windows,
-  OPP.Help.Shortcut.Mapping.Filereader, OPP.System;
+  OPP.Help.Shortcut.Mapping.Filereader, OPP.Help.System;
 
 constructor TOPPHelpShortcutDataset.Create;
 begin

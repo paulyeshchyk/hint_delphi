@@ -25,8 +25,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
   dxBar,
 
-  OPP.Vcl.Control.Hint,
-  OPP.Vcl.Control.Styler,
+  OPP.Help.Vcl.Control.Hint,
+  OPP.Help.Vcl.Control.Styler,
   OPP.Help.Shortcut.Request,
   OPP.Help.Hint,
   OPP.Help.Hint.Server,

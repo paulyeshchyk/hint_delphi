@@ -5,7 +5,7 @@ interface
 uses
   System.Generics.Collections, Vcl.Forms, Vcl.Controls, dxCustomHint,
   dxScreenTip,
-  OPP.Vcl.Control.Hint, OPP.Help.Hint, OPP.Help.Hint.Server;
+  OPP.Help.Vcl.Control.Hint, OPP.Help.Hint, OPP.Help.Hint.Server;
 
 type
   TOPPHintDialogCompletion = reference to procedure(Form: TForm);
