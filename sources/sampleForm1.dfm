@@ -10,8 +10,10 @@ object SampleForm: TSampleForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poDesigned
   OnCreate = FormCreate
+  PixelsPerInch = 96
   TextHeight = 13
   object dxDockSite1: TdxDockSite
     Left = 0
@@ -20,7 +22,6 @@ object SampleForm: TSampleForm
     Height = 747
     ParentColor = True
     Align = alLeft
-    ExplicitHeight = 714
     DockingType = 5
     OriginalWidth = 449
     OriginalHeight = 747
@@ -29,7 +30,6 @@ object SampleForm: TSampleForm
       Top = 0
       Width = 449
       Height = 747
-      ExplicitHeight = 714
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -48,7 +48,6 @@ object SampleForm: TSampleForm
       AutoHide = False
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitHeight = 714
       DockingType = 0
       OriginalWidth = 369
       OriginalHeight = 140
@@ -56,7 +55,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 445
-        Height = 705
+        Height = 719
         HelpType = htKeyword
         Align = alClient
         BevelKind = bkFlat
@@ -65,7 +64,6 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
-        ExplicitHeight = 672
         object Kod_OKWED: TCheckBox
           Left = 8
           Top = 12
@@ -82,7 +80,7 @@ object SampleForm: TSampleForm
           Left = 111
           Top = 12
           Width = 121
-          Height = 40
+          Height = 21
           Hint = 'cxHint test'
           HelpType = htKeyword
           HelpKeyword = 'Kod_MKC'
@@ -101,7 +99,6 @@ object SampleForm: TSampleForm
           TabOrder = 2
           object cxGrid2TableView1: TcxGridTableView
             Navigator.Buttons.CustomButtons = <>
-            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -136,8 +133,6 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 714
-    ExplicitWidth = 1198
     object Button1: TButton
       Left = 544
       Top = 6
@@ -154,8 +149,6 @@ object SampleForm: TSampleForm
     Width = 300
     Height = 747
     Align = alRight
-    ExplicitLeft = 898
-    ExplicitHeight = 714
     DockingType = 5
     OriginalWidth = 300
     OriginalHeight = 747
@@ -164,7 +157,6 @@ object SampleForm: TSampleForm
       Top = 0
       Width = 300
       Height = 747
-      ExplicitHeight = 714
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -179,7 +171,6 @@ object SampleForm: TSampleForm
       Caption = 'dxDockPanel2'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitHeight = 714
       DockingType = 0
       OriginalWidth = 185
       OriginalHeight = 140
@@ -187,22 +178,19 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 296
-        Height = 705
+        Height = 719
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 0
-        ExplicitHeight = 672
         object cxGrid1: TcxGrid
           Left = 1
           Top = 1
           Width = 294
-          Height = 703
+          Height = 717
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 670
           object cxGrid1DBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
-            ScrollbarAnnotations.CustomAnnotations = <>
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
