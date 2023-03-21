@@ -58,7 +58,7 @@ type
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure reloadConfigurationIfNeed();
-    function findOrCreateReader(AIdentifier: TOPPHelpIdentifier): IOPPHelpHintDataReader;
+    function findOrCreateReader(AIdentifier: TOPPHelpPredicate): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
 
     procedure temporarySave();
@@ -68,7 +68,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    function GetHintData(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
+    function GetHintData(identifier: TOPPHelpPredicate): TOPPHelpHintData;
     procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
 
@@ -148,48 +148,46 @@ begin
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
 
-  //temporarySave;
+  // temporarySave;
 
 end;
 
 procedure TOPPHelpHintServer.temporarySave();
-//var
+// var
 // list: TList<TOPPHelpHintMap>;
 // testValue : TOPPHelpHintMap;
 // kw : TOPPHelpKeyword;
 begin
-//   kw := TOPPHelpKeyword.Create();
-//   kw.bookmarkID := 'bookmarkID';
-//   kw.searchPattern := 'searchPattern';
-//   kw.page := '1';
-//   testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
-//   list := TList<TOPPHelpHintMap>.create;
-//   list.Add(testValue);
-//
-//   TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
+  // kw := TOPPHelpKeyword.Create();
+  // kw.bookmarkID := 'bookmarkID';
+  // kw.searchPattern := 'searchPattern';
+  // kw.page := '1';
+  // testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
+  // list := TList<TOPPHelpHintMap>.create;
+  // list.Add(testValue);
+  //
+  // TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
 end;
 
 { public }
 
-function TOPPHelpHintServer.findOrCreateReader(AIdentifier: TOPPHelpIdentifier): IOPPHelpHintDataReader;
+function TOPPHelpHintServer.findOrCreateReader(AIdentifier: TOPPHelpPredicate): IOPPHelpHintDataReader;
 var
   fMap: TOPPHelpHintMap;
-  fReader: IOPPHelpHintDataReader;
 begin
   result := nil;
 
   fMap := fHintMapSet.GetMap(AIdentifier);
-  if Assigned(fMap) then
-  begin
-    fReader := getReader(fMap.filename);
-    if not Assigned(fReader) then
-    begin
-      fReader := TOPPHelpRichtextHintReader.Create;
-      fReader.loadData(fMap.filename);
-      fHintDataReaders.Add(fMap.filename, fReader);
-    end;
-    result := fReader;
-  end;
+  if not Assigned(fMap) then
+    exit;
+
+  result := getReader(fMap.filename);
+  if Assigned(result) then
+    exit;
+
+  result := TOPPHelpRichtextHintReader.Create;
+  result.loadData(fMap.filename);
+  fHintDataReaders.Add(fMap.filename, result);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -212,7 +210,7 @@ begin
   end;
 end;
 
-function TOPPHelpHintServer.GetHintData(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
+function TOPPHelpHintServer.GetHintData(identifier: TOPPHelpPredicate): TOPPHelpHintData;
 var
   fReader: IOPPHelpHintDataReader;
 begin
@@ -230,9 +228,9 @@ end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
 var
-  fIdentifier: TOPPHelpIdentifier;
+  fIdentifier: TOPPHelpPredicate;
 begin
-  fIdentifier := TOPPHelpIdentifier.Create();
+  fIdentifier := TOPPHelpPredicate.Create();
   fIdentifier.value := hintMeta.hintIdentifier;
 
   result.data := GetHintData(fIdentifier);
@@ -271,7 +269,7 @@ var
   fChildrenHintsMeta: TList<TOPPHelpHintMeta>;
   fHintMeta: TOPPHelpHintMeta;
   id: String;
-  fKeyword: TOPPHelpIdentifier;
+  fKeyword: TOPPHelpPredicate;
 begin
 
   self.reloadConfigurationIfNeed();
@@ -286,7 +284,7 @@ begin
   for fHintMeta in fChildrenHintsMeta do
   begin
     id := fHintMeta.hintIdentifier;
-    fKeyword := TOPPHelpIdentifier.Create();
+    fKeyword := TOPPHelpPredicate.Create();
     fKeyword.value := id;
 
     self.findOrCreateReader(fKeyword);

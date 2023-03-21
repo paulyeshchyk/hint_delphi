@@ -10,12 +10,12 @@ type
 
   TOPPHelpHintMap = class(TObject)
   private
-    fIdentifier: TOPPHelpIdentifier;
+    fIdentifier: TOPPHelpPredicate;
     fFilename: string;
   public
-    constructor Create(AHelpKeyword: TOPPHelpIdentifier; AFileName: String);
+    constructor Create(AHelpKeyword: TOPPHelpPredicate; AFileName: String);
 
-    property identifier: TOPPHelpIdentifier read fIdentifier write fIdentifier;
+    property identifier: TOPPHelpPredicate read fIdentifier write fIdentifier;
     property filename: string read fFilename write fFilename;
   end;
 
@@ -24,14 +24,14 @@ type
     fList: TList<TOPPHelpHintMap>;
   public
     constructor Create(AList: TList<TOPPHelpHintMap> = nil);
-    function GetMap(AHelpKeyword: TOPPHelpIdentifier): TOPPHelpHintMap;
+    function GetMap(AHelpKeyword: TOPPHelpPredicate): TOPPHelpHintMap;
 
     property list: TList<TOPPHelpHintMap> read fList write fList;
   end;
 
 implementation
 
-constructor TOPPHelpHintMap.Create(AHelpKeyword: TOPPHelpIdentifier; AFileName: String);
+constructor TOPPHelpHintMap.Create(AHelpKeyword: TOPPHelpPredicate; AFileName: String);
 begin
   fIdentifier := AHelpKeyword;
   fFilename := AFileName;
@@ -44,7 +44,7 @@ begin
     fList.AddRange(AList);
 end;
 
-function TOPPHelpHintMapSet.GetMap(AHelpKeyword: TOPPHelpIdentifier): TOPPHelpHintMap;
+function TOPPHelpHintMapSet.GetMap(AHelpKeyword: TOPPHelpPredicate): TOPPHelpHintMap;
 var
   item: TOPPHelpHintMap;
 begin

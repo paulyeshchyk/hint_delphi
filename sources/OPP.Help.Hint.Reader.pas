@@ -17,7 +17,7 @@ type
     /// </summary>
     function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
 
-    function FindHintDataForBookmarkIdentifier(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
+    function FindHintDataForBookmarkIdentifier(identifier: TOPPHelpPredicate): TOPPHelpHintData;
   end;
 
   TOPPHelpRichtextHintReader = class(TInterfacedObject, IOPPHelpHintDataReader)
@@ -27,7 +27,7 @@ type
     fLoaded: Boolean;
     fRichEditControl: TdxRichEditControl;
     function getDocument(): IdxRichEditDocument;
-    function GetBookmark(identifier: TOPPHelpIdentifier): IdxRichEditBookmark;
+    function GetBookmark(identifier: TOPPHelpPredicate): IdxRichEditBookmark;
     function GetParagraph(bookmark: IdxRichEditBookmark): IdxRichEditParagraph; overload;
     function GetParagraph(position: IdxRichEditDocumentPosition): IdxRichEditParagraph; overload;
     function GetPlainText(paragraph: IdxRichEditParagraph): String;
@@ -37,7 +37,7 @@ type
     constructor Create;
     destructor Destroy; override;
     function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
-    function FindHintDataForBookmarkIdentifier(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
+    function FindHintDataForBookmarkIdentifier(identifier: TOPPHelpPredicate): TOPPHelpHintData;
   end;
 
 implementation
@@ -71,7 +71,7 @@ begin
 
 end;
 
-function TOPPHelpRichtextHintReader.FindHintDataForBookmarkIdentifier(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
+function TOPPHelpRichtextHintReader.FindHintDataForBookmarkIdentifier(identifier: TOPPHelpPredicate): TOPPHelpHintData;
 var
   bookmark: IdxRichEditBookmark;
   paragraph: IdxRichEditParagraph;
@@ -91,7 +91,7 @@ begin
   result := fRichEditControl.Document;
 end;
 
-function TOPPHelpRichtextHintReader.GetBookmark(identifier: TOPPHelpIdentifier): IdxRichEditBookmark;
+function TOPPHelpRichtextHintReader.GetBookmark(identifier: TOPPHelpPredicate): IdxRichEditBookmark;
 begin
   result := nil;
   if Length(identifier.value) = 0 then

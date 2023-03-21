@@ -5,7 +5,7 @@ interface
 type
   TOPPKeywordType = (ktAny, ktBookmark, ktSearch, ktPage);
 
-  TOPPHelpIdentifier = class
+  TOPPHelpPredicate = class
   private
     fValue: String;
     fKeywordType: TOPPKeywordType;
@@ -17,7 +17,7 @@ type
 
 implementation
 
-function TOPPHelpIdentifier.hashValue(): Integer;
+function TOPPHelpPredicate.hashValue(): Integer;
 begin
   result := 0;
 end;
