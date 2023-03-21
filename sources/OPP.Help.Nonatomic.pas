@@ -7,6 +7,7 @@ type
 
   TOPPHelpHintMapIdentifier = String;
   TOPPHintIdentifierType = String;
+  TOPPHelpShortcutMapIdentifier = String;
 
   TOPPHelpPredicate = class
   private

@@ -47,7 +47,7 @@ begin
       for map in AList do
       begin
         if Assigned(map) then
-          self.fShortcutHelpMatrix.add(map.HelpKeyword, map);
+          self.fShortcutHelpMatrix.add(map.identifier, map);
       end;
     end;
 

@@ -14,24 +14,45 @@
             "type": "OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
             "id": 3,
             "fields": {
-              "fHelpKeyword": "Kod_MKC",
-              "fSearchPattern": "совокупность свойств продукции, обусловливающих её пригодность"
+              "fPredicate": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
+                "id": 23,
+                "fields": {
+                  "fValue": "совокупность свойств продукции, обусловливающих её пригодность",
+                  "fKeywordType": "ktSearch"
+                }
+              },
+              "fIdentifier": "Kod_MKC"
             }
           },
           {
             "type": "OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
             "id": 4,
             "fields": {
-              "fHelpKeyword": "Kod_OKWED",
-              "fSearchPattern": "(ОКВЭД 2) ОК 029-2014"
+              "fPredicate": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
+                "id": 22,
+                "fields": {
+                  "fValue": "(ОКВЭД 2) ОК 029-2014",
+                  "fKeywordType": "ktSearch"
+                }
+              },
+              "fIdentifier": "Kod_OKWED"
             }
           },
           {
             "type": "OPP.Help.Shortcut.Mapping.TOPPHelpShortcutMap",
             "id": 5,
             "fields": {
-              "fHelpKeyword": "KodOKPD2",
-              "fSearchPattern": "Рисунок 1303"
+              "fPredicate": {
+                "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
+                "id": 21,
+                "fields": {
+                  "fValue": "Рисунок 1303",
+                  "fKeywordType": "ktSearch"
+                }
+              },
+              "fIdentifier": "KodOKPD2"
             }
           }
         ]

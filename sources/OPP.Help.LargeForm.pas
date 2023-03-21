@@ -71,6 +71,7 @@ implementation
 {$R *.dfm}
 
 uses
+  OPP.Help.Nonatomic,
   System.UITypes;
 
 // file://docs/гольфстрим_руководство пользователя.pdf?page=1&text=
@@ -118,8 +119,6 @@ begin
     exit;
   if not assigned(shortcutMap) then
     exit;
-  if Length(shortcutMap.SearchPattern) = 0 then
-    exit;
   TOPPSystemThread.Create(SearchJob, threadFinishedWork);
 end;
 
@@ -135,9 +134,22 @@ var
 begin
   Timer1.Enabled := true;
 
-  searchResult := pdfDocument.FindText(shortcutMap.SearchPattern);
-//  self.pdfViewer.SelPageIndex := searchResult.range.pageIndex;
-//  self.pdfViewer.ChangePage(pdfChangedThePage);
+  case shortcutMap.predicate.keywordType of
+    ktSearch: begin
+      searchResult := pdfDocument.FindText(shortcutMap.predicate.value);
+      //  self.pdfViewer.SelPageIndex := searchResult.range.pageIndex;
+      //  self.pdfViewer.ChangePage(pdfChangedThePage);
+    end;
+    ktBookmark: begin
+      //
+    end;
+    ktPage: begin
+      //
+    end;
+    ktAny: begin
+      //
+    end;
+  end;
   if assigned(onFinish) then
     onFinish(0);
 end;

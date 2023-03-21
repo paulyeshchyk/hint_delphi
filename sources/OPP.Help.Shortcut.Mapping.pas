@@ -3,19 +3,20 @@
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Generics.Collections;
+  System.SysUtils, System.Classes, System.Generics.Collections,
+  OPP.Help.nonatomic;
 
 type
 
   TOPPHelpShortcutMap = class(TObject)
   private
+    fPredicate: TOPPHelpPredicate;
     fHelpKeyword: String;
     fSearchPattern: String;
+    fIdentifier: TOPPHelpShortcutMapIdentifier;
   public
-    constructor Create(AHelpKeyword: String; ASearchPattern: String);
-
-    property HelpKeyword: String read fHelpKeyword write fHelpKeyword;
-    property SearchPattern: String read fSearchPattern write fSearchPattern;
+    property identifier: TOPPHelpShortcutMapIdentifier read fIdentifier write fIdentifier;
+    property predicate: TOPPHelpPredicate read fPredicate write fPredicate;
   end;
 
   TOPPHelpShortcutMapSet = class(TObject)
@@ -33,13 +34,6 @@ constructor TOPPHelpShortcutMapSet.Create(AList: TList<TOPPHelpShortcutMap>);
 begin
   fList := TList<TOPPHelpShortcutMap>.Create;
   fList.AddRange(AList);
-end;
-
-constructor TOPPHelpShortcutMap.Create(AHelpKeyword: String; ASearchPattern: String);
-begin
-  inherited Create;
-  fHelpKeyword := AHelpKeyword;
-  fSearchPattern := ASearchPattern;
 end;
 
 end.
