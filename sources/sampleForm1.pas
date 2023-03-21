@@ -25,8 +25,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
   dxBar,
 
-  OPP.Vcl.Controls,
-  OPP.Vcl.Component,
+  OPP.Vcl.Control.Hint,
+  OPP.Vcl.Control.Styler,
   OPP.Help.Shortcut.Request,
   OPP.Help.Hint,
   OPP.Help.Hint.Server,
@@ -84,6 +84,7 @@ implementation
 {$ENDIF}
 
 uses
+  System.TypInfo,
   OPP.Help.Shortcut.Server,
   dxPDFViewer;
 
@@ -104,6 +105,9 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
   fillGrid;
+
+  helpHintServer.registerHintMeta('HelpKeyword', PTypeInfo(TComponent.ClassInfo));
+  helpHintServer.registerHintMeta('Caption', PTypeInfo(TCheckbox.ClassInfo));
 
   loadHint(self, tipsRepo, cxHintController.HintStyle);
 

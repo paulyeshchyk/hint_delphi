@@ -76,7 +76,7 @@ var
   bookmark: IdxRichEditBookmark;
   paragraph: IdxRichEditParagraph;
 begin
-
+  // read identifier.fKeywordType here
   bookmark := self.GetBookmark(identifier);
   paragraph := self.GetParagraph(bookmark);
   result.text := self.GetPlainText(paragraph);

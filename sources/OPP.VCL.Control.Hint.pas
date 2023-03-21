@@ -1,15 +1,16 @@
-﻿unit OPP.VCL.Controls;
+﻿unit OPP.VCL.Control.Hint;
 
 interface
 
 uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
-  VCL.Controls,
+  VCL.Controls, VCL.StdCtrls,
   OPP.system,
   OPP.Help.Hint;
 
 type
-  TComponentHintEnumerator = class helper for TControl
+
+  TComponentHintEnumerator = class helper for TComponent
   public
 
     /// <summary>
@@ -19,35 +20,48 @@ type
     ///
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
-    function GetControlHintsMeta(propertyName: String): TList<TOPPHelpHintMeta>;
+    function GetControlHintsMeta(): TList<TOPPHelpHintMeta>;
     function OPPFindControl(propertyName: String; propertyValue: String): TControl;
+    function GetHintMeta: TOPPHelpHintMeta;
   end;
 
 implementation
 
-function TComponentHintEnumerator.GetControlHintsMeta(propertyName: String): TList<TOPPHelpHintMeta>;
+function TComponentHintEnumerator.GetHintMeta: TOPPHelpHintMeta;
+begin
+  result := TOPPHelpHintMeta.Create('Name', self.Name);
+
+  if self.ClassType = TEdit then
+  begin
+    result.propertyName := 'HelpKeyword';
+    result.hintIdentifier := (self as TEdit).HelpKeyword;
+  end
+  else if self.ClassType = TCheckBox then
+  begin
+    result.propertyName := 'HelpKeyword';
+    result.hintIdentifier := (self as TCheckBox).HelpKeyword;
+  end else begin
+    // nothing to do here
+  end;
+
+end;
+
+function TComponentHintEnumerator.GetControlHintsMeta(): TList<TOPPHelpHintMeta>;
 var
   child: TComponent;
   i: Integer;
-  fBookmarkIdentifier: String;
   fControlHint: TOPPHelpHintMeta;
 begin
-  result := TList<TOPPHelpHintMeta>.create();
+  result := TList<TOPPHelpHintMeta>.Create();
 
   for i := 0 to ComponentCount - 1 do
   begin
     child := self.Components[i];
-    if (child is TControl) and (IsPublishedProp(child, propertyName)) then
-    begin
-      fBookmarkIdentifier := String(GetPropValue(child, propertyName));
-      if not fBookmarkIdentifier.isEmpty() then
-      begin
-        fControlHint.propertyName := propertyName;
-        fControlHint.hintIdentifier := fBookmarkIdentifier;
-        result.Add(fControlHint);
-      end;
-      result.AddRange(TControl(child).GetControlHintsMeta('HelpKeyword'));
-    end;
+
+    fControlHint := child.GetHintMeta();
+    result.Add(fControlHint);
+    result.AddRange(TWinControl(child).GetControlHintsMeta());
+
   end;
 end;
 
@@ -75,7 +89,7 @@ begin
       end;
 
       // recursion
-      nextLevelChild := TControl(child).OPPFindControl(propertyName, propertyValue);
+      nextLevelChild := TWinControl(child).OPPFindControl(propertyName, propertyValue);
       if assigned(nextLevelChild) then
       begin
         result := TControl(nextLevelChild);

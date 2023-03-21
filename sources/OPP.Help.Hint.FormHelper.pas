@@ -4,7 +4,8 @@ interface
 
 uses
   System.Generics.Collections, Vcl.Forms, Vcl.Controls, dxCustomHint,
-  dxScreenTip, OPP.Vcl.Controls, OPP.Help.Hint, OPP.Help.Hint.Server;
+  dxScreenTip,
+  OPP.Vcl.Control.Hint, OPP.Help.Hint, OPP.Help.Hint.Server;
 
 type
   TOPPHintDialogCompletion = reference to procedure(Form: TForm);
@@ -23,8 +24,6 @@ uses
 procedure TOPPHelpHintFormHelper.loadHint(RootControl: TControl; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
 var
   fHintLoadCompletion: TOPPHelpHintLoadCompletion;
-  fList: TList<TOPPHelpHintMap>;
-  fMap: TOPPHelpHintMap;
 begin
   fHintLoadCompletion := procedure(hints: TList<TOPPHelpHint>)
     var

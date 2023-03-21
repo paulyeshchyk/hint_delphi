@@ -13,6 +13,7 @@ type
   TOPPHelpHintMeta = record
     propertyName: String;
     hintIdentifier: TOPPHintIdentifierType;
+    constructor Create(APropertyName: String; AHintIdentifier: TOPPHintIdentifierType);
   end;
 
   TOPPHelpHintData = record
@@ -36,6 +37,12 @@ type
   end;
 
 implementation
+
+constructor TOPPHelpHintMeta.Create(APropertyName: string; AHintIdentifier: string);
+begin
+  propertyName := aPropertyName;
+  hintIdentifier := AHintIdentifier;
+end;
 
 function TOPPHelpHintHelper.isEmpty(): Boolean;
 begin

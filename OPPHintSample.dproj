@@ -102,33 +102,30 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="sources\sampleForm1.pas">
-            <Form>SampleForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="sources\OPP.System.pas"/>
-        <DCCReference Include="sources\OPP.VCL.Controls.pas"/>
+        <DCCReference Include="sources\OPP.Help.JSON"/>
         <DCCReference Include="sources\OPP.Help.Hint.pas"/>
-        <DCCReference Include="sources\OPP.VCL.Component.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.FormHelper.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Mapping.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Mapping.Filereader.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Reader.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Server.pas"/>
         <DCCReference Include="sources\OPP.Help.LargeForm.pas">
             <Form>OPPHelpLargeForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas"/>
-        <DCCReference Include="sources\OPP.System.Thread.pas"/>
-        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.pas"/>
-        <DCCReference Include="sources\OPP.Help.Hint.FormHelper.pas"/>
-        <DCCReference Include="sources\OPP.Help.Hint.Server.pas"/>
-        <DCCReference Include="sources\OPP.Help.Shortcut.Server.pas"/>
-        <DCCReference Include="sources\OPP.Help.Shortcut.Request.pas"/>
-        <DCCReference Include="sources\OPP.Help.Shortcut.Dataset.pas"/>
-        <DCCReference Include="sources\OPP.System.Error.pas"/>
-        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
-        <DCCReference Include="sources\OPP.Help.Hint.Reader.pas"/>
-        <DCCReference Include="sources\OPP.Help.Hint.Mapping.pas"/>
-        <DCCReference Include="sources\OPP.Help.JSON"/>
-        <DCCReference Include="sources\OPP.Help.Hint.Mapping.Filereader.pas"/>
         <DCCReference Include="sources\OPP.Help.Nonatomic.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Dataset.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Request.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Server.pas"/>
+        <DCCReference Include="sources\OPP.System.pas"/>
+        <DCCReference Include="sources\OPP.System.Error.pas"/>
+        <DCCReference Include="sources\OPP.System.Thread.pas"/>
+        <DCCReference Include="sources\OPP.VCL.Control.Hint.pas"/>
+        <DCCReference Include="sources\OPP.VCL.Control.Styler.pas"/>
+        <DCCReference Include="sources\sampleForm1.pas">
+            <Form>SampleForm</Form>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -4,7 +4,10 @@ interface
 
 uses
   System.SyncObjs, System.SysUtils, System.Classes, System.Generics.Collections,
-  VCL.Controls, OPP.Help.Hint, OPP.VCL.Controls,
+  System.TypInfo,
+  VCL.Controls,
+  //
+  OPP.Help.Hint, OPP.VCL.Control.Hint,
   //
   OPP.Help.Nonatomic,
   OPP.Help.Hint.Mapping,
@@ -39,6 +42,9 @@ type
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
     function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
+
+    procedure registerHintMeta(propertyName: String; component: PTypeInfo);
+
     property OnGetHintConfigurationFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read getOnHintTextsFileNameRequest write setOnHintTextsFileNameRequest;
   end;
 
@@ -47,11 +53,13 @@ type
     fLoaded: Boolean;
     fHintMapSet: TOPPHelpHintMapSet;
 
+    fHintMetaDict: TDictionary<TSymbolName, String>;
+
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure reloadConfigurationIfNeed();
     function findOrCreateReader(AIdentifier: TOPPHelpIdentifier): IOPPHelpHintDataReader;
-    function getReader(AFileName: String):IOPPHelpHintDataReader;
+    function getReader(AFileName: String): IOPPHelpHintDataReader;
 
   public
     property loaded: Boolean read fLoaded;
@@ -62,6 +70,8 @@ type
     function GetHintData(identifier: TOPPHelpIdentifier): TOPPHelpHintData;
     procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
+
+    procedure registerHintMeta(propertyName: String; component: PTypeInfo);
 
     function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint; overload;
 
@@ -99,6 +109,7 @@ constructor TOPPHelpHintServer.Create;
 begin
   fHintDataReaders := TDictionary<String, IOPPHelpHintDataReader>.Create();
   fHintMapSet := TOPPHelpHintMapSet.Create();
+  fHintMetaDict := TDictionary<TSymbolName, String>.Create();
 end;
 
 destructor TOPPHelpHintServer.Destroy;
@@ -107,15 +118,20 @@ begin
   inherited Destroy;
 end;
 
+procedure TOPPHelpHintServer.registerHintMeta(propertyName: String; component: PTypeInfo);
+begin
+  fHintMetaDict.Add(component.Name, propertyName);
+end;
+
 { private }
 
 procedure TOPPHelpHintServer.reloadConfigurationIfNeed();
 var
   fFileName: string;
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
-  //list: TList<TOPPHelpHintMap>;
-  //testValue : TOPPHelpHintMap;
-  //kw : TOPPHelpKeyword;
+  // list: TList<TOPPHelpHintMap>;
+  // testValue : TOPPHelpHintMap;
+  // kw : TOPPHelpKeyword;
 begin
   if fLoaded then
     exit;
@@ -134,15 +150,15 @@ begin
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
 
-//  kw := TOPPHelpKeyword.Create();
-//  kw.bookmarkID := 'bookmarkID';
-//  kw.searchPattern := 'searchPattern';
-//  kw.page := '1';
-//  testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
-//  list := TList<TOPPHelpHintMap>.create;
-//  list.Add(testValue);
-////
-//  TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
+  // kw := TOPPHelpKeyword.Create();
+  // kw.bookmarkID := 'bookmarkID';
+  // kw.searchPattern := 'searchPattern';
+  // kw.page := '1';
+  // testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
+  // list := TList<TOPPHelpHintMap>.create;
+  // list.Add(testValue);
+  /// /
+  // TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
 
 end;
 
@@ -150,7 +166,7 @@ end;
 
 function TOPPHelpHintServer.findOrCreateReader(AIdentifier: TOPPHelpIdentifier): IOPPHelpHintDataReader;
 var
-  fMap : TOPPHelpHintMap;
+  fMap: TOPPHelpHintMap;
   fReader: IOPPHelpHintDataReader;
 begin
   result := nil;
@@ -159,17 +175,17 @@ begin
   if Assigned(fMap) then
   begin
     fReader := getReader(fMap.filename);
-    if not Assigned(fReader) then begin
+    if not Assigned(fReader) then
+    begin
       fReader := TOPPHelpRichtextHintReader.Create;
       fReader.loadData(fMap.filename);
-      fHintDataReaders.add(fMap.filename, fReader);
+      fHintDataReaders.Add(fMap.filename, fReader);
     end;
     result := fReader;
   end;
 end;
 
-
-function TOPPHelpHintServer.getReader(AFileName: String):IOPPHelpHintDataReader;
+function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
 var
   Mapping: IOPPHelpHintDataReader;
 begin
@@ -238,7 +254,7 @@ begin
     fHint := GetHint(fHintMeta);
     if not fHint.data.isEmpty() then
     begin
-      result.add(fHint);
+      result.Add(fHint);
     end;
   end;
   completion(result);
@@ -260,7 +276,7 @@ begin
     exit;
   end;
 
-  fHintMetaList := Control.GetControlHintsMeta('HelpKeyword');
+  fHintMetaList := Control.GetControlHintsMeta();
   for fHintMeta in fHintMetaList do
   begin
     id := fHintMeta.hintIdentifier;

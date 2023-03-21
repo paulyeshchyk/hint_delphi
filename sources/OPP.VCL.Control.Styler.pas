@@ -1,4 +1,4 @@
-﻿unit OPP.VCL.Component;
+﻿unit OPP.VCL.Control.Styler;
 
 interface
 
@@ -55,7 +55,14 @@ type
     override;
   end;
 
+  TEditStyler = class helper
+    (TOPPStyler) for TEdit public procedure restyle;
+    override;
+  end;
+
 implementation
+
+uses vcl.graphics;
 
 procedure TdxBarStyler.restyle;
 begin
@@ -102,6 +109,10 @@ end;
 procedure TOPPStyler.restyle;
 begin
   // nothing todo here; it is a virtual method
+end;
+
+procedure TEditStyler.restyle;
+begin
 end;
 
 end.
