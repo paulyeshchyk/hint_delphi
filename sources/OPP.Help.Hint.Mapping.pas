@@ -10,12 +10,12 @@ type
 
   TOPPHelpHintMap = class(TObject)
   private
-    fIdentifier: TOPPHelpPredicate;
+    fPredicate: TOPPHelpPredicate;
     fFilename: string;
   public
     constructor Create(AHelpKeyword: TOPPHelpPredicate; AFileName: String);
 
-    property identifier: TOPPHelpPredicate read fIdentifier write fIdentifier;
+    property predicate: TOPPHelpPredicate read fPredicate write fPredicate;
     property filename: string read fFilename write fFilename;
   end;
 
@@ -33,7 +33,7 @@ implementation
 
 constructor TOPPHelpHintMap.Create(AHelpKeyword: TOPPHelpPredicate; AFileName: String);
 begin
-  fIdentifier := AHelpKeyword;
+  fPredicate := AHelpKeyword;
   fFilename := AFileName;
 end;
 
@@ -51,7 +51,7 @@ begin
   result := nil;
   for item in fList do
   begin
-    if item.identifier.hashValue = AHelpKeyword.hashValue then
+    if item.predicate.hashValue = AHelpKeyword.hashValue then
     begin
       result := item;
       break;

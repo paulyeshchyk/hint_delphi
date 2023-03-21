@@ -2,8 +2,7 @@ program OPPHintSample;
 
 uses
   Vcl.Forms,
-  //AcroPDFLib_TLB in 'C:\Users\pavel\Documents\Embarcadero\Studio\19.0\Imports\AcroPDFLib_TLB.pas',
-  OPP.Help in 'sources\OPP.Help.JSON',
+  OPP.Help.JSON in 'sources\OPP.Help.JSON.pas',
   OPP.Help.Hint in 'sources\OPP.Help.Hint.pas',
   OPP.Help.Hint.FormHelper in 'sources\OPP.Help.Hint.FormHelper.pas',
   OPP.Help.Hint.Mapping in 'sources\OPP.Help.Hint.Mapping.pas',

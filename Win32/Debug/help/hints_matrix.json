@@ -14,7 +14,7 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 11,
             "fields": {
-              "fIdentifier": {
+              "fPredicate": {
                 "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
                 "id": 21,
                 "fields": {
@@ -29,7 +29,7 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 12,
             "fields": {
-              "fIdentifier": {
+              "fPredicate": {
                 "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
                 "id": 22,
                 "fields": {
@@ -44,7 +44,7 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 13,
             "fields": {
-              "fIdentifier": {
+              "fPredicate": {
                 "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
                 "id": 23,
                 "fields": {
@@ -59,7 +59,7 @@
             "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
             "id": 14,
             "fields": {
-              "fIdentifier": {
+              "fPredicate": {
                 "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
                 "id": 24,
                 "fields": {

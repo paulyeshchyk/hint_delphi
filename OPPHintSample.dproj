@@ -107,7 +107,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="sources\OPP.Help.JSON"/>
+        <DCCReference Include="sources\OPP.Help.JSON.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.FormHelper.pas"/>
         <DCCReference Include="sources\OPP.Help.Hint.Mapping.pas"/>
