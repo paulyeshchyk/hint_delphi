@@ -20,17 +20,10 @@ uses
   dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
   dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
 
-  Vcl.ExtCtrls, cxStyles, cxCustomData,
+  Vcl.ExtCtrls, cxStyles, cxCustomData, Data.DB,
   cxDataStorage, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
-  dxBar,
-
-  OPP.Help.Vcl.Control.Hint,
-  OPP.Help.Vcl.Control.Styler,
-  OPP.Help.Shortcut.Request,
-  OPP.Help.Hint,
-  OPP.Help.Hint.Server,
-  OPP.Help.Hint.FormHelper, cxFilter, cxData, Data.DB;
+  dxBar, cxFilter, cxData;
 
 type
   TSampleForm = class(TForm)
@@ -83,9 +76,11 @@ implementation
 {$ENDIF}
 
 uses
-  System.TypInfo,
+  OPP.Help.Vcl.Control.Styler,
+  OPP.Help.Hint.FormHelper,
+  OPP.Help.Hint.Server,
   OPP.Help.Shortcut.Server,
-  dxPDFViewer;
+  OPP.Help.Shortcut.Request;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 begin
@@ -104,9 +99,6 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
   fillGrid;
-
-  helpHintServer.registerHintMeta('HelpKeyword', PTypeInfo(TComponent.ClassInfo));
-  helpHintServer.registerHintMeta('Caption', PTypeInfo(TCheckbox.ClassInfo));
 
   loadHint(self, tipsRepo, cxHintController.HintStyle);
 

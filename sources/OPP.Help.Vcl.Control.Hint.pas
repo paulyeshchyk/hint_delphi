@@ -21,7 +21,7 @@ type
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
     function GetChildrenHintsMeta(): TList<TOPPHelpHintMeta>;
-    function OPPFindControl(propertyName: String; propertyValue: String): TControl;
+    function FindSubControl(meta: TOPPHelpHintMeta): TControl;
     function GetHintMeta: TOPPHelpHintMeta;
   end;
 
@@ -65,7 +65,7 @@ begin
   end;
 end;
 
-function TComponentHintEnumerator.OPPFindControl(propertyName: String; propertyValue: String): TControl;
+function TComponentHintEnumerator.FindSubControl(meta: TOPPHelpHintMeta): TControl;
 var
   i: Integer;
   child, nextLevelChild: TComponent;
@@ -78,10 +78,10 @@ begin
     child := self.Components[i];
     if not(child is TControl) then
       continue;
-    if (IsPublishedProp(child, propertyName)) then
+    if (IsPublishedProp(child, meta.propertyName)) then
     begin
-      valueToCompare := String(GetPropValue(child, propertyName));
-      found := CompareStr(valueToCompare, propertyValue) = 0;
+      valueToCompare := String(GetPropValue(child, meta.propertyName));
+      found := CompareStr(valueToCompare, meta.hintIdentifier) = 0;
       if found then
       begin
         result := TControl(child);
@@ -89,7 +89,8 @@ begin
       end;
 
       // recursion
-      nextLevelChild := TWinControl(child).OPPFindControl(propertyName, propertyValue);
+
+      nextLevelChild := TWinControl(child).FindSubControl(meta);
       if assigned(nextLevelChild) then
       begin
         result := TControl(nextLevelChild);

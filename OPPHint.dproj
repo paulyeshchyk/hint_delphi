@@ -23,8 +23,18 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Base)'=='true') or '$(Base_Linux64)'!=''">
+        <Base_Linux64>true</Base_Linux64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
         <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+        <Base_Win64>true</Base_Win64>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -58,15 +68,21 @@
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>OPPHint</SanitizedProjectName>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+        <DCC_UsePackage>RESTComponents;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
         <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
         <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
         <iOS_AppStore1024>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png</iOS_AppStore1024>
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;$(DCC_UsePackage)</DCC_UsePackage>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Linux64)'!=''">
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -74,6 +90,10 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;vclwinx;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;cxDataRS25;cxPageControlRS25;dxOfficeCoreRS25;cxEditorsRS25;dxLayoutControlRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;$(DCC_UsePackage)</DCC_UsePackage>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;vclwinx;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;cxDataRS25;cxPageControlRS25;dxOfficeCoreRS25;cxEditorsRS25;dxLayoutControlRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -90,6 +110,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_DcuOutput>.\$(Platform)\$(Config)\dcu</DCC_DcuOutput>
         <DCC_DcpOutput>.\$(Platform)\$(Config)\dcp</DCC_DcpOutput>
+        <Debugger_HostApplication>D:\projects\hint_delphi\Win32\Debug\OPPHintSample.exe</Debugger_HostApplication>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -108,15 +129,105 @@
         <DCCReference Include="dxCoreRS25.dcp"/>
         <DCCReference Include="cxLibraryRS25.dcp"/>
         <DCCReference Include="dxGDIPlusRS25.dcp"/>
+        <DCCReference Include="DbxCommonDriver.dcp"/>
+        <DCCReference Include="RESTComponents.dcp"/>
+        <DCCReference Include="cxDataRS25.dcp"/>
+        <DCCReference Include="cxPageControlRS25.dcp"/>
+        <DCCReference Include="dxOfficeCoreRS25.dcp"/>
+        <DCCReference Include="cxEditorsRS25.dcp"/>
+        <DCCReference Include="dxLayoutControlRS25.dcp"/>
+        <DCCReference Include="dxComnRS25.dcp"/>
+        <DCCReference Include="dxSpreadSheetCoreRS25.dcp"/>
+        <DCCReference Include="dxBarRS25.dcp"/>
+        <DCCReference Include="dxSkinsCoreRS25.dcp"/>
+        <DCCReference Include="cxGridRS25.dcp"/>
+        <DCCReference Include="dxRichEditControlRS25.dcp"/>
+        <DCCReference Include="dxRichEditControlCoreRS25.dcp"/>
+        <DCCReference Include="dxRichEditDocumentModelRS25.dcp"/>
+        <DCCReference Include="dxRichEditCoreRS25.dcp"/>
+        <DCCReference Include="dxPDFViewerRS25.dcp"/>
+        <DCCReference Include="dxSkinBlackRS25.dcp"/>
+        <DCCReference Include="dxSkinBlueprintRS25.dcp"/>
+        <DCCReference Include="dxSkinBlueRS25.dcp"/>
+        <DCCReference Include="dxSkinCaramelRS25.dcp"/>
+        <DCCReference Include="dxSkinCoffeeRS25.dcp"/>
+        <DCCReference Include="dxSkinDarkRoomRS25.dcp"/>
+        <DCCReference Include="dxSkinDarkSideRS25.dcp"/>
+        <DCCReference Include="dxSkinDevExpressDarkStyleRS25.dcp"/>
+        <DCCReference Include="dxSkinDevExpressStyleRS25.dcp"/>
+        <DCCReference Include="dxSkinFoggyRS25.dcp"/>
+        <DCCReference Include="dxSkinGlassOceansRS25.dcp"/>
+        <DCCReference Include="dxSkinHighContrastRS25.dcp"/>
+        <DCCReference Include="dxSkiniMaginaryRS25.dcp"/>
+        <DCCReference Include="dxSkinLilianRS25.dcp"/>
+        <DCCReference Include="dxSkinLiquidSkyRS25.dcp"/>
+        <DCCReference Include="dxSkinLondonLiquidSkyRS25.dcp"/>
+        <DCCReference Include="dxSkinMcSkinRS25.dcp"/>
+        <DCCReference Include="dxSkinMetropolisDarkRS25.dcp"/>
+        <DCCReference Include="dxSkinMetropolisRS25.dcp"/>
+        <DCCReference Include="dxSkinMoneyTwinsRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2007BlackRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2007BlueRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2007GreenRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2007PinkRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2007SilverRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2010BlackRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2010BlueRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2010SilverRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2013DarkGrayRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2013LightGrayRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2013WhiteRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2016ColorfulRS25.dcp"/>
+        <DCCReference Include="dxSkinOffice2016DarkRS25.dcp"/>
+        <DCCReference Include="dxSkinPumpkinRS25.dcp"/>
+        <DCCReference Include="dxSkinSevenClassicRS25.dcp"/>
+        <DCCReference Include="dxSkinSevenRS25.dcp"/>
+        <DCCReference Include="dxSkinSharpPlusRS25.dcp"/>
+        <DCCReference Include="dxSkinSharpRS25.dcp"/>
+        <DCCReference Include="dxSkinSilverRS25.dcp"/>
+        <DCCReference Include="dxSkinSpringTimeRS25.dcp"/>
+        <DCCReference Include="dxSkinStardustRS25.dcp"/>
+        <DCCReference Include="dxSkinSummer2008RS25.dcp"/>
+        <DCCReference Include="dxSkinTheAsphaltWorldRS25.dcp"/>
+        <DCCReference Include="dxSkinValentineRS25.dcp"/>
+        <DCCReference Include="dxSkinVisualStudio2013BlueRS25.dcp"/>
+        <DCCReference Include="dxSkinVisualStudio2013DarkRS25.dcp"/>
+        <DCCReference Include="dxSkinVisualStudio2013LightRS25.dcp"/>
+        <DCCReference Include="dxSkinVS2010RS25.dcp"/>
+        <DCCReference Include="dxSkinWhiteprintRS25.dcp"/>
+        <DCCReference Include="dxSkinXmas2008BlueRS25.dcp"/>
+        <DCCReference Include="dxDockingRS25.dcp"/>
+        <DCCReference Include="sources\OPP.Help.Hint.FormHelper.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Mapping.Filereader.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Mapping.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Reader.pas"/>
+        <DCCReference Include="sources\OPP.Help.Hint.Server.pas"/>
+        <DCCReference Include="sources\OPP.Help.JSON.pas"/>
+        <DCCReference Include="sources\OPP.Help.LargeForm.pas">
+            <Form>OPPHelpLargeForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="sources\OPP.Help.Nonatomic.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Dataset.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Mapping.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Request.pas"/>
+        <DCCReference Include="sources\OPP.Help.Shortcut.Server.pas"/>
+        <DCCReference Include="sources\OPP.Help.System.Error.pas"/>
+        <DCCReference Include="sources\OPP.Help.System.pas"/>
+        <DCCReference Include="sources\OPP.Help.System.Thread.pas"/>
+        <DCCReference Include="sources\OPP.Help.Vcl.Control.Hint.pas"/>
+        <DCCReference Include="sources\OPP.Help.Vcl.Control.Styler.pas"/>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -129,6 +240,38 @@
                     <Source Name="MainSource">OPPHint.dpk</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCoreDesign250.bpl">JVCL Core Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclBindCompFireDAC250.bpl">LiveBinding Expression Components FireDac</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompdbx250.bpl">LiveBindings Expression Components DbExpress</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclFMXtee9250.bpl">TeeChart Lite FMX Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcltee9250.bpl">TeeChart Standard VCL Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvAppFrmDesign250.bpl">JVCL Application and Form Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvBandsDesign250.bpl">JVCL Band Objects</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCmpDesign250.bpl">JVCL Non-Visual Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvControlsDesign250.bpl">JVCL Visual Controls</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCryptDesign250.bpl">JVCL Encryption and Compression</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCustomDesign250.bpl">JVCL Custom Controls</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDBDesign250.bpl">JVCL Database Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDlgsDesign250.bpl">JVCL Dialog Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDockingDesign250.bpl">JVCL Docking Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDotNetCtrlsDesign250.bpl">JVCL DotNet Controls</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvGlobusDesign250.bpl">JVCL Globus Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvHMIDesign250.bpl">JVCL HMI Controls</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvJansDesign250.bpl">JVCL Jans Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvManagedThreadsDesign250.bpl">JVCL Managed Threads</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvMMDesign250.bpl">JVCL Multimedia and Image Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvNetDesign250.bpl">JVCL Network Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPageCompsDesign250.bpl">JVCL Page Style Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPascalInterpreterDesign250.bpl">JVCL Interpreter Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPluginSystemDesign250.bpl">JVCL Plugin Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPrintPreviewDesign250.bpl">JVCL Print Preview Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvRuntimeDesignDesign250.bpl">JVCL Runtime Design Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvStdCtrlsDesign250.bpl">JVCL Standard Controls</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvSystemDesign250.bpl">JVCL System Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvTimeFrameworkDesign250.bpl">JVCL Time Framework</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvWizardsDesign250.bpl">JVCL Wizard</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvXPCtrlsDesign250.bpl">JVCL XP Controls</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\kbmMemDesDXEPro.bpl">kbmMemTable Pro Edition - Performance memory dataset - Delphi XE/Win32 - Designtime - www.Components4Developers.com</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfs25.bpl">FastScript 1.9 Components</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfsADO25.bpl">FastScript 1.9 ADO Components</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfsDB25.bpl">FastScript 1.9 DB Components</Excluded_Packages>
@@ -152,20 +295,26 @@
                     <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfsIBX25.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
-            <Deployment Version="4">
+            <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule"/>
+                <DeployFile LocalName="Win32\Debug\OPPHint.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>OPPHint.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule"/>
+                <DeployFile LocalName="Win32\Debug\OPPHint.bpl" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\19.0\Bpl\OPPHint.bpl" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="..\Win32\Debug\OPPHint.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="Win32\Debug\OPPHint.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="Win32\Debug\OPPHint.bpl" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
@@ -177,6 +326,12 @@
                     <Platform Name="Android64">
                         <RemoteDir>classes</RemoteDir>
                         <Operation>64</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidClassesDexFile">
+                    <Platform Name="Android">
+                        <RemoteDir>classes</RemoteDir>
+                        <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidFileProvider">
@@ -200,10 +355,6 @@
                         <RemoteDir>library\lib\armeabi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>library\lib\armeabi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidLibnativeArmeabiv7aFile">
                     <Platform Name="Android64">
@@ -216,18 +367,10 @@
                         <RemoteDir>library\lib\mips</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>library\lib\mips</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidServiceOutput">
                     <Platform Name="Android">
                         <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>library\lib\arm64-v8a</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -242,17 +385,9 @@
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>res\drawable</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidSplashStyles">
                     <Platform Name="Android">
-                        <RemoteDir>res\values</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
                         <RemoteDir>res\values</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -282,17 +417,9 @@
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>res\drawable</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_LauncherIcon144">
                     <Platform Name="Android">
-                        <RemoteDir>res\drawable-xxhdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-xxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -312,17 +439,9 @@
                         <RemoteDir>res\drawable-ldpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>res\drawable-ldpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_LauncherIcon48">
                     <Platform Name="Android">
-                        <RemoteDir>res\drawable-mdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-mdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -332,17 +451,9 @@
                         <RemoteDir>res\drawable-hdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>res\drawable-hdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_LauncherIcon96">
                     <Platform Name="Android">
-                        <RemoteDir>res\drawable-xhdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-xhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -402,17 +513,9 @@
                         <RemoteDir>res\drawable-small</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>res\drawable-small</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_SplashImage470">
                     <Platform Name="Android">
-                        <RemoteDir>res\drawable-normal</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-normal</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -422,17 +525,9 @@
                         <RemoteDir>res\drawable-large</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>res\drawable-large</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_SplashImage960">
                     <Platform Name="Android">
-                        <RemoteDir>res\drawable-xlarge</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-xlarge</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -463,28 +558,12 @@
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>
                     </Platform>
-                    <Platform Name="OSX64">
-                        <Operation>1</Operation>
-                        <Extensions>.framework</Extensions>
-                    </Platform>
-                    <Platform Name="OSXARM64">
-                        <Operation>1</Operation>
-                        <Extensions>.framework</Extensions>
-                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="DependencyModule">
                     <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX64">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSXARM64">
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
@@ -502,19 +581,11 @@
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
-                    <Platform Name="iOSSimARM64">
+                    <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX64">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSXARM64">
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
@@ -527,25 +598,16 @@
                     <Platform Name="Android">
                         <Operation>0</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <Operation>0</Operation>
-                    </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>0</Operation>
                     </Platform>
-                    <Platform Name="iOSSimARM64">
+                    <Platform Name="iOSSimulator">
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="OSX32">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="OSX64">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="OSXARM64">
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="Win32">
@@ -582,6 +644,39 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
+                <DeployClass Name="iPad_Launch1024">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch1536">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch2048">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="iPad_Launch2x">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
@@ -589,6 +684,17 @@
                     </Platform>
                     <Platform Name="iOSSimARM64">
                         <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch768">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -662,6 +768,17 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
+                <DeployClass Name="iPhone_Launch320">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="iPhone_Launch3x">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
@@ -669,6 +786,28 @@
                     </Platform>
                     <Platform Name="iOSSimARM64">
                         <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch640">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch640x1136">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -756,9 +895,6 @@
                     <Platform Name="Android">
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectiOSDeviceDebug">
                     <Platform Name="iOSDevice32">
@@ -769,11 +905,8 @@
                         <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="iOSSimARM64">
-                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
                 <DeployClass Name="ProjectiOSEntitlements"/>
                 <DeployClass Name="ProjectiOSInfoPList"/>
                 <DeployClass Name="ProjectiOSLaunchScreen"/>
@@ -784,7 +917,7 @@
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="iOSSimARM64">
+                    <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -796,22 +929,10 @@
                         <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="OSX64">
-                        <RemoteDir>Contents\Resources</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="OSXARM64">
-                        <RemoteDir>Contents\Resources</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
                     <Platform Name="Android">
                         <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>library\lib\arm64-v8a</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSDevice32">
@@ -820,19 +941,13 @@
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="iOSSimARM64">
+                    <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Linux64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="OSX64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="OSXARM64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
@@ -873,18 +988,18 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="Android64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSSimARM64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSX64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSXARM64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSXARM64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Android64" Name="$(PROJECTNAME)"/>
             </Deployment>
             <Platforms>
                 <Platform value="Android">False</Platform>

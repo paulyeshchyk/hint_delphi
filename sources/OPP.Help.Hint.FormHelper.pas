@@ -3,9 +3,10 @@
 interface
 
 uses
-  System.Generics.Collections, Vcl.Forms, Vcl.Controls, dxCustomHint,
-  dxScreenTip,
-  OPP.Help.Vcl.Control.Hint, OPP.Help.Hint, OPP.Help.Hint.Server;
+  System.Generics.Collections, Vcl.Forms, Vcl.Controls,
+  dxCustomHint, dxScreenTip,
+  OPP.Help.Hint;
+
 
 type
   TOPPHintDialogCompletion = reference to procedure(Form: TForm);
@@ -19,7 +20,7 @@ type
 implementation
 
 uses
-  OPP.Help.Hint.Mapping, OPP.Help.Hint.Mapping.Filereader;
+  OPP.Help.Vcl.Control.Hint, OPP.Help.Hint.Server;
 
 procedure TOPPHelpHintFormHelper.loadHint(RootControl: TControl; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
 var
@@ -49,19 +50,21 @@ var
   fScreenTipLink: TdxScreenTipLink;
   fControl: TControl;
 begin
-  fControl := OPPFindControl(Hint.meta.propertyName, Hint.meta.hintIdentifier);
+  fControl := self.FindSubControl(Hint.meta);
   if not assigned(fControl) then
     exit;
 
   fScreenTip := tipsRepo.Items.add;
+  fScreenTip.Width := 789;
+
   fScreenTip.Header.PlainText := true;
-  fScreenTip.Header.Text := 'Заголовок';
+  fScreenTip.Header.Text := '';//Заголовок
 
   fScreenTip.Description.PlainText := false;
   fScreenTip.Description.Text := Hint.Data.rtf;
 
-  fScreenTip.Footer.PlainText := true;
-  fScreenTip.Footer.Text := 'Подвал';
+//  fScreenTip.Footer.PlainText := true;
+//  fScreenTip.Footer.Text := 'Подвал';
 
   fScreenTipLink := TdxScreenTipStyle(hintStyle).ScreenTipLinks.add;
   fScreenTipLink.ScreenTip := fScreenTip;

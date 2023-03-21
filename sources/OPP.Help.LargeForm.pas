@@ -125,8 +125,8 @@ end;
 
 procedure TOPPHelpLargeForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  self.pdfViewer.SelPageIndex := 0;
-  self.pdfViewer.ChangePage(pdfChangedThePage);
+//  self.pdfViewer.SelPageIndex := 0;
+//  self.pdfViewer.ChangePage(pdfChangedThePage);
 end;
 
 procedure TOPPHelpLargeForm.SearchJob(onFinish: TOPPHelpThreadOnFinish);
@@ -136,8 +136,8 @@ begin
   Timer1.Enabled := true;
 
   searchResult := pdfDocument.FindText(shortcutMap.SearchPattern);
-  self.pdfViewer.SelPageIndex := searchResult.range.pageIndex;
-  self.pdfViewer.ChangePage(pdfChangedThePage);
+//  self.pdfViewer.SelPageIndex := searchResult.range.pageIndex;
+//  self.pdfViewer.ChangePage(pdfChangedThePage);
   if assigned(onFinish) then
     onFinish(0);
 end;
@@ -180,8 +180,8 @@ end;
 
 procedure TOPPHelpLargeForm.openPage(AIndex: Integer);
 begin
-  self.pdfViewer.SelPageIndex := AIndex;
-  self.pdfViewer.ChangePage(pdfChangedThePage);
+//  self.pdfViewer.SelPageIndex := AIndex;
+//  self.pdfViewer.ChangePage(pdfChangedThePage);
 end;
 
 end.
