@@ -20,7 +20,7 @@ type
     ///
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
-    function GetControlHintsMeta(): TList<TOPPHelpHintMeta>;
+    function GetChildrenHintsMeta(): TList<TOPPHelpHintMeta>;
     function OPPFindControl(propertyName: String; propertyValue: String): TControl;
     function GetHintMeta: TOPPHelpHintMeta;
   end;
@@ -31,12 +31,12 @@ function TComponentHintEnumerator.GetHintMeta: TOPPHelpHintMeta;
 begin
   result := TOPPHelpHintMeta.Create('Name', self.Name);
 
-  if self.ClassType = TEdit then
+  if TEdit = self.ClassType then
   begin
     result.propertyName := 'HelpKeyword';
     result.hintIdentifier := (self as TEdit).HelpKeyword;
   end
-  else if self.ClassType = TCheckBox then
+  else if TCheckBox = self.ClassType then
   begin
     result.propertyName := 'HelpKeyword';
     result.hintIdentifier := (self as TCheckBox).HelpKeyword;
@@ -46,11 +46,11 @@ begin
 
 end;
 
-function TComponentHintEnumerator.GetControlHintsMeta(): TList<TOPPHelpHintMeta>;
+function TComponentHintEnumerator.GetChildrenHintsMeta(): TList<TOPPHelpHintMeta>;
 var
   child: TComponent;
   i: Integer;
-  fControlHint: TOPPHelpHintMeta;
+  fChildHintMeta: TOPPHelpHintMeta;
 begin
   result := TList<TOPPHelpHintMeta>.Create();
 
@@ -58,9 +58,9 @@ begin
   begin
     child := self.Components[i];
 
-    fControlHint := child.GetHintMeta();
-    result.Add(fControlHint);
-    result.AddRange(TWinControl(child).GetControlHintsMeta());
+    fChildHintMeta := child.GetHintMeta();
+    result.Add(fChildHintMeta);
+    result.AddRange(TWinControl(child).GetChildrenHintsMeta());
 
   end;
 end;

@@ -61,6 +61,7 @@ type
     function findOrCreateReader(AIdentifier: TOPPHelpIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
 
+    procedure temporarySave();
   public
     property loaded: Boolean read fLoaded;
 
@@ -129,9 +130,6 @@ procedure TOPPHelpHintServer.reloadConfigurationIfNeed();
 var
   fFileName: string;
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
-  // list: TList<TOPPHelpHintMap>;
-  // testValue : TOPPHelpHintMap;
-  // kw : TOPPHelpKeyword;
 begin
   if fLoaded then
     exit;
@@ -150,16 +148,25 @@ begin
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
 
-  // kw := TOPPHelpKeyword.Create();
-  // kw.bookmarkID := 'bookmarkID';
-  // kw.searchPattern := 'searchPattern';
-  // kw.page := '1';
-  // testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
-  // list := TList<TOPPHelpHintMap>.create;
-  // list.Add(testValue);
-  /// /
-  // TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
+  //temporarySave;
 
+end;
+
+procedure TOPPHelpHintServer.temporarySave();
+//var
+// list: TList<TOPPHelpHintMap>;
+// testValue : TOPPHelpHintMap;
+// kw : TOPPHelpKeyword;
+begin
+//   kw := TOPPHelpKeyword.Create();
+//   kw.bookmarkID := 'bookmarkID';
+//   kw.searchPattern := 'searchPattern';
+//   kw.page := '1';
+//   testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
+//   list := TList<TOPPHelpHintMap>.create;
+//   list.Add(testValue);
+//
+//   TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
 end;
 
 { public }
@@ -217,7 +224,6 @@ begin
   fReader := findOrCreateReader(identifier);
   if Assigned(fReader) then
   begin
-
     result := fReader.FindHintDataForBookmarkIdentifier(identifier);
   end;
 end;
@@ -262,7 +268,7 @@ end;
 
 procedure TOPPHelpHintServer.GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion);
 var
-  fHintMetaList: TList<TOPPHelpHintMeta>;
+  fChildrenHintsMeta: TList<TOPPHelpHintMeta>;
   fHintMeta: TOPPHelpHintMeta;
   id: String;
   fKeyword: TOPPHelpIdentifier;
@@ -276,8 +282,8 @@ begin
     exit;
   end;
 
-  fHintMetaList := Control.GetControlHintsMeta();
-  for fHintMeta in fHintMetaList do
+  fChildrenHintsMeta := Control.GetChildrenHintsMeta();
+  for fHintMeta in fChildrenHintsMeta do
   begin
     id := fHintMeta.hintIdentifier;
     fKeyword := TOPPHelpIdentifier.Create();
@@ -286,7 +292,7 @@ begin
     self.findOrCreateReader(fKeyword);
   end;
 
-  self.GetHints(fHintMetaList, completion);
+  self.GetHints(fChildrenHintsMeta, completion);
 
 end;
 
