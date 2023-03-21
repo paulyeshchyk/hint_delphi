@@ -22,6 +22,7 @@
                   "fKeywordType": "ktAny"
                 }
               },
+              "fIdentifier": "Kod_MKC",
               "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
             }
           },
@@ -37,6 +38,7 @@
                   "fKeywordType": "ktAny"
                 }
               },
+              "fIdentifier": "Kod_OKWED",
               "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
             }
           },
@@ -52,6 +54,7 @@
                   "fKeywordType": "ktAny"
                 }
               },
+              "fIdentifier": "KodOKPD2",
               "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
             }
           },
@@ -67,6 +70,7 @@
                   "fKeywordType": "ktAny"
                 }
               },
+              "fIdentifier": "Kod_KWED2",
               "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
             }
           }

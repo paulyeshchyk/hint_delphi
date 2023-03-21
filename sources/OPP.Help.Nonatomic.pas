@@ -5,6 +5,9 @@ interface
 type
   TOPPKeywordType = (ktAny, ktBookmark, ktSearch, ktPage);
 
+  TOPPHelpHintMapIdentifier = String;
+  TOPPHintIdentifierType = String;
+
   TOPPHelpPredicate = class
   private
     fValue: String;

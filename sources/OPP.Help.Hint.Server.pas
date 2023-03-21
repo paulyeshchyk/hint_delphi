@@ -58,7 +58,7 @@ type
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure reloadConfigurationIfNeed();
-    function findOrCreateReader(AIdentifier: TOPPHelpPredicate): IOPPHelpHintDataReader;
+    function findOrCreateReader(AHintIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
 
     procedure temporarySave();
@@ -68,7 +68,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    function GetHintData(identifier: TOPPHelpPredicate): TOPPHelpHintData;
+    function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
     procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
 
@@ -178,13 +178,15 @@ end;
 
 { public }
 
-function TOPPHelpHintServer.findOrCreateReader(AIdentifier: TOPPHelpPredicate): IOPPHelpHintDataReader;
+//TODO: add callback where hintmap and reader be returned
+//reader will take predicate from hintmap and then it should run search using predicate
+function TOPPHelpHintServer.findOrCreateReader(AHintIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
 var
   fMap: TOPPHelpHintMap;
 begin
   result := nil;
 
-  fMap := fHintMapSet.GetMap(AIdentifier);
+  fMap := fHintMapSet.GetMap(AHintIdentifier);
   if not Assigned(fMap) then
     exit;
 
@@ -208,7 +210,7 @@ begin
     except
       on e: Exception do
       begin
-        //
+        e.Log();
       end;
     end;
 
@@ -217,7 +219,7 @@ begin
   end;
 end;
 
-function TOPPHelpHintServer.GetHintData(identifier: TOPPHelpPredicate): TOPPHelpHintData;
+function TOPPHelpHintServer.GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
 var
   fReader: IOPPHelpHintDataReader;
 begin
@@ -226,21 +228,16 @@ begin
   if not fLoaded then
     exit;
 
-  fReader := findOrCreateReader(identifier);
+  fReader := findOrCreateReader(AHintIdentifier);
   if Assigned(fReader) then
   begin
-    result := fReader.FindHintDataForBookmarkIdentifier(identifier);
+    result := fReader.FindHintDataForBookmarkIdentifier(AHintIdentifier);
   end;
 end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
-var
-  fIdentifier: TOPPHelpPredicate;
 begin
-  fIdentifier := TOPPHelpPredicate.Create();
-  fIdentifier.value := hintMeta.hintIdentifier;
-
-  result.data := GetHintData(fIdentifier);
+  result.data := GetHintData(hintMeta.hintIdentifier);
   result.meta := hintMeta;
 end;
 
@@ -273,10 +270,9 @@ end;
 
 procedure TOPPHelpHintServer.GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion);
 var
-  fChildrenHintsMeta: TList<TOPPHelpHintMeta>;
-  fHintMeta: TOPPHelpHintMeta;
-  id: String;
-  fKeyword: TOPPHelpPredicate;
+  fChildrenInfoList: TList<TOPPHelpHintMeta>;
+  fChildInfo: TOPPHelpHintMeta;
+  fHintIdentifier: TOPPHelpHintMapIdentifier;
 begin
 
   self.reloadConfigurationIfNeed();
@@ -287,18 +283,15 @@ begin
     exit;
   end;
 
-  fChildrenHintsMeta := Control.GetChildrenHintsMeta();
-  for fHintMeta in fChildrenHintsMeta do
+  fChildrenInfoList := Control.GetChildrenHintsMeta();
+  for fChildInfo in fChildrenInfoList do
   begin
-    id := fHintMeta.hintIdentifier;
-    fKeyword := TOPPHelpPredicate.Create();
-    fKeyword.value := id;
+    fHintIdentifier := fChildInfo.hintIdentifier;
 
-    self.findOrCreateReader(fKeyword);
+    self.findOrCreateReader(fHintIdentifier);
   end;
 
-  self.GetHints(fChildrenHintsMeta, completion);
-
+  self.GetHints(fChildrenInfoList, completion);
 end;
 
 function TOPPHelpHintServer.getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;

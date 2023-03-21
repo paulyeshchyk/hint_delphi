@@ -4,11 +4,10 @@ interface
 
 uses
   System.SysUtils, System.Generics.Collections,
+  OPP.Help.Nonatomic,
   OPP.Help.System;
 
 type
-
-  TOPPHintIdentifierType = String;
 
   TOPPHelpHintMeta = record
     propertyName: String;
