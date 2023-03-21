@@ -22,7 +22,7 @@ implementation
 uses
   System.SysUtils,
   Winapi.Windows,
-  OPP.Help.Shortcut.Mapping.Filereader;
+  OPP.Help.Shortcut.Mapping.Filereader, OPP.System;
 
 constructor TOPPHelpShortcutDataset.Create;
 begin
@@ -40,15 +40,14 @@ begin
       fShortcutHelpMatrix.Clear;
       if Assigned(error) then
       begin
-        // OutputDebugString(error.ClassName.toWideChar);
+        error.Log();
         exit;
       end;
+
       for map in AList do
       begin
         if Assigned(map) then
-        begin
           self.fShortcutHelpMatrix.add(map.HelpKeyword, map);
-        end;
       end;
     end;
 
@@ -67,7 +66,7 @@ begin
     except
       on e: Exception do
       begin
-        //
+        e.Log();
       end;
     end;
 

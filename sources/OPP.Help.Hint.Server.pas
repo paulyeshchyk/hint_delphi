@@ -144,7 +144,7 @@ begin
 
       if Assigned(error) then
       begin
-        OutputDebugString(error.className.toWideChar);
+        error.Log();
         exit;
       end;
       if Assigned(AList) then
