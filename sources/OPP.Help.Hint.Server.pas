@@ -86,7 +86,7 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
-  OPP.Help.Hint.Mapping.Filereader;
+  OPP.Help.Hint.Mapping.Filereader, Windows, OPP.System;
 
 var
   fLock: TCriticalSection;
@@ -139,10 +139,17 @@ begin
 
   fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpHintMap>; error: Exception)
     begin
+
+      self.fLoaded := true;
+
+      if Assigned(error) then
+      begin
+        OutputDebugString(error.className.toWideChar);
+        exit;
+      end;
       if Assigned(AList) then
         fHintMapSet.list.AddRange(AList);
 
-      self.fLoaded := true;
     end;
 
   fFileName := fOnHintTextsFileNameRequest();
@@ -166,7 +173,7 @@ begin
   // list := TList<TOPPHelpHintMap>.create;
   // list.Add(testValue);
   //
-  // TOPPHelpHintMap.saveJSON(list, 'help\hints_matrix1.json')
+  // TOPPHelpHintMap.saveJSON(list, 'help\mapping\hints_matrix1.json')
 end;
 
 { public }

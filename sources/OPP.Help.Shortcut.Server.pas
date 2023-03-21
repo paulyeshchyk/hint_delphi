@@ -39,8 +39,8 @@ uses
   OPP.Help.LargeForm;
 
 const
-  shortcutJSONFileName: String = 'help\shortcut_matrix.json';
-  pdfFileName: String = 'docs\readme.pdf';
+  shortcutJSONFileName: String = 'help\mapping\shortcut_matrix.json';
+  pdfFileName: String = 'help\shortcuts\readme.pdf';
 
 var
   fLock: TCriticalSection;
