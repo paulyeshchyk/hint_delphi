@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.131,=D:\hint_delphi\New1.txt</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.251,D:\hint_delphi\New1.txt=D:\hint_delphi\sources\docs\readme.txt</Transaction>
+  </Transactions>
+</BorlandProject>
