@@ -32,8 +32,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
     procedure loadContent(AStream: TMemoryStream);
-    procedure openPage(APageIndex: Integer);
     procedure setPredicate(APredicate: TOPPHelpPredicate);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
@@ -52,15 +52,20 @@ uses System.SysUtils;
 constructor TOPPHelpViewFullScreen.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  self.BevelOuter := bvNone;
+
   fPDFViewer := TdxPDFViewer.Create(self);
   fPDFViewer.parent := self;
   fPDFViewer.Align := alClient;
   fPDFViewer.OptionsZoom.ZoomMode := pzmPageWidth;
   fPDFViewer.OnDocumentLoaded := onPDFViewer1DocumentLoaded;
+
   fHasLoadedContent := false;
+
   fSearchTimer := TTimer.Create(self);
   fSearchTimer.Enabled := false;
   fSearchTimer.OnTimer := onTimerTick;
+
   fEventListeners := TList<IOPPHelpViewEventListener>.Create();
 end;
 
@@ -118,11 +123,6 @@ end;
 function TOPPHelpViewFullScreen.getPDFDocument(): TdxPDFDocument;
 begin
   result := fPDFViewer.Document
-end;
-
-procedure TOPPHelpViewFullScreen.openPage(APageIndex: Integer);
-begin
-  fPDFViewer.CurrentPageIndex := APageIndex;
 end;
 
 procedure TOPPHelpViewFullScreen.doSearchIfPossible();

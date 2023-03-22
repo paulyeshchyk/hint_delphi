@@ -52,8 +52,6 @@ type
     { Public declarations }
     property stream: TMemoryStream read fStream write setStream;
     property predicate: TOPPHelpPredicate read fPredicate write setPredicate;
-
-    procedure openPage(AIndex: Integer);
   end;
 
 var
@@ -113,11 +111,6 @@ end;
 procedure TOPPHelpLargeForm.setStream(AStream: TMemoryStream);
 begin
   fHelpFullScreen.loadContent(AStream);
-end;
-
-procedure TOPPHelpLargeForm.openPage(AIndex: Integer);
-begin
-  fHelpFullScreen.openPage(AIndex);
 end;
 
 end.

@@ -17,7 +17,6 @@ type
 
   IOPPHelpViewFullScreen = interface
     procedure loadContent(AStream: TMemoryStream);
-    procedure openPage(APageIndex: Integer);
     procedure setPredicate(APredicate: TOPPHelpPredicate);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);

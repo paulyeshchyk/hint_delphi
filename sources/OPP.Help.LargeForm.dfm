@@ -40,8 +40,8 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
       True)
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 312
-    Top = 288
+    Left = 536
+    Top = 48
     PixelsPerInch = 96
     DockControlHeights = (
       0
