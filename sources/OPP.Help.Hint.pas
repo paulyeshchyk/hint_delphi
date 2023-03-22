@@ -4,25 +4,20 @@ interface
 
 uses
   System.SysUtils, System.Generics.Collections,
+  OPP.Help.Meta,
   OPP.Help.Nonatomic;
 
 type
-
-  TOPPHelpHintMeta = record
-    propertyName: String;
-    hintIdentifier: TOPPHintIdentifierType;
-    constructor Create(APropertyName: String; AHintIdentifier: TOPPHintIdentifierType);
-  end;
 
   TOPPHelpHintData = record
     text: String;
     rtf: String;
   end;
 
-  TOPPHintIdList = TList<TOPPHelpHintMeta>;
+  TOPPHintIdList = TList<TOPPHelpMeta>;
 
   TOPPHelpHint = record
-    meta: TOPPHelpHintMeta;
+    meta: TOPPHelpMeta;
     data: TOPPHelpHintData;
   end;
 
@@ -35,12 +30,6 @@ type
   end;
 
 implementation
-
-constructor TOPPHelpHintMeta.Create(APropertyName: string; AHintIdentifier: string);
-begin
-  propertyName := aPropertyName;
-  hintIdentifier := AHintIdentifier;
-end;
 
 function TOPPHelpHintHelper.isEmpty(): Boolean;
 begin

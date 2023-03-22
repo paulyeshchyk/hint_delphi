@@ -222,6 +222,7 @@
         <DCCReference Include="sources\OPP.Help.Vcl.Control.Hint.pas"/>
         <DCCReference Include="sources\OPP.Help.Vcl.Control.Styler.pas"/>
         <DCCReference Include="sources\OPP.Help.System.Str.pas"/>
+        <DCCReference Include="sources\OPP.Help.Meta.pas"/>
         <None Include="sources\notes\readme.md"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

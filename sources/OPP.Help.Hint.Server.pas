@@ -11,7 +11,8 @@ uses
   //
   OPP.Help.Nonatomic,
   OPP.Help.Hint.Mapping,
-  OPP.Help.Hint.Reader;
+  OPP.Help.Hint.Reader,
+  OPP.Help.Meta;
 
 type
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
@@ -25,7 +26,7 @@ type
     ///
     /// </summary>
     /// <remarks> </remarks>
-    function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
+    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
 
     /// <summary>
     /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
@@ -74,7 +75,7 @@ type
 
     procedure registerHintMeta(propertyName: String; component: PTypeInfo);
 
-    function GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint; overload;
+    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint; overload;
 
     function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
@@ -235,7 +236,7 @@ begin
   end;
 end;
 
-function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpHintMeta): TOPPHelpHint;
+function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
 begin
   result.data := GetHintData(hintMeta.hintIdentifier);
   result.meta := hintMeta;
@@ -243,7 +244,7 @@ end;
 
 procedure TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion);
 var
-  fHintMeta: TOPPHelpHintMeta;
+  fHintMeta: TOPPHelpMeta;
   fHint: TOPPHelpHint;
   result: TList<TOPPHelpHint>;
 begin
@@ -270,8 +271,8 @@ end;
 
 procedure TOPPHelpHintServer.GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion);
 var
-  fChildrenInfoList: TList<TOPPHelpHintMeta>;
-  fChildInfo: TOPPHelpHintMeta;
+  fChildrenInfoList: TList<TOPPHelpMeta>;
+  fChildInfo: TOPPHelpMeta;
   fHintIdentifier: TOPPHelpHintMapIdentifier;
 begin
 
@@ -283,7 +284,7 @@ begin
     exit;
   end;
 
-  fChildrenInfoList := Control.GetChildrenHintsMeta();
+  fChildrenInfoList := Control.GetChildrenHelpMeta();
   for fChildInfo in fChildrenInfoList do
   begin
     fHintIdentifier := fChildInfo.hintIdentifier;

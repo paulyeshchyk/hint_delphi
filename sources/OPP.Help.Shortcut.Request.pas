@@ -18,7 +18,7 @@ type
     property activeControl: TWinControl read fActiveControl;
 
     constructor create(activeControl: TWinControl; msg: TWMHelp);
-    function getHelpData(): String;
+    function GetShortcutIdentifier(): String;
   end;
 
 implementation
@@ -30,7 +30,7 @@ begin
   fActiveControl := activeControl;
 end;
 
-function TOPPHelpShortcutRequest.getHelpData(): String;
+function TOPPHelpShortcutRequest.GetShortcutIdentifier(): String;
 begin
   result := fActiveControl.HelpKeyword;
 end;

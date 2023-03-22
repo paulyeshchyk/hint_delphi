@@ -68,9 +68,8 @@ begin
 
   fPDFMemoryStream := TDictionary<String, TMemoryStream>.create;
 
-  fShortcutDataset := TOPPHelpShortcutDataset.create;
+  fShortcutDataset := TOPPHelpShortcutDataset.Create;
   fShortcutDataset.load(shortcutJSONFileName);
-  // loadPDF(pdfFileName);
 end;
 
 destructor TOPPHelpShortcutServer.Destroy;
@@ -116,7 +115,7 @@ var
   Mapping: TOPPHelpShortcutMap;
   fStream: TMemoryStream;
 begin
-  helpData := Request.getHelpData();
+  helpData := Request.GetShortcutIdentifier();
   Mapping := fShortcutDataset.getMapping(helpData);
   if Assigned(Mapping) then
   begin

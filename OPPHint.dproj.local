@@ -3,6 +3,8 @@
 	<Transactions/>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="sources"/>
+    <File Path="sources\notes"/>
+    <File Path="sources\notes\readme.md"/>
     <File Path="sources\OPP.Help.Hint.pas"/>
     <File Path="sources\OPP.Help.Hint.FormHelper.pas"/>
     <File Path="sources\OPP.Help.Hint.Mapping.pas"/>
@@ -12,6 +14,7 @@
     <File Path="sources\OPP.Help.JSON.pas"/>
     <File Path="sources\OPP.Help.LargeForm.pas"/>
     <File Path="sources\OPP.Help.LargeForm.dfm"/>
+    <File Path="sources\OPP.Help.Meta.pas"/>
     <File Path="sources\OPP.Help.Nonatomic.pas"/>
     <File Path="sources\OPP.Help.Shortcut.Dataset.pas"/>
     <File Path="sources\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
@@ -23,8 +26,6 @@
     <File Path="sources\OPP.Help.System.Thread.pas"/>
     <File Path="sources\OPP.Help.Vcl.Control.Hint.pas"/>
     <File Path="sources\OPP.Help.Vcl.Control.Styler.pas"/>
-    <File Path="sources\notes"/>
-    <File Path="sources\notes\readme.md"/>
     <File Path="cxDataRS25.dcp"/>
     <File Path="cxEditorsRS25.dcp"/>
     <File Path="cxGridRS25.dcp"/>
@@ -96,12 +97,12 @@
     <File Path="dxSkinWhiteprintRS25.dcp"/>
     <File Path="dxSkinXmas2008BlueRS25.dcp"/>
     <File Path="dxSpreadSheetCoreRS25.dcp"/>
+    <File Path="IndyCore.dcp"/>
+    <File Path="IndyProtocols.dcp"/>
+    <File Path="IndySystem.dcp"/>
     <File Path="RESTComponents.dcp"/>
     <File Path="rtl.dcp"/>
     <File Path="vcl.dcp"/>
     <File Path="vclwinx.dcp"/>
-    <File Path="IndySystem.dcp"/>
-    <File Path="IndyProtocols.dcp"/>
-    <File Path="IndyCore.dcp"/>
   </ProjectSortOrder>
 </BorlandProject>

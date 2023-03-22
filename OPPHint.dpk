@@ -126,6 +126,7 @@ contains
   OPP.Help.System.Thread in 'sources\OPP.Help.System.Thread.pas',
   OPP.Help.Vcl.Control.Hint in 'sources\OPP.Help.Vcl.Control.Hint.pas',
   OPP.Help.Vcl.Control.Styler in 'sources\OPP.Help.Vcl.Control.Styler.pas',
-  OPP.Help.System.Str in 'sources\OPP.Help.System.Str.pas';
+  OPP.Help.System.Str in 'sources\OPP.Help.System.Str.pas',
+  OPP.Help.Meta in 'sources\OPP.Help.Meta.pas';
 
 end.

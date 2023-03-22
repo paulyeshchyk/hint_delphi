@@ -5,30 +5,30 @@ interface
 uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
   Vcl.Controls, Vcl.StdCtrls,
-  OPP.Help.Hint;
+  OPP.Help.Meta;
 
 type
 
-  TComponentHintEnumerator = class helper for TComponent
+  TOPPHelpComponentEnumerator = class helper for TComponent
   public
 
     /// <summary>
-    /// Возворащает список TOPPHintMeta, применимых для данного компонента.
+    /// Возворащает список TOPPHelpMeta, применимых для данного компонента.
     ///
-    /// Ключ для TOPPHintMeta берётся из значения свойства компонента, указанного в аргументе propertyName
+    /// Ключ для TOPPHelpMeta берётся из значения свойства компонента, указанного в аргументе propertyName
     ///
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
-    function GetChildrenHintsMeta(): TList<TOPPHelpHintMeta>;
-    function FindSubControl(meta: TOPPHelpHintMeta): TControl;
-    function GetHintMeta: TOPPHelpHintMeta;
+    function GetChildrenHelpMeta(): TList<TOPPHelpMeta>;
+    function FindSubControl(meta: TOPPHelpMeta): TControl;
+    function GetHelpMeta: TOPPHelpMeta;
   end;
 
 implementation
 
-function TComponentHintEnumerator.GetHintMeta: TOPPHelpHintMeta;
+function TOPPHelpComponentEnumerator.GetHelpMeta: TOPPHelpMeta;
 begin
-  result := TOPPHelpHintMeta.Create('Name', self.Name);
+  result := TOPPHelpMeta.Create('Name', self.Name);
 
   if TEdit = self.ClassType then
   begin
@@ -45,26 +45,25 @@ begin
 
 end;
 
-function TComponentHintEnumerator.GetChildrenHintsMeta(): TList<TOPPHelpHintMeta>;
+function TOPPHelpComponentEnumerator.GetChildrenHelpMeta(): TList<TOPPHelpMeta>;
 var
   child: TComponent;
   i: Integer;
-  fChildHintMeta: TOPPHelpHintMeta;
+  fChildHintMeta: TOPPHelpMeta;
 begin
-  result := TList<TOPPHelpHintMeta>.Create();
+  result := TList<TOPPHelpMeta>.Create();
 
   for i := 0 to ComponentCount - 1 do
   begin
     child := self.Components[i];
 
-    fChildHintMeta := child.GetHintMeta();
+    fChildHintMeta := child.GetHelpMeta();
     result.Add(fChildHintMeta);
-    result.AddRange(TWinControl(child).GetChildrenHintsMeta());
-
+    result.AddRange(TWinControl(child).GetChildrenHelpMeta());
   end;
 end;
 
-function TComponentHintEnumerator.FindSubControl(meta: TOPPHelpHintMeta): TControl;
+function TOPPHelpComponentEnumerator.FindSubControl(meta: TOPPHelpMeta): TControl;
 var
   i: Integer;
   child, nextLevelChild: TComponent;
