@@ -191,6 +191,12 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
+                <DeployFile LocalName="sources\docs\readme.txt" Configuration="Debug" Class="File">
+                    <Platform Name="Win32">
+                        <RemoteName>readme.txt</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHintSample.exe</RemoteName>
@@ -198,12 +204,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="sources\docs\readme.txt" Configuration="Debug" Class="File">
-                    <Platform Name="Win32">
-                        <RemoteName>readme.txt</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

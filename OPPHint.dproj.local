@@ -18,11 +18,13 @@
     <File Path="sources\OPP.Help.Shortcut.Mapping.pas"/>
     <File Path="sources\OPP.Help.Shortcut.Request.pas"/>
     <File Path="sources\OPP.Help.Shortcut.Server.pas"/>
+    <File Path="sources\OPP.Help.System.Str.pas"/>
     <File Path="sources\OPP.Help.System.Error.pas"/>
-    <File Path="sources\OPP.Help.System.pas"/>
     <File Path="sources\OPP.Help.System.Thread.pas"/>
     <File Path="sources\OPP.Help.Vcl.Control.Hint.pas"/>
     <File Path="sources\OPP.Help.Vcl.Control.Styler.pas"/>
+    <File Path="sources\notes"/>
+    <File Path="sources\notes\readme.md"/>
     <File Path="cxDataRS25.dcp"/>
     <File Path="cxEditorsRS25.dcp"/>
     <File Path="cxGridRS25.dcp"/>

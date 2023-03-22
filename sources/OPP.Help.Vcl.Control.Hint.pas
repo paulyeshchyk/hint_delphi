@@ -4,8 +4,7 @@ interface
 
 uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
-  VCL.Controls, VCL.StdCtrls,
-  OPP.Help.System,
+  Vcl.Controls, Vcl.StdCtrls,
   OPP.Help.Hint;
 
 type

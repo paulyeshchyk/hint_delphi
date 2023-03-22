@@ -20,9 +20,9 @@ type
 implementation
 
 uses
-  System.SysUtils,
-  Winapi.Windows,
-  OPP.Help.Shortcut.Mapping.Filereader, OPP.Help.System;
+  System.SysUtils, Winapi.Windows,
+  OPP.Help.System.Error,
+  OPP.Help.Shortcut.Mapping.Filereader;
 
 constructor TOPPHelpShortcutDataset.Create;
 begin
@@ -33,14 +33,14 @@ function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
 var
   callback: TOPPHelpShortcutMapJSONReadCallback;
 begin
-  callback := procedure(AList: TList<TOPPHelpShortcutMap>; error: Exception)
+  callback := procedure(AList: TList<TOPPHelpShortcutMap>; Error: Exception)
     var
       map: TOPPHelpShortcutMap;
     begin
       fShortcutHelpMatrix.Clear;
-      if Assigned(error) then
+      if Assigned(Error) then
       begin
-        error.Log();
+        Error.Log();
         exit;
       end;
 

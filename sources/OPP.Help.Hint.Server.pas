@@ -86,7 +86,7 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
-  OPP.Help.Hint.Mapping.Filereader, Windows, OPP.Help.System;
+  OPP.Help.Hint.Mapping.Filereader, Windows, OPP.Help.System.Error;
 
 var
   fLock: TCriticalSection;

@@ -37,7 +37,7 @@ function helpShortcutServer: IOPPHelpShortcutServer;
 implementation
 
 uses
-  OPP.Help.LargeForm, OPP.Help.System;
+  OPP.Help.LargeForm, OPP.Help.System.Str;
 
 const
   shortcutJSONFileName: String = 'help\mapping\shortcut_matrix.json';
