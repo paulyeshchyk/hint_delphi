@@ -126,6 +126,9 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="vclwinx.dcp"/>
         <DCCReference Include="dbrtl.dcp"/>
+        <DCCReference Include="IndySystem.dcp"/>
+        <DCCReference Include="IndyProtocols.dcp"/>
+        <DCCReference Include="IndyCore.dcp"/>
         <DCCReference Include="dxCoreRS25.dcp"/>
         <DCCReference Include="cxLibraryRS25.dcp"/>
         <DCCReference Include="dxGDIPlusRS25.dcp"/>

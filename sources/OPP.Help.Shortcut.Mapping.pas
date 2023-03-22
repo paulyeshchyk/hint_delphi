@@ -23,9 +23,9 @@ type
   private
     fList: TList<TOPPHelpShortcutMap>;
   public
-    property list: TList<TOPPHelpShortcutMap> read fList write fList;
-
     constructor Create(AList: TList<TOPPHelpShortcutMap>);
+
+    property list: TList<TOPPHelpShortcutMap> read fList write fList;
   end;
 
 implementation

@@ -98,5 +98,8 @@
     <File Path="rtl.dcp"/>
     <File Path="vcl.dcp"/>
     <File Path="vclwinx.dcp"/>
+    <File Path="IndySystem.dcp"/>
+    <File Path="IndyProtocols.dcp"/>
+    <File Path="IndyCore.dcp"/>
   </ProjectSortOrder>
 </BorlandProject>

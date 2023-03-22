@@ -18,6 +18,7 @@
                 "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
                 "id": 23,
                 "fields": {
+                  "fFilename": ".\\help\\shortcuts\\readme.pdf",
                   "fValue": "совокупность свойств продукции, обусловливающих её пригодность",
                   "fKeywordType": "ktSearch"
                 }
@@ -33,6 +34,7 @@
                 "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
                 "id": 22,
                 "fields": {
+                  "fFilename": ".\\help\\shortcuts\\readme.pdf",
                   "fValue": "(ОКВЭД 2) ОК 029-2014",
                   "fKeywordType": "ktSearch"
                 }
@@ -48,6 +50,7 @@
                 "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
                 "id": 21,
                 "fields": {
+                  "fFilename": ".\\help\\shortcuts\\readme.pdf",
                   "fValue": "Рисунок 1303",
                   "fKeywordType": "ktSearch"
                 }

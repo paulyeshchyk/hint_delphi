@@ -5,13 +5,15 @@
 
 interface
 
-uses SysUtils, Windows;
+uses SysUtils, Windows,
+  IdGlobal, IdHash, IdHashMessageDigest;
 
 type
   StringHelper = record helper for
     String
     function isEmpty(): Boolean;
     function toWideChar: PWideChar;
+    function hashString(): String;
   end;
 
   ErrorHelper = class helper for Exception
@@ -26,6 +28,19 @@ begin
   OutputDebugString(self.ClassName.toWideChar);
 end;
 
+function StringHelper.hashString(): String;
+var
+    hashMessageDigest5 : TIdHashMessageDigest5;
+begin
+    hashMessageDigest5 := nil;
+    try
+        hashMessageDigest5 := TIdHashMessageDigest5.Create;
+        Result := IdGlobal.IndyLowerCase ( hashMessageDigest5.HashStringAsHex ( self ) );
+    finally
+        hashMessageDigest5.Free;
+    end;
+end;
+
 function StringHelper.toWideChar: PWideChar;
 var
   oleStr: PWideChar;
@@ -33,7 +48,7 @@ begin
   GetMem(oleStr, (Length(self) + 1) * SizeOf(WideChar));
   try
     StringToWideChar(self, oleStr, Length(self) + 1);
-    result := oleStr;
+    Result := oleStr;
   finally
     FreeMem(oleStr);
   end;
@@ -41,7 +56,7 @@ end;
 
 function StringHelper.isEmpty: Boolean;
 begin
-  result := (Length(self) = 0);
+  Result := (Length(self) = 0);
 end;
 
 end.

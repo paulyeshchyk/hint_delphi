@@ -3,6 +3,7 @@
 interface
 
 uses
+  System.Generics.Collections,
   System.SysUtils, System.SyncObjs, System.Classes,
 
   WinAPI.Messages,
@@ -21,8 +22,8 @@ type
   TOPPHelpShortcutServer = class(TInterfacedObject, IOPPHelpShortcutServer)
   private
     fShortcutDataset: TOPPHelpShortcutDataset;
-    fPDFMemoryStream: TMemoryStream;
-    procedure loadPDF(AFileName: String);
+    fPDFMemoryStream: TDictionary<String, TMemoryStream>;
+    function loadPDF(AFileName: String): TMemoryStream;
   public
     function showHelp(Request: TOPPHelpShortcutRequest): Boolean;
     function showManual(pageIndex: Integer): Boolean;
@@ -36,11 +37,10 @@ function helpShortcutServer: IOPPHelpShortcutServer;
 implementation
 
 uses
-  OPP.Help.LargeForm;
+  OPP.Help.LargeForm, OPP.Help.System;
 
 const
   shortcutJSONFileName: String = 'help\mapping\shortcut_matrix.json';
-  pdfFileName: String = 'help\shortcuts\readme.pdf';
 
 var
   fLock: TCriticalSection;
@@ -66,9 +66,11 @@ constructor TOPPHelpShortcutServer.create;
 begin
   inherited create;
 
+  fPDFMemoryStream := TDictionary<String, TMemoryStream>.create;
+
   fShortcutDataset := TOPPHelpShortcutDataset.create;
   fShortcutDataset.load(shortcutJSONFileName);
-  loadPDF(pdfFileName);
+  // loadPDF(pdfFileName);
 end;
 
 destructor TOPPHelpShortcutServer.Destroy;
@@ -78,22 +80,33 @@ begin
   inherited Destroy;
 end;
 
-procedure TOPPHelpShortcutServer.loadPDF(AFileName: String);
+function TOPPHelpShortcutServer.loadPDF(AFileName: String): TMemoryStream;
+var
+  hash: String;
+  fStream: TMemoryStream;
 begin
-  fPDFMemoryStream := TMemoryStream.create;
-  fPDFMemoryStream.loadFromFile(AFileName);
-  fPDFMemoryStream.Position := 0;
+  hash := AFileName.hashString;
+  fPDFMemoryStream.TryGetValue(hash, fStream);
+  if not Assigned(fStream) then
+  begin
+    fStream := TMemoryStream.create;
+    fStream.loadFromFile(AFileName);
+    fStream.Position := 0;
+
+    fPDFMemoryStream.Add(hash, fStream);
+  end;
+  result := fStream;
 end;
 
 function TOPPHelpShortcutServer.showManual(pageIndex: Integer): Boolean;
-var
-  helpForm: TOPPHelpLargeForm;
+// var
+// helpForm: TOPPHelpLargeForm;
 begin
-  helpForm := TOPPHelpLargeForm.create(nil);
-  helpForm.stream := fPDFMemoryStream;
-  helpForm.openPage(3);
-  helpForm.ShowModal;
-  result := true;
+  // helpForm := TOPPHelpLargeForm.create(nil);
+  // helpForm.stream := fPDFMemoryStream;
+  // helpForm.openPage(3);
+  // helpForm.ShowModal;
+  // result := true;
 end;
 
 function TOPPHelpShortcutServer.showHelp(Request: TOPPHelpShortcutRequest): Boolean;
@@ -101,13 +114,15 @@ var
   helpForm: TOPPHelpLargeForm;
   helpData: String;
   Mapping: TOPPHelpShortcutMap;
+  fStream: TMemoryStream;
 begin
   helpData := Request.getHelpData();
   Mapping := fShortcutDataset.getMapping(helpData);
   if Assigned(Mapping) then
   begin
+    fStream := loadPDF(mapping.predicate.fileName);
     helpForm := TOPPHelpLargeForm.create(nil);
-    helpForm.stream := fPDFMemoryStream;
+    helpForm.stream := fStream;
     helpForm.shortcutMap := Mapping;
     helpForm.ShowModal;
     result := true;
