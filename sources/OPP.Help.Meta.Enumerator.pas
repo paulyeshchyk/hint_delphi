@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Vcl.Control.Hint;
+﻿unit OPP.Help.Meta.Enumerator;
 
 interface
 
@@ -33,12 +33,12 @@ begin
   if TEdit = self.ClassType then
   begin
     result.propertyName := 'HelpKeyword';
-    result.hintIdentifier := (self as TEdit).HelpKeyword;
+    result.identifier := (self as TEdit).HelpKeyword;
   end
   else if TCheckBox = self.ClassType then
   begin
     result.propertyName := 'HelpKeyword';
-    result.hintIdentifier := (self as TCheckBox).HelpKeyword;
+    result.identifier := (self as TCheckBox).HelpKeyword;
   end else begin
     // nothing to do here
   end;
@@ -79,7 +79,7 @@ begin
     if (IsPublishedProp(child, meta.propertyName)) then
     begin
       valueToCompare := String(GetPropValue(child, meta.propertyName));
-      found := CompareStr(valueToCompare, meta.hintIdentifier) = 0;
+      found := CompareStr(valueToCompare, meta.identifier) = 0;
       if found then
       begin
         result := TControl(child);

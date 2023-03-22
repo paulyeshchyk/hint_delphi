@@ -17,7 +17,7 @@ type
     /// </summary>
     function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
 
-    function FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHintIdentifierType): TOPPHelpHintData;
+    function FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpHintData;
   end;
 
   TOPPHelpRichtextHintReader = class(TInterfacedObject, IOPPHelpHintDataReader)
@@ -27,7 +27,7 @@ type
     fLoaded: Boolean;
     fRichEditControl: TdxRichEditControl;
     function getDocument(): IdxRichEditDocument;
-    function GetBookmark(AHintIdentifier: TOPPHintIdentifierType): IdxRichEditBookmark;
+    function GetBookmark(AHintIdentifier: TOPPHelpMetaIdentifierType): IdxRichEditBookmark;
     function GetParagraph(bookmark: IdxRichEditBookmark): IdxRichEditParagraph; overload;
     function GetParagraph(position: IdxRichEditDocumentPosition): IdxRichEditParagraph; overload;
     function GetPlainText(paragraph: IdxRichEditParagraph): String;
@@ -37,7 +37,7 @@ type
     constructor Create;
     destructor Destroy; override;
     function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
-    function FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHintIdentifierType): TOPPHelpHintData;
+    function FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpHintData;
   end;
 
 implementation
@@ -71,7 +71,7 @@ begin
 
 end;
 
-function TOPPHelpRichtextHintReader.FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHintIdentifierType): TOPPHelpHintData;
+function TOPPHelpRichtextHintReader.FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpHintData;
 var
   bookmark: IdxRichEditBookmark;
   paragraph: IdxRichEditParagraph;
@@ -91,7 +91,7 @@ begin
   result := fRichEditControl.Document;
 end;
 
-function TOPPHelpRichtextHintReader.GetBookmark(AHintIdentifier: TOPPHintIdentifierType): IdxRichEditBookmark;
+function TOPPHelpRichtextHintReader.GetBookmark(AHintIdentifier: TOPPHelpMetaIdentifierType): IdxRichEditBookmark;
 begin
   result := nil;
   if Length(AHintIdentifier) = 0 then

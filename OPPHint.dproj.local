@@ -15,6 +15,7 @@
     <File Path="sources\OPP.Help.LargeForm.pas"/>
     <File Path="sources\OPP.Help.LargeForm.dfm"/>
     <File Path="sources\OPP.Help.Meta.pas"/>
+    <File Path="sources\OPP.Help.Meta.Enumerator.pas"/>
     <File Path="sources\OPP.Help.Nonatomic.pas"/>
     <File Path="sources\OPP.Help.Shortcut.Dataset.pas"/>
     <File Path="sources\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
@@ -24,7 +25,6 @@
     <File Path="sources\OPP.Help.System.Str.pas"/>
     <File Path="sources\OPP.Help.System.Error.pas"/>
     <File Path="sources\OPP.Help.System.Thread.pas"/>
-    <File Path="sources\OPP.Help.Vcl.Control.Hint.pas"/>
     <File Path="sources\OPP.Help.Vcl.Control.Styler.pas"/>
     <File Path="cxDataRS25.dcp"/>
     <File Path="cxEditorsRS25.dcp"/>

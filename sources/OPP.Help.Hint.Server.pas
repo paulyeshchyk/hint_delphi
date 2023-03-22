@@ -7,7 +7,7 @@ uses
   System.TypInfo,
   VCL.Controls,
   //
-  OPP.Help.Hint, OPP.Help.Vcl.Control.Hint,
+  OPP.Help.Hint, OPP.Help.Meta.Enumerator,
   //
   OPP.Help.Nonatomic,
   OPP.Help.Hint.Mapping,
@@ -59,7 +59,7 @@ type
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure reloadConfigurationIfNeed();
-    function findOrCreateReader(AHintIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
+    function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
 
     procedure temporarySave();
@@ -181,13 +181,13 @@ end;
 
 //TODO: add callback where hintmap and reader be returned
 //reader will take predicate from hintmap and then it should run search using predicate
-function TOPPHelpHintServer.findOrCreateReader(AHintIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
+function TOPPHelpHintServer.findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
 var
   fMap: TOPPHelpHintMap;
 begin
   result := nil;
 
-  fMap := fHintMapSet.GetMap(AHintIdentifier);
+  fMap := fHintMapSet.GetMap(AMetaIdentifier);
   if not Assigned(fMap) then
     exit;
 
@@ -238,7 +238,7 @@ end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
 begin
-  result.data := GetHintData(hintMeta.hintIdentifier);
+  result.data := GetHintData(hintMeta.identifier);
   result.meta := hintMeta;
 end;
 
@@ -273,7 +273,7 @@ procedure TOPPHelpHintServer.GetHints(Control: TControl; completion: TOPPHelpHin
 var
   fChildrenInfoList: TList<TOPPHelpMeta>;
   fChildInfo: TOPPHelpMeta;
-  fHintIdentifier: TOPPHelpHintMapIdentifier;
+  fMetaIdentifier: TOPPHelpHintMapIdentifier;
 begin
 
   self.reloadConfigurationIfNeed();
@@ -287,9 +287,9 @@ begin
   fChildrenInfoList := Control.GetChildrenHelpMeta();
   for fChildInfo in fChildrenInfoList do
   begin
-    fHintIdentifier := fChildInfo.hintIdentifier;
+    fMetaIdentifier := fChildInfo.identifier;
 
-    self.findOrCreateReader(fHintIdentifier);
+    self.findOrCreateReader(fMetaIdentifier);
   end;
 
   self.GetHints(fChildrenInfoList, completion);

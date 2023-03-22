@@ -6,7 +6,7 @@ type
   TOPPKeywordType = (ktAny, ktBookmark, ktSearch, ktPage);
 
   TOPPHelpHintMapIdentifier = String;
-  TOPPHintIdentifierType = String;
+  TOPPHelpMetaIdentifierType = String;
   TOPPHelpShortcutMapIdentifier = String;
 
   TOPPHelpPredicate = class

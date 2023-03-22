@@ -15,7 +15,8 @@ uses
 
 type
   IOPPHelpShortcutServer = interface
-    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;
+    function showHelp(AMapping: TOPPHelpShortcutMap): Boolean;overload;
+    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;overload;
     function showManual(pageIndex: Integer): Boolean;
   end;
 
@@ -25,7 +26,8 @@ type
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
     function loadPDF(AFileName: String): TMemoryStream;
   public
-    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;
+    function showHelp(AMapping: TOPPHelpShortcutMap): Boolean;overload;
+    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;overload;
     function showManual(pageIndex: Integer): Boolean;
     constructor create;
     destructor Destroy; override;
@@ -108,26 +110,32 @@ begin
   // result := true;
 end;
 
-function TOPPHelpShortcutServer.showHelp(Request: TOPPHelpShortcutRequest): Boolean;
+function TOPPHelpShortcutServer.showHelp(AMapping: TOPPHelpShortcutMap): Boolean;
 var
-  helpForm: TOPPHelpLargeForm;
-  helpData: String;
-  Mapping: TOPPHelpShortcutMap;
+  fHelpForm: TOPPHelpLargeForm;
   fStream: TMemoryStream;
 begin
-  helpData := Request.GetShortcutIdentifier();
-  Mapping := fShortcutDataset.getMapping(helpData);
-  if Assigned(Mapping) then
+  if Assigned(AMapping) then
   begin
-    fStream := loadPDF(mapping.predicate.fileName);
-    helpForm := TOPPHelpLargeForm.create(nil);
-    helpForm.stream := fStream;
-    helpForm.shortcutMap := Mapping;
-    helpForm.ShowModal;
+    fStream := loadPDF(AMapping.predicate.fileName);
+    fHelpForm := TOPPHelpLargeForm.create(nil);
+    fHelpForm.stream := fStream;
+    fHelpForm.shortcutMap := AMapping;
+    fHelpForm.ShowModal;
     result := true;
   end else begin
     result := false;
   end;
+end;
+
+function TOPPHelpShortcutServer.showHelp(Request: TOPPHelpShortcutRequest): Boolean;
+var
+  fhelpData: String;
+  fMapping: TOPPHelpShortcutMap;
+begin
+  fhelpData := Request.GetShortcutIdentifier();
+  fMapping := fShortcutDataset.getMapping(fhelpData);
+  showHelp(fMapping);
 end;
 
 initialization

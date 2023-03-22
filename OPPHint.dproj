@@ -219,7 +219,7 @@
         <DCCReference Include="sources\OPP.Help.Shortcut.Server.pas"/>
         <DCCReference Include="sources\OPP.Help.System.Error.pas"/>
         <DCCReference Include="sources\OPP.Help.System.Thread.pas"/>
-        <DCCReference Include="sources\OPP.Help.Vcl.Control.Hint.pas"/>
+        <DCCReference Include="sources\OPP.Help.Meta.Enumerator.pas"/>
         <DCCReference Include="sources\OPP.Help.Vcl.Control.Styler.pas"/>
         <DCCReference Include="sources\OPP.Help.System.Str.pas"/>
         <DCCReference Include="sources\OPP.Help.Meta.pas"/>

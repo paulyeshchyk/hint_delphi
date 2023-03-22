@@ -20,7 +20,7 @@ type
 implementation
 
 uses
-  OPP.Help.Vcl.Control.Hint, OPP.Help.Hint.Server;
+  OPP.Help.Meta.Enumerator, OPP.Help.Hint.Server;
 
 procedure TOPPHelpHintFormHelper.loadHint(RootControl: TControl; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
 var

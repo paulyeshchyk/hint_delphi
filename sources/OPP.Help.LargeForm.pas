@@ -117,38 +117,45 @@ procedure TOPPHelpLargeForm.doSearchIfPossible;
 begin
   if not fHasContent then
     exit;
-  if not assigned(shortcutMap) then
-    exit;
   TOPPSystemThread.Create(SearchJob, threadFinishedWork);
 end;
 
 procedure TOPPHelpLargeForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-//  self.pdfViewer.SelPageIndex := 0;
-//  self.pdfViewer.ChangePage(pdfChangedThePage);
+   self.pdfViewer.CurrentPageIndex := 0;
 end;
 
 procedure TOPPHelpLargeForm.SearchJob(onFinish: TOPPHelpThreadOnFinish);
 var
   searchResult: TdxPDFDocumentTextSearchResult;
 begin
+  if not assigned(shortcutMap) then
+  begin
+    if assigned(onFinish) then
+      onFinish(0);
+    exit;
+  end;
+
   Timer1.Enabled := true;
 
   case shortcutMap.predicate.keywordType of
-    ktSearch: begin
-      searchResult := pdfDocument.FindText(shortcutMap.predicate.value);
-      //  self.pdfViewer.SelPageIndex := searchResult.range.pageIndex;
-      //  self.pdfViewer.ChangePage(pdfChangedThePage);
-    end;
-    ktBookmark: begin
-      //
-    end;
-    ktPage: begin
-      //
-    end;
-    ktAny: begin
-      //
-    end;
+    ktSearch:
+      begin
+        searchResult := pdfDocument.FindText(shortcutMap.predicate.value);
+        self.pdfViewer.CurrentPageIndex := searchResult.range.pageIndex;
+      end;
+    ktBookmark:
+      begin
+        //
+      end;
+    ktPage:
+      begin
+        self.pdfViewer.CurrentPageIndex := StrToInt(shortcutMap.predicate.value);
+      end;
+    ktAny:
+      begin
+        //
+      end;
   end;
   if assigned(onFinish) then
     onFinish(0);
@@ -192,8 +199,7 @@ end;
 
 procedure TOPPHelpLargeForm.openPage(AIndex: Integer);
 begin
-//  self.pdfViewer.SelPageIndex := AIndex;
-//  self.pdfViewer.ChangePage(pdfChangedThePage);
+   self.pdfViewer.CurrentPageIndex := AIndex;
 end;
 
 end.

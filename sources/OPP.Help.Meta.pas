@@ -8,16 +8,16 @@ uses
 type
   TOPPHelpMeta = record
     propertyName: String;
-    hintIdentifier: TOPPHintIdentifierType;
-    constructor Create(APropertyName: String; AHintIdentifier: TOPPHintIdentifierType);
+    identifier: TOPPHelpMetaIdentifierType;
+    constructor Create(APropertyName: String; AIdentifier: TOPPHelpMetaIdentifierType);
   end;
 
 implementation
 
-constructor TOPPHelpMeta.Create(APropertyName: string; AHintIdentifier: string);
+constructor TOPPHelpMeta.Create(APropertyName: string; AIdentifier: string);
 begin
   propertyName := APropertyName;
-  hintIdentifier := AHintIdentifier;
+  identifier := AIdentifier;
 end;
 
 end.

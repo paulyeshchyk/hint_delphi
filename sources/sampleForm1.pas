@@ -79,12 +79,27 @@ uses
   OPP.Help.Vcl.Control.Styler,
   OPP.Help.Hint.FormHelper,
   OPP.Help.Hint.Server,
+  OPP.Help.Shortcut.Mapping,
   OPP.Help.Shortcut.Server,
-  OPP.Help.Shortcut.Request;
+  OPP.Help.Shortcut.Request,
+  OPP.Help.nonatomic;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
+var
+  fMapping: TOPPHelpShortcutMap;
+  fPredicate : TOPPHelpPredicate;
+  fRequest : TOPPHelpShortcutRequest;
 begin
-  helpShortcutServer.showManual(3);
+  fPredicate := TOPPHelpPredicate.Create;
+  fPredicate.keywordType := ktPage;
+  fPredicate.value := '3';
+  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
+
+  fMapping := TOPPHelpShortcutMap.Create;
+  fMapping.predicate := fPredicate;
+
+  helpShortcutServer.showHelp(fMapping);
+
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
