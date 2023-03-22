@@ -11,13 +11,11 @@ type
   TOPPHelpHintMap = class(TObject)
   private
     fPredicate: TOPPHelpPredicate;
-    fFilename: string;
     fIdentifier: TOPPHelpHintMapIdentifier;
   public
-    constructor Create(AHelpKeyword: TOPPHelpPredicate; AFileName: String);
+    constructor Create(AIdentifier: TOPPHelpHintMapIdentifier; APredicate: TOPPHelpPredicate);
 
     property predicate: TOPPHelpPredicate read fPredicate write fPredicate;
-    property filename: string read fFilename write fFilename;
     property identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
   end;
 
@@ -33,10 +31,10 @@ type
 
 implementation
 
-constructor TOPPHelpHintMap.Create(AHelpKeyword: TOPPHelpPredicate; AFileName: String);
+constructor TOPPHelpHintMap.Create(AIdentifier: TOPPHelpHintMapIdentifier; APredicate: TOPPHelpPredicate);
 begin
-  fPredicate := AHelpKeyword;
-  fFilename := AFileName;
+  fIdentifier := AIdentifier;
+  fPredicate := APredicate;
 end;
 
 constructor TOPPHelpHintMapSet.Create(AList: TList<OPP.Help.Hint.Mapping.TOPPHelpHintMap> = nil);

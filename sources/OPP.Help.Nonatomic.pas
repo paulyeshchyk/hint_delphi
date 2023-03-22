@@ -13,17 +13,13 @@ type
   private
     fValue: String;
     fKeywordType: TOPPKeywordType;
+    fFileName: String;
   public
-    function hashValue(): Integer;
     property value: String read fValue write fValue;
     property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
+    property fileName: String read fFileName write fFileName;
   end;
 
 implementation
-
-function TOPPHelpPredicate.hashValue(): Integer;
-begin
-  result := 0;
-end;
 
 end.

@@ -19,11 +19,11 @@
                 "id": 21,
                 "fields": {
                   "fValue": "Kod_MKC",
-                  "fKeywordType": "ktAny"
+                  "fKeywordType": "ktAny",
+              	  "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
                 }
               },
-              "fIdentifier": "Kod_MKC",
-              "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+              "fIdentifier": "Kod_MKC"
             }
           },
           {
@@ -35,11 +35,11 @@
                 "id": 22,
                 "fields": {
                   "fValue": "Kod_OKWED",
-                  "fKeywordType": "ktAny"
+                  "fKeywordType": "ktAny",
+              	  "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
                 }
               },
-              "fIdentifier": "Kod_OKWED",
-              "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+              "fIdentifier": "Kod_OKWED"
             }
           },
           {
@@ -51,11 +51,11 @@
                 "id": 23,
                 "fields": {
                   "fValue": "KodOKPD2",
-                  "fKeywordType": "ktAny"
+                  "fKeywordType": "ktAny",
+              	  "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
                 }
               },
-              "fIdentifier": "KodOKPD2",
-              "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+              "fIdentifier": "KodOKPD2"
             }
           },
           {
@@ -67,11 +67,11 @@
                 "id": 24,
                 "fields": {
                   "fValue": "Kod_KWED2",
-                  "fKeywordType": "ktAny"
+                  "fKeywordType": "ktAny",
+              	  "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
                 }
               },
-              "fIdentifier": "Kod_KWED2",
-              "fFilename": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+              "fIdentifier": "Kod_KWED2"
             }
           }
         ]

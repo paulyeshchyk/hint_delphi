@@ -190,13 +190,13 @@ begin
   if not Assigned(fMap) then
     exit;
 
-  result := getReader(fMap.filename);
+  result := getReader(fMap.predicate.filename);
   if Assigned(result) then
     exit;
 
   result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(fMap.filename);
-  fHintDataReaders.Add(fMap.filename, result);
+  result.loadData(fMap.predicate.filename);
+  fHintDataReaders.Add(fMap.predicate.filename, result);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
