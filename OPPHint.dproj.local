@@ -26,6 +26,9 @@
     <File Path="sources\OPP.Help.System.Error.pas"/>
     <File Path="sources\OPP.Help.System.Thread.pas"/>
     <File Path="sources\OPP.Help.Vcl.Control.Styler.pas"/>
+    <File Path="sources\OPP.Help.View.pas"/>
+    <File Path="sources\OPP.Help.View.Fullscreen.pas"/>
+    <File Path="sources\OPP.Help.View.Hint.pas"/>
     <File Path="cxDataRS25.dcp"/>
     <File Path="cxEditorsRS25.dcp"/>
     <File Path="cxGridRS25.dcp"/>

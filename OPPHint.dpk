@@ -127,6 +127,9 @@ contains
   OPP.Help.Meta.Enumerator in 'sources\OPP.Help.Meta.Enumerator.pas',
   OPP.Help.Vcl.Control.Styler in 'sources\OPP.Help.Vcl.Control.Styler.pas',
   OPP.Help.System.Str in 'sources\OPP.Help.System.Str.pas',
-  OPP.Help.Meta in 'sources\OPP.Help.Meta.pas';
+  OPP.Help.Meta in 'sources\OPP.Help.Meta.pas',
+  OPP.Help.View in 'sources\OPP.Help.View.pas',
+  OPP.Help.View.Fullscreen in 'sources\OPP.Help.View.Fullscreen.pas',
+  OPP.Help.View.Hint in 'sources\OPP.Help.View.Hint.pas';
 
 end.

@@ -23,43 +23,35 @@ uses
   cxControls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxPDFDocument,
   dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, Vcl.ComCtrls, Vcl.ExtCtrls,
 
+  OPP.Help.View,
+  OPP.Help.View.Fullscreen,
   OPP.Help.Nonatomic,
   OPP.Help.Shortcut.Mapping, OPP.Help.System.Thread;
 
 type
-  TOPPHelpLargeForm = class(TForm)
+  TOPPHelpLargeForm = class(TForm, IOPPHelpViewEventListener)
     dxBarManager1: TdxBarManager;
     dxBarManager1Bar1: TdxBar;
     dxBarButton1: TdxBarButton;
     ProgressBar1: TProgressBar;
-    dxPDFViewer1: TdxPDFViewer;
-    Timer1: TTimer;
-    procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure dxPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Timer1Timer(Sender: TObject);
   private
     { Private declarations }
-    fHasContent: Bool;
+    fHelpFullScreen: TOPPHelpViewFullScreen;
     fStream: TMemoryStream;
     fPredicate: TOPPHelpPredicate;
     fProgress: Integer;
-    function getPDFDocument(): TdxPDFDocument;
+    procedure searchStarted;
+    procedure searchEnded;
+    procedure searchProgress;
     procedure setStream(AStream: TMemoryStream);
     procedure setPredicate(APredicate: TOPPHelpPredicate);
-    procedure doSearchIfPossible;
-    procedure threadFinishedWork(AResult: Integer);
-    procedure SearchJob(onFinish: TOPPHelpThreadOnFinish);
-    procedure pdfChangedThePage;
-    function getPDFViewer: TdxPDFViewer;
     function doIncrementPosition(): Integer;
   public
     { Public declarations }
     property stream: TMemoryStream read fStream write setStream;
     property predicate: TOPPHelpPredicate read fPredicate write setPredicate;
-    property pdfDocument: TdxPDFDocument read getPDFDocument;
-    property pdfViewer: TdxPDFViewer read getPDFViewer;
 
     procedure openPage(AIndex: Integer);
   end;
@@ -71,33 +63,38 @@ implementation
 
 {$R *.dfm}
 
-uses
-  System.UITypes;
-
-// file://docs/гольфстрим_руководство пользователя.pdf?page=1&text=
-
 procedure TOPPHelpLargeForm.FormCreate(Sender: TObject);
 begin
-  fHasContent := false;
   SetWindowPos(Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NoMove or SWP_NoSize);
   fProgress := 0;
-  Timer1.Enabled := false;
+
+  fHelpFullScreen := TOPPHelpViewFullScreen.Create(self);
+  fHelpFullScreen.Align := alClient;
+  fHelpFullScreen.Parent := self;
+  fHelpFullScreen.addStateChangeListener(self);
 end;
 
-procedure TOPPHelpLargeForm.FormDestroy(Sender: TObject);
+procedure TOPPHelpLargeForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  //
+  if assigned(fHelpFullScreen) then begin
+    fHelpFullScreen.removeStateChangeListener(self);
+    FreeAndNil(fHelpFullScreen);
+  end;
 end;
 
-procedure TOPPHelpLargeForm.Timer1Timer(Sender: TObject);
+procedure TOPPHelpLargeForm.searchStarted();
+begin
+  ProgressBar1.Position := 0;
+end;
+
+procedure TOPPHelpLargeForm.searchEnded();
+begin
+  ProgressBar1.Position := 0;
+end;
+
+procedure TOPPHelpLargeForm.searchProgress;
 begin
   ProgressBar1.Position := doIncrementPosition;
-end;
-
-procedure TOPPHelpLargeForm.dxPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
-begin
-  fHasContent := true;
-  doSearchIfPossible;
 end;
 
 function TOPPHelpLargeForm.doIncrementPosition: Integer;
@@ -108,98 +105,19 @@ begin
   result := fProgress;
 end;
 
-function TOPPHelpLargeForm.getPDFViewer: TdxPDFViewer;
-begin
-  result := dxPDFViewer1;
-end;
-
-procedure TOPPHelpLargeForm.doSearchIfPossible;
-begin
-  if not fHasContent then
-    exit;
-  TOPPSystemThread.Create(SearchJob, threadFinishedWork);
-end;
-
-procedure TOPPHelpLargeForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-   self.pdfViewer.CurrentPageIndex := 0;
-end;
-
-procedure TOPPHelpLargeForm.SearchJob(onFinish: TOPPHelpThreadOnFinish);
-var
-  searchResult: TdxPDFDocumentTextSearchResult;
-begin
-  if not assigned(predicate) then
-  begin
-    if assigned(onFinish) then
-      onFinish(0);
-    exit;
-  end;
-
-  Timer1.Enabled := true;
-
-  case predicate.keywordType of
-    ktSearch:
-      begin
-        searchResult := pdfDocument.FindText(predicate.value);
-        self.pdfViewer.CurrentPageIndex := searchResult.range.pageIndex;
-      end;
-    ktBookmark:
-      begin
-        //
-      end;
-    ktPage:
-      begin
-        self.pdfViewer.CurrentPageIndex := StrToInt(predicate.value);
-      end;
-    ktAny:
-      begin
-        //
-      end;
-  end;
-  if assigned(onFinish) then
-    onFinish(0);
-end;
-
-procedure TOPPHelpLargeForm.pdfChangedThePage;
-begin
-  //
-end;
-
-procedure TOPPHelpLargeForm.threadFinishedWork(AResult: Integer);
-begin
-  Timer1.Enabled := false;
-  ProgressBar1.Position := 0;
-end;
-
-function TOPPHelpLargeForm.getPDFDocument(): TdxPDFDocument;
-begin
-  if assigned(self.pdfViewer) then
-  begin
-    result := self.pdfViewer.Document;
-  end else begin
-    result := nil;
-  end;
-end;
-
 procedure TOPPHelpLargeForm.setPredicate(APredicate: TOPPHelpPredicate);
 begin
-  fPredicate := APredicate;
-  doSearchIfPossible;
+  fHelpFullScreen.setPredicate(APredicate);
 end;
 
 procedure TOPPHelpLargeForm.setStream(AStream: TMemoryStream);
 begin
-  fStream := AStream;
-  if not assigned(fStream) and not assigned(pdfViewer) then
-    exit;
-  //
-  pdfViewer.LoadFromStream(fStream);
+  fHelpFullScreen.loadContent(AStream);
 end;
 
 procedure TOPPHelpLargeForm.openPage(AIndex: Integer);
 begin
-   self.pdfViewer.CurrentPageIndex := AIndex;
+  fHelpFullScreen.openPage(AIndex);
 end;
 
 end.

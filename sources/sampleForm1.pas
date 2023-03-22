@@ -99,10 +99,10 @@ end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
 var
-  Request: TOPPHelpShortcutRequest;
+  fShortcutRequest: TOPPHelpShortcutRequest;
 begin
-  Request := TOPPHelpShortcutRequest.create(Screen.ActiveControl, Msg);
-  helpShortcutServer.showHelp(Request);
+  fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
+  helpShortcutServer.showHelp(fShortcutRequest);
 end;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
@@ -117,7 +117,6 @@ end;
 
 procedure TSampleForm.fillGrid;
 begin
-
   cxGrid2TableView1.DataController.Append;
   cxGrid2TableView1.DataController.Values[0, 0] := '888.09.Test';
   cxGrid2TableView1.DataController.Values[0, 1] := '-';

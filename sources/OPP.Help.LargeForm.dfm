@@ -15,7 +15,6 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object ProgressBar1: TProgressBar
@@ -25,16 +24,7 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
     Height = 17
     Align = alBottom
     Position = 76
-    TabOrder = 4
-  end
-  object dxPDFViewer1: TdxPDFViewer
-    Left = 0
-    Top = 28
-    Width = 635
-    Height = 525
-    Align = alClient
-    OptionsZoom.ZoomMode = pzmPageWidth
-    OnDocumentLoaded = dxPDFViewer1DocumentLoaded
+    TabOrder = 2
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -82,11 +72,5 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
       Hint = 'Close'
       Visible = ivAlways
     end
-  end
-  object Timer1: TTimer
-    Interval = 50
-    OnTimer = Timer1Timer
-    Left = 320
-    Top = 296
   end
 end
