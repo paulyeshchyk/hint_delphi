@@ -55,7 +55,7 @@ begin
   result := 0;
 end;
 
-function TOPPHelpShortcutDataset.getMapping(key: string): TOPPHelpShortcutMap;
+function TOPPHelpShortcutDataset.GetMapping(key: string): TOPPHelpShortcutMap;
 var
   Mapping: TOPPHelpShortcutMap;
 begin

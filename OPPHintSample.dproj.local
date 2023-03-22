@@ -4,7 +4,6 @@
     <File Path="sources"/>
     <File Path="sources\sampleForm1.pas"/>
     <File Path="sources\sampleForm1.dfm"/>
-    <File Path="sources\OPP.Help.System.Str.pas"/>
   </ProjectSortOrder>
 	<Transactions/>
 </BorlandProject>

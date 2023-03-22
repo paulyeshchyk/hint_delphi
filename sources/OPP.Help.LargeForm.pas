@@ -23,6 +23,7 @@ uses
   cxControls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxPDFDocument,
   dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, Vcl.ComCtrls, Vcl.ExtCtrls,
 
+  OPP.Help.Nonatomic,
   OPP.Help.Shortcut.Mapping, OPP.Help.System.Thread;
 
 type
@@ -42,11 +43,11 @@ type
     { Private declarations }
     fHasContent: Bool;
     fStream: TMemoryStream;
-    fShortcutMap: TOPPHelpShortcutMap;
+    fPredicate: TOPPHelpPredicate;
     fProgress: Integer;
     function getPDFDocument(): TdxPDFDocument;
     procedure setStream(AStream: TMemoryStream);
-    procedure setShortcutMap(AMap: TOPPHelpShortcutMap);
+    procedure setPredicate(APredicate: TOPPHelpPredicate);
     procedure doSearchIfPossible;
     procedure threadFinishedWork(AResult: Integer);
     procedure SearchJob(onFinish: TOPPHelpThreadOnFinish);
@@ -56,7 +57,7 @@ type
   public
     { Public declarations }
     property stream: TMemoryStream read fStream write setStream;
-    property shortcutMap: TOPPHelpShortcutMap read fShortcutMap write setShortcutMap;
+    property predicate: TOPPHelpPredicate read fPredicate write setPredicate;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
     property pdfViewer: TdxPDFViewer read getPDFViewer;
 
@@ -71,7 +72,6 @@ implementation
 {$R *.dfm}
 
 uses
-  OPP.Help.Nonatomic,
   System.UITypes;
 
 // file://docs/гольфстрим_руководство пользователя.pdf?page=1&text=
@@ -129,7 +129,7 @@ procedure TOPPHelpLargeForm.SearchJob(onFinish: TOPPHelpThreadOnFinish);
 var
   searchResult: TdxPDFDocumentTextSearchResult;
 begin
-  if not assigned(shortcutMap) then
+  if not assigned(predicate) then
   begin
     if assigned(onFinish) then
       onFinish(0);
@@ -138,10 +138,10 @@ begin
 
   Timer1.Enabled := true;
 
-  case shortcutMap.predicate.keywordType of
+  case predicate.keywordType of
     ktSearch:
       begin
-        searchResult := pdfDocument.FindText(shortcutMap.predicate.value);
+        searchResult := pdfDocument.FindText(predicate.value);
         self.pdfViewer.CurrentPageIndex := searchResult.range.pageIndex;
       end;
     ktBookmark:
@@ -150,7 +150,7 @@ begin
       end;
     ktPage:
       begin
-        self.pdfViewer.CurrentPageIndex := StrToInt(shortcutMap.predicate.value);
+        self.pdfViewer.CurrentPageIndex := StrToInt(predicate.value);
       end;
     ktAny:
       begin
@@ -182,9 +182,9 @@ begin
   end;
 end;
 
-procedure TOPPHelpLargeForm.setShortcutMap(AMap: TOPPHelpShortcutMap);
+procedure TOPPHelpLargeForm.setPredicate(APredicate: TOPPHelpPredicate);
 begin
-  fShortcutMap := AMap;
+  fPredicate := APredicate;
   doSearchIfPossible;
 end;
 

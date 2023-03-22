@@ -9,15 +9,15 @@ uses
   WinAPI.Messages,
   WinAPI.Windows,
   Vcl.Controls, Vcl.Forms,
+  OPP.Help.Nonatomic,
   OPP.Help.Shortcut.Dataset,
   OPP.Help.Shortcut.Request,
   OPP.Help.Shortcut.Mapping;
 
 type
   IOPPHelpShortcutServer = interface
-    function showHelp(AMapping: TOPPHelpShortcutMap): Boolean;overload;
-    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;overload;
-    function showManual(pageIndex: Integer): Boolean;
+    function showHelp(APredicate: TOPPHelpPredicate): Boolean; overload;
+    function showHelp(Request: TOPPHelpShortcutRequest): Boolean; overload;
   end;
 
   TOPPHelpShortcutServer = class(TInterfacedObject, IOPPHelpShortcutServer)
@@ -26,9 +26,8 @@ type
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
     function loadPDF(AFileName: String): TMemoryStream;
   public
-    function showHelp(AMapping: TOPPHelpShortcutMap): Boolean;overload;
-    function showHelp(Request: TOPPHelpShortcutRequest): Boolean;overload;
-    function showManual(pageIndex: Integer): Boolean;
+    function showHelp(APredicate: TOPPHelpPredicate): Boolean; overload;
+    function showHelp(ARequest: TOPPHelpShortcutRequest): Boolean; overload;
     constructor create;
     destructor Destroy; override;
     property ShortcutDataset: TOPPHelpShortcutDataset read fShortcutDataset write fShortcutDataset;
@@ -70,7 +69,7 @@ begin
 
   fPDFMemoryStream := TDictionary<String, TMemoryStream>.create;
 
-  fShortcutDataset := TOPPHelpShortcutDataset.Create;
+  fShortcutDataset := TOPPHelpShortcutDataset.create;
   fShortcutDataset.load(shortcutJSONFileName);
 end;
 
@@ -83,59 +82,48 @@ end;
 
 function TOPPHelpShortcutServer.loadPDF(AFileName: String): TMemoryStream;
 var
-  hash: String;
+  fFileNameHash: String;
   fStream: TMemoryStream;
 begin
-  hash := AFileName.hashString;
-  fPDFMemoryStream.TryGetValue(hash, fStream);
+  fFileNameHash := AFileName.hashString;
+  fPDFMemoryStream.TryGetValue(fFileNameHash, fStream);
   if not Assigned(fStream) then
   begin
     fStream := TMemoryStream.create;
     fStream.loadFromFile(AFileName);
     fStream.Position := 0;
 
-    fPDFMemoryStream.Add(hash, fStream);
+    fPDFMemoryStream.Add(fFileNameHash, fStream);
   end;
   result := fStream;
 end;
 
-function TOPPHelpShortcutServer.showManual(pageIndex: Integer): Boolean;
-// var
-// helpForm: TOPPHelpLargeForm;
-begin
-  // helpForm := TOPPHelpLargeForm.create(nil);
-  // helpForm.stream := fPDFMemoryStream;
-  // helpForm.openPage(3);
-  // helpForm.ShowModal;
-  // result := true;
-end;
-
-function TOPPHelpShortcutServer.showHelp(AMapping: TOPPHelpShortcutMap): Boolean;
+function TOPPHelpShortcutServer.showHelp(APredicate: TOPPHelpPredicate): Boolean;
 var
   fHelpForm: TOPPHelpLargeForm;
   fStream: TMemoryStream;
 begin
-  if Assigned(AMapping) then
-  begin
-    fStream := loadPDF(AMapping.predicate.fileName);
-    fHelpForm := TOPPHelpLargeForm.create(nil);
-    fHelpForm.stream := fStream;
-    fHelpForm.shortcutMap := AMapping;
-    fHelpForm.ShowModal;
-    result := true;
-  end else begin
-    result := false;
-  end;
+  result := Assigned(APredicate);
+  if not result then
+    exit;
+
+  fStream := loadPDF(APredicate.fileName);
+  fHelpForm := TOPPHelpLargeForm.create(nil);
+  fHelpForm.stream := fStream;
+  fHelpForm.predicate := APredicate;
+  fHelpForm.ShowModal;
 end;
 
-function TOPPHelpShortcutServer.showHelp(Request: TOPPHelpShortcutRequest): Boolean;
+function TOPPHelpShortcutServer.showHelp(ARequest: TOPPHelpShortcutRequest): Boolean;
 var
-  fhelpData: String;
   fMapping: TOPPHelpShortcutMap;
 begin
-  fhelpData := Request.GetShortcutIdentifier();
-  fMapping := fShortcutDataset.getMapping(fhelpData);
-  showHelp(fMapping);
+  fMapping := fShortcutDataset.GetMapping(ARequest.shortcutIdentifier);
+  result := Assigned(fMapping);
+  if not result then
+    exit;
+
+  showHelp(fMapping.predicate);
 end;
 
 initialization

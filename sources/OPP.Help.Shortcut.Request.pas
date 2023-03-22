@@ -13,12 +13,14 @@ type
   private
     fMsg: TWMHelp;
     fActiveControl: TWinControl;
+
+    function GetShortcutIdentifier(): String;
   public
+    constructor create(activeControl: TWinControl; msg: TWMHelp);
+
     property msg: TWMHelp read fMsg;
     property activeControl: TWinControl read fActiveControl;
-
-    constructor create(activeControl: TWinControl; msg: TWMHelp);
-    function GetShortcutIdentifier(): String;
+    property shortcutIdentifier: String read GetShortcutIdentifier;
   end;
 
 implementation

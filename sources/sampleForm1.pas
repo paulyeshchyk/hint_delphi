@@ -86,7 +86,6 @@ uses
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
-  fMapping: TOPPHelpShortcutMap;
   fPredicate : TOPPHelpPredicate;
   fRequest : TOPPHelpShortcutRequest;
 begin
@@ -95,11 +94,7 @@ begin
   fPredicate.value := '3';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  fMapping := TOPPHelpShortcutMap.Create;
-  fMapping.predicate := fPredicate;
-
-  helpShortcutServer.showHelp(fMapping);
-
+  helpShortcutServer.showHelp(fPredicate);
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
