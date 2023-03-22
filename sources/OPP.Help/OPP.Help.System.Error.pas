@@ -28,7 +28,8 @@ type
 implementation
 
 uses
-  Windows, OPP.Help.System.Str;
+  Windows,
+  OPP.Help.System.Str;
 
 procedure ErrorHelper.Log;
 begin

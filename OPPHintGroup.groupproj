@@ -3,11 +3,8 @@
         <ProjectGuid>{A4A020B5-FF25-4816-955B-D5040C13A0D0}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="OPPHint.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="OPPHintSample.dproj">
-            <Dependencies>OPPHint.dproj</Dependencies>
+            <Dependencies/>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -17,32 +14,23 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="OPPHint">
-        <MSBuild Projects="OPPHint.dproj"/>
-    </Target>
-    <Target Name="OPPHint:Clean">
-        <MSBuild Projects="OPPHint.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="OPPHint:Make">
-        <MSBuild Projects="OPPHint.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="OPPHintSample" DependsOnTargets="OPPHint">
+    <Target Name="OPPHintSample">
         <MSBuild Projects="OPPHintSample.dproj"/>
     </Target>
-    <Target Name="OPPHintSample:Clean" DependsOnTargets="OPPHint:Clean">
+    <Target Name="OPPHintSample:Clean">
         <MSBuild Projects="OPPHintSample.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHintSample:Make" DependsOnTargets="OPPHint:Make">
+    <Target Name="OPPHintSample:Make">
         <MSBuild Projects="OPPHintSample.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPHint;OPPHintSample"/>
+        <CallTarget Targets="OPPHintSample"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPHint:Clean;OPPHintSample:Clean"/>
+        <CallTarget Targets="OPPHintSample:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPHint:Make;OPPHintSample:Make"/>
+        <CallTarget Targets="OPPHintSample:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

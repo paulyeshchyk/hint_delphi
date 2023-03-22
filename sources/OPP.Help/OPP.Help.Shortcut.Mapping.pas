@@ -11,8 +11,6 @@ type
   TOPPHelpShortcutMap = class(TObject)
   private
     fPredicate: TOPPHelpPredicate;
-    fHelpKeyword: String;
-    fSearchPattern: String;
     fIdentifier: TOPPHelpShortcutMapIdentifier;
   public
     property identifier: TOPPHelpShortcutMapIdentifier read fIdentifier write fIdentifier;

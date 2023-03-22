@@ -9,6 +9,7 @@ type
   TOPPHelpMeta = record
     propertyName: String;
     identifier: TOPPHelpMetaIdentifierType;
+  public
     constructor Create(APropertyName: String; AIdentifier: TOPPHelpMetaIdentifierType);
   end;
 
