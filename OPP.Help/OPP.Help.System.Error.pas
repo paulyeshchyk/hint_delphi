@@ -32,8 +32,11 @@ uses
   OPP.Help.System.Str;
 
 procedure ErrorHelper.Log;
+var
+  output: String;
 begin
-  OutputDebugString(self.ClassName.toWideChar);
+  output := Format('Error: %s (%s)', [self.ClassName, self.message]);
+  OutputDebugString(output.toWideChar);
 end;
 
 constructor TOPPHelpShortcutDatasetError.Create(errorCode: Integer; errorMessage: String; errorClass: String);

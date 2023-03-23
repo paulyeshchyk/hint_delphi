@@ -5,6 +5,7 @@ uses
   System.Generics.Collections,
   System.SysUtils,
   System.JSON, System.IOUtils,
+  OPP.Help.System.Error,
   OPP.Help.Hint.Mapping;
 
 type
@@ -67,7 +68,7 @@ begin
     except
       on E: Exception do
       begin
-
+        E.Log();
       end;
 
     end;

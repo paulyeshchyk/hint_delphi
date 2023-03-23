@@ -46,7 +46,7 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'Custom 1'
@@ -59,7 +59,11 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
       FloatTop = 8
       FloatClientWidth = 0
       FloatClientHeight = 0
-      ItemLinks = <>
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
       OneOnRow = True
       Row = 0
       UseOwnFont = False

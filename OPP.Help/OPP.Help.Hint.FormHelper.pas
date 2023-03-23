@@ -38,7 +38,7 @@ begin
 
   helpHintServer.OnGetHintConfigurationFileNameRequest := function(): string
     begin
-      result := 'help\mapping\hints_matrix.json';
+      result := '.\help\mapping\hints_matrix.json';
     end;
 
   helpHintServer.getHints(RootControl, fHintLoadCompletion);
