@@ -127,6 +127,7 @@ contains
   OPP.Help.View in '..\OPP.Help\OPP.Help.View.pas',
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
   OPP.Help.System.Stream in '..\OPP.Help\OPP.Help.System.Stream.pas',
-  OPP.Help.Events in '..\OPP.Help\OPP.Help.Events.pas';
+  OPP.Help.Events in '..\OPP.Help\OPP.Help.Events.pas',
+  OPP.Help.System.Messaging.Pipe in '..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas';
 
 end.

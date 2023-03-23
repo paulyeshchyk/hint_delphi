@@ -4,13 +4,11 @@ interface
 
 uses
   System.Types, System.Classes,
-  WinAPI.Windows, WinAPI.Messages,
+  WinAPI.Windows,
   Vcl.Controls, Vcl.StdCtrls,
-  Vcl.forms;
+  Vcl.Forms;
 
 type
-
-  TCopyDataType = (cdtString = 0, cdtImage = 1, cdtRecord = 2);
 
   TOPPMessagingHelper = class
   public
@@ -18,17 +16,9 @@ type
     class function GetProcessHandle(AProcessName: String): THandle;
   end;
 
-  TOPPMessagePipeCompletion = reference to procedure(AStream: TStream);
-
-  TOPPMessagePipe = class
-    function SendRecord(AReceiverHandle: THandle; const ARecordType: ShortString; completion: TOPPMessagePipeCompletion): Boolean;
-    function SendStreamData(AReceiverHandle: THandle; const AStream: TMemoryStream; const ADataType: TCopyDataType): Boolean;
-    function SendData(AReceiverHandle: THandle; const ADataToSend: TCopyDataStruct): Boolean;
-  end;
-
 implementation
 
-uses TLHelp32, System.Sysutils, OPP.Help.System.Stream;
+uses TLHelp32, System.Sysutils;
 
 class function TOPPMessagingHelper.GetHWndByPID(const hPID: THandle): THandle;
 type
@@ -39,7 +29,7 @@ type
     HWND: THandle;
   end;
 
-  function EnumWindowsProc(Wnd: DWORD; var EI: TEnumInfo): Bool; stdcall;
+  function EnumWindowsProc(Wnd: DWORD; var EI: TEnumInfo): Boolean; stdcall;
   var
     PID: DWORD;
   begin
@@ -95,52 +85,6 @@ begin
   end;
 
   CloseHandle(FSnapshotHandle);
-end;
-
-function TOPPMessagePipe.SendRecord(AReceiverHandle: THandle; const ARecordType: ShortString; completion: TOPPMessagePipeCompletion): Boolean;
-var
-  _Stream: TMemoryStream;
-begin
-  _Stream := TMemoryStream.Create;
-  try
-    if Assigned(completion) then
-      completion(_Stream);
-    _Stream.Position := 0;
-    Result := SendStreamData(AReceiverHandle, _Stream, TCopyDataType.cdtRecord);
-  finally
-    FreeAndNil(_Stream);
-  end;
-end;
-
-function TOPPMessagePipe.SendStreamData(AReceiverHandle: THandle; const AStream: TMemoryStream; const ADataType: TCopyDataType): Boolean;
-var
-  _CopyDataStruct: TCopyDataStruct;
-begin
-  Result := false;
-
-  if AStream.Size = 0 then
-    Exit;
-
-  _CopyDataStruct.dwData := Integer(ADataType);
-  _CopyDataStruct.cbData := AStream.Size;
-  _CopyDataStruct.lpData := AStream.Memory;
-
-  Result := SendData(AReceiverHandle, _CopyDataStruct);
-
-end;
-
-function TOPPMessagePipe.SendData(AReceiverHandle: THandle; const ADataToSend: TCopyDataStruct): Boolean;
-var
-  fSendResponse: Integer;
-begin
-  Result := false;
-
-  if (AReceiverHandle = 0) then
-    Exit;
-
-  fSendResponse := SendMessage(AReceiverHandle, WM_COPYDATA, WPARAM(0), LPARAM(@ADataToSend)); // WPARAM(0) -> FLocalReceiverForm.Handle
-
-  Result := fSendResponse <> 0;
 end;
 
 end.

@@ -57,7 +57,7 @@ uses
   OPP.Help.Events,
   OPP.Help.System.Stream,
   OPP.Help.View.FullScreen,
-  OPP.Help.System.Messaging;
+  OPP.Help.System.Messaging, OPP.Help.System.Messaging.Pipe;
 
 const
   OPPViewerProcessName: String = 'opphelppreview.exe';

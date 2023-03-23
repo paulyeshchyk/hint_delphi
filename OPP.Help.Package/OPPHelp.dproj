@@ -280,6 +280,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Events.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas"/>
         <None Include="..\OPP.Help\notes\readme.md"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
