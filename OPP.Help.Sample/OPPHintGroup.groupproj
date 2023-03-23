@@ -3,14 +3,14 @@
         <ProjectGuid>{A4A020B5-FF25-4816-955B-D5040C13A0D0}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="..\OPP.Help.Preview\OPPHelpPreview.dproj">
+        <Projects Include="..\OPP.Help.Package\OPPHelp.dproj">
             <Dependencies/>
+        </Projects>
+        <Projects Include="..\OPP.Help.Preview\OPPHelpPreview.dproj">
+            <Dependencies>..\OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
         <Projects Include="OPPHintSample.dproj">
             <Dependencies>..\OPP.Help.Package\OPPHelp.dproj</Dependencies>
-        </Projects>
-        <Projects Include="..\OPP.Help.Package\OPPHelp.dproj">
-            <Dependencies/>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -20,13 +20,22 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="OPPHelpPreview">
+    <Target Name="OPPHelp">
+        <MSBuild Projects="..\OPP.Help.Package\OPPHelp.dproj"/>
+    </Target>
+    <Target Name="OPPHelp:Clean">
+        <MSBuild Projects="..\OPP.Help.Package\OPPHelp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPPHelp:Make">
+        <MSBuild Projects="..\OPP.Help.Package\OPPHelp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OPPHelpPreview" DependsOnTargets="OPPHelp">
         <MSBuild Projects="..\OPP.Help.Preview\OPPHelpPreview.dproj"/>
     </Target>
-    <Target Name="OPPHelpPreview:Clean">
+    <Target Name="OPPHelpPreview:Clean" DependsOnTargets="OPPHelp:Clean">
         <MSBuild Projects="..\OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHelpPreview:Make">
+    <Target Name="OPPHelpPreview:Make" DependsOnTargets="OPPHelp:Make">
         <MSBuild Projects="..\OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Make"/>
     </Target>
     <Target Name="OPPHintSample" DependsOnTargets="OPPHelp">
@@ -38,23 +47,14 @@
     <Target Name="OPPHintSample:Make" DependsOnTargets="OPPHelp:Make">
         <MSBuild Projects="OPPHintSample.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPHelp">
-        <MSBuild Projects="..\OPP.Help.Package\OPPHelp.dproj"/>
-    </Target>
-    <Target Name="OPPHelp:Clean">
-        <MSBuild Projects="..\OPP.Help.Package\OPPHelp.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="OPPHelp:Make">
-        <MSBuild Projects="..\OPP.Help.Package\OPPHelp.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPHelpPreview;OPPHintSample;OPPHelp"/>
+        <CallTarget Targets="OPPHelp;OPPHelpPreview;OPPHintSample"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPHelpPreview:Clean;OPPHintSample:Clean;OPPHelp:Clean"/>
+        <CallTarget Targets="OPPHelp:Clean;OPPHelpPreview:Clean;OPPHintSample:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPHelpPreview:Make;OPPHintSample:Make;OPPHelp:Make"/>
+        <CallTarget Targets="OPPHelp:Make;OPPHelpPreview:Make;OPPHintSample:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
