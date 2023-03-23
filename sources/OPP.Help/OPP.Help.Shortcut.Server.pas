@@ -16,6 +16,7 @@ uses
 
 type
   IOPPHelpShortcutServer = interface
+    function exportControl(AControl: TControl): Boolean;
     function showHelp(APredicate: TOPPHelpPredicate): Boolean; overload;
     function showHelp(Request: TOPPHelpShortcutRequest): Boolean; overload;
   end;
@@ -26,6 +27,7 @@ type
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
     function loadPDF(AFileName: String): TMemoryStream;
   public
+    function exportControl(AControl: TControl): Boolean;
     function showHelp(APredicate: TOPPHelpPredicate): Boolean; overload;
     function showHelp(ARequest: TOPPHelpShortcutRequest): Boolean; overload;
     constructor create;
@@ -124,6 +126,11 @@ begin
     exit;
 
   showHelp(fMapping.predicate);
+end;
+
+function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
+begin
+  result := true;
 end;
 
 initialization

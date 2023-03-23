@@ -111,36 +111,37 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="sources\sampleForm1.pas">
+        <DCCReference Include="sampleForm1.pas">
             <Form>SampleForm</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Hint.FormHelper.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Hint.Mapping.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Hint.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Hint.Reader.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Hint.Server.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.JSON.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.LargeForm.pas">
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.FormHelper.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Reader.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.JSON.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.LargeForm.pas">
             <Form>OPPHelpLargeForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Meta.Enumerator.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Meta.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Nonatomic.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Shortcut.Dataset.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Shortcut.Mapping.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Shortcut.Request.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Shortcut.Server.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.System.Error.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.System.Str.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.System.Thread.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.Vcl.Control.Styler.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.View.Fullscreen.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.View.Hint.pas"/>
-        <DCCReference Include="sources\OPP.Help\OPP.Help.View.pas"/>
-        <None Include="sources\OPP.Help\notes\readme.md"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Meta.Enumerator.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Nonatomic.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Dataset.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Mapping.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Request.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Server.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Error.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Str.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Thread.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Vcl.Control.Styler.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.View.Fullscreen.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.View.Hint.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.View.pas"/>
+        <None Include="..\OPP.Help\notes\readme.md"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -217,6 +218,12 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
+                <DeployFile LocalName="..\OPP.Help\notes\readme.md" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHintSample.exe</RemoteName>
@@ -227,12 +234,6 @@
                 <DeployFile LocalName="sources\docs\readme.txt" Configuration="Debug" Class="File">
                     <Platform Name="Win32">
                         <RemoteName>readme.txt</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="sources\OPP.Help\notes\readme.md" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
