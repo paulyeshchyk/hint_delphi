@@ -8,8 +8,6 @@ uses
 
 type
 
-  TCopyDataType = (cdtString = 0, cdtImage = 1, cdtRecord = 2);
-
   TWMCopyData = packed record
     Msg: Cardinal;
     From: HWND;
@@ -22,7 +20,7 @@ type
     OPPHelpViewFullScreen1: TOPPHelpViewFullScreen;
   private
     { Private declarations }
-    procedure WMUserTen(var Msg: TWMCopyData); message WM_COPYDATA;
+    procedure WMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
   public
     { Public declarations }
   end;
@@ -34,21 +32,21 @@ implementation
 
 {$R *.dfm}
 
-procedure TForm1.WMUserTen(var Msg: TWMCopyData);
-var
-  copyDataType: TCopyDataType;
-  res1, data1: TOPPHelpViewFullScreenSharedMessage;
-begin
-  copyDataType := TCopyDataType(Msg.CopyDataStruct.dwData);
-  res1 := data1.unpack(Msg.CopyDataStruct);
+uses OPP.Help.System.Messaging,
+  OPP.Help.System.Stream,
+  OPP.Help.Events;
 
-//  if assigned(pData) then
-//  begin
-//    res1 := data1.unpack(Msg.CopyDataStruct);
-//    ShowMessage('Received correct message page:' + IntToStr(res1.page));
-//  end else begin
-//    ShowMessage('Received wrong message');
-//  end;
+procedure TForm1.WMCopyData(var Msg: TWMCopyData);
+var
+  res1: TOPPHelpViewFullScreenSharedMessage;
+  Stream: TReadOnlyMemoryStream;
+begin
+
+  Stream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
+  res1.readFromStream(Stream);
+
+  ShowMessage('Received correct message page:' + IntToStr(res1.page));
+
 end;
 
 end.

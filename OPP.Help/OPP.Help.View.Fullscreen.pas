@@ -18,12 +18,6 @@ uses
 
 type
 
-  TOPPHelpViewFullScreenSharedMessage = record
-    page: Integer;
-    function pack(): TCopyDataStruct;
-    function unpack(from: PCopyDataStruct): TOPPHelpViewFullScreenSharedMessage;
-  end;
-
   TOPPHelpViewFullScreen = class(TPanel, IOPPHelpViewFullScreen)
   private
     fStream: TMemoryStream;
@@ -61,35 +55,6 @@ implementation
 
 uses System.SysUtils;
 
-function TOPPHelpViewFullScreenSharedMessage.unpack(from: PCopyDataStruct): TOPPHelpViewFullScreenSharedMessage;
-var
-  buffer: TReadOnlyMemoryStream;
-  result1: TOPPHelpViewFullScreenSharedMessage;
-begin
-  buffer := TReadOnlyMemoryStream.Create(from^.lpData, from^.cbData);
-  try
-    result.page := buffer.ReadInteger();
-  finally
-    buffer.Free;
-  end;
-end;
-
-function TOPPHelpViewFullScreenSharedMessage.pack(): TCopyDataStruct;
-var
-  Buffer: TMemoryStream;
-  Len: Integer;
-begin
-  Buffer := TMemoryStream.Create;
-  try
-    Buffer.WriteInteger(self.page);
-    result.dwData := 0;
-    result.cbData := Buffer.Size;
-    result.lpData := Buffer.Memory;
-  finally
-    Buffer.free;
-  end;
-end;
-
 constructor TOPPHelpViewFullScreen.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -112,9 +77,9 @@ end;
 
 destructor TOPPHelpViewFullScreen.Destroy;
 begin
-  fEventListeners.free;
-  fSearchTimer.free;
-  fPDFViewer.free;
+  fEventListeners.Free;
+  fSearchTimer.Free;
+  fPDFViewer.Free;
   inherited;
 end;
 

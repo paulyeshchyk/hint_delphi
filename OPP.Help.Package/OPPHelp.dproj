@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{68CD4081-A586-4D46-BFD6-9E2186BB3BDA}</ProjectGuid>
         <MainSource>OPPHelp.dpk</MainSource>
-        <ProjectVersion>18.2</ProjectVersion>
+        <ProjectVersion>19.5</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -18,8 +18,8 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='iOSDevice32' and '$(Base)'=='true') or '$(Base_iOSDevice32)'!=''">
-        <Base_iOSDevice32>true</Base_iOSDevice32>
+    <PropertyGroup Condition="('$(Platform)'=='Android64' and '$(Base)'=='true') or '$(Base_Android64)'!=''">
+        <Base_Android64>true</Base_Android64>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -28,8 +28,8 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='iOSSimulator' and '$(Base)'=='true') or '$(Base_iOSSimulator)'!=''">
-        <Base_iOSSimulator>true</Base_iOSSimulator>
+    <PropertyGroup Condition="('$(Platform)'=='iOSSimARM64' and '$(Base)'=='true') or '$(Base_iOSSimARM64)'!=''">
+        <Base_iOSSimARM64>true</Base_iOSSimARM64>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -38,8 +38,8 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='OSX32' and '$(Base)'=='true') or '$(Base_OSX32)'!=''">
-        <Base_OSX32>true</Base_OSX32>
+    <PropertyGroup Condition="('$(Platform)'=='OSX64' and '$(Base)'=='true') or '$(Base_OSX64)'!=''">
+        <Base_OSX64>true</Base_OSX64>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -88,24 +88,58 @@
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
         <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
         <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
+        <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_iOSDevice32)'!=''">
+    <PropertyGroup Condition="'$(Base_Android64)'!=''">
+        <VerInfo_Keys>package=com.embarcadero.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <BT_BuildType>Debug</BT_BuildType>
+        <Base_Android>true</Base_Android>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
-        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
+        <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage);$(DCC_UsePackage)</DCC_UsePackage>
+        <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
         <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
+        <iOS_AppStore1024>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png</iOS_AppStore1024>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_iOSSimulator)'!=''">
+    <PropertyGroup Condition="'$(Base_iOSSimARM64)'!=''">
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=en;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
+        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
-        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage);$(DCC_UsePackage)</DCC_UsePackage>
+        <iOS_AppStore1024>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png</iOS_AppStore1024>
+        <iPhone_AppIcon120>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png</iPhone_AppIcon120>
+        <iPhone_AppIcon180>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png</iPhone_AppIcon180>
+        <iPhone_Launch2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png</iPhone_Launch2x>
+        <iPhone_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png</iPhone_LaunchDark2x>
+        <iPhone_Launch3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png</iPhone_Launch3x>
+        <iPhone_LaunchDark3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png</iPhone_LaunchDark3x>
+        <iPhone_Spotlight80>$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png</iPhone_Spotlight80>
+        <iPhone_Spotlight120>$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png</iPhone_Spotlight120>
+        <iPhone_Setting58>$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_58x58.png</iPhone_Setting58>
+        <iPhone_Setting87>$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_87x87.png</iPhone_Setting87>
+        <iPhone_Notification40>$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png</iPhone_Notification40>
+        <iPhone_Notification60>$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png</iPhone_Notification60>
+        <iPad_AppIcon152>$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png</iPad_AppIcon152>
+        <iPad_AppIcon167>$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png</iPad_AppIcon167>
+        <iPad_Launch2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png</iPad_Launch2x>
+        <iPad_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png</iPad_LaunchDark2x>
+        <iPad_SpotLight80>$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png</iPad_SpotLight80>
+        <iPad_Setting58>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
+        <iPad_Notification40>$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png</iPad_Notification40>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Linux64)'!=''">
         <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_OSX32)'!=''">
-        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
+    <PropertyGroup Condition="'$(Base_OSX64)'!=''">
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
+        <BT_BuildType>Debug</BT_BuildType>
+        <DCC_UsePackage>rtl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage);$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -113,10 +147,10 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxThemeRS25;cxDataRS25;cxPageControlRS25;dxOfficeCoreRS25;cxEditorsRS25;dxLayoutControlRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxThemeRS25;cxDataRS25;cxPageControlRS25;dxOfficeCoreRS25;cxEditorsRS25;dxLayoutControlRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -133,7 +167,7 @@
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\OPPHelp</DCC_DcuOutput>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
-        <Debugger_HostApplication>..\..\..\..\Compiled\Executable\OPPHintSample.exe</Debugger_HostApplication>
+        <Debugger_HostApplication>D:\Compiled\Executable\OPPHelpPreview.exe</Debugger_HostApplication>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -153,76 +187,70 @@
         <DCCReference Include="IndyProtocols.dcp"/>
         <DCCReference Include="IndyCore.dcp"/>
         <DCCReference Include="RESTComponents.dcp"/>
-        <DCCReference Include="dxCoreRS25.dcp"/>
-        <DCCReference Include="cxLibraryRS25.dcp"/>
-        <DCCReference Include="dxGDIPlusRS25.dcp"/>
-        <DCCReference Include="dxThemeRS25.dcp"/>
-        <DCCReference Include="cxDataRS25.dcp"/>
-        <DCCReference Include="cxPageControlRS25.dcp"/>
-        <DCCReference Include="dxOfficeCoreRS25.dcp"/>
-        <DCCReference Include="cxEditorsRS25.dcp"/>
-        <DCCReference Include="dxLayoutControlRS25.dcp"/>
-        <DCCReference Include="dxComnRS25.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreRS25.dcp"/>
-        <DCCReference Include="dxBarRS25.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS25.dcp"/>
-        <DCCReference Include="cxGridRS25.dcp"/>
-        <DCCReference Include="dxRichEditControlRS25.dcp"/>
-        <DCCReference Include="dxRichEditControlCoreRS25.dcp"/>
-        <DCCReference Include="dxRichEditDocumentModelRS25.dcp"/>
-        <DCCReference Include="dxRichEditCoreRS25.dcp"/>
-        <DCCReference Include="dxPDFViewerRS25.dcp"/>
-        <DCCReference Include="dxSkinBlackRS25.dcp"/>
-        <DCCReference Include="dxSkinBlueprintRS25.dcp"/>
-        <DCCReference Include="dxSkinBlueRS25.dcp"/>
-        <DCCReference Include="dxSkinCaramelRS25.dcp"/>
-        <DCCReference Include="dxSkinCoffeeRS25.dcp"/>
-        <DCCReference Include="dxSkinDarkRoomRS25.dcp"/>
-        <DCCReference Include="dxSkinDarkSideRS25.dcp"/>
-        <DCCReference Include="dxSkinDevExpressDarkStyleRS25.dcp"/>
-        <DCCReference Include="dxSkinDevExpressStyleRS25.dcp"/>
-        <DCCReference Include="dxSkinFoggyRS25.dcp"/>
-        <DCCReference Include="dxSkinGlassOceansRS25.dcp"/>
-        <DCCReference Include="dxSkinHighContrastRS25.dcp"/>
-        <DCCReference Include="dxSkiniMaginaryRS25.dcp"/>
-        <DCCReference Include="dxSkinLilianRS25.dcp"/>
-        <DCCReference Include="dxSkinLiquidSkyRS25.dcp"/>
-        <DCCReference Include="dxSkinLondonLiquidSkyRS25.dcp"/>
-        <DCCReference Include="dxSkinMcSkinRS25.dcp"/>
-        <DCCReference Include="dxSkinMetropolisDarkRS25.dcp"/>
-        <DCCReference Include="dxSkinMetropolisRS25.dcp"/>
-        <DCCReference Include="dxSkinMoneyTwinsRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007BlackRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007BlueRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007GreenRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007PinkRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007SilverRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2010BlackRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2010BlueRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2010SilverRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2013DarkGrayRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2013LightGrayRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2013WhiteRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2016ColorfulRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2016DarkRS25.dcp"/>
-        <DCCReference Include="dxSkinPumpkinRS25.dcp"/>
-        <DCCReference Include="dxSkinSevenClassicRS25.dcp"/>
-        <DCCReference Include="dxSkinSevenRS25.dcp"/>
-        <DCCReference Include="dxSkinSharpPlusRS25.dcp"/>
-        <DCCReference Include="dxSkinSharpRS25.dcp"/>
-        <DCCReference Include="dxSkinSilverRS25.dcp"/>
-        <DCCReference Include="dxSkinSpringTimeRS25.dcp"/>
-        <DCCReference Include="dxSkinStardustRS25.dcp"/>
-        <DCCReference Include="dxSkinSummer2008RS25.dcp"/>
-        <DCCReference Include="dxSkinTheAsphaltWorldRS25.dcp"/>
-        <DCCReference Include="dxSkinValentineRS25.dcp"/>
-        <DCCReference Include="dxSkinVisualStudio2013BlueRS25.dcp"/>
-        <DCCReference Include="dxSkinVisualStudio2013DarkRS25.dcp"/>
-        <DCCReference Include="dxSkinVisualStudio2013LightRS25.dcp"/>
-        <DCCReference Include="dxSkinVS2010RS25.dcp"/>
-        <DCCReference Include="dxSkinWhiteprintRS25.dcp"/>
-        <DCCReference Include="dxSkinXmas2008BlueRS25.dcp"/>
-        <DCCReference Include="dxDockingRS25.dcp"/>
+        <DCCReference Include="dxCoreRS28.dcp"/>
+        <DCCReference Include="cxLibraryRS28.dcp"/>
+        <DCCReference Include="dxGDIPlusRS28.dcp"/>
+        <DCCReference Include="dxComnRS28.dcp"/>
+        <DCCReference Include="dxSpreadSheetCoreRS28.dcp"/>
+        <DCCReference Include="dxBarRS28.dcp"/>
+        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
+        <DCCReference Include="cxGridRS28.dcp"/>
+        <DCCReference Include="dxRichEditControlRS28.dcp"/>
+        <DCCReference Include="dxRichEditControlCoreRS28.dcp"/>
+        <DCCReference Include="dxRichEditDocumentModelRS28.dcp"/>
+        <DCCReference Include="dxRichEditCoreRS28.dcp"/>
+        <DCCReference Include="dxPDFViewerRS28.dcp"/>
+        <DCCReference Include="dxSkinBlackRS28.dcp"/>
+        <DCCReference Include="dxSkinBlueprintRS28.dcp"/>
+        <DCCReference Include="dxSkinBlueRS28.dcp"/>
+        <DCCReference Include="dxSkinCaramelRS28.dcp"/>
+        <DCCReference Include="dxSkinCoffeeRS28.dcp"/>
+        <DCCReference Include="dxSkinDarkRoomRS28.dcp"/>
+        <DCCReference Include="dxSkinDarkSideRS28.dcp"/>
+        <DCCReference Include="dxSkinDevExpressDarkStyleRS28.dcp"/>
+        <DCCReference Include="dxSkinDevExpressStyleRS28.dcp"/>
+        <DCCReference Include="dxSkinFoggyRS28.dcp"/>
+        <DCCReference Include="dxSkinGlassOceansRS28.dcp"/>
+        <DCCReference Include="dxSkinHighContrastRS28.dcp"/>
+        <DCCReference Include="dxSkiniMaginaryRS28.dcp"/>
+        <DCCReference Include="dxSkinLilianRS28.dcp"/>
+        <DCCReference Include="dxSkinLiquidSkyRS28.dcp"/>
+        <DCCReference Include="dxSkinLondonLiquidSkyRS28.dcp"/>
+        <DCCReference Include="dxSkinMcSkinRS28.dcp"/>
+        <DCCReference Include="dxSkinMetropolisDarkRS28.dcp"/>
+        <DCCReference Include="dxSkinMetropolisRS28.dcp"/>
+        <DCCReference Include="dxSkinMoneyTwinsRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2007BlackRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2007BlueRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2007GreenRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2007PinkRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2007SilverRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2010BlackRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2010BlueRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2010SilverRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2013DarkGrayRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2013LightGrayRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2013WhiteRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2016ColorfulRS28.dcp"/>
+        <DCCReference Include="dxSkinOffice2016DarkRS28.dcp"/>
+        <DCCReference Include="dxSkinPumpkinRS28.dcp"/>
+        <DCCReference Include="dxSkinSevenClassicRS28.dcp"/>
+        <DCCReference Include="dxSkinSevenRS28.dcp"/>
+        <DCCReference Include="dxSkinSharpPlusRS28.dcp"/>
+        <DCCReference Include="dxSkinSharpRS28.dcp"/>
+        <DCCReference Include="dxSkinSilverRS28.dcp"/>
+        <DCCReference Include="dxSkinSpringTimeRS28.dcp"/>
+        <DCCReference Include="dxSkinStardustRS28.dcp"/>
+        <DCCReference Include="dxSkinSummer2008RS28.dcp"/>
+        <DCCReference Include="dxSkinTheAsphaltWorldRS28.dcp"/>
+        <DCCReference Include="dxSkinValentineRS28.dcp"/>
+        <DCCReference Include="dxSkinVisualStudio2013BlueRS28.dcp"/>
+        <DCCReference Include="dxSkinVisualStudio2013DarkRS28.dcp"/>
+        <DCCReference Include="dxSkinVisualStudio2013LightRS28.dcp"/>
+        <DCCReference Include="dxSkinVS2010RS28.dcp"/>
+        <DCCReference Include="dxSkinWhiteprintRS28.dcp"/>
+        <DCCReference Include="dxSkinXmas2008BlueRS28.dcp"/>
+        <DCCReference Include="dxDockingRS28.dcp"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.FormHelper.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.pas"/>
@@ -251,16 +279,17 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.View.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Events.pas"/>
         <None Include="..\OPP.Help\notes\readme.md"/>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -270,75 +299,8 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclIndyCore250.bpl">Indy 10 Core Design Time</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JclBaseExpert250.bpl">JCL Package containing common units for JCL Experts</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCoreDesign250.bpl">JVCL Core Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dacvcl120.bpl">Devart Data Access GUI related Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dcldac120.bpl">Devart Data Access Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\DataExplorerFireDACPlugin250.bpl">FireDAC Data Explorer Integration</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclIntraweb_140_250.bpl">IntraWeb 14.0 Design Package for RAD Studio XE6</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclie250.bpl">Internet Explorer Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl250.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclIndyProtocols250.bpl">Indy 10 Protocols Design Time</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JclDebugExpert250.bpl">JCL Debug IDE extension</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JclProjectAnalysisExpert250.bpl">JCL Project Analyzer</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JclFavoriteFoldersExpert250.bpl">JCL Open and Save IDE dialogs with favorite folders</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JclRepositoryExpert250.bpl">JCL Package containing repository wizards</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JclSIMDViewExpert250.bpl">JCL Debug Window of XMM registers</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JclStackTraceViewerExpert250.bpl">JCL Stack Trace Viewer</Excluded_Packages>
-                    <Excluded_Packages Name="C:\delphi_libs\my_libs\devex17\Library\RS25\dcldxFireDACServerModeRS25.bpl">FireDAC Data Source for ExpressDataController Server Mode by Developer Express Inc.</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclBindCompFireDAC250.bpl">LiveBinding Expression Components FireDac</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompdbx250.bpl">LiveBindings Expression Components DbExpress</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclFMXtee9250.bpl">TeeChart Lite FMX Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcltee9250.bpl">TeeChart Standard VCL Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvAppFrmDesign250.bpl">JVCL Application and Form Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvBandsDesign250.bpl">JVCL Band Objects</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCmpDesign250.bpl">JVCL Non-Visual Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvControlsDesign250.bpl">JVCL Visual Controls</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCryptDesign250.bpl">JVCL Encryption and Compression</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvCustomDesign250.bpl">JVCL Custom Controls</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDBDesign250.bpl">JVCL Database Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDlgsDesign250.bpl">JVCL Dialog Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDockingDesign250.bpl">JVCL Docking Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvDotNetCtrlsDesign250.bpl">JVCL DotNet Controls</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvGlobusDesign250.bpl">JVCL Globus Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvHMIDesign250.bpl">JVCL HMI Controls</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvJansDesign250.bpl">JVCL Jans Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvManagedThreadsDesign250.bpl">JVCL Managed Threads</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvMMDesign250.bpl">JVCL Multimedia and Image Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvNetDesign250.bpl">JVCL Network Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPageCompsDesign250.bpl">JVCL Page Style Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPascalInterpreterDesign250.bpl">JVCL Interpreter Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPluginSystemDesign250.bpl">JVCL Plugin Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvPrintPreviewDesign250.bpl">JVCL Print Preview Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvRuntimeDesignDesign250.bpl">JVCL Runtime Design Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvStdCtrlsDesign250.bpl">JVCL Standard Controls</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvSystemDesign250.bpl">JVCL System Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvTimeFrameworkDesign250.bpl">JVCL Time Framework</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvWizardsDesign250.bpl">JVCL Wizard</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\JvXPCtrlsDesign250.bpl">JVCL XP Controls</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\kbmMemDesDXEPro.bpl">kbmMemTable Pro Edition - Performance memory dataset - Delphi XE/Win32 - Designtime - www.Components4Developers.com</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfs25.bpl">FastScript 1.9 Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfsADO25.bpl">FastScript 1.9 ADO Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfsDB25.bpl">FastScript 1.9 DB Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfsTee25.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\FR7.bpl">FastReport 2.4 Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrx25.bpl">FastReport 6.0 Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxADO25.bpl">FastReport 6.0 ADO Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxDB25.bpl">FastReport 6.0 DB Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxDBX25.bpl">FastReport 6.0 DBX Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxTee25.bpl">FastReport 6.0 Tee Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxe25.bpl">FastReport 6.0 Exports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\delphi_libs\my_libs\SDAC\bpl\sdacvcl120.bpl">SQL Server Data Access GUI related Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\delphi_libs\my_libs\SDAC\bpl\dclsdac120.bpl">SQL Server Data Access Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\SMExportD2010_10.bpl">SMExport suite: data export from dataset. Written by Mike Shkolnik/Scalabium, 1998-2006.</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIBX25.bpl">FastReport 6.0 IBX Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfsIBX25.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">OPPHelp.dpk</Source>
@@ -731,11 +693,11 @@
             </Deployment>
             <Platforms>
                 <Platform value="Android">False</Platform>
-                <Platform value="iOSDevice32">False</Platform>
+                <Platform value="Android64">False</Platform>
                 <Platform value="iOSDevice64">False</Platform>
-                <Platform value="iOSSimulator">False</Platform>
+                <Platform value="iOSSimARM64">False</Platform>
                 <Platform value="Linux64">False</Platform>
-                <Platform value="OSX32">False</Platform>
+                <Platform value="OSX64">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
