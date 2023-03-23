@@ -17,7 +17,6 @@ type
     Button1: TButton;
     Edit1: TEdit;
     Button2: TButton;
-    OPPHelpShortcutServer1: TOPPHelpShortcutServer;
     Button3: TButton;
     Kod_MKC: TEdit;
     Kod_OKWED: TCheckBox;
@@ -27,6 +26,7 @@ type
     procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
 
@@ -76,7 +76,7 @@ end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
 var
-  pipe: TOPPMessagePipe;
+  Pipe: TOPPMessagePipe;
   hwnd: THandle;
   Msg: TOPPHelpViewFullScreenSharedMessage;
 begin
@@ -84,18 +84,26 @@ begin
   Msg.page := 199;
 
   hwnd := TOPPMessagingHelper.GetProcessHandle(OPPViewerProcessName);
-  if hwnd <> 0 then
+  if hwnd = 0 then
   begin
-    pipe := TOPPMessagePipe.Create;
-
-    pipe.SendRecord(hwnd, '',
-      procedure(AStream: TStream)
-      begin
-        Msg.writeToStream(AStream);
-      end);
-
-    pipe.Free;
+    hwnd := TOPPMessagingHelper.RunProcess(OPPViewerProcessName, handle);
   end;
+
+  if hwnd = 0 then
+  begin
+    ShowMessage('Невозможно запустить окно помощи.');
+    exit;
+  end;
+
+  Pipe := TOPPMessagePipe.Create;
+
+  Pipe.SendRecord(hwnd, '',
+    procedure(AStream: TStream)
+    begin
+      Msg.writeToStream(AStream);
+    end);
+
+  Pipe.Free;
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
@@ -136,6 +144,11 @@ begin
   begin
     Edit1.SelectAll;
   end;
+end;
+
+procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  TOPPMessagingHelper.KillProcess(OPPViewerProcessName);
 end;
 
 initialization

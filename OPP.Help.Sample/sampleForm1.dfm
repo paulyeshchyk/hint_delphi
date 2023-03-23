@@ -11,6 +11,7 @@ object SampleForm: TSampleForm
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poDesigned
+  OnClose = FormClose
   OnCreate = FormCreate
   TextHeight = 13
   object Panel1: TPanel
