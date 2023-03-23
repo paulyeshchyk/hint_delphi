@@ -1,0 +1,137 @@
+package OPPHelp;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  DbxCommonDriver,
+  dbrtl,
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  RESTComponents,
+  dxCoreRS25,
+  cxLibraryRS25,
+  dxGDIPlusRS25,
+  dxThemeRS25,
+  cxDataRS25,
+  cxPageControlRS25,
+  dxOfficeCoreRS25,
+  cxEditorsRS25,
+  dxLayoutControlRS25,
+  dxComnRS25,
+  dxSpreadSheetCoreRS25,
+  dxBarRS25,
+  dxSkinsCoreRS25,
+  cxGridRS25,
+  dxRichEditControlRS25,
+  dxRichEditControlCoreRS25,
+  dxRichEditDocumentModelRS25,
+  dxRichEditCoreRS25,
+  dxPDFViewerRS25,
+  dxSkinBlackRS25,
+  dxSkinBlueprintRS25,
+  dxSkinBlueRS25,
+  dxSkinCaramelRS25,
+  dxSkinCoffeeRS25,
+  dxSkinDarkRoomRS25,
+  dxSkinDarkSideRS25,
+  dxSkinDevExpressDarkStyleRS25,
+  dxSkinDevExpressStyleRS25,
+  dxSkinFoggyRS25,
+  dxSkinGlassOceansRS25,
+  dxSkinHighContrastRS25,
+  dxSkiniMaginaryRS25,
+  dxSkinLilianRS25,
+  dxSkinLiquidSkyRS25,
+  dxSkinLondonLiquidSkyRS25,
+  dxSkinMcSkinRS25,
+  dxSkinMetropolisDarkRS25,
+  dxSkinMetropolisRS25,
+  dxSkinMoneyTwinsRS25,
+  dxSkinOffice2007BlackRS25,
+  dxSkinOffice2007BlueRS25,
+  dxSkinOffice2007GreenRS25,
+  dxSkinOffice2007PinkRS25,
+  dxSkinOffice2007SilverRS25,
+  dxSkinOffice2010BlackRS25,
+  dxSkinOffice2010BlueRS25,
+  dxSkinOffice2010SilverRS25,
+  dxSkinOffice2013DarkGrayRS25,
+  dxSkinOffice2013LightGrayRS25,
+  dxSkinOffice2013WhiteRS25,
+  dxSkinOffice2016ColorfulRS25,
+  dxSkinOffice2016DarkRS25,
+  dxSkinPumpkinRS25,
+  dxSkinSevenClassicRS25,
+  dxSkinSevenRS25,
+  dxSkinSharpPlusRS25,
+  dxSkinSharpRS25,
+  dxSkinSilverRS25,
+  dxSkinSpringTimeRS25,
+  dxSkinStardustRS25,
+  dxSkinSummer2008RS25,
+  dxSkinTheAsphaltWorldRS25,
+  dxSkinValentineRS25,
+  dxSkinVisualStudio2013BlueRS25,
+  dxSkinVisualStudio2013DarkRS25,
+  dxSkinVisualStudio2013LightRS25,
+  dxSkinVS2010RS25,
+  dxSkinWhiteprintRS25,
+  dxSkinXmas2008BlueRS25,
+  dxDockingRS25;
+
+contains
+  OPP.Help.Hint.FormHelper in '..\OPP.Help\OPP.Help.Hint.FormHelper.pas',
+  OPP.Help.Hint.Mapping.Filereader in '..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas',
+  OPP.Help.Hint.Mapping in '..\OPP.Help\OPP.Help.Hint.Mapping.pas',
+  OPP.Help.Hint in '..\OPP.Help\OPP.Help.Hint.pas',
+  OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
+  OPP.Help.Hint.Server in '..\OPP.Help\OPP.Help.Hint.Server.pas',
+  OPP.Help.JSON in '..\OPP.Help\OPP.Help.JSON.pas',
+  OPP.Help.LargeForm in '..\OPP.Help\OPP.Help.LargeForm.pas' {OPPHelpLargeForm},
+  OPP.Help.Meta.Enumerator in '..\OPP.Help\OPP.Help.Meta.Enumerator.pas',
+  OPP.Help.Meta in '..\OPP.Help\OPP.Help.Meta.pas',
+  OPP.Help.Nonatomic in '..\OPP.Help\OPP.Help.Nonatomic.pas',
+  OPP.Help.Shortcut.Dataset in '..\OPP.Help\OPP.Help.Shortcut.Dataset.pas',
+  OPP.Help.Shortcut.Mapping.Filereader in '..\OPP.Help\OPP.Help.Shortcut.Mapping.Filereader.pas',
+  OPP.Help.Shortcut.Mapping in '..\OPP.Help\OPP.Help.Shortcut.Mapping.pas',
+  OPP.Help.Shortcut.Request in '..\OPP.Help\OPP.Help.Shortcut.Request.pas',
+  OPP.Help.Shortcut.Server in '..\OPP.Help\OPP.Help.Shortcut.Server.pas',
+  OPP.Help.System.Error in '..\OPP.Help\OPP.Help.System.Error.pas',
+  OPP.Help.System.Str in '..\OPP.Help\OPP.Help.System.Str.pas',
+  OPP.Help.System.Thread in '..\OPP.Help\OPP.Help.System.Thread.pas',
+  OPP.Help.Vcl.Control.Styler in '..\OPP.Help\OPP.Help.Vcl.Control.Styler.pas',
+  OPP.Help.View.Fullscreen in '..\OPP.Help\OPP.Help.View.Fullscreen.pas',
+  OPP.Help.View.Hint in '..\OPP.Help\OPP.Help.View.Hint.pas',
+  OPP.Help.View in '..\OPP.Help\OPP.Help.View.pas',
+  OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
+  OPP.Help.System.Stream in '..\OPP.Help\OPP.Help.System.Stream.pas';
+
+end.

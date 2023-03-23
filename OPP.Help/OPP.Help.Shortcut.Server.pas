@@ -3,12 +3,16 @@
 interface
 
 uses
+
+//vcl.dialogs,
+
+
   System.Generics.Collections,
   System.SysUtils, System.SyncObjs, System.Classes,
 
   WinAPI.Messages,
   WinAPI.Windows,
-  Vcl.Controls, Vcl.Forms,
+  Vcl.Controls, Vcl.StdCtrls, Vcl.Forms,
   OPP.Help.Nonatomic,
   OPP.Help.Shortcut.Dataset,
   OPP.Help.Shortcut.Request,
@@ -21,7 +25,7 @@ type
     function showHelp(Request: TOPPHelpShortcutRequest): Boolean; overload;
   end;
 
-  TOPPHelpShortcutServer = class(TInterfacedObject, IOPPHelpShortcutServer)
+  TOPPHelpShortcutServer = class(TComponent, IOPPHelpShortcutServer)
   private
     fShortcutDataset: TOPPHelpShortcutDataset;
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
@@ -30,12 +34,14 @@ type
     function exportControl(AControl: TControl): Boolean;
     function showHelp(APredicate: TOPPHelpPredicate): Boolean; overload;
     function showHelp(ARequest: TOPPHelpShortcutRequest): Boolean; overload;
-    constructor create;
+
+    constructor Create(AOwner: TComponent);
     destructor Destroy; override;
     property ShortcutDataset: TOPPHelpShortcutDataset read fShortcutDataset write fShortcutDataset;
   end;
 
 function helpShortcutServer: IOPPHelpShortcutServer;
+procedure Register;
 
 implementation
 
@@ -55,7 +61,7 @@ begin
   try
     if not Assigned(fHelpServer) then
     begin
-      fHelpServer := TOPPHelpShortcutServer.create;
+      fHelpServer := TOPPHelpShortcutServer.Create(nil);
     end;
     result := fHelpServer;
   finally
@@ -65,9 +71,9 @@ end;
 
 // ---
 
-constructor TOPPHelpShortcutServer.create;
+constructor TOPPHelpShortcutServer.create(AOwner: TComponent);
 begin
-  inherited create;
+  inherited Create(AOwner);
 
   fPDFMemoryStream := TDictionary<String, TMemoryStream>.create;
 
@@ -131,6 +137,11 @@ end;
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
 begin
   result := true;
+end;
+
+procedure Register;
+begin
+  RegisterComponents('OPPHelp',[TOPPHelpShortcutServer])
 end;
 
 initialization

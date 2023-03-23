@@ -23,7 +23,7 @@ uses
   Vcl.ExtCtrls, cxStyles, cxCustomData, Data.DB,
   cxDataStorage, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, dxDockControl, dxDockPanel,
-  dxBar, cxFilter, cxData;
+  dxBar, cxFilter, cxData, OPP.Help.Shortcut.Server;
 
 type
   TSampleForm = class(TForm)
@@ -51,7 +51,11 @@ type
     cxGrid1Level1: TcxGridLevel;
     cxGrid1: TcxGrid;
     Edit1: TEdit;
+    Button2: TButton;
+    OPPHelpShortcutServer1: TOPPHelpShortcutServer;
+    Button3: TButton;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
@@ -80,14 +84,19 @@ uses
   OPP.Help.Hint.FormHelper,
   OPP.Help.Hint.Server,
   OPP.Help.Shortcut.Mapping,
-  OPP.Help.Shortcut.Server,
+  // OPP.Help.Shortcut.Server,
   OPP.Help.Shortcut.Request,
-  OPP.Help.nonatomic;
+  OPP.Help.nonatomic,
+
+  OPP.Help.View.FullScreen,
+  OPP.Help.System.Messaging;
+
+const
+  OPPViewerProcessName: String = 'opphelppreview.exe';
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
-  fPredicate : TOPPHelpPredicate;
-  fRequest : TOPPHelpShortcutRequest;
+  fPredicate: TOPPHelpPredicate;
 begin
   fPredicate := TOPPHelpPredicate.Create;
   fPredicate.keywordType := ktPage;
@@ -95,6 +104,24 @@ begin
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
   helpShortcutServer.showHelp(fPredicate);
+end;
+
+procedure TSampleForm.Button2Click(Sender: TObject);
+var
+  hwnd: THandle;
+  fMessage: TOPPHelpViewFullScreenSharedMessage;
+  fCopyDataStruct: TCopyDataStruct;
+begin
+
+  fMessage.page := 98;
+
+  fCopyDataStruct := fMessage.pack;
+
+  hwnd := TOPPMessagingHelper.GetProcessHandle(OPPViewerProcessName);
+  if hwnd <> 0 then
+  begin
+    SendMessage(hwnd, WM_COPYDATA, Handle, Integer(@fCopyDataStruct));
+  end;
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
@@ -110,7 +137,7 @@ begin
 
   fillGrid;
 
-  loadHint(self, tipsRepo, cxHintController.HintStyle);
+  self.loadHint(self, tipsRepo, cxHintController.HintStyle);
 
   self.restyle();
 end;

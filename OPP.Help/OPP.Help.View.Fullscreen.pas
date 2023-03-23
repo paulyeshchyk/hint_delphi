@@ -5,15 +5,25 @@ interface
 uses
   System.Classes,
   System.Generics.Collections,
+  WinAPI.Windows,
   Vcl.ExtCtrls,
   Vcl.Controls,
   Vcl.StdCtrls,
   dxPDFViewer, dxPDFDocument, dxCustomPreview,
   OPP.Help.Nonatomic,
   OPP.Help.System.Thread,
-  OPP.Help.View;
+  OPP.Help.View,
+
+  OPP.Help.System.Stream;
 
 type
+
+  TOPPHelpViewFullScreenSharedMessage = record
+    page: Integer;
+    function pack(): TCopyDataStruct;
+    function unpack(from: PCopyDataStruct): TOPPHelpViewFullScreenSharedMessage;
+  end;
+
   TOPPHelpViewFullScreen = class(TPanel, IOPPHelpViewFullScreen)
   private
     fStream: TMemoryStream;
@@ -45,9 +55,40 @@ type
     procedure searchWorkEnded(AResult: Integer);
   end;
 
+procedure Register;
+
 implementation
 
 uses System.SysUtils;
+
+function TOPPHelpViewFullScreenSharedMessage.unpack(from: PCopyDataStruct): TOPPHelpViewFullScreenSharedMessage;
+var
+  buffer: TReadOnlyMemoryStream;
+  result1: TOPPHelpViewFullScreenSharedMessage;
+begin
+  buffer := TReadOnlyMemoryStream.Create(from^.lpData, from^.cbData);
+  try
+    result.page := buffer.ReadInteger();
+  finally
+    buffer.Free;
+  end;
+end;
+
+function TOPPHelpViewFullScreenSharedMessage.pack(): TCopyDataStruct;
+var
+  Buffer: TMemoryStream;
+  Len: Integer;
+begin
+  Buffer := TMemoryStream.Create;
+  try
+    Buffer.WriteInteger(self.page);
+    result.dwData := 0;
+    result.cbData := Buffer.Size;
+    result.lpData := Buffer.Memory;
+  finally
+    Buffer.free;
+  end;
+end;
 
 constructor TOPPHelpViewFullScreen.Create(AOwner: TComponent);
 begin
@@ -71,9 +112,9 @@ end;
 
 destructor TOPPHelpViewFullScreen.Destroy;
 begin
-  fEventListeners.Free;
-  fSearchTimer.Free;
-  fPDFViewer.Free;
+  fEventListeners.free;
+  fSearchTimer.free;
+  fPDFViewer.free;
   inherited;
 end;
 
@@ -106,7 +147,7 @@ end;
 
 procedure TOPPHelpViewFullScreen.addStateChangeListener(AListener: IOPPHelpViewEventListener);
 begin
-  fEventListeners.Add(AListener);
+  fEventListeners.add(AListener);
 end;
 
 procedure TOPPHelpViewFullScreen.removeStateChangeListener(AListener: IOPPHelpViewEventListener);
@@ -214,6 +255,11 @@ begin
     fListener.SearchEnded;
 
   fSearchTimer.Enabled := false;
+end;
+
+procedure Register;
+begin
+  RegisterComponents('OPPHelp', [TOPPHelpViewFullScreen])
 end;
 
 end.

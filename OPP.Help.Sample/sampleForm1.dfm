@@ -211,6 +211,23 @@ object SampleForm: TSampleForm
     Text = 'opphint://Kod_MKC'
     OnKeyPress = Edit1KeyPress
   end
+  object Button2: TButton
+    Left = 640
+    Top = 256
+    Width = 75
+    Height = 25
+    Caption = 'Button2'
+    TabOrder = 4
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 736
+    Top = 344
+    Width = 75
+    Height = 25
+    Caption = 'send message'
+    TabOrder = 5
+  end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
     HintStyle.ScreenTipLinks = <>
@@ -225,5 +242,9 @@ object SampleForm: TSampleForm
     Left = 560
     Top = 88
     PixelsPerInch = 96
+  end
+  object OPPHelpShortcutServer1: TOPPHelpShortcutServer
+    Left = 600
+    Top = 400
   end
 end

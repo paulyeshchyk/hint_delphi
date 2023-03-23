@@ -17,3 +17,5 @@ OPPHelp.pas
 HH.PAS
 HH_FUNCS.PAS
 .svn
+*.res
+*.local

@@ -1,15 +1,14 @@
-program OPPHintSample;
+program OPPHelpPreview;
 
 uses
   Vcl.Forms,
-  sampleForm1 in 'sampleForm1.pas' {SampleForm};
+  OPPHelpPreviewForm in 'OPPHelpPreviewForm.pas' {Form1};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TSampleForm, SampleForm);
+  Application.CreateForm(TForm1, Form1);
   Application.Run;
-
 end.

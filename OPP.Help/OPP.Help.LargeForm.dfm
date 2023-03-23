@@ -46,7 +46,7 @@ object OPPHelpLargeForm: TOPPHelpLargeForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'Custom 1'
