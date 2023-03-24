@@ -13,16 +13,14 @@ type
   TOPPMessagePipeCompletion = reference to procedure(AStream: TStream);
 
   TOPPMessagePipe = class
-    function SendRecord(AReceiverHandle: THandle; const ARecordType: ShortString; completion: TOPPMessagePipeCompletion): Boolean;
-    function SendStreamData(AReceiverHandle: THandle; const AStream: TMemoryStream; const ADataType: TCopyDataType): Boolean;
-    function SendData(AReceiverHandle: THandle; const ADataToSend: TCopyDataStruct): Boolean;
+    function SendRecord(AReceiverHandle: THandle; ASenderHandle: THandle; const ARecordType: ShortString; completion: TOPPMessagePipeCompletion): Boolean;
+    function SendStreamData(AReceiverHandle: THandle; ASenderHandle: THandle; const AStream: TMemoryStream; const ADataType: TCopyDataType): Boolean;
+    function SendData(AReceiverHandle: THandle; ASenderHandle: THandle; const ADataToSend: TCopyDataStruct): Boolean;
   end;
-
 
 implementation
 
-
-function TOPPMessagePipe.SendRecord(AReceiverHandle: THandle; const ARecordType: ShortString; completion: TOPPMessagePipeCompletion): Boolean;
+function TOPPMessagePipe.SendRecord(AReceiverHandle: THandle; ASenderHandle: THandle; const ARecordType: ShortString; completion: TOPPMessagePipeCompletion): Boolean;
 var
   _Stream: TMemoryStream;
 begin
@@ -31,30 +29,29 @@ begin
     if Assigned(completion) then
       completion(_Stream);
     _Stream.Position := 0;
-    Result := SendStreamData(AReceiverHandle, _Stream, TCopyDataType.cdtRecord);
+    Result := SendStreamData(AReceiverHandle, ASenderHandle, _Stream, TCopyDataType.cdtRecord);
   finally
     FreeAndNil(_Stream);
   end;
 end;
 
-function TOPPMessagePipe.SendStreamData(AReceiverHandle: THandle; const AStream: TMemoryStream; const ADataType: TCopyDataType): Boolean;
+function TOPPMessagePipe.SendStreamData(AReceiverHandle: THandle; ASenderHandle: THandle; const AStream: TMemoryStream; const ADataType: TCopyDataType): Boolean;
 var
-  _CopyDataStruct: TCopyDataStruct;
+  fCopyDataStruct: TCopyDataStruct;
 begin
   Result := false;
 
   if AStream.Size = 0 then
     Exit;
 
-  _CopyDataStruct.dwData := Integer(ADataType);
-  _CopyDataStruct.cbData := AStream.Size;
-  _CopyDataStruct.lpData := AStream.Memory;
+  fCopyDataStruct.dwData := Integer(ADataType);
+  fCopyDataStruct.cbData := AStream.Size;
+  fCopyDataStruct.lpData := AStream.Memory;
 
-  Result := SendData(AReceiverHandle, _CopyDataStruct);
-
+  Result := SendData(AReceiverHandle, ASenderHandle, fCopyDataStruct);
 end;
 
-function TOPPMessagePipe.SendData(AReceiverHandle: THandle; const ADataToSend: TCopyDataStruct): Boolean;
+function TOPPMessagePipe.SendData(AReceiverHandle: THandle; ASenderHandle: THandle; const ADataToSend: TCopyDataStruct): Boolean;
 var
   fSendResponse: Integer;
 begin
@@ -63,10 +60,9 @@ begin
   if (AReceiverHandle = 0) then
     Exit;
 
-  fSendResponse := SendMessage(AReceiverHandle, WM_COPYDATA, WPARAM(0), LPARAM(@ADataToSend)); // WPARAM(0) -> FLocalReceiverForm.Handle
+  fSendResponse := SendMessage(AReceiverHandle, WM_COPYDATA, Integer(ASenderHandle), LPARAM(@ADataToSend));
 
   Result := fSendResponse <> 0;
 end;
 
 end.
-

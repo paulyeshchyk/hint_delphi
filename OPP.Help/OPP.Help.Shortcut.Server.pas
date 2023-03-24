@@ -13,7 +13,7 @@ uses
   WinAPI.Messages,
   WinAPI.Windows,
   Vcl.Controls, Vcl.StdCtrls, Vcl.Forms,
-  OPP.Help.Nonatomic,
+  OPP.Help.Predicate,
   OPP.Help.Shortcut.Dataset,
   OPP.Help.Shortcut.Request,
   OPP.Help.Shortcut.Mapping;
@@ -23,19 +23,20 @@ type
     function exportControl(AControl: TControl): Boolean;
     function showHelp(APredicate: TOPPHelpPredicate): Boolean; overload;
     function showHelp(Request: TOPPHelpShortcutRequest): Boolean; overload;
+    function loadPDF(AFileName: String): TMemoryStream;
   end;
 
   TOPPHelpShortcutServer = class(TComponent, IOPPHelpShortcutServer)
   private
     fShortcutDataset: TOPPHelpShortcutDataset;
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
-    function loadPDF(AFileName: String): TMemoryStream;
   public
+    function loadPDF(AFileName: String): TMemoryStream;
     function exportControl(AControl: TControl): Boolean;
     function showHelp(APredicate: TOPPHelpPredicate): Boolean; overload;
     function showHelp(ARequest: TOPPHelpShortcutRequest): Boolean; overload;
 
-    constructor Create(AOwner: TComponent);
+    constructor Create(AOwner: TComponent);override;
     destructor Destroy; override;
     property ShortcutDataset: TOPPHelpShortcutDataset read fShortcutDataset write fShortcutDataset;
   end;

@@ -81,8 +81,7 @@
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\OPPHelp</DCC_DcuOutput>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
-        <UsePackages>true</UsePackages>
-        <DCC_UsePackage>OPPHelp;rtl;dbrtl;dxPDFViewerRS28;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>OPPHelp;$(DCC_UsePackage)</DCC_UsePackage>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\22.0\bin;C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBase2020\IDE_spoof;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Users\Paul\AppData\Local\Microsoft\WindowsApps;D:\Embarcadero\Studio\22.0;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
     </PropertyGroup>
@@ -104,15 +103,15 @@
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -125,8 +124,16 @@
                     <Source Name="MainSource">OPPHelpPreview.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="C:\delphi_libs\my_libs\SDAC\bpl\sdacvcl120.bpl">SQL Server Data Access GUI related Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\delphi_libs\my_libs\SDAC\bpl\dclsdac120.bpl">SQL Server Data Access Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\SMExportD2010_10.bpl">SMExport suite: data export from dataset. Written by Mike Shkolnik/Scalabium, 1998-2006.</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIBX25.bpl">FastReport 6.0 IBX Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfsIBX25.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

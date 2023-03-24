@@ -4,7 +4,7 @@ interface
 
 uses
   Vcl.Forms, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes,
+  System.Classes, System.Generics.Collections,
   Vcl.Controls, Vcl.StdCtrls, Vcl.Dialogs,
 
   Vcl.ExtCtrls, cxStyles, cxCustomData, Data.DB, dxScreenTip, OPP.Help.Shortcut.Server, cxClasses, dxCustomHint, cxHint;
@@ -32,6 +32,7 @@ type
 
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure fillGrid();
+    procedure sendOpenPage(AProcessHandle: THandle);
   public
     { Public declarations }
   end;
@@ -55,12 +56,14 @@ uses
   OPP.Help.nonatomic,
 
   OPP.Help.Events,
+  OPP.Help.Predicate,
   OPP.Help.System.Stream,
   OPP.Help.View.FullScreen,
   OPP.Help.System.Messaging, OPP.Help.System.Messaging.Pipe;
 
 const
-  OPPViewerProcessName: String = 'opphelppreview.exe';
+  OPPViewerProcessName: String = 'OPPHelpPreview.exe';
+  OPPViewerClassName: String = 'TForm1';
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
@@ -76,34 +79,76 @@ end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
 var
-  Pipe: TOPPMessagePipe;
+  fWindowClassHandleList: TList<THandle>;
   hwnd: THandle;
-  Msg: TOPPHelpViewFullScreenSharedMessage;
+  fRunResult: Boolean;
 begin
 
-  Msg.page := 199;
-
-  hwnd := TOPPMessagingHelper.GetProcessHandle(OPPViewerProcessName);
-  if hwnd = 0 then
+  fWindowClassHandleList := TOPPMessagingHelper.GetWindowClassHandleList(OPPViewerClassName);
+  if assigned(fWindowClassHandleList) then
   begin
-    hwnd := TOPPMessagingHelper.RunProcess(OPPViewerProcessName, handle);
+    if fWindowClassHandleList.Count = 0 then
+    begin
+      fRunResult := TOPPMessagingHelper.RunProcess(OPPViewerProcessName, self.Handle, 300,
+        procedure()
+        var
+          hwnd: THandle;
+        begin
+          fWindowClassHandleList := TOPPMessagingHelper.GetWindowClassHandleList(OPPViewerClassName);
+          if assigned(fWindowClassHandleList) then
+          begin
+            for hwnd in fWindowClassHandleList do
+            begin
+              sendOpenPage(hwnd);
+            end;
+          end;
+        end);
+
+    end else begin
+      for hwnd in fWindowClassHandleList do
+      begin
+        sendOpenPage(hwnd);
+      end;
+    end;
+  end else begin
+
+    fRunResult := TOPPMessagingHelper.RunProcess(OPPViewerProcessName, Handle, 300,
+      procedure()
+      begin
+        sendOpenPage(hwnd);
+      end);
+
   end;
 
-  if hwnd = 0 then
+end;
+
+procedure TSampleForm.sendOpenPage(AProcessHandle: THandle);
+var
+  Pipe: TOPPMessagePipe;
+  fPredicate: TOPPHelpPredicate;
+begin
+  if AProcessHandle = 0 then
   begin
     ShowMessage('Невозможно запустить окно помощи.');
     exit;
   end;
 
+  fPredicate := TOPPHelpPredicate.Create();
+  fPredicate.keywordType := ktPage;
+  fPredicate.value := '12';
+  fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\readme.pdf';
+
   Pipe := TOPPMessagePipe.Create;
 
-  Pipe.SendRecord(hwnd, '',
+  Pipe.SendRecord(AProcessHandle, self.Handle, '',
     procedure(AStream: TStream)
     begin
-      Msg.writeToStream(AStream);
+      fPredicate.writeToStream(AStream);
     end);
 
   Pipe.Free;
+  fPredicate.Free;
+
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);

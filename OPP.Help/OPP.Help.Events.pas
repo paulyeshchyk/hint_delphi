@@ -7,6 +7,7 @@ uses System.Classes;
 type
   TOPPHelpViewFullScreenSharedMessage = record
     page: Integer;
+    filename: String;
   end;
 
   TOPPHelpViewFullScreenSharedMessageHelper = record helper for TOPPHelpViewFullScreenSharedMessage
@@ -24,6 +25,7 @@ begin
   if not assigned(AStream) then
     exit;
   AStream.WriteInteger(self.page);
+  AStream.WriteString(self.filename);
   result := true;
 end;
 
@@ -34,6 +36,7 @@ begin
     exit;
 
   self.page := AStream.ReadInteger;
+  self.filename := AStream.ReadString;
   result := true;
 
 end;

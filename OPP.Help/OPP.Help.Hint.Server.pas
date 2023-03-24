@@ -10,6 +10,8 @@ uses
   OPP.Help.Hint, OPP.Help.Meta.Enumerator,
   //
   OPP.Help.Nonatomic,
+  OPP.Help.System.Str,
+  OPP.Help.Predicate,
   OPP.Help.Hint.Mapping,
   OPP.Help.Hint.Reader,
   OPP.Help.Meta;
@@ -138,14 +140,14 @@ begin
   if not Assigned(fOnHintTextsFileNameRequest) then
     exit;
 
-  fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpHintMap>; error: Exception)
+  fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpHintMap>; Error: Exception)
     begin
 
       self.fLoaded := true;
 
-      if Assigned(error) then
+      if Assigned(Error) then
       begin
-        error.Log();
+        Error.Log();
         exit;
       end;
       if Assigned(AList) then
@@ -179,25 +181,32 @@ end;
 
 { public }
 
-//TODO: add callback where hintmap and reader be returned
-//reader will take predicate from hintmap and then it should run search using predicate
+// TODO: add callback where hintmap and reader be returned
+// reader will take predicate from hintmap and then it should run search using predicate
 function TOPPHelpHintServer.findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
 var
   fMap: TOPPHelpHintMap;
+  fPredicate: TOPPHelpPredicate;
 begin
   result := nil;
 
   fMap := fHintMapSet.GetMap(AMetaIdentifier);
   if not Assigned(fMap) then
     exit;
+  fPredicate := fMap.Predicate;
+  if not Assigned(fPredicate) then
+  begin
+    OutputDebugString('!!! PREDICATE NOT FOUND!!!'.toWidechar);
+    exit;
+  end;
 
-  result := getReader(fMap.predicate.filename);
+  result := getReader(fMap.Predicate.filename);
   if Assigned(result) then
     exit;
 
   result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(fMap.predicate.filename);
-  fHintDataReaders.Add(fMap.predicate.filename, result);
+  result.loadData(fMap.Predicate.filename);
+  fHintDataReaders.Add(fMap.Predicate.filename, result);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -239,7 +248,7 @@ end;
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
 begin
   result.data := GetHintData(hintMeta.identifier);
-  result.meta := hintMeta;
+  result.Meta := hintMeta;
 end;
 
 procedure TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion);

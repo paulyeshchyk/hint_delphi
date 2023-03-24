@@ -4,7 +4,8 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Generics.Collections,
-  OPP.Help.nonatomic;
+  OPP.Help.Nonatomic,
+  OPP.Help.Predicate;
 
 type
 

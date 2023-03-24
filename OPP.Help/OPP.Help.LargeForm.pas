@@ -25,7 +25,7 @@ uses
 
   OPP.Help.View,
   OPP.Help.View.Fullscreen,
-  OPP.Help.Nonatomic,
+  OPP.Help.Predicate,
   OPP.Help.Shortcut.Mapping, OPP.Help.System.Thread;
 
 type

@@ -4,7 +4,8 @@ interface
 
 uses
   System.Generics.Collections,
-  OPP.Help.Nonatomic;
+  OPP.Help.Nonatomic,
+  OPP.Help.Predicate;
 
 type
 

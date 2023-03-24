@@ -10,7 +10,9 @@ uses
   Vcl.Controls,
   Vcl.StdCtrls,
   dxPDFViewer, dxPDFDocument, dxCustomPreview,
+
   OPP.Help.Nonatomic,
+  OPP.Help.Predicate,
   OPP.Help.System.Thread,
   OPP.Help.View,
 
@@ -18,7 +20,7 @@ uses
 
 type
 
-  TOPPHelpViewFullScreen = class(TPanel, IOPPHelpViewFullScreen)
+  TOPPHelpViewFullScreen = class(TPanel)
   private
     fStream: TMemoryStream;
     fPDFViewer: TdxPDFViewer;
@@ -34,11 +36,12 @@ type
     procedure setHasLoadedContent(AHasLoadedContent: Boolean);
     property HasLoadedContent: Boolean read fHasLoadedContent write setHasLoadedContent;
   public
+
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
     procedure loadContent(AStream: TMemoryStream);
-    procedure setPredicate(APredicate: TOPPHelpPredicate);
+    procedure setPredicate(const APredicate: TOPPHelpPredicate);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
 
@@ -47,6 +50,7 @@ type
 
     procedure searchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
     procedure searchWorkEnded(AResult: Integer);
+
   end;
 
 procedure Register;
@@ -83,15 +87,16 @@ begin
   inherited;
 end;
 
-procedure TOPPHelpViewFullScreen.setPredicate(APredicate: TOPPHelpPredicate);
+procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
-  fPredicate := APredicate;
+  fPredicate := APredicate.copy();
   doSearchIfPossible;
 end;
 
 procedure TOPPHelpViewFullScreen.setHasLoadedContent(AHasLoadedContent: Boolean);
 begin
   fHasLoadedContent := AHasLoadedContent;
+  doSearchIfPossible;
 end;
 
 procedure TOPPHelpViewFullScreen.loadContent(AStream: TMemoryStream);

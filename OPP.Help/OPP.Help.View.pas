@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes,
-  OPP.Help.Nonatomic;
+  OPP.Help.Predicate;
 
 type
   TOPPHelpViewStateChangedEvent = procedure of object;
@@ -17,7 +17,7 @@ type
 
   IOPPHelpViewFullScreen = interface
     procedure loadContent(AStream: TMemoryStream);
-    procedure setPredicate(APredicate: TOPPHelpPredicate);
+    procedure setPredicate(const APredicate: TOPPHelpPredicate);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
   end;
