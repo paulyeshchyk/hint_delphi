@@ -14,7 +14,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
   dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxStatusBar,
-  cxContainer, cxEdit, cxProgressBar, OPP.Help.View, cxPC, dxDockControl, cxClasses, dxBar, dxDockPanel;
+  cxContainer, cxEdit, cxProgressBar, OPP.Help.View, cxPC, dxDockControl, cxClasses, dxBar, dxDockPanel, cxBarEditItem,
+  cxStyles;
 
 type
 
@@ -36,12 +37,16 @@ type
     dxBarManager1Bar1: TdxBar;
     oppHelpView: TOPPHelpViewFullScreen;
     dxBarButtonExit: TdxBarButton;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSubItem2: TdxBarSubItem;
     dxBarButton1: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure dxBarButtonShowTreeClick(Sender: TObject);
     procedure dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
     procedure dxBarButton1Click(Sender: TObject);
+    procedure dxBarButtonExitClick(Sender: TObject);
   private
     { Private declarations }
     fIsTreeVisible: Boolean;
@@ -109,6 +114,11 @@ end;
 procedure TForm1.dxBarButton1Click(Sender: TObject);
 begin
   oppHelpView.triggerFindPanel;
+end;
+
+procedure TForm1.dxBarButtonExitClick(Sender: TObject);
+begin
+  self.close();
 end;
 
 procedure TForm1.dxBarButtonShowTreeClick(Sender: TObject);

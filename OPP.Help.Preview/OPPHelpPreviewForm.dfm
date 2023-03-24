@@ -62,9 +62,9 @@ object Form1: TForm1
   end
   object oppHelpView: TOPPHelpViewFullScreen
     Left = 0
-    Top = 28
+    Top = 25
     Width = 766
-    Height = 593
+    Height = 596
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 5
@@ -97,13 +97,10 @@ object Form1: TForm1
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
-      'Default'
-      'Find')
+      'Default')
     Categories.ItemsVisibles = (
-      2
       2)
     Categories.Visibles = (
-      True
       True)
     PopupMenuLinks = <>
     UseSystemFont = True
@@ -113,7 +110,7 @@ object Form1: TForm1
     DockControlHeights = (
       0
       0
-      28
+      25
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'default'
@@ -126,29 +123,60 @@ object Form1: TForm1
       FloatTop = 8
       FloatClientWidth = 0
       FloatClientHeight = 0
+      IsMainMenu = True
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButtonExit'
+          ItemName = 'dxBarSubItem1'
         end>
+      MultiLine = True
       OneOnRow = True
       Row = 0
+      ShowMark = False
       UseOwnFont = False
       Visible = True
-      WholeRow = False
+      WholeRow = True
     end
     object dxBarButtonExit: TdxBarButton
       Caption = 'E&xit'
       Category = 0
       Hint = 'Exit'
       Visible = ivAlways
+      OnClick = dxBarButtonExitClick
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = '&File'
+      Category = 0
+      Visible = ivAlways
+      AllowCustomizing = False
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButtonExit'
+        end>
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
     end
     object dxBarButton1: TdxBarButton
-      Caption = 'Find...'
-      Category = 1
-      Hint = 'Find'
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
       Visible = ivAlways
-      OnClick = dxBarButton1Click
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New separator'
+      Category = 0
+      Hint = 'New separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
 end
