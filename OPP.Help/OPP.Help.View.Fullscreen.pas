@@ -40,6 +40,10 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    procedure reloadControls;
+
+    procedure triggerFindPanel;
+
     procedure loadContent(AStream: TMemoryStream);
     procedure setPredicate(const APredicate: TOPPHelpPredicate);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
@@ -87,6 +91,16 @@ begin
   inherited;
 end;
 
+procedure TOPPHelpViewFullScreen.reloadControls;
+begin
+  //
+end;
+
+procedure TOPPHelpViewFullScreen.triggerFindPanel;
+begin
+  fPDFViewer.ShowFindPanel;
+end;
+
 procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
   fPredicate := APredicate.copy();
@@ -97,13 +111,13 @@ procedure TOPPHelpViewFullScreen.setHasLoadedContent(AHasLoadedContent: Boolean)
 begin
   fHasLoadedContent := AHasLoadedContent;
   doSearchIfPossible;
+  reloadControls;
 end;
 
 procedure TOPPHelpViewFullScreen.loadContent(AStream: TMemoryStream);
 begin
 
   fStream := AStream;
-
   TOPPSystemThread.Create(loadWorkStarted, loadWorkEnded);
 end;
 

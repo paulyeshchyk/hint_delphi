@@ -14,7 +14,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
   dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxStatusBar,
-  cxContainer, cxEdit, cxProgressBar, OPP.Help.View;
+  cxContainer, cxEdit, cxProgressBar, OPP.Help.View, cxPC, dxDockControl, cxClasses, dxBar, dxDockPanel;
 
 type
 
@@ -25,21 +25,40 @@ type
     Result: Longint;
   end;
 
+  TOPPHelpPreviewFormState = (fsCreated, fsLoading, fsHandlingMessage, fsSearching, fsSearchProgressing, fsSearchFinishing, fsIdle);
+
   TForm1 = class(TForm, IOPPHelpViewEventListener)
-    oppHelpView: TOPPHelpViewFullScreen;
     dxStatusBar1: TdxStatusBar;
     dxStatusBar1Container0: TdxStatusBarContainerControl;
     cxProgressBar1: TcxProgressBar;
+    dxDockingManager1: TdxDockingManager;
+    dxBarManager1: TdxBarManager;
+    dxBarManager1Bar1: TdxBar;
+    oppHelpView: TOPPHelpViewFullScreen;
+    dxBarButtonExit: TdxBarButton;
+    dxBarButton1: TdxBarButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure dxBarButtonShowTreeClick(Sender: TObject);
+    procedure dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
+    procedure dxBarButton1Click(Sender: TObject);
   private
     { Private declarations }
+    fIsTreeVisible: Boolean;
     fProgress: TcxProgressBar;
     fProgressPanel: TPanel;
+    fCurrentState: TOPPHelpPreviewFormState;
     procedure WMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
+    { --- }
     procedure SearchStarted();
     procedure SearchProgress();
     procedure SearchEnded();
+    { --- }
+    procedure setIsTreeVisible(AValue: Boolean);
+    property isTreeVisible: Boolean read fIsTreeVisible write setIsTreeVisible;
+
+    procedure setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
+    property currentState: TOPPHelpPreviewFormState read fCurrentState write setCurrentState;
 
   public
     { Public declarations }
@@ -60,6 +79,49 @@ uses
 
   OPP.Help.Shortcut.Server;
 
+procedure TForm1.setIsTreeVisible(AValue: Boolean);
+begin
+  fIsTreeVisible := AValue;
+  //
+end;
+
+procedure TForm1.setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
+begin
+  fCurrentState := ACurrentState;
+  case fCurrentState of
+    fsCreated:
+      dxStatusBar1.Panels[1].Text := 'Created';
+    fsLoading:
+      dxStatusBar1.Panels[1].Text := 'Loading';
+    fsHandlingMessage:
+      dxStatusBar1.Panels[1].Text := 'Handling';
+    fsSearching:
+      dxStatusBar1.Panels[1].Text := 'Searching';
+    fsSearchProgressing:
+      dxStatusBar1.Panels[1].Text := 'Progressing';
+    fsSearchFinishing:
+      dxStatusBar1.Panels[1].Text := 'Finishing';
+    fsIdle:
+      dxStatusBar1.Panels[1].Text := '';
+  end;
+end;
+
+procedure TForm1.dxBarButton1Click(Sender: TObject);
+begin
+  oppHelpView.triggerFindPanel;
+end;
+
+procedure TForm1.dxBarButtonShowTreeClick(Sender: TObject);
+begin
+  isTreeVisible := not isTreeVisible;
+end;
+
+procedure TForm1.dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
+begin
+  CanClose := false;
+  isTreeVisible := false;
+end;
+
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   oppHelpView.removeStateChangeListener(self);
@@ -69,7 +131,10 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
-  dxStatusBar1.Panels[1].Text := 'Created';
+
+  { --- }
+
+  isTreeVisible := true;
 end;
 
 procedure TForm1.WMCopyData(var Msg: TWMCopyData);
@@ -78,7 +143,7 @@ var
   fNotificationStream: TReadOnlyMemoryStream;
   fPDFStream: TMemoryStream;
 begin
-  dxStatusBar1.Panels[1].Text := 'received message';
+  currentState := fsHandlingMessage;
 
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
   fPredicate := TOPPHelpPredicate.Create();
@@ -95,13 +160,14 @@ end;
 { --------- }
 procedure TForm1.SearchStarted();
 begin
-  dxStatusBar1.Panels[1].Text := 'SearchStarted';
+  currentState := fsSearching;
   cxProgressBar1.Position := 0;
 end;
 
 procedure TForm1.SearchProgress();
 begin
-  dxStatusBar1.Panels[1].Text := 'SearchProgress';
+  currentState := fsSearchProgressing;
+
   cxProgressBar1.Position := cxProgressBar1.Position + 1;
   if (cxProgressBar1.Position >= 100) then
     cxProgressBar1.Position := 0;
@@ -109,7 +175,8 @@ end;
 
 procedure TForm1.SearchEnded();
 begin
-  dxStatusBar1.Panels[1].Text := 'SearchEnded';
+  fCurrentState := fsSearchFinishing;
+
   cxProgressBar1.Position := 0;
 end;
 
