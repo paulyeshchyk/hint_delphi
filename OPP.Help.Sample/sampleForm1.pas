@@ -7,7 +7,10 @@ uses
   System.Classes, System.Generics.Collections,
   Vcl.Controls, Vcl.StdCtrls, Vcl.Dialogs,
 
-  Vcl.ExtCtrls, cxStyles, cxCustomData, Data.DB, dxScreenTip, OPP.Help.Shortcut.Server, cxClasses, dxCustomHint, cxHint;
+  Vcl.ExtCtrls, cxStyles, cxCustomData, Data.DB, dxScreenTip,
+  cxClasses, dxCustomHint, cxHint,
+  OPP.Help.Shortcut.Server,
+  OPP.Help.Predicate;
 
 type
   TSampleForm = class(TForm)
@@ -32,7 +35,7 @@ type
 
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure fillGrid();
-    procedure sendOpenPage(AProcessHandle: THandle);
+    procedure sendOpenPage(AProcessHandle: THandle; predicate: TOPPHelpPredicate);
   public
     { Public declarations }
   end;
@@ -56,7 +59,6 @@ uses
   OPP.Help.nonatomic,
 
   OPP.Help.Events,
-  OPP.Help.Predicate,
   OPP.Help.System.Stream,
   OPP.Help.View.FullScreen,
   OPP.Help.System.Messaging, OPP.Help.System.Messaging.Pipe;
@@ -82,7 +84,13 @@ var
   fWindowClassHandleList: TList<THandle>;
   hwnd: THandle;
   fRunResult: Boolean;
+  fPredicate: TOPPHelpPredicate;
 begin
+
+  fPredicate := TOPPHelpPredicate.Create();
+  fPredicate.keywordType := ktPage;
+  fPredicate.value := '12';
+  fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\readme.pdf';
 
   fWindowClassHandleList := TOPPMessagingHelper.GetWindowClassHandleList(OPPViewerClassName);
   if assigned(fWindowClassHandleList) then
@@ -99,7 +107,7 @@ begin
           begin
             for hwnd in fWindowClassHandleList do
             begin
-              sendOpenPage(hwnd);
+              sendOpenPage(hwnd, fPredicate);
             end;
           end;
         end);
@@ -107,7 +115,7 @@ begin
     end else begin
       for hwnd in fWindowClassHandleList do
       begin
-        sendOpenPage(hwnd);
+        sendOpenPage(hwnd, fPredicate);
       end;
     end;
   end else begin
@@ -115,17 +123,15 @@ begin
     fRunResult := TOPPMessagingHelper.RunProcess(OPPViewerProcessName, Handle, 300,
       procedure()
       begin
-        sendOpenPage(hwnd);
+        sendOpenPage(hwnd, fPredicate);
       end);
 
   end;
-
 end;
 
-procedure TSampleForm.sendOpenPage(AProcessHandle: THandle);
+procedure TSampleForm.sendOpenPage(AProcessHandle: THandle; predicate: TOPPHelpPredicate);
 var
   Pipe: TOPPMessagePipe;
-  fPredicate: TOPPHelpPredicate;
 begin
   if AProcessHandle = 0 then
   begin
@@ -133,21 +139,15 @@ begin
     exit;
   end;
 
-  fPredicate := TOPPHelpPredicate.Create();
-  fPredicate.keywordType := ktPage;
-  fPredicate.value := '12';
-  fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\readme.pdf';
-
   Pipe := TOPPMessagePipe.Create;
 
   Pipe.SendRecord(AProcessHandle, self.Handle, '',
     procedure(AStream: TStream)
     begin
-      fPredicate.writeToStream(AStream);
+      predicate.writeToStream(AStream);
     end);
 
   Pipe.Free;
-  fPredicate.Free;
 
 end;
 
@@ -156,7 +156,9 @@ var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
-  helpShortcutServer.showHelp(fShortcutRequest);
+  if not helpShortcutServer.showHelp(fShortcutRequest) then begin
+    ShowMessage('Nothing to show');
+  end;
 end;
 
 procedure TSampleForm.FormCreate(Sender: TObject);

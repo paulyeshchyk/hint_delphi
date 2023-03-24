@@ -15,7 +15,7 @@
             "id": 3,
             "fields": {
               "fPredicate": {
-                "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
                 "id": 23,
                 "fields": {
                   "fFilename": ".\\help\\shortcuts\\readme.pdf",
@@ -31,7 +31,7 @@
             "id": 4,
             "fields": {
               "fPredicate": {
-                "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
                 "id": 22,
                 "fields": {
                   "fFilename": ".\\help\\shortcuts\\readme.pdf",
@@ -47,7 +47,7 @@
             "id": 5,
             "fields": {
               "fPredicate": {
-                "type": "OPP.Help.Nonatomic.TOPPHelpPredicate",
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
                 "id": 21,
                 "fields": {
                   "fFilename": ".\\help\\shortcuts\\readme.pdf",

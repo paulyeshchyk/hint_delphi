@@ -113,8 +113,9 @@ var
   fStream: TMemoryStream;
 begin
   result := Assigned(APredicate);
-  if not result then
+  if not result then begin
     exit;
+  end;
 
   fStream := loadPDF(APredicate.fileName);
   fHelpForm := TOPPHelpLargeForm.create(nil);
@@ -129,10 +130,11 @@ var
 begin
   fMapping := fShortcutDataset.GetMapping(ARequest.shortcutIdentifier);
   result := Assigned(fMapping);
-  if not result then
+  if not result then begin
     exit;
+  end;
 
-  showHelp(fMapping.predicate);
+  result := showHelp(fMapping.predicate);
 end;
 
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
