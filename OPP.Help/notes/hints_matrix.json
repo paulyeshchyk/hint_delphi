@@ -1,0 +1,97 @@
+{
+  "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMapSet",
+  "id": 1,
+  "fields": {
+    "fList": {
+      "type": "System.Generics.Collections.TList<OPP.Help.Hint.Mapping.TOPPHelpHintMap>",
+      "id": 21,
+      "fields": {
+        "FListHelper": [
+          5
+        ],
+        "FItems": [
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 31,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 41,
+                "fields": {
+                  "fValue": "Kod_MKC",
+                  "fKeywordType": "ktAny",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+                }
+              },
+              "fIdentifier": "Kod_MKC"
+            }
+          },
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 32,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 42,
+                "fields": {
+                  "fValue": "Kod_OKWED",
+                  "fKeywordType": "ktAny",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+                }
+              },
+              "fIdentifier": "Kod_OKWED"
+            }
+          },
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 33,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 43,
+                "fields": {
+                  "fValue": "Kod_OKWED",
+                  "fKeywordType": "ktAny",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+                }
+              },
+              "fIdentifier": "Kod_OKWED"
+            }
+          },
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 34,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 44,
+                "fields": {
+                  "fValue": "KodOKPD2",
+                  "fKeywordType": "ktAny",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+                }
+              },
+              "fIdentifier": "KodOKPD2"
+            }
+          },
+          {
+            "type": "OPP.Help.Hint.Mapping.TOPPHelpHintMap",
+            "id": 35,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 45,
+                "fields": {
+                  "fValue": "Kod_KWED2",
+                  "fKeywordType": "ktAny",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf"
+                }
+              },
+              "fIdentifier": "Kod_KWED2"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@ uses
   OPP.Help.Nonatomic;
 
 type
-  TOPPHelpPredicate = class
+  TOPPHelpPredicate = class (TObject)
   private
     fValue: String;
     fKeywordType: TOPPKeywordType;

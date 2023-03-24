@@ -14,7 +14,7 @@ type
     fPredicate: TOPPHelpPredicate;
     fIdentifier: TOPPHelpHintMapIdentifier;
   public
-    constructor Create(AIdentifier: TOPPHelpHintMapIdentifier; APredicate: TOPPHelpPredicate);
+    constructor Create(const AIdentifier: TOPPHelpHintMapIdentifier; const APredicate: TOPPHelpPredicate);
 
     property predicate: TOPPHelpPredicate read fPredicate write fPredicate;
     property identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
@@ -32,7 +32,7 @@ type
 
 implementation
 
-constructor TOPPHelpHintMap.Create(AIdentifier: TOPPHelpHintMapIdentifier; APredicate: TOPPHelpPredicate);
+constructor TOPPHelpHintMap.Create(const AIdentifier: TOPPHelpHintMapIdentifier; const APredicate: TOPPHelpPredicate);
 begin
   fIdentifier := AIdentifier;
   fPredicate := APredicate;

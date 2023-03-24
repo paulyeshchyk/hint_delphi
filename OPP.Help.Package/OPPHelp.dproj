@@ -227,6 +227,8 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Predicate.pas"/>
         <None Include="..\OPP.Help\notes\readme.md"/>
+        <None Include="..\OPP.Help\notes\hints_matrix.json"/>
+        <None Include="..\OPP.Help\notes\shortcut_matrix.json"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

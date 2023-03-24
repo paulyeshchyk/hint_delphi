@@ -158,25 +158,27 @@ begin
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
 
-  // temporarySave;
+  //temporarySave;
 
 end;
 
 procedure TOPPHelpHintServer.temporarySave();
-// var
-// list: TList<TOPPHelpHintMap>;
-// testValue : TOPPHelpHintMap;
-// kw : TOPPHelpKeyword;
+var
+  list: TList<TOPPHelpHintMap>;
+  testValue: TOPPHelpHintMap;
+  fPredicate: TOPPHelpPredicate;
 begin
-  // kw := TOPPHelpKeyword.Create();
-  // kw.bookmarkID := 'bookmarkID';
-  // kw.searchPattern := 'searchPattern';
-  // kw.page := '1';
-  // testValue := TOPPHelpHintMap.Create(kw, 'zz.rtf');
-  // list := TList<TOPPHelpHintMap>.create;
-  // list.Add(testValue);
-  //
-  // TOPPHelpHintMap.saveJSON(list, 'help\mapping\hints_matrix1.json')
+  fPredicate := TOPPHelpPredicate.Create;
+  fPredicate.value := '12value12';
+  fPredicate.keywordType := ktSearch;
+  fPredicate.fileName := 'loremipsum.rtf';
+
+
+  testValue := TOPPHelpHintMap.Create('ident12', fPredicate);
+  list := TList<TOPPHelpHintMap>.Create;
+  list.Add(testValue);
+
+  TOPPHelpHintMap.saveJSON(list, 'help\mapping\hints_matrix1.json')
 end;
 
 { public }
@@ -196,7 +198,7 @@ begin
   fPredicate := fMap.Predicate;
   if not Assigned(fPredicate) then
   begin
-    OutputDebugString('!!! PREDICATE NOT FOUND!!!'.toWidechar);
+    WinAPI.Windows.OutputDebugString('!!! PREDICATE NOT FOUND!!!'.toWidechar);
     exit;
   end;
 

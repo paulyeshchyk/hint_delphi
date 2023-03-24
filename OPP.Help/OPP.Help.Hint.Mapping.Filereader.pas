@@ -44,6 +44,7 @@ begin
     except
       on E: Exception do
       begin
+        E.Log();
         error := E;
       end;
     end;
