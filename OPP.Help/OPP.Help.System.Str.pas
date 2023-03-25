@@ -2,6 +2,8 @@ unit OPP.Help.System.Str;
 
 interface
 
+uses sysutils;
+
 type
   StringHelper = record helper for
     String

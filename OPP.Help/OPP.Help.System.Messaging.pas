@@ -4,13 +4,14 @@ interface
 
 uses
   System.Types, System.Classes, System.Generics.Collections,
-  WinAPI.Windows, WinAPI.ShellAPI,
+  WinAPI.Windows,
   Vcl.Controls, Vcl.StdCtrls,
   Vcl.Forms;
 
 type
 
-  TOPPSystemMessageRunCompletion = reference to procedure;
+  TOPPSystemMessageRunResultType = (rrtSuccess, rrtFail);
+  TOPPSystemMessageRunCompletion = reference to procedure(ARunResultType: TOPPSystemMessageRunResultType);
 
   TOPPSystemMessageHelper = class
   private
@@ -19,7 +20,7 @@ type
     class function GetHWndByPID(const hPID: THandle): THandle;
     class function GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
     class function GetProcessHandleList(AProcessName: String): TList<THandle>;
-    class function RunProcess(AProcessName: String; AHandle: THandle; WaitForDelay: Integer; completion: TOPPSystemMessageRunCompletion): Boolean;
+    class procedure RunProcess(AProcessName: String; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion);
     class function KillProcess(ExeFileName: string): Integer;
   end;
 
@@ -127,10 +128,11 @@ begin
   CloseHandle(FSnapshotHandle);
 end;
 
-class function TOPPSystemMessageHelper.RunProcess(AProcessName: String; AHandle: THandle; WaitForDelay: Integer;  completion: TOPPSystemMessageRunCompletion): Boolean;
+class procedure TOPPSystemMessageHelper.RunProcess(AProcessName: String; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion);
 var
   tmpStartupInfo: TStartupInfo;
   tmpProcessInformation: TProcessInformation;
+  fCreateProcessResult: Boolean;
 begin
 
   System.FillChar(tmpStartupInfo, Sizeof(tmpStartupInfo), 0);
@@ -140,18 +142,21 @@ begin
     wShowWindow := SW_SHOWMINIMIZED;
   end;
 
-  result := WinAPI.Windows.CreateProcess(nil, AProcessName.toWideChar, nil, nil, true, CREATE_NEW_PROCESS_GROUP, nil, nil, tmpStartupInfo, tmpProcessInformation);
-  if not result then
+  fCreateProcessResult := WinAPI.Windows.CreateProcess(nil, AProcessName.toWideChar, nil, nil, true, CREATE_NEW_PROCESS_GROUP, nil, nil, tmpStartupInfo, tmpProcessInformation);
+  if not fCreateProcessResult then
+  begin
+    completion(rrtFail);
     exit;
+  end;
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hThread);
 
-  WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, WaitForDelay);
+  WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, ActivationDelay);
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hProcess);
 
   if Assigned(completion) then
-    completion();
+    completion(rrtSuccess);
 
 end;
 

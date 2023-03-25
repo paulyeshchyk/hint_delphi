@@ -86,9 +86,9 @@ implementation
 {$R *.dfm}
 
 uses
-  OPP.Help.System.Messaging,
+
   OPP.Help.System.Stream,
-  OPP.Help.Events,
+
 
   OPP.Help.Shortcut.Server;
 
@@ -150,8 +150,6 @@ begin
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
 
-  { --- }
-
   isTreeVisible := true;
 end;
 
@@ -167,6 +165,7 @@ begin
   fPredicate.readFromStream(fNotificationStream);
 
   runPredicate(fPredicate);
+  msg.Result := 10000;
   //fPredicate.Free;
 end;
 

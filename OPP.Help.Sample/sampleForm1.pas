@@ -4,10 +4,10 @@ interface
 
 uses
   Vcl.Forms, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, System.Generics.Collections,
+  System.Classes,
   Vcl.Controls, Vcl.StdCtrls, Vcl.Dialogs,
 
-  Vcl.ExtCtrls, cxStyles, cxCustomData, Data.DB, dxScreenTip,
+  Vcl.ExtCtrls, cxStyles, Data.DB, dxScreenTip,
   cxClasses, dxCustomHint, cxHint,
   OPP.Help.Shortcut.Server,
   OPP.Help.Predicate;
@@ -56,14 +56,13 @@ uses
   OPP.Help.Vcl.Control.Styler,
   OPP.Help.Hint.FormHelper,
   OPP.Help.Hint.Server,
-  OPP.Help.Shortcut.Mapping,
+
   OPP.Help.Shortcut.Request,
   OPP.Help.nonatomic,
 
-  OPP.Help.Events,
-  OPP.Help.System.Stream,
-  OPP.Help.View.FullScreen,
-  OPP.Help.System.Messaging;
+
+
+  OPP.Help.View.FullScreen;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
@@ -74,7 +73,11 @@ begin
   fPredicate.value := '3';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate, vmInternal);
+  helpShortcutServer.showHelp(fPredicate, vmInternal,
+    procedure(ACompletionResult: TOPPHelpShortcutPresentingResult)
+    begin
+      //
+    end);
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
@@ -87,7 +90,11 @@ begin
   fPredicate.value := '12';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate, vmExternal);
+  helpShortcutServer.showHelp(fPredicate, vmExternal,
+    procedure(completionResult: TOPPHelpShortcutPresentingResult)
+    begin
+      //
+    end);
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
@@ -95,10 +102,12 @@ var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
-  if not helpShortcutServer.showHelp(fShortcutRequest) then
-  begin
-    ShowMessage('Nothing to show');
-  end;
+  helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
+    procedure(completionResult: TOPPHelpShortcutPresentingResult)
+    begin
+      if completionResult = prFail then
+        ShowMessage('Nothing to show');
+    end);
 end;
 
 procedure TSampleForm.FormCreate(Sender: TObject);

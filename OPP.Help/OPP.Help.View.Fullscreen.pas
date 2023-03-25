@@ -14,9 +14,7 @@ uses
   OPP.Help.Nonatomic,
   OPP.Help.Predicate,
   OPP.Help.System.Thread,
-  OPP.Help.View,
-
-  OPP.Help.System.Stream;
+  OPP.Help.View;
 
 type
 
@@ -171,8 +169,12 @@ begin
 
   fSearchIsInProgress := true;
   fSearchThread := TOPPSystemThread.Create(searchWorkStarted, searchWorkEnded);
-  fSearchThread.Execute;
-  // fSearchThread.Free;
+  try
+    fSearchThread.Execute;
+  finally
+    fSearchThread.Free;
+  end;
+
 end;
 
 // threads
@@ -190,7 +192,6 @@ begin
       onFinish(0);
     exit;
   end;
-
 
   searchWork();
 

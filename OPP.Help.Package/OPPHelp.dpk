@@ -79,6 +79,7 @@ contains
   OPP.Help.Events in '..\OPP.Help\OPP.Help.Events.pas',
   OPP.Help.System.Messaging.Pipe in '..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas',
   OPP.Help.Predicate in '..\OPP.Help\OPP.Help.Predicate.pas',
-  OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm};
+  OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
+  OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas';
 
 end.

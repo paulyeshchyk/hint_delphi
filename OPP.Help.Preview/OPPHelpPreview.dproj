@@ -78,7 +78,7 @@
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\OPPHelp</DCC_DcuOutput>
+        <DCC_DcuOutput>D:\Compiled\Units\OPPHelp</DCC_DcuOutput>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <DCC_UsePackage>OPPHelp;$(DCC_UsePackage)</DCC_UsePackage>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>

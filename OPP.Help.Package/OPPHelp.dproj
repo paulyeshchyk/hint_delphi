@@ -105,7 +105,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\OPPHelp</DCC_DcuOutput>
+        <DCC_DcuOutput>D:\Compiled\Units\OPPHelp</DCC_DcuOutput>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <Debugger_HostApplication>D:\Compiled\Executable\OPPHintSample.exe</Debugger_HostApplication>
@@ -176,6 +176,7 @@
             <Form>OPPHelpPreviewForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
         <None Include="..\OPP.Help\notes\readme.md"/>
         <None Include="..\OPP.Help\notes\hints_matrix.json"/>
         <None Include="..\OPP.Help\notes\shortcut_matrix.json"/>
