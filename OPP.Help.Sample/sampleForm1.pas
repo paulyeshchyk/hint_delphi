@@ -70,7 +70,7 @@ var
 begin
   fPredicate := TOPPHelpPredicate.Create;
   fPredicate.keywordType := ktPage;
-  fPredicate.value := '3';
+  fPredicate.value := '18';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
   helpShortcutServer.showHelp(fPredicate, vmInternal,
