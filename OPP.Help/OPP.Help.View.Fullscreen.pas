@@ -121,7 +121,14 @@ procedure TOPPHelpViewFullScreen.loadContent(AStream: TMemoryStream);
 begin
 
   fStream := AStream;
-  TOPPSystemThread.Create(loadWorkStarted, loadWorkEnded);
+
+  TThread.Synchronize(nil,
+    procedure()
+    begin
+      loadWorkStarted(loadWorkEnded);
+    end);
+
+  // TOPPSystemThread.Create(loadWorkStarted, loadWorkEnded);
 end;
 
 procedure TOPPHelpViewFullScreen.onTimerTick(Sender: TObject);
@@ -167,13 +174,11 @@ begin
   if not assigned(fPredicate) then
     exit;
 
-  fSearchIsInProgress := true;
-  fSearchThread := TOPPSystemThread.Create(searchWorkStarted, searchWorkEnded);
-  try
-    fSearchThread.Execute;
-  finally
-    fSearchThread.Free;
-  end;
+  TThread.Synchronize(nil,
+    procedure()
+    begin
+      searchWorkStarted(searchWorkEnded);
+    end);
 
 end;
 
@@ -183,8 +188,13 @@ var
   fListener: IOPPHelpViewEventListener;
 begin
 
+  fSearchIsInProgress := true;
+
   for fListener in fEventListeners do
-    fListener.SearchStarted;
+  begin
+    if assigned(fListener) then
+      fListener.SearchStarted;
+  end;
 
   if not assigned(fPredicate) then
   begin
@@ -204,7 +214,10 @@ var
   fListener: IOPPHelpViewEventListener;
 begin
   for fListener in fEventListeners do
-    fListener.SearchEnded;
+  begin
+    if assigned(fListener) then
+      fListener.SearchEnded;
+  end;
 
   fSearchTimer.Enabled := false;
   fSearchIsInProgress := false;
@@ -243,7 +256,10 @@ var
   fListener: IOPPHelpViewEventListener;
 begin
   for fListener in fEventListeners do
-    fListener.LoadStarted;
+  begin
+    if assigned(fListener) then
+      fListener.LoadStarted;
+  end;
 
   if not assigned(fStream) then
   begin
@@ -259,7 +275,10 @@ var
   fListener: IOPPHelpViewEventListener;
 begin
   for fListener in fEventListeners do
-    fListener.SearchEnded;
+  begin
+    if assigned(fListener) then
+      fListener.SearchEnded;
+  end;
 end;
 
 procedure Register;
