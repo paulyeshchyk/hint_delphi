@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=304,111,87,36
+Coordinates=0,0,59,58
 Visible=True
 
 [Panel1]
@@ -10,7 +10,4 @@ Coordinates=0,137,65,36
 
 [cxHintController]
 Coordinates=467,56,107,36
-
-[Button1]
-Coordinates=0,0,59,58
 

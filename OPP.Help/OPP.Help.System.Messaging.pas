@@ -10,16 +10,16 @@ uses
 
 type
 
-  TOPPMessagingHelplerRunProcessCompletion = reference to procedure;
+  TOPPSystemMessageRunCompletion = reference to procedure;
 
-  TOPPMessagingHelper = class
+  TOPPSystemMessageHelper = class
   private
     class function GetProcessList(): TDictionary<THandle, String>;
   public
     class function GetHWndByPID(const hPID: THandle): THandle;
     class function GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
     class function GetProcessHandleList(AProcessName: String): TList<THandle>;
-    class function RunProcess(AProcessName: String; AHandle: THandle; WaitForDelay: Integer; completion: TOPPMessagingHelplerRunProcessCompletion): Boolean;
+    class function RunProcess(AProcessName: String; AHandle: THandle; WaitForDelay: Integer; completion: TOPPSystemMessageRunCompletion): Boolean;
     class function KillProcess(ExeFileName: string): Integer;
   end;
 
@@ -27,7 +27,7 @@ implementation
 
 uses TLHelp32, System.Sysutils, OPP.Help.System.Str;
 
-class function TOPPMessagingHelper.GetProcessList(): TDictionary<THandle, String>;
+class function TOPPSystemMessageHelper.GetProcessList(): TDictionary<THandle, String>;
 var
   FSnapshotHandle: THandle; // Process snapshot handle
   FProcessEntry32: TProcessEntry32; // Structural information of the process entry
@@ -48,7 +48,7 @@ begin
   CloseHandle(FSnapshotHandle);
 end;
 
-class function TOPPMessagingHelper.GetHWndByPID(const hPID: THandle): THandle;
+class function TOPPSystemMessageHelper.GetHWndByPID(const hPID: THandle): THandle;
 type
   PEnumInfo = ^TEnumInfo;
 
@@ -85,7 +85,7 @@ begin
     result := 0;
 end;
 
-class function TOPPMessagingHelper.GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
+class function TOPPSystemMessageHelper.GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
 var
   fHandle: THandle;
 begin
@@ -96,7 +96,7 @@ begin
 
 end;
 
-class function TOPPMessagingHelper.GetProcessHandleList(AProcessName: String): TList<THandle>;
+class function TOPPSystemMessageHelper.GetProcessHandleList(AProcessName: String): TList<THandle>;
 var
   fProcessName: string; // Process name
   FSnapshotHandle: THandle; // Process snapshot handle
@@ -165,7 +165,7 @@ end;
   end;
 }
 
-class function TOPPMessagingHelper.RunProcess(AProcessName: String; AHandle: THandle; WaitForDelay: Integer;  completion: TOPPMessagingHelplerRunProcessCompletion): Boolean;
+class function TOPPSystemMessageHelper.RunProcess(AProcessName: String; AHandle: THandle; WaitForDelay: Integer;  completion: TOPPSystemMessageRunCompletion): Boolean;
 var
   tmpStartupInfo: TStartupInfo;
   tmpProcessInformation: TProcessInformation;
@@ -196,7 +196,7 @@ begin
 
 end;
 
-class function TOPPMessagingHelper.KillProcess(ExeFileName: string): Integer;
+class function TOPPSystemMessageHelper.KillProcess(ExeFileName: string): Integer;
 const
   PROCESS_TERMINATE = $0001;
 var

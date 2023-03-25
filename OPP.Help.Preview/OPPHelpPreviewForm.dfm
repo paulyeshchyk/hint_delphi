@@ -10,10 +10,8 @@ object Form1: TForm1
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object dxStatusBar1: TdxStatusBar
     Left = 0
@@ -39,6 +37,8 @@ object Form1: TForm1
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
+    ExplicitTop = 588
+    ExplicitWidth = 752
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4
@@ -68,6 +68,8 @@ object Form1: TForm1
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitWidth = 752
+    ExplicitHeight = 563
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace

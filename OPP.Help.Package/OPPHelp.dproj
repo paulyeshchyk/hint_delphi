@@ -103,7 +103,6 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\OPPHelp</DCC_DcuOutput>
@@ -112,6 +111,7 @@
         <Debugger_HostApplication>D:\GulfStream\Compiled\Executable\OPPHintSample.exe</Debugger_HostApplication>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\19.0\bin;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBaseXE7\IDE_spoof;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Embarcadero\Studio\19.0\bin;C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl;C:\Program Files (x86)\Embarcadero\Studio\19.0\bin64;C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\Win64;C:\Program Files (x86)\VMware\VMware vSphere CLI\Perl\site\bin;C:\Program Files (x86)\VMware\VMware vSphere CLI\Perl\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Common Files\ASCON Shared\Gulfstream\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\pavel\AppData\Local\Microsoft\WindowsApps;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
+        <DCC_UnitSearchPath>D:\vcl\devex\20.2.6;D:\projects\Gulf\hint\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -123,78 +123,27 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="cxGridRS28.dcp"/>
+        <DCCReference Include="cxLibraryRS28.dcp"/>
+        <DCCReference Include="dxBarRS28.dcp"/>
+        <DCCReference Include="dxComnRS28.dcp"/>
+        <DCCReference Include="dxCoreRS28.dcp"/>
+        <DCCReference Include="dxDockingRS28.dcp"/>
+        <DCCReference Include="dxGDIPlusRS28.dcp"/>
+        <DCCReference Include="dxPDFViewerRS28.dcp"/>
+        <DCCReference Include="dxRichEditControlCoreRS28.dcp"/>
+        <DCCReference Include="dxRichEditControlRS28.dcp"/>
+        <DCCReference Include="dxRichEditCoreRS28.dcp"/>
+        <DCCReference Include="dxRichEditDocumentModelRS28.dcp"/>
+        <DCCReference Include="dxSpreadSheetCoreRS28.dcp"/>
+        <DCCReference Include="RESTComponents.dcp"/>
+        <DCCReference Include="dbrtl.dcp"/>
+        <DCCReference Include="DbxCommonDriver.dcp"/>
+        <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="IndyProtocols.dcp"/>
+        <DCCReference Include="IndySystem.dcp"/>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
-        <DCCReference Include="DbxCommonDriver.dcp"/>
-        <DCCReference Include="dbrtl.dcp"/>
-        <DCCReference Include="IndySystem.dcp"/>
-        <DCCReference Include="IndyProtocols.dcp"/>
-        <DCCReference Include="IndyCore.dcp"/>
-        <DCCReference Include="RESTComponents.dcp"/>
-        <DCCReference Include="dxCoreRS25.dcp"/>
-        <DCCReference Include="cxLibraryRS25.dcp"/>
-        <DCCReference Include="dxGDIPlusRS25.dcp"/>
-        <DCCReference Include="dxComnRS25.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreRS25.dcp"/>
-        <DCCReference Include="dxBarRS25.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS25.dcp"/>
-        <DCCReference Include="cxGridRS25.dcp"/>
-        <DCCReference Include="dxRichEditControlRS25.dcp"/>
-        <DCCReference Include="dxRichEditControlCoreRS25.dcp"/>
-        <DCCReference Include="dxRichEditDocumentModelRS25.dcp"/>
-        <DCCReference Include="dxRichEditCoreRS25.dcp"/>
-        <DCCReference Include="dxPDFViewerRS25.dcp"/>
-        <DCCReference Include="dxSkinBlackRS25.dcp"/>
-        <DCCReference Include="dxSkinBlueprintRS25.dcp"/>
-        <DCCReference Include="dxSkinBlueRS25.dcp"/>
-        <DCCReference Include="dxSkinCaramelRS25.dcp"/>
-        <DCCReference Include="dxSkinCoffeeRS25.dcp"/>
-        <DCCReference Include="dxSkinDarkRoomRS25.dcp"/>
-        <DCCReference Include="dxSkinDarkSideRS25.dcp"/>
-        <DCCReference Include="dxSkinDevExpressDarkStyleRS25.dcp"/>
-        <DCCReference Include="dxSkinDevExpressStyleRS25.dcp"/>
-        <DCCReference Include="dxSkinFoggyRS25.dcp"/>
-        <DCCReference Include="dxSkinGlassOceansRS25.dcp"/>
-        <DCCReference Include="dxSkinHighContrastRS25.dcp"/>
-        <DCCReference Include="dxSkiniMaginaryRS25.dcp"/>
-        <DCCReference Include="dxSkinLilianRS25.dcp"/>
-        <DCCReference Include="dxSkinLiquidSkyRS25.dcp"/>
-        <DCCReference Include="dxSkinLondonLiquidSkyRS25.dcp"/>
-        <DCCReference Include="dxSkinMcSkinRS25.dcp"/>
-        <DCCReference Include="dxSkinMetropolisDarkRS25.dcp"/>
-        <DCCReference Include="dxSkinMetropolisRS25.dcp"/>
-        <DCCReference Include="dxSkinMoneyTwinsRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007BlackRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007BlueRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007GreenRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007PinkRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2007SilverRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2010BlackRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2010BlueRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2010SilverRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2013DarkGrayRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2013LightGrayRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2013WhiteRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2016ColorfulRS25.dcp"/>
-        <DCCReference Include="dxSkinOffice2016DarkRS25.dcp"/>
-        <DCCReference Include="dxSkinPumpkinRS25.dcp"/>
-        <DCCReference Include="dxSkinSevenClassicRS25.dcp"/>
-        <DCCReference Include="dxSkinSevenRS25.dcp"/>
-        <DCCReference Include="dxSkinSharpPlusRS25.dcp"/>
-        <DCCReference Include="dxSkinSharpRS25.dcp"/>
-        <DCCReference Include="dxSkinSilverRS25.dcp"/>
-        <DCCReference Include="dxSkinSpringTimeRS25.dcp"/>
-        <DCCReference Include="dxSkinStardustRS25.dcp"/>
-        <DCCReference Include="dxSkinSummer2008RS25.dcp"/>
-        <DCCReference Include="dxSkinTheAsphaltWorldRS25.dcp"/>
-        <DCCReference Include="dxSkinValentineRS25.dcp"/>
-        <DCCReference Include="dxSkinVisualStudio2013BlueRS25.dcp"/>
-        <DCCReference Include="dxSkinVisualStudio2013DarkRS25.dcp"/>
-        <DCCReference Include="dxSkinVisualStudio2013LightRS25.dcp"/>
-        <DCCReference Include="dxSkinVS2010RS25.dcp"/>
-        <DCCReference Include="dxSkinWhiteprintRS25.dcp"/>
-        <DCCReference Include="dxSkinXmas2008BlueRS25.dcp"/>
-        <DCCReference Include="dxDockingRS25.dcp"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.FormHelper.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.pas"/>
@@ -229,15 +178,15 @@
         <None Include="..\OPP.Help\notes\readme.md"/>
         <None Include="..\OPP.Help\notes\hints_matrix.json"/>
         <None Include="..\OPP.Help\notes\shortcut_matrix.json"/>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -247,16 +196,8 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\delphi_libs\my_libs\SDAC\bpl\sdacvcl120.bpl">SQL Server Data Access GUI related Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\delphi_libs\my_libs\SDAC\bpl\dclsdac120.bpl">SQL Server Data Access Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\SMExportD2010_10.bpl">SMExport suite: data export from dataset. Written by Mike Shkolnik/Scalabium, 1998-2006.</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIBX25.bpl">FastReport 6.0 IBX Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfsIBX25.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">OPPHelp.dpk</Source>

@@ -5,6 +5,7 @@ interface
 uses
   System.SyncObjs, System.SysUtils, System.Classes, System.Generics.Collections,
   System.TypInfo,
+  WinAPI.Windows,
   VCL.Controls,
   //
   OPP.Help.Hint, OPP.Help.Meta.Enumerator,
@@ -89,7 +90,7 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
-  OPP.Help.Hint.Mapping.Filereader, Windows, OPP.Help.System.Error;
+  OPP.Help.Hint.Mapping.Filereader, OPP.Help.System.Error;
 
 var
   fLock: TCriticalSection;

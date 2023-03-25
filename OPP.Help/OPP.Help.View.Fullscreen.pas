@@ -20,21 +20,24 @@ uses
 
 type
 
+  TOPPHelpViewSearchInstanciator = (siDocumentLoad, siPredicate);
+
   TOPPHelpViewFullScreen = class(TPanel)
   private
     fStream: TMemoryStream;
     fPDFViewer: TdxPDFViewer;
     fPredicate: TOPPHelpPredicate;
-    fHasLoadedContent: Boolean;
+    fHasLoadedDocument: Boolean;
+    fSearchIsInProgress: Boolean;
     fSearchTimer: TTimer;
     fEventListeners: TList<IOPPHelpViewEventListener>;
     function getPDFDocument(): TdxPDFDocument;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
     procedure onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
-    procedure doSearchIfPossible();
+    procedure doSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
     procedure onTimerTick(Sender: TObject);
-    procedure setHasLoadedContent(AHasLoadedContent: Boolean);
-    property HasLoadedContent: Boolean read fHasLoadedContent write setHasLoadedContent;
+    procedure setHasLoadedDocument(AHasLoadedDocument: Boolean);
+    property HasLoadedDocument: Boolean read fHasLoadedDocument write setHasLoadedDocument;
   public
 
     constructor Create(AOwner: TComponent); override;
@@ -54,6 +57,7 @@ type
 
     procedure searchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
     procedure searchWorkEnded(AResult: Integer);
+    procedure searchWork();
 
   end;
 
@@ -74,7 +78,8 @@ begin
   fPDFViewer.OptionsZoom.ZoomMode := pzmPageWidth;
   fPDFViewer.OnDocumentLoaded := onPDFViewer1DocumentLoaded;
 
-  fHasLoadedContent := false;
+  fHasLoadedDocument := false;
+  fSearchIsInProgress := false;
 
   fSearchTimer := TTimer.Create(self);
   fSearchTimer.Enabled := false;
@@ -88,6 +93,7 @@ begin
   fEventListeners.Free;
   fSearchTimer.Free;
   fPDFViewer.Free;
+
   inherited;
 end;
 
@@ -104,13 +110,12 @@ end;
 procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
   fPredicate := APredicate.copy();
-  doSearchIfPossible;
+  doSearchIfPossible(siPredicate);
 end;
 
-procedure TOPPHelpViewFullScreen.setHasLoadedContent(AHasLoadedContent: Boolean);
+procedure TOPPHelpViewFullScreen.setHasLoadedDocument(AHasLoadedDocument: Boolean);
 begin
-  fHasLoadedContent := AHasLoadedContent;
-  doSearchIfPossible;
+  fHasLoadedDocument := AHasLoadedDocument;
   reloadControls;
 end;
 
@@ -141,8 +146,8 @@ end;
 
 procedure TOPPHelpViewFullScreen.onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
 begin
-  HasLoadedContent := true;
-  doSearchIfPossible;
+  HasLoadedDocument := true;
+  doSearchIfPossible(siDocumentLoad);
 end;
 
 function TOPPHelpViewFullScreen.getPDFDocument(): TdxPDFDocument;
@@ -150,23 +155,32 @@ begin
   result := fPDFViewer.Document
 end;
 
-procedure TOPPHelpViewFullScreen.doSearchIfPossible();
+procedure TOPPHelpViewFullScreen.doSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
+var
+  fSearchThread: TOPPSystemThread;
 begin
-  if not HasLoadedContent then
+
+  if fSearchIsInProgress then
+    exit;
+
+  if not HasLoadedDocument then
     exit;
 
   if not assigned(fPredicate) then
     exit;
 
-  TOPPSystemThread.Create(searchWorkStarted, searchWorkEnded);
+  fSearchIsInProgress := true;
+  fSearchThread := TOPPSystemThread.Create(searchWorkStarted, searchWorkEnded);
+  fSearchThread.Execute;
+  // fSearchThread.Free;
 end;
 
 // threads
 procedure TOPPHelpViewFullScreen.searchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
 var
-  fSearchResult: TdxPDFDocumentTextSearchResult;
   fListener: IOPPHelpViewEventListener;
 begin
+
   for fListener in fEventListeners do
     fListener.SearchStarted;
 
@@ -177,6 +191,28 @@ begin
     exit;
   end;
 
+
+  searchWork();
+
+  if assigned(onFinish) then
+    onFinish(0);
+end;
+
+procedure TOPPHelpViewFullScreen.searchWorkEnded(AResult: Integer);
+var
+  fListener: IOPPHelpViewEventListener;
+begin
+  for fListener in fEventListeners do
+    fListener.SearchEnded;
+
+  fSearchTimer.Enabled := false;
+  fSearchIsInProgress := false;
+end;
+
+procedure TOPPHelpViewFullScreen.searchWork();
+var
+  fSearchResult: TdxPDFDocumentTextSearchResult;
+begin
   fSearchTimer.Enabled := true;
 
   case fPredicate.keywordType of
@@ -199,18 +235,6 @@ begin
       end;
   end;
 
-  if assigned(onFinish) then
-    onFinish(0);
-end;
-
-procedure TOPPHelpViewFullScreen.searchWorkEnded(AResult: Integer);
-var
-  fListener: IOPPHelpViewEventListener;
-begin
-  for fListener in fEventListeners do
-    fListener.SearchEnded;
-
-  fSearchTimer.Enabled := false;
 end;
 
 procedure TOPPHelpViewFullScreen.loadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
@@ -218,9 +242,7 @@ var
   fListener: IOPPHelpViewEventListener;
 begin
   for fListener in fEventListeners do
-    fListener.SearchStarted;
-
-  fSearchTimer.Enabled := true;
+    fListener.LoadStarted;
 
   if not assigned(fStream) then
   begin
@@ -237,8 +259,6 @@ var
 begin
   for fListener in fEventListeners do
     fListener.SearchEnded;
-
-  fSearchTimer.Enabled := false;
 end;
 
 procedure Register;

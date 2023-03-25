@@ -3,30 +3,13 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
-  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
-  dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
-  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
-  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
-  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
-  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxBar, cxClasses, cxPC, dxDockControl, dxDockPanel,
-  cxControls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxPDFDocument,
-  dxBarBuiltInMenu, dxCustomPreview, dxPDFViewer, Vcl.ComCtrls, Vcl.ExtCtrls,
-
-  OPP.Help.View,
-  OPP.Help.View.Fullscreen,
-  OPP.Help.Predicate,
-  OPP.Help.Shortcut.Mapping, OPP.Help.System.Thread;
+  cxClasses, cxControls, cxGraphics, cxLookAndFeelPainters, cxLookAndFeels,
+  cxPC, dxBar, dxBarBuiltInMenu, dxCustomPreview, dxDockControl, dxDockPanel,
+  dxPDFDocument, dxPDFViewer, OPP.Help.Predicate, OPP.Help.Shortcut.Mapping,
+  OPP.Help.System.Thread, OPP.Help.View, OPP.Help.View.Fullscreen,
+  System.Classes, System.SysUtils, System.Variants, Vcl.ComCtrls, Vcl.Controls,
+  Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Messages,
+  Winapi.Windows;
 
 type
   TOPPHelpLargeForm = class(TForm, IOPPHelpViewEventListener)
@@ -42,6 +25,7 @@ type
     fStream: TMemoryStream;
     fPredicate: TOPPHelpPredicate;
     fProgress: Integer;
+    procedure LoadStarted();
     procedure searchStarted;
     procedure searchEnded;
     procedure searchProgress;
@@ -78,6 +62,11 @@ begin
     fHelpFullScreen.removeStateChangeListener(self);
     FreeAndNil(fHelpFullScreen);
   end;
+end;
+
+procedure TOPPHelpLargeForm.loadStarted();
+begin
+  ProgressBar1.Position := 0;
 end;
 
 procedure TOPPHelpLargeForm.searchStarted();

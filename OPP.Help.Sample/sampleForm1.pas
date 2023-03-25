@@ -17,25 +17,27 @@ type
     cxHintController: TcxHintStyleController;
     tipsRepo: TdxScreenTipRepository;
     Panel1: TPanel;
-    Button1: TButton;
-    Edit1: TEdit;
-    Button2: TButton;
-    Button3: TButton;
-    Kod_MKC: TEdit;
+    GroupBox1: TGroupBox;
     Kod_OKWED: TCheckBox;
+    Kod_MKC: TEdit;
+    Button1: TButton;
+    Button2: TButton;
+    GroupBox2: TGroupBox;
+    Label1: TLabel;
+    CheckBox1: TCheckBox;
+    Edit1: TEdit;
+    Button3: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
-    procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
 
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure fillGrid();
-    procedure sendOpenPage(AProcessHandle: THandle; predicate: TOPPHelpPredicate);
   public
     { Public declarations }
   end;
@@ -61,11 +63,7 @@ uses
   OPP.Help.Events,
   OPP.Help.System.Stream,
   OPP.Help.View.FullScreen,
-  OPP.Help.System.Messaging, OPP.Help.System.Messaging.Pipe;
-
-const
-  OPPViewerProcessName: String = 'OPPHelpPreview.exe';
-  OPPViewerClassName: String = 'TForm1';
+  OPP.Help.System.Messaging;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
@@ -76,79 +74,20 @@ begin
   fPredicate.value := '3';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate);
+  helpShortcutServer.showHelp(fPredicate, vmInternal);
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
 var
-  fWindowClassHandleList: TList<THandle>;
-  hwnd: THandle;
-  fRunResult: Boolean;
   fPredicate: TOPPHelpPredicate;
 begin
 
   fPredicate := TOPPHelpPredicate.Create();
   fPredicate.keywordType := ktPage;
   fPredicate.value := '12';
-  fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\readme.pdf';
+  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  fWindowClassHandleList := TOPPMessagingHelper.GetWindowClassHandleList(OPPViewerClassName);
-  if assigned(fWindowClassHandleList) then
-  begin
-    if fWindowClassHandleList.Count = 0 then
-    begin
-      fRunResult := TOPPMessagingHelper.RunProcess(OPPViewerProcessName, self.Handle, 300,
-        procedure()
-        var
-          hwnd: THandle;
-        begin
-          fWindowClassHandleList := TOPPMessagingHelper.GetWindowClassHandleList(OPPViewerClassName);
-          if assigned(fWindowClassHandleList) then
-          begin
-            for hwnd in fWindowClassHandleList do
-            begin
-              sendOpenPage(hwnd, fPredicate);
-            end;
-          end;
-        end);
-
-    end else begin
-      for hwnd in fWindowClassHandleList do
-      begin
-        sendOpenPage(hwnd, fPredicate);
-      end;
-    end;
-  end else begin
-
-    fRunResult := TOPPMessagingHelper.RunProcess(OPPViewerProcessName, Handle, 300,
-      procedure()
-      begin
-        sendOpenPage(hwnd, fPredicate);
-      end);
-
-  end;
-end;
-
-procedure TSampleForm.sendOpenPage(AProcessHandle: THandle; predicate: TOPPHelpPredicate);
-var
-  Pipe: TOPPMessagePipe;
-begin
-  if AProcessHandle = 0 then
-  begin
-    ShowMessage('Невозможно запустить окно помощи.');
-    exit;
-  end;
-
-  Pipe := TOPPMessagePipe.Create;
-
-  Pipe.SendRecord(AProcessHandle, self.Handle, '',
-    procedure(AStream: TStream)
-    begin
-      predicate.writeToStream(AStream);
-    end);
-
-  Pipe.Free;
-
+  helpShortcutServer.showHelp(fPredicate, vmExternal);
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
@@ -156,7 +95,8 @@ var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
-  if not helpShortcutServer.showHelp(fShortcutRequest) then begin
+  if not helpShortcutServer.showHelp(fShortcutRequest) then
+  begin
     ShowMessage('Nothing to show');
   end;
 end;
@@ -185,17 +125,9 @@ begin
   HintInfo.ReshowTimeout := MaxInt;
 end;
 
-procedure TSampleForm.Edit1KeyPress(Sender: TObject; var Key: Char);
-begin
-  if (Key = #13) or (Key = #10) then
-  begin
-    Edit1.SelectAll;
-  end;
-end;
-
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  TOPPMessagingHelper.KillProcess(OPPViewerProcessName);
+  helpShortcutServer.killExternalViewer;
 end;
 
 initialization

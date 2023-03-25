@@ -28,7 +28,7 @@ type
 implementation
 
 uses
-  Windows,
+  WinAPI.Windows,
   OPP.Help.System.Str;
 
 procedure ErrorHelper.Log;

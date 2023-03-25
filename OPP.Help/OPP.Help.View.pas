@@ -10,6 +10,7 @@ type
   TOPPHelpViewStateChangedEvent = procedure of object;
 
   IOPPHelpViewEventListener = interface
+    procedure LoadStarted();
     procedure SearchStarted();
     procedure SearchProgress();
     procedure SearchEnded();
