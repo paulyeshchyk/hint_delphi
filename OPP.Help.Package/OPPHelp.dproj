@@ -108,7 +108,7 @@
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\OPPHelp</DCC_DcuOutput>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
-        <Debugger_HostApplication>D:\GulfStream\Compiled\Executable\OPPHintSample.exe</Debugger_HostApplication>
+        <Debugger_HostApplication>D:\Compiled\Executable\OPPHintSample.exe</Debugger_HostApplication>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\19.0\bin;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBaseXE7\IDE_spoof;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Embarcadero\Studio\19.0\bin;C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl;C:\Program Files (x86)\Embarcadero\Studio\19.0\bin64;C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\Win64;C:\Program Files (x86)\VMware\VMware vSphere CLI\Perl\site\bin;C:\Program Files (x86)\VMware\VMware vSphere CLI\Perl\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Common Files\ASCON Shared\Gulfstream\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\pavel\AppData\Local\Microsoft\WindowsApps;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
         <DCC_UnitSearchPath>D:\vcl\devex\20.2.6;D:\projects\Gulf\hint\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -136,6 +136,7 @@
         <DCCReference Include="dxRichEditCoreRS28.dcp"/>
         <DCCReference Include="dxRichEditDocumentModelRS28.dcp"/>
         <DCCReference Include="dxSpreadSheetCoreRS28.dcp"/>
+        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
         <DCCReference Include="RESTComponents.dcp"/>
         <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="DbxCommonDriver.dcp"/>
@@ -151,10 +152,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Reader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.JSON.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.LargeForm.pas">
-            <Form>OPPHelpLargeForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.Enumerator.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Nonatomic.pas"/>
@@ -175,6 +172,10 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Events.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Predicate.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.PreviewForm.pas">
+            <Form>OPPHelpPreviewForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="..\OPP.Help\notes\readme.md"/>
         <None Include="..\OPP.Help\notes\hints_matrix.json"/>
         <None Include="..\OPP.Help\notes\shortcut_matrix.json"/>

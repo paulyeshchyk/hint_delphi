@@ -41,10 +41,15 @@ requires
   dxRichEditCoreRS28,
   dxRichEditDocumentModelRS28,
   dxSpreadSheetCoreRS28,
-
-  RESTComponents, dbrtl, DbxCommonDriver,
-  IndyCore, IndyProtocols, IndySystem,
-  rtl, vcl;
+  dxSkinsCoreRS28,
+  RESTComponents,
+  dbrtl,
+  DbxCommonDriver,
+  IndyCore,
+  IndyProtocols,
+  IndySystem,
+  rtl,
+  vcl;
 
 contains
   OPP.Help.Hint.FormHelper in '..\OPP.Help\OPP.Help.Hint.FormHelper.pas',
@@ -54,7 +59,6 @@ contains
   OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
   OPP.Help.Hint.Server in '..\OPP.Help\OPP.Help.Hint.Server.pas',
   OPP.Help.JSON in '..\OPP.Help\OPP.Help.JSON.pas',
-  OPP.Help.LargeForm in '..\OPP.Help\OPP.Help.LargeForm.pas' { OPPHelpLargeForm } ,
   OPP.Help.Meta.Enumerator in '..\OPP.Help\OPP.Help.Meta.Enumerator.pas',
   OPP.Help.Meta in '..\OPP.Help\OPP.Help.Meta.pas',
   OPP.Help.Nonatomic in '..\OPP.Help\OPP.Help.Nonatomic.pas',
@@ -66,7 +70,7 @@ contains
   OPP.Help.System.Error in '..\OPP.Help\OPP.Help.System.Error.pas',
   OPP.Help.System.Str in '..\OPP.Help\OPP.Help.System.Str.pas',
   OPP.Help.System.Thread in '..\OPP.Help\OPP.Help.System.Thread.pas',
-  OPP.Help.vcl.Control.Styler in '..\OPP.Help\OPP.Help.Vcl.Control.Styler.pas',
+  OPP.Help.Vcl.Control.Styler in '..\OPP.Help\OPP.Help.Vcl.Control.Styler.pas',
   OPP.Help.View.Fullscreen in '..\OPP.Help\OPP.Help.View.Fullscreen.pas',
   OPP.Help.View.Hint in '..\OPP.Help\OPP.Help.View.Hint.pas',
   OPP.Help.View in '..\OPP.Help\OPP.Help.View.pas',
@@ -74,6 +78,7 @@ contains
   OPP.Help.System.Stream in '..\OPP.Help\OPP.Help.System.Stream.pas',
   OPP.Help.Events in '..\OPP.Help\OPP.Help.Events.pas',
   OPP.Help.System.Messaging.Pipe in '..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas',
-  OPP.Help.Predicate in '..\OPP.Help\OPP.Help.Predicate.pas';
+  OPP.Help.Predicate in '..\OPP.Help\OPP.Help.Predicate.pas',
+  OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm};
 
 end.

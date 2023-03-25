@@ -127,51 +127,11 @@ begin
   CloseHandle(FSnapshotHandle);
 end;
 
-{
-
-
-  function  FileExec( const CmdLine: String; bHide, bWait: Boolean): Boolean;
-  var
-  StartupInfo : TStartupInfo;
-  ProcessInfo : TProcessInformation;
-  s:String;
-  begin
-  FillChar(StartupInfo, SizeOf(TStartupInfo), 0);
-  with StartupInfo do
-  begin
-  cb := SizeOf(TStartupInfo);
-  dwFlags := STARTF_USESHOWWINDOW or STARTF_FORCEONFEEDBACK;
-  if bHide then
-  wShowWindow := SW_HIDE
-  else
-  wShowWindow := SW_SHOWNORMAL;
-  end;
-
-  s:=ExtractFilePath(cmdLine);
-
-  Result := CreateProcess(nil, PChar(CmdLine), nil, nil, False,
-  NORMAL_PRIORITY_CLASS, nil,pChar(s), StartupInfo, ProcessInfo);
-  if Result then
-  CloseHandle(ProcessInfo.hThread);
-
-  if bWait then
-  if Result then
-  begin
-  WaitForInputIdle(ProcessInfo.hProcess, INFINITE);
-  WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
-  end;
-  if Result then
-  CloseHandle(ProcessInfo.hProcess);
-  end;
-}
-
 class function TOPPSystemMessageHelper.RunProcess(AProcessName: String; AHandle: THandle; WaitForDelay: Integer;  completion: TOPPSystemMessageRunCompletion): Boolean;
 var
   tmpStartupInfo: TStartupInfo;
   tmpProcessInformation: TProcessInformation;
 begin
-
-  result := false;
 
   System.FillChar(tmpStartupInfo, Sizeof(tmpStartupInfo), 0);
   with tmpStartupInfo do
@@ -189,7 +149,6 @@ begin
   WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, WaitForDelay);
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hProcess);
-//  WinAPI.Windows.CloseHandle(tmpProcessInformation.dwThreadId);
 
   if Assigned(completion) then
     completion();

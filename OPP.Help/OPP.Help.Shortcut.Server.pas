@@ -13,10 +13,12 @@ uses
   OPP.Help.Shortcut.Dataset,
   OPP.Help.Shortcut.Request,
   OPP.Help.Shortcut.Mapping,
-  OPP.Help.System.Messaging;
+  OPP.Help.System.Messaging,
+  OPP.Help.PreviewForm;
 
 type
   TOPPHelpViewMode = (vmInternal, vmExternal);
+  TPreviewFormClass = class of TOPPHelpPreviewForm;
 
   IOPPHelpShortcutServer = interface
     function exportControl(AControl: TControl): Boolean;
@@ -46,12 +48,13 @@ type
   end;
 
 function helpShortcutServer: IOPPHelpShortcutServer;
+
 procedure Register;
 
 implementation
 
 uses
-  OPP.Help.LargeForm, OPP.Help.System.Str,
+  OPP.Help.System.Str,
   OPP.Help.System.Messaging.Pipe;
 
 const
@@ -123,6 +126,8 @@ begin
       result := openInternalViewer(APredicate);
     vmExternal:
       result := openExternalViewer(APredicate);
+  else
+    result := false;
   end;
 end;
 
@@ -133,9 +138,7 @@ begin
   fMapping := fShortcutDataset.GetMapping(ARequest.shortcutIdentifier);
   result := Assigned(fMapping);
   if not result then
-  begin
     exit;
-  end;
 
   result := showHelp(fMapping.Predicate, vmInternal);
 end;
@@ -147,46 +150,49 @@ end;
 
 function TOPPHelpShortcutServer.openInternalViewer(APredicate: TOPPHelpPredicate): Boolean;
 var
-  fHelpForm: TOPPHelpLargeForm;
-  fStream: TMemoryStream;
+  fPreviewForm: TOPPHelpPreviewForm;
 begin
   result := Assigned(APredicate);
   if not result then
-  begin
     exit;
-  end;
 
-  fStream := loadPDF(APredicate.fileName);
-  fHelpForm := TOPPHelpLargeForm.Create(nil);
-  fHelpForm.stream := fStream;
-  fHelpForm.Predicate := APredicate;
-  fHelpForm.ShowModal;
+  fPreviewForm := TOPPHelpPreviewForm.Create(nil);
+  try
+    fPreviewForm.runPredicate(APredicate);
+    fPreviewForm.showModal;
+  finally
+    FreeAndNil(fPreviewForm);
+  end;
 end;
 
 function TOPPHelpShortcutServer.openExternalViewer(APredicate: TOPPHelpPredicate): Boolean;
 var
   fWindowClassHandleList: TList<THandle>;
   hwnd: THandle;
-  fRunResult: Boolean;
   fSelfHandle: THandle;
+  fOPPViewerClassName: String;
+
 const
   OPPViewerProcessName: String = 'OPPHelpPreview.exe';
-  OPPViewerClassName: String = 'TForm1';
 begin
 
-  fSelfHandle := Application.Handle; // or use handle of the form, like self.Handle
+  result := false;
 
-  fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(OPPViewerClassName);
+  fOPPViewerClassName := TPreviewFormClass.classname;
+
+  fSelfHandle := Application.Handle;
+
+  fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fOPPViewerClassName);
   if Assigned(fWindowClassHandleList) then
   begin
     if fWindowClassHandleList.Count = 0 then
     begin
-      fRunResult := TOPPSystemMessageHelper.RunProcess(OPPViewerProcessName, fSelfHandle, 300,
+      result := TOPPSystemMessageHelper.RunProcess(OPPViewerProcessName, fSelfHandle, 300,
         procedure()
         var
           hwnd: THandle;
         begin
-          fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(OPPViewerClassName);
+          fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fOPPViewerClassName);
           if Assigned(fWindowClassHandleList) then
           begin
             for hwnd in fWindowClassHandleList do
@@ -203,19 +209,17 @@ begin
       end;
     end;
   end else begin
-
-    fRunResult := TOPPSystemMessageHelper.RunProcess(OPPViewerProcessName, fSelfHandle, 300,
+    result := TOPPSystemMessageHelper.RunProcess(OPPViewerProcessName, fSelfHandle, 300,
       procedure()
       begin
         sendOpenPage(hwnd, APredicate);
       end);
-    // ??? fPredicate.fileName := '.\help\shortcuts\readme.pdf';
   end;
 end;
 
 procedure TOPPHelpShortcutServer.sendOpenPage(AProcessHandle: THandle; Predicate: TOPPHelpPredicate);
 var
-  Pipe: TOPPMessagePipe;
+  fMessagePipe: TOPPMessagePipe;
   fSelfHandle: THandle;
 begin
   if AProcessHandle = 0 then
@@ -225,16 +229,15 @@ begin
   end;
 
   fSelfHandle := Application.Handle; // self.Handle
-  Pipe := TOPPMessagePipe.Create;
+  fMessagePipe := TOPPMessagePipe.Create;
 
-  Pipe.SendRecord(AProcessHandle, fSelfHandle, '',
+  fMessagePipe.SendRecord(AProcessHandle, fSelfHandle, '',
     procedure(AStream: TStream)
     begin
       Predicate.writeToStream(AStream);
     end);
 
-  Pipe.Free;
-
+  fMessagePipe.Free;
 end;
 
 procedure TOPPHelpShortcutServer.killExternalViewer();

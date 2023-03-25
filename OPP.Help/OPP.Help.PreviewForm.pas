@@ -1,4 +1,4 @@
-unit OPPHelpPreviewForm;
+unit OPP.Help.PreviewForm;
 
 interface
 
@@ -6,22 +6,24 @@ uses
   cxBarEditItem, cxClasses, cxContainer, cxControls, cxEdit, cxGraphics,
   cxLookAndFeelPainters, cxLookAndFeels, cxPC, cxProgressBar, cxStyles, dxBar,
   dxDockControl, dxDockPanel, dxStatusBar,
-  System.Classes, System.SysUtils,
-  System.Variants,
-  Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls,
-  Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls,
+
+  OPP.Help.View, OPP.Help.View.Fullscreen,  OPP.Help.Predicate,
+
+  System.Classes, System.SysUtils, System.Variants,
+  Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls,
   Winapi.Messages, Winapi.Windows,
-  OPP.Help.View, OPP.Help.View.Fullscreen, dxSkinsCore, dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
-  dxSkinCaramel, dxSkinCoffee, dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle,
-  dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky,
-  dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
-  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
-  dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinOffice2019Black,
-  dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
-  dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+
+  dxSkinsCore, dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray, dxSkinOffice2013White,
+  dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinOffice2019Black, dxSkinOffice2019Colorful,
+  dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
+  dxSkinSharpPlus, dxSkinSilver, dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinTheBezier, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
 
@@ -34,7 +36,7 @@ type
 
   TOPPHelpPreviewFormState = (fsCreated, fsLoading, fsHandlingMessage, fsSearching, fsSearchProgressing, fsSearchFinishing, fsIdle);
 
-  TForm1 = class(TForm, IOPPHelpViewEventListener)
+  TOPPHelpPreviewForm = class(TForm, IOPPHelpViewEventListener)
     dxStatusBar1: TdxStatusBar;
     dxStatusBar1Container0: TdxStatusBarContainerControl;
     cxProgressBar1: TcxProgressBar;
@@ -64,18 +66,20 @@ type
     procedure SearchProgress();
     procedure SearchEnded();
     { --- }
-    procedure setIsTreeVisible(AValue: Boolean);
-    property isTreeVisible: Boolean read fIsTreeVisible write setIsTreeVisible;
 
+    procedure setIsTreeVisible(AValue: Boolean);
+
+    property isTreeVisible: Boolean read fIsTreeVisible write setIsTreeVisible;
     procedure setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     property currentState: TOPPHelpPreviewFormState read fCurrentState write setCurrentState;
 
   public
     { Public declarations }
+    procedure runPredicate(APredicate: TOPPHelpPredicate);
   end;
 
-var
-  Form1: TForm1;
+//var
+//  OPPHelpPreviewForm: TOPPHelpPreviewForm;
 
 implementation
 
@@ -84,18 +88,17 @@ implementation
 uses
   OPP.Help.System.Messaging,
   OPP.Help.System.Stream,
-  OPP.Help.Predicate,
   OPP.Help.Events,
 
   OPP.Help.Shortcut.Server;
 
-procedure TForm1.setIsTreeVisible(AValue: Boolean);
+procedure TOPPHelpPreviewForm.setIsTreeVisible(AValue: Boolean);
 begin
   fIsTreeVisible := AValue;
   //
 end;
 
-procedure TForm1.setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
+procedure TOPPHelpPreviewForm.setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
 begin
   fCurrentState := ACurrentState;
   case fCurrentState of
@@ -116,33 +119,33 @@ begin
   end;
 end;
 
-procedure TForm1.dxBarButton1Click(Sender: TObject);
+procedure TOPPHelpPreviewForm.dxBarButton1Click(Sender: TObject);
 begin
   oppHelpView.triggerFindPanel;
 end;
 
-procedure TForm1.dxBarButtonExitClick(Sender: TObject);
+procedure TOPPHelpPreviewForm.dxBarButtonExitClick(Sender: TObject);
 begin
   self.close();
 end;
 
-procedure TForm1.dxBarButtonShowTreeClick(Sender: TObject);
+procedure TOPPHelpPreviewForm.dxBarButtonShowTreeClick(Sender: TObject);
 begin
   isTreeVisible := not isTreeVisible;
 end;
 
-procedure TForm1.dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
+procedure TOPPHelpPreviewForm.dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
 begin
   CanClose := false;
   isTreeVisible := false;
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TOPPHelpPreviewForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   oppHelpView.removeStateChangeListener(self);
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
@@ -152,11 +155,10 @@ begin
   isTreeVisible := true;
 end;
 
-procedure TForm1.WMCopyData(var Msg: TWMCopyData);
+procedure TOPPHelpPreviewForm.WMCopyData(var Msg: TWMCopyData);
 var
   fPredicate: TOPPHelpPredicate;
   fNotificationStream: TReadOnlyMemoryStream;
-  fPDFStream: TMemoryStream;
 begin
   currentState := fsHandlingMessage;
 
@@ -164,24 +166,23 @@ begin
   fPredicate := TOPPHelpPredicate.Create();
   fPredicate.readFromStream(fNotificationStream);
 
-  fPDFStream := helpShortcutServer.loadPDF(fPredicate.fileName);
-  oppHelpView.loadContent(fPDFStream);
-  oppHelpView.setPredicate(fPredicate);
+  runPredicate(fPredicate);
+  //fPredicate.Free;
 end;
 
 { --------- }
-procedure TForm1.LoadStarted();
+procedure TOPPHelpPreviewForm.LoadStarted();
 begin
   currentState := fsLoading;
 end;
 
-procedure TForm1.SearchStarted();
+procedure TOPPHelpPreviewForm.SearchStarted();
 begin
   currentState := fsSearching;
   cxProgressBar1.Position := 0;
 end;
 
-procedure TForm1.SearchProgress();
+procedure TOPPHelpPreviewForm.SearchProgress();
 begin
   currentState := fsSearchProgressing;
 
@@ -190,11 +191,21 @@ begin
     cxProgressBar1.Position := 0;
 end;
 
-procedure TForm1.SearchEnded();
+procedure TOPPHelpPreviewForm.SearchEnded();
 begin
   fCurrentState := fsSearchFinishing;
 
   cxProgressBar1.Position := 0;
 end;
+
+procedure TOPPHelpPreviewForm.runPredicate(APredicate: TOPPHelpPredicate);
+var
+  fPDFStream: TMemoryStream;
+begin
+  fPDFStream := helpShortcutServer.loadPDF(APredicate.fileName);
+  oppHelpView.loadContent(fPDFStream);
+  oppHelpView.setPredicate(APredicate);
+end;
+
 
 end.

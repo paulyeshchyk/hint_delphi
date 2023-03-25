@@ -1,9 +1,9 @@
-object Form1: TForm1
+object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Left = 0
   Top = 0
-  Caption = 'Form1'
-  ClientHeight = 641
-  ClientWidth = 766
+  Caption = 'OPPHelpPreviewForm'
+  ClientHeight = 608
+  ClientWidth = 752
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,8 +15,8 @@ object Form1: TForm1
   TextHeight = 13
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 621
-    Width = 766
+    Top = 588
+    Width = 752
     Height = 20
     Panels = <
       item
@@ -37,8 +37,8 @@ object Form1: TForm1
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 588
-    ExplicitWidth = 752
+    ExplicitTop = 555
+    ExplicitWidth = 738
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4
@@ -63,13 +63,13 @@ object Form1: TForm1
   object oppHelpView: TOPPHelpViewFullScreen
     Left = 0
     Top = 25
-    Width = 766
-    Height = 596
+    Width = 752
+    Height = 563
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 752
-    ExplicitHeight = 563
+    ExplicitWidth = 738
+    ExplicitHeight = 530
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace
@@ -106,8 +106,8 @@ object Form1: TForm1
       True)
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 392
-    Top = 128
+    Left = 640
+    Top = 328
     PixelsPerInch = 96
     DockControlHeights = (
       0
