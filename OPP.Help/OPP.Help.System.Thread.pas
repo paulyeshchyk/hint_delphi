@@ -34,10 +34,12 @@ procedure TOPPSystemThread.Execute;
 begin
   inherited;
 
-  if not assigned(fJob) then
-    exit;
-
-  fJob(onFinish);
+  Synchronize(
+    procedure()
+    begin
+      if assigned(fJob) then
+        fJob(onFinish);
+    end);
 end;
 
 end.
