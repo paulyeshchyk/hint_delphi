@@ -20,7 +20,7 @@ type
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
     function GetChildrenHelpMeta(): TList<TOPPHelpMeta>;
-    function FindSubControl(meta: TOPPHelpMeta): TControl;
+    function FindSubControl(Meta: TOPPHelpMeta): TControl;
     function GetHelpMeta: TOPPHelpMeta;
   end;
 
@@ -47,23 +47,25 @@ end;
 
 function TOPPHelpComponentEnumerator.GetChildrenHelpMeta(): TList<TOPPHelpMeta>;
 var
-  child: TComponent;
+  fChildComponent: TComponent;
   i: Integer;
-  fChildHintMeta: TOPPHelpMeta;
+  fChildComponentHintMeta: TOPPHelpMeta;
 begin
   result := TList<TOPPHelpMeta>.Create();
 
   for i := 0 to ComponentCount - 1 do
   begin
-    child := self.Components[i];
+    fChildComponent := self.Components[i];
 
-    fChildHintMeta := child.GetHelpMeta();
-    result.Add(fChildHintMeta);
-    result.AddRange(TWinControl(child).GetChildrenHelpMeta());
+    fChildComponentHintMeta := fChildComponent.GetHelpMeta();
+    if fChildComponentHintMeta.isValid then
+      result.Add(fChildComponentHintMeta);
+
+    result.AddRange(TWinControl(fChildComponent).GetChildrenHelpMeta());
   end;
 end;
 
-function TOPPHelpComponentEnumerator.FindSubControl(meta: TOPPHelpMeta): TControl;
+function TOPPHelpComponentEnumerator.FindSubControl(Meta: TOPPHelpMeta): TControl;
 var
   i: Integer;
   child, nextLevelChild: TComponent;
@@ -76,10 +78,10 @@ begin
     child := self.Components[i];
     if not(child is TControl) then
       continue;
-    if (IsPublishedProp(child, meta.propertyName)) then
+    if (IsPublishedProp(child, Meta.propertyName)) then
     begin
-      valueToCompare := String(GetPropValue(child, meta.propertyName));
-      found := CompareStr(valueToCompare, meta.identifier) = 0;
+      valueToCompare := String(GetPropValue(child, Meta.propertyName));
+      found := CompareStr(valueToCompare, Meta.identifier) = 0;
       if found then
       begin
         result := TControl(child);
@@ -88,7 +90,7 @@ begin
 
       // recursion
 
-      nextLevelChild := TWinControl(child).FindSubControl(meta);
+      nextLevelChild := TWinControl(child).FindSubControl(Meta);
       if assigned(nextLevelChild) then
       begin
         result := TControl(nextLevelChild);

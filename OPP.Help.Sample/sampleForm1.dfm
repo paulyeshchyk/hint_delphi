@@ -2,56 +2,133 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = 'SampleForm'
-  ClientHeight = 409
-  ClientWidth = 802
+  ClientHeight = 818
+  ClientWidth = 1604
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
-  TextHeight = 13
+  PixelsPerInch = 192
+  TextHeight = 27
   object Panel1: TPanel
     Left = 0
-    Top = 368
-    Width = 802
-    Height = 41
+    Top = 736
+    Width = 1604
+    Height = 82
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 335
-    ExplicitWidth = 788
+    ExplicitTop = 735
+    ExplicitWidth = 1590
+  end
+  object GroupBox2: TGroupBox
+    Left = 912
+    Top = 16
+    Width = 626
+    Height = 226
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+    Caption = 'GroupBox2'
+    TabOrder = 1
+    object Label1: TLabel
+      Left = 32
+      Top = 48
+      Width = 64
+      Height = 27
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'Label2'
+    end
+    object CheckBox1: TCheckBox
+      Left = 32
+      Top = 130
+      Width = 194
+      Height = 34
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'CheckBox1'
+      TabOrder = 0
+    end
+    object Edit1: TEdit
+      Left = 320
+      Top = 42
+      Width = 242
+      Height = 35
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+    object Button3: TButton
+      Left = 412
+      Top = 122
+      Width = 150
+      Height = 50
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'Button3'
+      TabOrder = 2
+      OnClick = Button3Click
+    end
   end
   object GroupBox1: TGroupBox
-    Left = 8
-    Top = 8
-    Width = 425
-    Height = 113
+    Left = 16
+    Top = 16
+    Width = 850
+    Height = 226
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
     Caption = 'Help && Hints'
-    TabOrder = 1
+    TabOrder = 2
     object Kod_OKWED: TCheckBox
-      Left = 24
-      Top = 28
-      Width = 97
-      Height = 17
+      Left = 48
+      Top = 56
+      Width = 194
+      Height = 34
       HelpType = htKeyword
       HelpKeyword = 'Kod_OKWED'
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Caption = '1Kod_OKWED'
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
     end
     object Kod_MKC: TEdit
-      Left = 24
-      Top = 65
-      Width = 121
-      Height = 21
+      Left = 48
+      Top = 130
+      Width = 242
+      Height = 35
       Hint = 'cxHint test'
       HelpType = htKeyword
       HelpKeyword = 'Kod_MKC'
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       ParentCustomHint = False
       ParentShowHint = False
       ShowHint = True
@@ -59,61 +136,30 @@ object SampleForm: TSampleForm
       Text = 'Kod_MKC'
     end
     object Button1: TButton
-      Left = 302
-      Top = 63
-      Width = 75
-      Height = 25
+      Left = 604
+      Top = 126
+      Width = 150
+      Height = 50
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Caption = #1055#1086#1084#1086#1097#1100
       TabOrder = 3
       OnClick = Button1Click
     end
     object Button2: TButton
-      Left = 302
-      Top = 24
-      Width = 75
-      Height = 25
+      Left = 604
+      Top = 48
+      Width = 150
+      Height = 50
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Caption = 'External'
       TabOrder = 2
       OnClick = Button2Click
-    end
-  end
-  object GroupBox2: TGroupBox
-    Left = 456
-    Top = 8
-    Width = 313
-    Height = 105
-    Caption = 'GroupBox2'
-    TabOrder = 2
-    object Label1: TLabel
-      Left = 16
-      Top = 24
-      Width = 31
-      Height = 13
-      Caption = 'Label2'
-    end
-    object CheckBox1: TCheckBox
-      Left = 16
-      Top = 65
-      Width = 97
-      Height = 17
-      Caption = 'CheckBox1'
-      TabOrder = 0
-    end
-    object Edit1: TEdit
-      Left = 160
-      Top = 21
-      Width = 121
-      Height = 21
-      TabOrder = 1
-      Text = 'Edit1'
-    end
-    object Button3: TButton
-      Left = 206
-      Top = 61
-      Width = 75
-      Height = 25
-      Caption = 'Button3'
-      TabOrder = 2
     end
   end
   object cxHintController: TcxHintStyleController
@@ -129,6 +175,6 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 1088
     Top = 168
-    PixelsPerInch = 96
+    PixelsPerInch = 192
   end
 end

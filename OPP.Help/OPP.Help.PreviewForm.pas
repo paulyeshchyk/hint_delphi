@@ -7,7 +7,7 @@ uses
   cxLookAndFeelPainters, cxLookAndFeels, cxPC, cxProgressBar, cxStyles, dxBar,
   dxDockControl, dxDockPanel, dxStatusBar,
 
-  OPP.Help.View, OPP.Help.View.Fullscreen,  OPP.Help.Predicate,
+  OPP.Help.View, OPP.Help.View.Fullscreen, OPP.Help.Predicate,
 
   System.Classes, System.SysUtils, System.Variants,
   Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls,
@@ -78,8 +78,8 @@ type
     procedure runPredicate(APredicate: TOPPHelpPredicate);
   end;
 
-//var
-//  OPPHelpPreviewForm: TOPPHelpPreviewForm;
+  // var
+  // OPPHelpPreviewForm: TOPPHelpPreviewForm;
 
 implementation
 
@@ -88,7 +88,6 @@ implementation
 uses
 
   OPP.Help.System.Stream,
-
 
   OPP.Help.Shortcut.Server;
 
@@ -165,8 +164,8 @@ begin
   fPredicate.readFromStream(fNotificationStream);
 
   runPredicate(fPredicate);
-  msg.Result := 10000;
-  //fPredicate.Free;
+  Msg.Result := 10000;
+  // fPredicate.Free;
 end;
 
 { --------- }
@@ -202,9 +201,11 @@ var
   fPDFStream: TMemoryStream;
 begin
   fPDFStream := helpShortcutServer.loadPDF(APredicate.fileName);
-  oppHelpView.loadContent(fPDFStream);
-  oppHelpView.setPredicate(APredicate);
+  try
+    oppHelpView.loadContent(fPDFStream);
+    oppHelpView.setPredicate(APredicate);
+  finally
+  end;
 end;
-
 
 end.

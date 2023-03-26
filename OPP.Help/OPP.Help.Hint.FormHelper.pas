@@ -7,7 +7,6 @@ uses
   dxCustomHint, dxScreenTip,
   OPP.Help.Hint;
 
-
 type
   TOPPHintDialogCompletion = reference to procedure(Form: TForm);
 

@@ -10,25 +10,39 @@ uses
   Vcl.ExtCtrls, cxStyles, Data.DB, dxScreenTip,
   cxClasses, dxCustomHint, cxHint,
   OPP.Help.Shortcut.Server,
-  OPP.Help.Predicate;
+  OPP.Help.Predicate, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinBasic,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary,
+  dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark,
+  dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark,
+  dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinPumpkin,
+  dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinsDefaultPainters, dxSkinValentine,
+  dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, dxDateRanges,
+  dxScrollbarAnnotations, cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxGrid;
 
 type
   TSampleForm = class(TForm)
     cxHintController: TcxHintStyleController;
     tipsRepo: TdxScreenTipRepository;
     Panel1: TPanel;
-    GroupBox1: TGroupBox;
-    Kod_OKWED: TCheckBox;
-    Kod_MKC: TEdit;
-    Button1: TButton;
-    Button2: TButton;
     GroupBox2: TGroupBox;
     Label1: TLabel;
     CheckBox1: TCheckBox;
     Edit1: TEdit;
     Button3: TButton;
+    GroupBox1: TGroupBox;
+    Kod_OKWED: TCheckBox;
+    Kod_MKC: TEdit;
+    Button1: TButton;
+    Button2: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
@@ -56,13 +70,13 @@ uses
   OPP.Help.Vcl.Control.Styler,
   OPP.Help.Hint.FormHelper,
   OPP.Help.Hint.Server,
+  OPP.Help.Hint.Mapping,
+  OPP.Help.Hint,
 
+  OPP.Help.System.Str,
   OPP.Help.Shortcut.Request,
   OPP.Help.nonatomic,
-
-
-
-  OPP.Help.View.FullScreen;
+  OPP.Help.View.FullScreen, System.Generics.Collections;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
@@ -94,6 +108,15 @@ begin
     procedure(completionResult: TOPPHelpShortcutPresentingResult)
     begin
       //
+    end);
+end;
+
+procedure TSampleForm.Button3Click(Sender: TObject);
+begin
+  helpHintServer.GenerateMap(self,
+    procedure(AList: TList<TOPPHelpHintMap>)
+    begin
+      helpHintServer.MergeMaps(AList);
     end);
 end;
 

@@ -1,3 +1,5 @@
+Ctrl+Shift+A - find unit for class and adds it to uses
+
 // Opening OpenOffice in Delphi: https://www.freepascal.org/~michael/articles/openoffice1/openoffice.pdf
 
 // to disable platforms on delphi 11 follow the guide

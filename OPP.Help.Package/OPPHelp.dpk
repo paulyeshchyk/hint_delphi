@@ -49,7 +49,8 @@ requires
   IndyProtocols,
   IndySystem,
   rtl,
-  vcl;
+  vcl,
+  dsnap;
 
 contains
   OPP.Help.Hint.FormHelper in '..\OPP.Help\OPP.Help.Hint.FormHelper.pas',
@@ -80,6 +81,7 @@ contains
   OPP.Help.System.Messaging.Pipe in '..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas',
   OPP.Help.Predicate in '..\OPP.Help\OPP.Help.Predicate.pas',
   OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
-  OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas';
+  OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas',
+  OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas';
 
 end.

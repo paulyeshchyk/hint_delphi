@@ -19,6 +19,7 @@ uses
 
 type
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
+  TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpHintMap>);
 
   TOPPHelpHintServerOnHintTextsFilenameRequest = reference to function(): string;
 
@@ -48,6 +49,9 @@ type
     procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
 
     procedure registerHintMeta(propertyName: String; component: PTypeInfo);
+
+    procedure GenerateMap(AControl: TControl; completion: TOPPHelpMapGenerationCompletion);
+    procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
 
     property OnGetHintConfigurationFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read getOnHintTextsFileNameRequest write setOnHintTextsFileNameRequest;
   end;
@@ -79,6 +83,8 @@ type
     procedure registerHintMeta(propertyName: String; component: PTypeInfo);
 
     function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint; overload;
+    procedure GenerateMap(AControl: TControl; completion: TOPPHelpMapGenerationCompletion);
+    procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
 
     function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
@@ -151,15 +157,13 @@ begin
         Error.Log();
         exit;
       end;
-      if Assigned(AList) then
-        fHintMapSet.list.AddRange(AList);
-
+      fHintMapSet.AddMaps(AList);
     end;
 
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
 
-  //temporarySave;
+  // temporarySave;
 
 end;
 
@@ -173,7 +177,6 @@ begin
   fPredicate.value := '12value12';
   fPredicate.keywordType := ktSearch;
   fPredicate.fileName := 'loremipsum.rtf';
-
 
   testValue := TOPPHelpHintMap.Create('ident12', fPredicate);
   list := TList<TOPPHelpHintMap>.Create;
@@ -203,13 +206,13 @@ begin
     exit;
   end;
 
-  result := getReader(fMap.Predicate.filename);
+  result := getReader(fMap.Predicate.fileName);
   if Assigned(result) then
     exit;
 
   result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(fMap.Predicate.filename);
-  fHintDataReaders.Add(fMap.Predicate.filename, result);
+  result.loadData(fMap.Predicate.fileName);
+  fHintDataReaders.Add(fMap.Predicate.fileName, result);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -300,7 +303,6 @@ begin
   for fChildInfo in fChildrenInfoList do
   begin
     fMetaIdentifier := fChildInfo.identifier;
-
     self.findOrCreateReader(fMetaIdentifier);
   end;
 
@@ -315,6 +317,39 @@ end;
 procedure TOPPHelpHintServer.setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
 begin
   fOnHintTextsFileNameRequest := value;
+end;
+
+procedure TOPPHelpHintServer.GenerateMap(AControl: TControl; completion: TOPPHelpMapGenerationCompletion);
+var
+  fList: TList<TOPPHelpMeta>;
+  fMeta: TOPPHelpMeta;
+  fMap: TOPPHelpHintMap;
+  fMapList: TList<TOPPHelpHintMap>;
+begin
+
+  fMapList := TList<TOPPHelpHintMap>.Create();
+  try
+    fList := AControl.GetChildrenHelpMeta();
+    try
+      for fMeta in fList do
+      begin
+        fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);
+        fMapList.Add(fMap);
+      end;
+
+      if Assigned(completion) then
+        completion(fMapList);
+    finally
+      fList.Free;
+    end;
+  finally
+    fMapList.Free;
+  end;
+end;
+
+procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpHintMap>);
+begin
+  fHintMapSet.MergeMaps(AList);
 end;
 
 { private }

@@ -2,74 +2,90 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Left = 0
   Top = 0
   Caption = 'OPPHelpPreviewForm'
-  ClientHeight = 608
-  ClientWidth = 752
+  ClientHeight = 1216
+  ClientWidth = 1504
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
   OnClose = FormClose
   OnCreate = FormCreate
-  TextHeight = 13
+  PixelsPerInch = 192
+  TextHeight = 27
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 588
-    Width = 752
-    Height = 20
+    Top = 1176
+    Width = 1504
+    Height = 40
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
     Panels = <
       item
         PanelStyleClassName = 'TdxStatusBarContainerPanelStyle'
         PanelStyle.Container = dxStatusBar1Container0
-        Width = 141
+        Width = 282
       end
       item
         PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
-        Width = 1000
+        Width = 2000
       end
       item
         PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
-        Width = 20
+        Width = 40
       end>
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -22
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 555
-    ExplicitWidth = 738
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4
-      Width = 139
-      Height = 14
+      Width = 280
+      Height = 34
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       object cxProgressBar1: TcxProgressBar
         Left = 0
         Top = 0
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         Align = alClient
         AutoSize = False
         ParentColor = False
+        Properties.PeakSize = 4
         Properties.PeakValue = 42.000000000000000000
         Style.BorderStyle = ebsNone
         Style.Color = clBtnFace
         StyleHot.Color = clBtnFace
         TabOrder = 0
-        Height = 14
-        Width = 139
+        Height = 34
+        Width = 280
       end
     end
   end
   object oppHelpView: TOPPHelpViewFullScreen
     Left = 0
     Top = 25
-    Width = 752
-    Height = 563
+    Width = 1504
+    Height = 1151
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 738
-    ExplicitHeight = 530
+    ExplicitTop = 50
+    ExplicitHeight = 1126
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace

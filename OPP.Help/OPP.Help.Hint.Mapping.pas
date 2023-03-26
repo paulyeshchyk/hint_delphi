@@ -16,7 +16,7 @@ type
   public
     constructor Create(const AIdentifier: TOPPHelpHintMapIdentifier; const APredicate: TOPPHelpPredicate);
 
-    property predicate: TOPPHelpPredicate read fPredicate write fPredicate;
+    property Predicate: TOPPHelpPredicate read fPredicate write fPredicate;
     property identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
   end;
 
@@ -27,7 +27,9 @@ type
     constructor Create(AList: TList<TOPPHelpHintMap> = nil);
     function GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintMap;
 
-    property list: TList<TOPPHelpHintMap> read fList write fList;
+    procedure AddMaps(AList: TList<TOPPHelpHintMap>);
+    procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
+    property list: TList<TOPPHelpHintMap> read fList;
   end;
 
 implementation
@@ -58,6 +60,35 @@ begin
       break;
     end;
   end;
+end;
+
+procedure TOPPHelpHintMapSet.AddMaps(AList: TList<TOPPHelpHintMap>);
+var
+  fItem: TOPPHelpHintMap;
+begin
+  if not assigned(AList) then
+    exit;
+
+  for fItem in AList do
+  begin
+    fList.Add(fItem);
+  end;
+
+end;
+
+
+procedure TOPPHelpHintMapSet.MergeMaps(AList: TList<TOPPHelpHintMap>);
+var
+  fItem: TOPPHelpHintMap;
+begin
+  if not assigned(AList) then
+    exit;
+
+  for fItem in AList do
+  begin
+    fList.Add(fItem);
+  end;
+
 end;
 
 end.

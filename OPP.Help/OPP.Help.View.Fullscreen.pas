@@ -161,8 +161,6 @@ begin
 end;
 
 procedure TOPPHelpViewFullScreen.doSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
-var
-  fSearchThread: TOPPSystemThread;
 begin
 
   if fSearchIsInProgress then
