@@ -210,6 +210,16 @@ object SampleForm: TSampleForm
       OnClick = Button2Click
     end
   end
+  object paMain: TPanel
+    Left = 424
+    Top = 360
+    Width = 185
+    Height = 41
+    Caption = 'paMain'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 3
+  end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
     HintStyle.ScreenTipLinks = <>

@@ -1,4 +1,4 @@
-﻿unit OPP.Help.System.Messaging.Pipe;
+unit OPP.Help.System.Messaging.Pipe;
 
 interface
 

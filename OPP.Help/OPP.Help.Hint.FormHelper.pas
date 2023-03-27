@@ -1,4 +1,4 @@
-Ôªøunit OPP.Help.Hint.FormHelper;
+unit OPP.Help.Hint.FormHelper;
 
 interface
 
@@ -12,8 +12,8 @@ type
 
   TOPPHelpHintFormHelper = class helper for TForm
   public
-    procedure loadHint(RootControl: TControl; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
-    procedure addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
+    procedure loadHint(RootControl: TControl; tipsRepo: TdxScreenTipRepository; hintStyle: TdxScreenTipStyle);
+    procedure addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TdxScreenTipStyle);
   end;
 
 implementation
@@ -21,7 +21,7 @@ implementation
 uses
   OPP.Help.Meta.Enumerator, OPP.Help.Hint.Server;
 
-procedure TOPPHelpHintFormHelper.loadHint(RootControl: TControl; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
+procedure TOPPHelpHintFormHelper.loadHint(RootControl: TControl; tipsRepo: TdxScreenTipRepository; hintStyle: TdxScreenTipStyle);
 var
   fHintLoadCompletion: TOPPHelpHintLoadCompletion;
 begin
@@ -35,15 +35,15 @@ begin
       end;
     end;
 
-  helpHintServer.OnGetHintConfigurationFileNameRequest := function(): string
-    begin
-      result := '.\help\mapping\hints_matrix.json';
-    end;
-
-  helpHintServer.getHints(RootControl, fHintLoadCompletion);
+//  TOPPHelpHintServer.sharedInstance().OnGetHintConfigurationFileNameRequest := function(): string
+//    begin
+//      result := '.\help\mapping\hints_matrix.json';
+//    end;
+//
+//  TOPPHelpHintServer.sharedInstance().getHints(RootControl, fHintLoadCompletion);
 end;
 
-procedure TOPPHelpHintFormHelper.addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TcxCustomHintStyle);
+procedure TOPPHelpHintFormHelper.addTip(Hint: TOPPHelpHint; tipsRepo: TdxScreenTipRepository; hintStyle: TdxScreenTipStyle);
 var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
@@ -57,15 +57,15 @@ begin
   fScreenTip.Width := 789;
 
   fScreenTip.Header.PlainText := true;
-  fScreenTip.Header.Text := '';//–ó–∞–≥–æ–ª–æ–≤–æ–∫
+  fScreenTip.Header.Text := '';//«‡„ÓÎÓ‚ÓÍ
 
   fScreenTip.Description.PlainText := false;
   fScreenTip.Description.Text := Hint.Data.rtf;
 
 //  fScreenTip.Footer.PlainText := true;
-//  fScreenTip.Footer.Text := '–ü–æ–¥–≤–∞–ª';
+//  fScreenTip.Footer.Text := 'œÓ‰‚‡Î';
 
-  fScreenTipLink := TdxScreenTipStyle(hintStyle).ScreenTipLinks.add;
+  fScreenTipLink := hintStyle.ScreenTipLinks.add;
   fScreenTipLink.ScreenTip := fScreenTip;
   fScreenTipLink.Control := fControl;
 end;

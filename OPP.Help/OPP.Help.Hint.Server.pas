@@ -1,4 +1,4 @@
-п»їunit OPP.Help.Hint.Server;
+unit OPP.Help.Hint.Server;
 
 interface
 
@@ -7,9 +7,10 @@ uses
   System.TypInfo,
   WinAPI.Windows,
   VCL.Controls,
-  //
-  OPP.Help.Hint, OPP.Help.Meta.Enumerator,
-  //
+//  //
+  OPP.Help.Hint,
+  OPP.Help.Meta.Enumerator,
+//  //
   OPP.Help.Nonatomic,
   OPP.Help.System.Str,
   OPP.Help.Predicate,
@@ -18,32 +19,33 @@ uses
   OPP.Help.Meta;
 
 type
+
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpHintMap>);
 
   TOPPHelpHintServerOnHintTextsFilenameRequest = reference to function(): string;
 
   IOPPHelpHintServer = interface
-
-    /// <summary>
-    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕРґСЃРєР°Р·РєСѓ РґР»СЏ РєРѕРјРїРѕРЅРµРЅС‚Р°, РјРµС‚Р°РґР°РЅРЅС‹Рµ РєРѕС‚РѕСЂРѕРіРѕ СѓРєР°Р·Р°РЅС‹ РІ РїР°СЂР°РјРµС‚СЂРµ hintMeta.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
+    //
+    // /// <summary>
+    // /// Возвращает подсказку для компонента, метаданные которого указаны в параметре hintMeta.
+    // ///
+    // /// </summary>
+    // /// <remarks> </remarks>
     function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
-
-    /// <summary>
-    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РїРѕРґСЃРєР°Р·РѕРє, РїСЂРёРјРµРЅРёРјС‹С… РґР»СЏ РєРѕРјРїРѕРЅРµРЅС‚Р°, СѓРєР°Р·Р°РЅРЅРѕРіРѕ РІ РїР°СЂР°РјРµС‚СЂРµ Control.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
+    //
+    // /// <summary>
+    // /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
+    // ///
+    // /// </summary>
+    // /// <remarks> </remarks>
     procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
-
-    /// <summary>
-    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РїРѕРґСЃРєР°Р·РѕРє, РїСЂРёРјРµРЅРёРјС‹С… РґР»СЏ СЃРїРёСЃРєР° РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ, РІР·СЏС‚С‹С… РёР· РєРѕРјРїРѕРЅРµРЅС‚Р°.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
+    //
+    // /// <summary>
+    // /// Возвращает список подсказок, применимых для списка идентификаторов, взятых из компонента.
+    // ///
+    // /// </summary>
+    // /// <remarks> </remarks>
     procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
     function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
@@ -59,6 +61,7 @@ type
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
   private
+
     fLoaded: Boolean;
     fHintMapSet: TOPPHelpHintMapSet;
 
@@ -70,7 +73,8 @@ type
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
   public
-    property loaded: Boolean read fLoaded;
+
+    class function sharedInstance(): IOPPHelpHintServer;
 
     constructor Create;
     destructor Destroy; override;
@@ -89,9 +93,12 @@ type
     function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
     property OnGetHintConfigurationFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read fOnHintTextsFileNameRequest write fOnHintTextsFileNameRequest;
+    property loaded: Boolean read fLoaded;
+
   end;
 
-function helpHintServer: IOPPHelpHintServer;
+//function helpHintServer: IOPPHelpHintServer;
+
 
 implementation
 
@@ -99,12 +106,13 @@ uses
   OPP.Help.Hint.Mapping.Filereader, OPP.Help.System.Error;
 
 var
-  fLock: TCriticalSection;
+  fOPPHelpHintServerLock: TCriticalSection;
   fHelpHintServer: IOPPHelpHintServer;
 
-function helpHintServer: IOPPHelpHintServer;
+
+class function TOPPHelpHintServer.sharedInstance(): IOPPHelpHintServer;
 begin
-  fLock.Acquire;
+  fOPPHelpHintServerLock.Acquire;
   try
     if not Assigned(fHelpHintServer) then
     begin
@@ -112,7 +120,7 @@ begin
     end;
     result := fHelpHintServer;
   finally
-    fLock.Release;
+    fOPPHelpHintServerLock.Release;
   end;
 end;
 
@@ -133,8 +141,6 @@ procedure TOPPHelpHintServer.registerHintMeta(propertyName: String; component: P
 begin
   fHintMetaDict.Add(component.Name, propertyName);
 end;
-
-{ private }
 
 procedure TOPPHelpHintServer.reloadConfigurationIfNeed();
 var
@@ -165,34 +171,33 @@ begin
 
 end;
 
-{ public }
 
 // TODO: add callback where hintmap and reader be returned
 // reader will take predicate from hintmap and then it should run search using predicate
 function TOPPHelpHintServer.findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
-var
-  fMap: TOPPHelpHintMap;
-  fPredicate: TOPPHelpPredicate;
+//var
+//  fMap: TOPPHelpHintMap;
+//  fPredicate: TOPPHelpPredicate;
 begin
   result := nil;
 
-  fMap := fHintMapSet.GetMap(AMetaIdentifier);
-  if not Assigned(fMap) then
-    exit;
-  fPredicate := fMap.Predicate;
-  if not Assigned(fPredicate) then
-  begin
-    WinAPI.Windows.OutputDebugString('!!! PREDICATE NOT FOUND!!!'.toWidechar);
-    exit;
-  end;
-
-  result := getReader(fMap.Predicate.fileName);
-  if Assigned(result) then
-    exit;
-
-  result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(fMap.Predicate.fileName);
-  fHintDataReaders.Add(fMap.Predicate.fileName, result);
+//  fMap := fHintMapSet.GetMap(AMetaIdentifier);
+//  if not Assigned(fMap) then
+//    exit;
+//  fPredicate := fMap.Predicate;
+//  if not Assigned(fPredicate) then
+//  begin
+//    WinAPI.Windows.OutputDebugString('!!! PREDICATE NOT FOUND!!!'.toWidechar);
+//    exit;
+//  end;
+//
+//  result := getReader(fMap.Predicate.fileName);
+//  if Assigned(result) then
+//    exit;
+//
+//  result := TOPPHelpRichtextHintReader.Create;
+//  result.loadData(fMap.Predicate.fileName);
+//  fHintDataReaders.Add(fMap.Predicate.fileName, result);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -343,14 +348,13 @@ begin
   fHintMapSet.MergeMaps(AList);
 end;
 
-{ private }
 
 initialization
 
-fLock := TCriticalSection.Create;
+fOPPHelpHintServerLock := TCriticalSection.Create;
 
 finalization
 
-fLock.Free;
+fOPPHelpHintServerLock.Free;
 
 end.

@@ -1,4 +1,4 @@
-﻿unit OPP.Help.System.Thread;
+unit OPP.Help.System.Thread;
 
 interface
 

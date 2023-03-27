@@ -1,4 +1,4 @@
-п»їunit OPP.Help.Shortcut.Server;
+unit OPP.Help.Shortcut.Server;
 
 interface
 
@@ -66,20 +66,20 @@ const
   OPPViewerProcessName: String = 'OPPHelpPreview.exe';
 
 var
-  fLock: TCriticalSection;
-  fHelpServer: IOPPHelpShortcutServer;
+  fOPPHelpShortcutServerLock: TCriticalSection;
+  fOPPHelpShortcutServer: IOPPHelpShortcutServer;
 
 function helpShortcutServer: IOPPHelpShortcutServer;
 begin
-  fLock.Acquire;
+  fOPPHelpShortcutServerLock.Acquire;
   try
-    if not Assigned(fHelpServer) then
+    if not Assigned(fOPPHelpShortcutServer) then
     begin
-      fHelpServer := TOPPHelpShortcutServer.Create(nil);
+      fOPPHelpShortcutServer := TOPPHelpShortcutServer.Create(nil);
     end;
-    result := fHelpServer;
+    result := fOPPHelpShortcutServer;
   finally
-    fLock.Release;
+    fOPPHelpShortcutServerLock.Release;
   end;
 end;
 
@@ -209,7 +209,7 @@ begin
   result := -1;
   if AProcessHandle = 0 then
   begin
-    // ShowMessage('РќРµРІРѕР·РјРѕР¶РЅРѕ Р·Р°РїСѓСЃС‚РёС‚СЊ РѕРєРЅРѕ РїРѕРјРѕС‰Рё.');
+    // ShowMessage('Невозможно запустить окно помощи.');
     exit;
   end;
 
@@ -239,10 +239,10 @@ end;
 
 initialization
 
-fLock := TCriticalSection.Create;
+fOPPHelpShortcutServerLock := TCriticalSection.Create;
 
 finalization
 
-fLock.Free;
+fOPPHelpShortcutServerLock.Free;
 
 end.

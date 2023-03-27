@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Shortcut.Mapping;
+unit OPP.Help.Shortcut.Mapping;
 
 interface
 

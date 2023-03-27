@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Shortcut.Mapping.Filereader;
+unit OPP.Help.Shortcut.Mapping.Filereader;
 
 interface
 

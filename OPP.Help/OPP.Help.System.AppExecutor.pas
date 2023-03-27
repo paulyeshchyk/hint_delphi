@@ -1,4 +1,4 @@
-﻿unit OPP.Help.System.AppExecutor;
+unit OPP.Help.System.AppExecutor;
 
 interface
 

@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Hint;
+unit OPP.Help.Hint;
 
 interface
 
@@ -36,3 +36,4 @@ begin
 end;
 
 end.
+

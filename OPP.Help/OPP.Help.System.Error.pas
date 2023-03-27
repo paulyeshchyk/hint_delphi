@@ -1,4 +1,4 @@
-﻿unit OPP.Help.System.Error;
+unit OPP.Help.System.Error;
 
 interface
 

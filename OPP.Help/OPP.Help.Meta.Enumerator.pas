@@ -1,11 +1,12 @@
-п»їunit OPP.Help.Meta.Enumerator;
+unit OPP.Help.Meta.Enumerator;
 
 interface
 
 uses
   system.classes, system.sysUtils, system.TypInfo, system.Generics.Collections,
-  Vcl.Controls, Vcl.StdCtrls,
-  OPP.Help.Meta;
+  Vcl.Controls, Vcl.StdCtrls, Vcl.ExtCtrls,
+  OPP.Help.Meta, OPP.Help.system.Str,
+  WinAPI.Windows;
 
 type
 
@@ -13,21 +14,22 @@ type
   public
 
     /// <summary>
-    /// Р’РѕР·РІРѕСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє TOPPHelpMeta, РїСЂРёРјРµРЅРёРјС‹С… РґР»СЏ РґР°РЅРЅРѕРіРѕ РєРѕРјРїРѕРЅРµРЅС‚Р°.
+    /// Возворащает список TOPPHelpMeta, применимых для данного компонента.
     ///
-    /// РљР»СЋС‡ РґР»СЏ TOPPHelpMeta Р±РµСЂС‘С‚СЃСЏ РёР· Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РєРѕРјРїРѕРЅРµРЅС‚Р°, СѓРєР°Р·Р°РЅРЅРѕРіРѕ РІ Р°СЂРіСѓРјРµРЅС‚Рµ propertyName
+    /// Ключ для TOPPHelpMeta берётся из значения свойства компонента, указанного в аргументе propertyName
     ///
     /// </summary>
-    /// <remarks> Р·РЅР°С‡РµРЅРёРµ propertyName РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ 'name'</remarks>
+    /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
     function GetChildrenHelpMeta(): TList<TOPPHelpMeta>;
     function FindSubControl(Meta: TOPPHelpMeta): TControl;
     function GetHelpMeta: TOPPHelpMeta;
   end;
 
 implementation
-uses OppObjControl;
 
 function TOPPHelpComponentEnumerator.GetHelpMeta: TOPPHelpMeta;
+var
+  fParent: TWinControl;
 begin
   result := TOPPHelpMeta.Create('Name', self.Name);
 
@@ -36,17 +38,26 @@ begin
     result.propertyName := 'HelpKeyword';
     result.identifier := (self as TEdit).HelpKeyword;
   end
-  else if TCheckBox = self.ClassType then
+  else if TPanel = self.ClassType then
+  begin
+    result.propertyName := 'Name';
+    result.identifier := (self as TPanel).name;
+  end else if TCheckBox = self.ClassType then
   begin
     result.propertyName := 'HelpKeyword';
     result.identifier := (self as TCheckBox).HelpKeyword;
   end else begin
-    if self.ClassName = 'TOppObjControl' then begin
-      result.propertyName := 'TypeObject';
-      result.identifier := (self as TOppObjControl).TypeObject;
-      //
+    if self is TWinControl then
+    begin
+      fParent := (self as TWinControl).Parent;
+      if Assigned(fParent) and (fParent.className = 'TOppObjControl') then
+      begin
+        result.propertyName := 'TypeObject';
+        result.identifier := '!Тема';
+        TWinControl(self).ShowHint := true;
+        TWinControl(self).parent.showHint := true;
+      end;
     end;
-    // nothing to do here
   end;
 
 end;
@@ -56,12 +67,19 @@ var
   fChildComponent: TComponent;
   i: Integer;
   fChildComponentHintMeta: TOPPHelpMeta;
+  fSelfClassName: String;
 begin
+
+  fSelfClassName := self.className;
+  WinAPI.Windows.OutputDebugString(fSelfClassName.toWideChar);
+
   result := TList<TOPPHelpMeta>.Create();
 
   for i := 0 to ComponentCount - 1 do
   begin
     fChildComponent := self.Components[i];
+    if not Assigned(fChildComponent) then
+      continue;
 
     fChildComponentHintMeta := fChildComponent.GetHelpMeta();
     if fChildComponentHintMeta.isValid then
@@ -93,17 +111,16 @@ begin
         result := TControl(child);
         break;
       end;
-
-      // recursion
-
-      nextLevelChild := TWinControl(child).FindSubControl(Meta);
-      if assigned(nextLevelChild) then
-      begin
-        result := TControl(nextLevelChild);
-        break;
-      end;
-
     end;
+    // recursion
+
+    nextLevelChild := TWinControl(child).FindSubControl(Meta);
+    if Assigned(nextLevelChild) then
+    begin
+      result := TControl(nextLevelChild);
+      break;
+    end;
+
   end;
 
 end;

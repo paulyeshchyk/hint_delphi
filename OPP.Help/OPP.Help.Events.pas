@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Events;
+unit OPP.Help.Events;
 
 interface
 

@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Shortcut.DatasetBind;
+unit OPP.Help.Shortcut.DatasetBind;
 
 interface
 

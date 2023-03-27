@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Shortcut.Request;
+unit OPP.Help.Shortcut.Request;
 
 interface
 

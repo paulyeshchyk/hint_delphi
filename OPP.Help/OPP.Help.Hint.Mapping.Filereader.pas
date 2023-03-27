@@ -1,6 +1,7 @@
 unit OPP.Help.Hint.Mapping.Filereader;
 
 interface
+
 uses
   System.Generics.Collections,
   System.SysUtils,
@@ -9,7 +10,7 @@ uses
   OPP.Help.Hint.Mapping;
 
 type
-  TOPPHelpHintMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpHintMap>; error: Exception);
+  TOPPHelpHintMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpHintMap>; Error: Exception);
 
   TOPPHelpHintMapFileReader = class helper for TOPPHelpHintMap
   private
@@ -30,28 +31,36 @@ var
   jsonObject: TJSONObject;
   mapList: TOPPHelpHintMapSet;
   list: TList<TOPPHelpHintMap>;
-  error: Exception;
+  Error: Exception;
 begin
-  error := nil;
+  Error := nil;
   deSerializer := TJSONUnMarshal.Create;
   list := TList<TOPPHelpHintMap>.Create;
   try
-    jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
     try
-      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpHintMapSet;
-      list.AddRange(mapList.list);
-      FreeAndNil(mapList);
+      jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
+      try
+        mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpHintMapSet;
+        list.AddRange(mapList.list);
+        FreeAndNil(mapList);
+      except
+        on E: Exception do
+        begin
+          E.Log();
+          Error := E;
+        end;
+      end;
     except
       on E: Exception do
       begin
         E.Log();
-        error := E;
+        Error := E;
       end;
     end;
   finally
     if assigned(callback) then
     begin
-      callback(list, error);
+      callback(list, Error);
     end;
     FreeAndNil(jsonObject);
     FreeAndNil(list);
@@ -84,6 +93,10 @@ var
   jsonObj: TJSONObject;
   jsonString: String;
 begin
+
+  if not assigned(AList) then
+    exit;
+
   //
   serializer := TJSONMarshal.Create;
 

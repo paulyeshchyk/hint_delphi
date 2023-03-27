@@ -51,8 +51,13 @@ end;
 constructor TOPPHelpHintMapSet.Create(AList: TList<OPP.Help.Hint.Mapping.TOPPHelpHintMap> = nil);
 begin
   fList := TList<TOPPHelpHintMap>.Create;
+
   if assigned(AList) then
+  begin
+    fList.Capacity := AList.Count;
     fList.AddRange(AList);
+  end else begin
+  end;
 end;
 
 function TOPPHelpHintMapSet.GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintMap;
@@ -101,7 +106,7 @@ begin
   for fItem in fList do
   begin
     if not fDictionary.ContainsKey(fItem.identifier) then
-        fDictionary.Add(fItem.identifier, fItem);
+      fDictionary.Add(fItem.identifier, fItem);
   end;
 
   for fItem in AList do

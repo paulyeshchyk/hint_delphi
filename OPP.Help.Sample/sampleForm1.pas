@@ -29,6 +29,7 @@ type
     Kod_MKC: TEdit;
     Button1: TButton;
     Button2: TButton;
+    paMain: TPanel;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -37,12 +38,9 @@ type
     procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    { Private declarations }
-
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure fillGrid();
   public
-    { Public declarations }
   end;
 
 var
@@ -102,11 +100,11 @@ end;
 
 procedure TSampleForm.Button3Click(Sender: TObject);
 begin
-  helpHintServer.GenerateMap(self,'.\help\hints\gulfstream_manual_rtf.rtf',
+  TOPPHelpHintServer.sharedInstance().GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf',
     procedure(AList: TList<TOPPHelpHintMap>)
     begin
-      helpHintServer.MergeMaps(AList);
-      helpHintServer.SaveMaps('.\help\mapping\zz.json');
+      TOPPHelpHintServer.sharedInstance().MergeMaps(AList);
+      TOPPHelpHintServer.sharedInstance().SaveMaps('.\help\mapping\zz.json');
     end);
 end;
 
@@ -127,9 +125,13 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
   fillGrid;
-  self.loadHint(self, tipsRepo, cxHintController.HintStyle);
-
+  self.loadHint(self, tipsRepo, TdxScreenTipStyle(cxHintController.HintStyle));
   self.restyle();
+end;
+
+procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  helpShortcutServer.killExternalViewer;
 end;
 
 procedure TSampleForm.fillGrid;
@@ -144,11 +146,6 @@ end;
 procedure TSampleForm.cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
 begin
   HintInfo.ReshowTimeout := MaxInt;
-end;
-
-procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  helpShortcutServer.killExternalViewer;
 end;
 
 initialization
