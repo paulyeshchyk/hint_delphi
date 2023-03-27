@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   dxRichEdit.Control, dxRichEdit.NativeAPI,
   OPP.Help.Nonatomic,
+  OPP.Help.Predicate,
   OPP.Help.Hint;
 
 type
@@ -17,7 +18,7 @@ type
     /// </summary>
     function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
 
-    function FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpHintData;
+    function FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;
   end;
 
   TOPPHelpRichtextHintReader = class(TInterfacedObject, IOPPHelpHintDataReader)
@@ -37,7 +38,7 @@ type
     constructor Create;
     destructor Destroy; override;
     function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
-    function FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpHintData;
+    function FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;
   end;
 
 implementation
@@ -71,16 +72,43 @@ begin
 
 end;
 
-function TOPPHelpRichtextHintReader.FindHintDataForBookmarkIdentifier(AHintIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpHintData;
+function TOPPHelpRichtextHintReader.FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;
 var
   bookmark: IdxRichEditBookmark;
   paragraph: IdxRichEditParagraph;
 begin
-  // read identifier.fKeywordType here
-  bookmark := self.GetBookmark(AHintIdentifier);
-  paragraph := self.GetParagraph(bookmark);
-  result.text := self.GetPlainText(paragraph);
-  result.rtf := self.GetRichText(paragraph);
+
+  case APredicate.keywordType of
+    ktBookmark:
+      begin
+        bookmark := self.GetBookmark(APredicate.value);
+        paragraph := self.GetParagraph(bookmark);
+        result.text := self.GetPlainText(paragraph);
+        result.rtf := self.GetRichText(paragraph);
+      end;
+    ktAny:
+      begin
+        bookmark := self.GetBookmark(APredicate.value);
+        paragraph := self.GetParagraph(bookmark);
+        result.text := self.GetPlainText(paragraph);
+        result.rtf := self.GetRichText(paragraph);
+      end;
+    ktSearch:
+      begin
+        bookmark := self.GetBookmark(APredicate.value);
+        paragraph := self.GetParagraph(bookmark);
+        result.text := self.GetPlainText(paragraph);
+        result.rtf := self.GetRichText(paragraph);
+      end;
+    ktPage:
+      begin
+        bookmark := self.GetBookmark(APredicate.value);
+        paragraph := self.GetParagraph(bookmark);
+        result.text := self.GetPlainText(paragraph);
+        result.rtf := self.GetRichText(paragraph);
+      end;
+  end;
+
 end;
 
 function TOPPHelpRichtextHintReader.getDocument(): IdxRichEditDocument;

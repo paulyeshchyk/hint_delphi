@@ -16,7 +16,7 @@ type
 
     function GetShortcutIdentifier(): String;
   public
-    constructor create(activeControl: TWinControl; msg: TWMHelp);
+    constructor Create(activeControl: TWinControl; msg: TWMHelp);
 
     property msg: TWMHelp read fMsg;
     property activeControl: TWinControl read fActiveControl;
@@ -25,7 +25,7 @@ type
 
 implementation
 
-constructor TOPPHelpShortcutRequest.create(activeControl: TWinControl; msg: TWMHelp);
+constructor TOPPHelpShortcutRequest.Create(activeControl: TWinControl; msg: TWMHelp);
 begin
   inherited create;
   fMsg := msg;

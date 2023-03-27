@@ -50,8 +50,9 @@ type
 
     procedure registerHintMeta(propertyName: String; component: PTypeInfo);
 
-    procedure GenerateMap(AControl: TControl; completion: TOPPHelpMapGenerationCompletion);
+    procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
+    procedure SaveMaps(AFileName: String);
 
     property OnGetHintConfigurationFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read getOnHintTextsFileNameRequest write setOnHintTextsFileNameRequest;
   end;
@@ -68,8 +69,6 @@ type
     procedure reloadConfigurationIfNeed();
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
-
-    procedure temporarySave();
   public
     property loaded: Boolean read fLoaded;
 
@@ -83,8 +82,9 @@ type
     procedure registerHintMeta(propertyName: String; component: PTypeInfo);
 
     function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint; overload;
-    procedure GenerateMap(AControl: TControl; completion: TOPPHelpMapGenerationCompletion);
+    procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
+    procedure SaveMaps(AFileName: String);
 
     function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
     procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
@@ -163,26 +163,6 @@ begin
   fFileName := fOnHintTextsFileNameRequest();
   TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
 
-  // temporarySave;
-
-end;
-
-procedure TOPPHelpHintServer.temporarySave();
-var
-  list: TList<TOPPHelpHintMap>;
-  testValue: TOPPHelpHintMap;
-  fPredicate: TOPPHelpPredicate;
-begin
-  fPredicate := TOPPHelpPredicate.Create;
-  fPredicate.value := '12value12';
-  fPredicate.keywordType := ktSearch;
-  fPredicate.fileName := 'loremipsum.rtf';
-
-  testValue := TOPPHelpHintMap.Create('ident12', fPredicate);
-  list := TList<TOPPHelpHintMap>.Create;
-  list.Add(testValue);
-
-  TOPPHelpHintMap.saveJSON(list, 'help\mapping\hints_matrix1.json')
 end;
 
 { public }
@@ -238,6 +218,7 @@ end;
 function TOPPHelpHintServer.GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
 var
   fReader: IOPPHelpHintDataReader;
+  fHintMap: TOPPHelpHintMap;
 begin
 
   self.reloadConfigurationIfNeed();
@@ -247,7 +228,10 @@ begin
   fReader := findOrCreateReader(AHintIdentifier);
   if Assigned(fReader) then
   begin
-    result := fReader.FindHintDataForBookmarkIdentifier(AHintIdentifier);
+
+    fHintMap := fHintMapSet.GetMap(AHintIdentifier);
+    if Assigned(fHintMap) then
+      result := fReader.FindHintDataForBookmarkIdentifier(fHintMap.Predicate);
   end;
 end;
 
@@ -286,8 +270,8 @@ end;
 
 procedure TOPPHelpHintServer.GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion);
 var
-  fChildrenInfoList: TList<TOPPHelpMeta>;
-  fChildInfo: TOPPHelpMeta;
+  fChildrenHelpMetaList: TList<TOPPHelpMeta>;
+  fChildHelpMeta: TOPPHelpMeta;
   fMetaIdentifier: TOPPHelpHintMapIdentifier;
 begin
 
@@ -299,14 +283,14 @@ begin
     exit;
   end;
 
-  fChildrenInfoList := Control.GetChildrenHelpMeta();
-  for fChildInfo in fChildrenInfoList do
+  fChildrenHelpMetaList := Control.GetChildrenHelpMeta();
+  for fChildHelpMeta in fChildrenHelpMetaList do
   begin
-    fMetaIdentifier := fChildInfo.identifier;
+    fMetaIdentifier := fChildHelpMeta.identifier;
     self.findOrCreateReader(fMetaIdentifier);
   end;
 
-  self.GetHints(fChildrenInfoList, completion);
+  self.GetHints(fChildrenHelpMetaList, completion);
 end;
 
 function TOPPHelpHintServer.getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
@@ -319,7 +303,7 @@ begin
   fOnHintTextsFileNameRequest := value;
 end;
 
-procedure TOPPHelpHintServer.GenerateMap(AControl: TControl; completion: TOPPHelpMapGenerationCompletion);
+procedure TOPPHelpHintServer.GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
 var
   fList: TList<TOPPHelpMeta>;
   fMeta: TOPPHelpMeta;
@@ -334,6 +318,8 @@ begin
       for fMeta in fList do
       begin
         fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);
+        if Length(defaultPredicateFileName) > 0 then
+          fMap.Predicate.fileName := defaultPredicateFileName;
         fMapList.Add(fMap);
       end;
 
@@ -345,6 +331,11 @@ begin
   finally
     fMapList.Free;
   end;
+end;
+
+procedure TOPPHelpHintServer.SaveMaps(AFileName: String);
+begin
+  TOPPHelpHintMap.saveJSON(fHintMapSet.list, AFileName);
 end;
 
 procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpHintMap>);

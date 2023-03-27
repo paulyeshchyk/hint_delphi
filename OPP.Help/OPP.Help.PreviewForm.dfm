@@ -2,7 +2,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Left = 0
   Top = 0
   Caption = 'OPPHelpPreviewForm'
-  ClientHeight = 1216
+  ClientHeight = 1061
   ClientWidth = 1504
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,13 +10,14 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
   TextHeight = 27
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 1176
+    Top = 1021
     Width = 1504
     Height = 40
     Margins.Left = 6
@@ -76,16 +77,20 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Left = 0
     Top = 25
     Width = 1504
-    Height = 1151
+    Height = 996
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
     Align = alClient
     BevelOuter = bvNone
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 5
-    ExplicitTop = 50
-    ExplicitHeight = 1126
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace

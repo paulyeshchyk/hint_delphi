@@ -10,6 +10,7 @@ object SampleForm: TSampleForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -27,8 +28,6 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 735
-    ExplicitWidth = 1590
   end
   object GroupBox2: TGroupBox
     Left = 912
@@ -44,13 +43,19 @@ object SampleForm: TSampleForm
     object Label1: TLabel
       Left = 32
       Top = 48
-      Width = 64
-      Height = 27
+      Width = 37
+      Height = 16
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
       Caption = 'Label2'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
     end
     object CheckBox1: TCheckBox
       Left = 32
@@ -62,17 +67,29 @@ object SampleForm: TSampleForm
       Margins.Right = 6
       Margins.Bottom = 6
       Caption = 'CheckBox1'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 0
     end
     object Edit1: TEdit
       Left = 320
       Top = 42
       Width = 242
-      Height = 35
+      Height = 24
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 1
       Text = 'Edit1'
     end
@@ -86,6 +103,12 @@ object SampleForm: TSampleForm
       Margins.Right = 6
       Margins.Bottom = 6
       Caption = 'Button3'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 2
       OnClick = Button3Click
     end
@@ -95,11 +118,22 @@ object SampleForm: TSampleForm
     Top = 16
     Width = 850
     Height = 226
+    Hint = 'Kod_OKWED wrong hint'
+    HelpType = htKeyword
+    HelpKeyword = 'Kod_KWED2'
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
     Caption = 'Help && Hints'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 2
     object Kod_OKWED: TCheckBox
       Left = 48
@@ -121,7 +155,7 @@ object SampleForm: TSampleForm
       Left = 48
       Top = 130
       Width = 242
-      Height = 35
+      Height = 24
       Hint = 'cxHint test'
       HelpType = htKeyword
       HelpKeyword = 'Kod_MKC'
@@ -145,6 +179,12 @@ object SampleForm: TSampleForm
       Margins.Right = 6
       Margins.Bottom = 6
       Caption = #1055#1086#1084#1086#1097#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 3
       OnClick = Button1Click
     end
@@ -153,11 +193,19 @@ object SampleForm: TSampleForm
       Top = 48
       Width = 150
       Height = 50
+      HelpType = htKeyword
+      HelpKeyword = 'Kod_OKWED'
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
       Caption = 'External'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 2
       OnClick = Button2Click
     end
@@ -169,12 +217,12 @@ object SampleForm: TSampleForm
     UseHintControlLookAndFeel = True
     OnShowHint = cxHintControllerShowHint
     OnShowHintEx = cxHintControllerShowHintEx
-    Left = 1096
-    Top = 48
+    Left = 160
+    Top = 248
   end
   object tipsRepo: TdxScreenTipRepository
-    Left = 1088
-    Top = 168
-    PixelsPerInch = 192
+    Left = 256
+    Top = 296
+    PixelsPerInch = 96
   end
 end

@@ -89,14 +89,13 @@ begin
 
   jsonObj := serializer.marshal(TOPPHelpHintMapSet.Create(AList)) as TJSONObject;
   try
-    jsonString := TJson.Format(jsonObj); // formatted
-    // jsonString := jsonObj.ToString;//unformatted
+    jsonString := TJson.JsonEncode(jsonObj);
     try
       TFile.WriteAllText(AFileName, jsonString);
     except
       on E: Exception do
       begin
-        //
+        E.Log;
       end;
     end;
   finally

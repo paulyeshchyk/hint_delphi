@@ -34,8 +34,10 @@ type
     procedure onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
     procedure doSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
     procedure onTimerTick(Sender: TObject);
+    function GetEventListeners():TList<IOPPHelpViewEventListener>;
     procedure setHasLoadedDocument(AHasLoadedDocument: Boolean);
     property HasLoadedDocument: Boolean read fHasLoadedDocument write setHasLoadedDocument;
+    property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
   public
 
     constructor Create(AOwner: TComponent); override;
@@ -105,6 +107,13 @@ begin
   fPDFViewer.ShowFindPanel;
 end;
 
+function TOPPHelpViewFullScreen.GetEventListeners: TList<IOPPHelpViewEventListener>;
+begin
+  if not assigned( fEventListeners) then
+    fEventListeners := TList<IOPPHelpViewEventListener>.Create();
+  result := fEventListeners;
+end;
+
 procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
   fPredicate := APredicate.copy();
@@ -135,18 +144,18 @@ procedure TOPPHelpViewFullScreen.onTimerTick(Sender: TObject);
 var
   fListener: IOPPHelpViewEventListener;
 begin
-  for fListener in fEventListeners do
+  for fListener in EventListeners do
     fListener.SearchProgress();
 end;
 
 procedure TOPPHelpViewFullScreen.addStateChangeListener(AListener: IOPPHelpViewEventListener);
 begin
-  fEventListeners.add(AListener);
+  EventListeners.add(AListener);
 end;
 
 procedure TOPPHelpViewFullScreen.removeStateChangeListener(AListener: IOPPHelpViewEventListener);
 begin
-  fEventListeners.Remove(AListener);
+  EventListeners.Remove(AListener);
 end;
 
 procedure TOPPHelpViewFullScreen.onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
@@ -188,7 +197,7 @@ begin
 
   fSearchIsInProgress := true;
 
-  for fListener in fEventListeners do
+  for fListener in EventListeners do
   begin
     if assigned(fListener) then
       fListener.SearchStarted;
@@ -211,7 +220,7 @@ procedure TOPPHelpViewFullScreen.searchWorkEnded(AResult: Integer);
 var
   fListener: IOPPHelpViewEventListener;
 begin
-  for fListener in fEventListeners do
+  for fListener in EventListeners do
   begin
     if assigned(fListener) then
       fListener.SearchEnded;
@@ -253,7 +262,7 @@ procedure TOPPHelpViewFullScreen.loadWorkStarted(onFinish: TOPPHelpThreadOnFinis
 var
   fListener: IOPPHelpViewEventListener;
 begin
-  for fListener in fEventListeners do
+  for fListener in EventListeners do
   begin
     if assigned(fListener) then
       fListener.LoadStarted;
@@ -272,7 +281,7 @@ procedure TOPPHelpViewFullScreen.loadWorkEnded(AResult: Integer);
 var
   fListener: IOPPHelpViewEventListener;
 begin
-  for fListener in fEventListeners do
+  for fListener in EventListeners do
   begin
     if assigned(fListener) then
       fListener.SearchEnded;
