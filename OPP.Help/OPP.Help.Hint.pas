@@ -16,7 +16,7 @@ type
   TOPPHintIdList = TList<TOPPHelpMeta>;
 
   TOPPHelpHint = record
-    meta: TOPPHelpMeta;
+    Meta: TOPPHelpMeta;
     data: TOPPHelpHintData;
   end;
 

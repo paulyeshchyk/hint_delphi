@@ -43,7 +43,7 @@ type
     { Private declarations }
 
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
-    procedure onSaveHints(hints: TList<TOPPHelpHint>);
+    procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
   public
     { Public declarations }
   end;
@@ -108,7 +108,7 @@ begin
     procedure(AList: TList<TOPPHelpHintMap>)
     begin
       helpHintServer.MergeMaps(AList);
-      helpHintServer.SaveMaps('.\help\mapping\zz.json');
+      helpHintServer.SaveMaps('.\help\mapping\hints_matrix.json');
     end);
 end;
 
@@ -128,17 +128,12 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
-  helpHintServer.OnGetHintConfigurationFileNameRequest := function(): string
-    begin
-      result := '.\help\mapping\hints_matrix.json';
-    end;
-
-  helpHintServer.getHints(self, self.onSaveHints);
+  helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.onHintViewsCreate);
 
   self.restyle();
 end;
 
-procedure TSampleForm.onSaveHints(hints: TList<TOPPHelpHint>);
+procedure TSampleForm.onHintViewsCreate(hints: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
   fScreenTip: TdxScreenTip;
@@ -159,9 +154,6 @@ begin
 
     fScreenTip.Description.PlainText := false;
     fScreenTip.Description.Text := fHint.Data.rtf;
-
-    // fScreenTip.Footer.PlainText := true;
-    // fScreenTip.Footer.Text := 'Подвал';
 
     fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.add;
     fScreenTipLink.ScreenTip := fScreenTip;

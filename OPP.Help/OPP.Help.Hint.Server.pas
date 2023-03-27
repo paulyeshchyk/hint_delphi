@@ -26,35 +26,16 @@ type
   IOPPHelpHintServer = interface
 
     /// <summary>
-    /// Возвращает подсказку для компонента, метаданные которого указаны в параметре hintMeta.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
-    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
-
-    /// <summary>
     /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
     ///
     /// </summary>
     /// <remarks> </remarks>
-    procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
-
-    /// <summary>
-    /// Возвращает список подсказок, применимых для списка идентификаторов, взятых из компонента.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
-    procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
-    function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
-    procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
-
-    procedure registerHintMeta(propertyName: String; component: PTypeInfo);
+    procedure GetHints(Control: TControl; filename: String; completion: TOPPHelpHintLoadCompletion); overload;
 
     procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
 
-    property OnGetHintConfigurationFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read getOnHintTextsFileNameRequest write setOnHintTextsFileNameRequest;
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -65,8 +46,7 @@ type
     fHintMetaDict: TDictionary<TSymbolName, String>;
 
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
-    fOnHintTextsFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest;
-    procedure reloadConfigurationIfNeed();
+    procedure reloadConfigurationIfNeed(filename: String);
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
   public
@@ -76,8 +56,8 @@ type
     destructor Destroy; override;
 
     function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
-    procedure GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion); overload;
-    procedure GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
+    procedure GetHints(Control: TControl; filename: String; completion: TOPPHelpHintLoadCompletion); overload;
+    procedure GetHints(hintsMetaList: TOPPHintIdList; filename: String; completion: TOPPHelpHintLoadCompletion); overload;
 
     procedure registerHintMeta(propertyName: String; component: PTypeInfo);
 
@@ -85,10 +65,6 @@ type
     procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
-
-    function getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
-    procedure setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
-    property OnGetHintConfigurationFileNameRequest: TOPPHelpHintServerOnHintTextsFilenameRequest read fOnHintTextsFileNameRequest write fOnHintTextsFileNameRequest;
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -136,15 +112,14 @@ end;
 
 { private }
 
-procedure TOPPHelpHintServer.reloadConfigurationIfNeed();
+procedure TOPPHelpHintServer.reloadConfigurationIfNeed(filename: String);
 var
-  fFileName: string;
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
 begin
   if fLoaded then
     exit;
 
-  if not Assigned(fOnHintTextsFileNameRequest) then
+  if Length(filename) = 0 then
     exit;
 
   fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpHintMap>; Error: Exception)
@@ -160,8 +135,7 @@ begin
       fHintMapSet.AddMaps(AList);
     end;
 
-  fFileName := fOnHintTextsFileNameRequest();
-  TOPPHelpHintMap.readJSON(fFileName, fOPPHelpHintMapJSONReadCallback);
+  TOPPHelpHintMap.readJSON(filename, fOPPHelpHintMapJSONReadCallback);
 
 end;
 
@@ -186,13 +160,13 @@ begin
     exit;
   end;
 
-  result := getReader(fMap.Predicate.fileName);
+  result := getReader(fMap.Predicate.filename);
   if Assigned(result) then
     exit;
 
   result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(fMap.Predicate.fileName);
-  fHintDataReaders.Add(fMap.Predicate.fileName, result);
+  result.loadData(fMap.Predicate.filename);
+  fHintDataReaders.Add(fMap.Predicate.filename, result);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -221,10 +195,6 @@ var
   fHintMap: TOPPHelpHintMap;
 begin
 
-  self.reloadConfigurationIfNeed();
-  if not fLoaded then
-    exit;
-
   fReader := findOrCreateReader(AHintIdentifier);
   if Assigned(fReader) then
   begin
@@ -241,14 +211,14 @@ begin
   result.Meta := hintMeta;
 end;
 
-procedure TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion);
+procedure TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList; filename: String; completion: TOPPHelpHintLoadCompletion);
 var
   fHintMeta: TOPPHelpMeta;
   fHint: TOPPHelpHint;
   result: TList<TOPPHelpHint>;
 begin
 
-  self.reloadConfigurationIfNeed();
+  self.reloadConfigurationIfNeed(filename);
   if not fLoaded then
   begin
     if Assigned(completion) then
@@ -268,14 +238,14 @@ begin
   completion(result);
 end;
 
-procedure TOPPHelpHintServer.GetHints(Control: TControl; completion: TOPPHelpHintLoadCompletion);
+procedure TOPPHelpHintServer.GetHints(Control: TControl; filename: String; completion: TOPPHelpHintLoadCompletion);
 var
   fChildrenHelpMetaList: TList<TOPPHelpMeta>;
   fChildHelpMeta: TOPPHelpMeta;
   fMetaIdentifier: TOPPHelpHintMapIdentifier;
 begin
 
-  self.reloadConfigurationIfNeed();
+  self.reloadConfigurationIfNeed(filename);
   if not fLoaded then
   begin
     if Assigned(completion) then
@@ -290,17 +260,7 @@ begin
     self.findOrCreateReader(fMetaIdentifier);
   end;
 
-  self.GetHints(fChildrenHelpMetaList, completion);
-end;
-
-function TOPPHelpHintServer.getOnHintTextsFileNameRequest(): TOPPHelpHintServerOnHintTextsFilenameRequest;
-begin
-  result := fOnHintTextsFileNameRequest;
-end;
-
-procedure TOPPHelpHintServer.setOnHintTextsFileNameRequest(value: TOPPHelpHintServerOnHintTextsFilenameRequest);
-begin
-  fOnHintTextsFileNameRequest := value;
+  self.GetHints(fChildrenHelpMetaList, filename, completion);
 end;
 
 procedure TOPPHelpHintServer.GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
@@ -319,7 +279,7 @@ begin
       begin
         fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);
         if Length(defaultPredicateFileName) > 0 then
-          fMap.Predicate.fileName := defaultPredicateFileName;
+          fMap.Predicate.filename := defaultPredicateFileName;
         fMapList.Add(fMap);
       end;
 
