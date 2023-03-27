@@ -2,8 +2,8 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = 'SampleForm'
-  ClientHeight = 818
-  ClientWidth = 1604
+  ClientHeight = 817
+  ClientWidth = 1590
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object SampleForm: TSampleForm
   TextHeight = 27
   object Panel1: TPanel
     Left = 0
-    Top = 736
-    Width = 1604
+    Top = 735
+    Width = 1590
     Height = 82
     Margins.Left = 6
     Margins.Top = 6
@@ -27,8 +27,6 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 735
-    ExplicitWidth = 1590
   end
   object GroupBox2: TGroupBox
     Left = 912

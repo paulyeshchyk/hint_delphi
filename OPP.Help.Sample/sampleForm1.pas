@@ -4,13 +4,16 @@ interface
 
 uses
   Vcl.Forms, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes,
+  System.Classes, System.Generics.Collections,
   Vcl.Controls, Vcl.StdCtrls, Vcl.Dialogs,
 
   Vcl.ExtCtrls, cxStyles, Data.DB, dxScreenTip,
   cxClasses, dxCustomHint, cxHint,
   OPP.Help.Shortcut.Server,
-  OPP.Help.Predicate, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
+  OPP.Help.Predicate,
+  OPP.Help.Hint,
+
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
   cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid;
 
@@ -40,7 +43,7 @@ type
     { Private declarations }
 
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
-    procedure fillGrid();
+    procedure onSaveHints(hints: TList<TOPPHelpHint>);
   public
     { Public declarations }
   end;
@@ -57,15 +60,14 @@ implementation
 
 uses
   OPP.Help.Vcl.Control.Styler,
-  OPP.Help.Hint.FormHelper,
   OPP.Help.Hint.Server,
   OPP.Help.Hint.Mapping,
-  OPP.Help.Hint,
 
   OPP.Help.System.Str,
   OPP.Help.Shortcut.Request,
   OPP.Help.nonatomic,
-  OPP.Help.View.FullScreen, System.Generics.Collections;
+  OPP.Help.View.FullScreen,
+  OPP.Help.Meta.Enumerator;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
@@ -102,7 +104,7 @@ end;
 
 procedure TSampleForm.Button3Click(Sender: TObject);
 begin
-  helpHintServer.GenerateMap(self,'.\help\hints\gulfstream_manual_rtf.rtf',
+  helpHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf',
     procedure(AList: TList<TOPPHelpHintMap>)
     begin
       helpHintServer.MergeMaps(AList);
@@ -126,14 +128,46 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
-  fillGrid;
-  self.loadHint(self, tipsRepo, cxHintController.HintStyle);
+  helpHintServer.OnGetHintConfigurationFileNameRequest := function(): string
+    begin
+      result := '.\help\mapping\hints_matrix.json';
+    end;
+
+  helpHintServer.getHints(self, self.onSaveHints);
 
   self.restyle();
 end;
 
-procedure TSampleForm.fillGrid;
+procedure TSampleForm.onSaveHints(hints: TList<TOPPHelpHint>);
+var
+  fHint: TOPPHelpHint;
+  fScreenTip: TdxScreenTip;
+  fScreenTipLink: TdxScreenTipLink;
+  fControl: TControl;
 begin
+  for fHint in hints do
+  begin
+    fControl := self.FindSubControl(fHint.Meta);
+    if not assigned(fControl) then
+      exit;
+
+    fScreenTip := tipsRepo.Items.add;
+    fScreenTip.Width := 789;
+
+    fScreenTip.Header.PlainText := true;
+    fScreenTip.Header.Text := ''; // Заголовок
+
+    fScreenTip.Description.PlainText := false;
+    fScreenTip.Description.Text := fHint.Data.rtf;
+
+    // fScreenTip.Footer.PlainText := true;
+    // fScreenTip.Footer.Text := 'Подвал';
+
+    fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.add;
+    fScreenTipLink.ScreenTip := fScreenTip;
+    fScreenTipLink.Control := fControl;
+
+  end;
 end;
 
 procedure TSampleForm.cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);

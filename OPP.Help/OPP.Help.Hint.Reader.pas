@@ -27,13 +27,13 @@ type
   private
     fLoaded: Boolean;
     fRichEditControl: TdxRichEditControl;
-    function getDocument(): IdxRichEditDocument;
-    function GetBookmark(AHintIdentifier: TOPPHelpMetaIdentifierType): IdxRichEditBookmark;
-    function GetParagraph(bookmark: IdxRichEditBookmark): IdxRichEditParagraph; overload;
-    function GetParagraph(position: IdxRichEditDocumentPosition): IdxRichEditParagraph; overload;
-    function GetPlainText(paragraph: IdxRichEditParagraph): String;
-    function GetRichText(paragraph: IdxRichEditParagraph): String;
-    property Document: IdxRichEditDocument read getDocument;
+    function getDocument(): dxRichEdit.NativeAPI.IdxRichEditDocument;
+    function GetBookmark(AHintIdentifier: TOPPHelpMetaIdentifierType): dxRichEdit.NativeAPI.IdxRichEditBookmark;
+    function GetParagraph(bookmark: dxRichEdit.NativeAPI.IdxRichEditBookmark): dxRichEdit.NativeAPI.IdxRichEditParagraph; overload;
+    function GetParagraph(position: dxRichEdit.NativeAPI.IdxRichEditDocumentPosition): dxRichEdit.NativeAPI.IdxRichEditParagraph; overload;
+    function GetPlainText(paragraph: dxRichEdit.NativeAPI.IdxRichEditParagraph): String;
+    function GetRichText(paragraph: dxRichEdit.NativeAPI.IdxRichEditParagraph): String;
+    property Document: dxRichEdit.NativeAPI.IdxRichEditDocument read getDocument;
   public
     constructor Create;
     destructor Destroy; override;
@@ -111,7 +111,7 @@ begin
 
 end;
 
-function TOPPHelpRichtextHintReader.getDocument(): IdxRichEditDocument;
+function TOPPHelpRichtextHintReader.getDocument(): dxRichEdit.NativeAPI.IdxRichEditDocument;
 begin
   result := nil;
   if not fLoaded then
@@ -119,7 +119,7 @@ begin
   result := fRichEditControl.Document;
 end;
 
-function TOPPHelpRichtextHintReader.GetBookmark(AHintIdentifier: TOPPHelpMetaIdentifierType): IdxRichEditBookmark;
+function TOPPHelpRichtextHintReader.GetBookmark(AHintIdentifier: TOPPHelpMetaIdentifierType): dxRichEdit.NativeAPI.IdxRichEditBookmark;
 begin
   result := nil;
   if Length(AHintIdentifier) = 0 then
@@ -127,7 +127,7 @@ begin
   result := Document.bookmarks.items[AHintIdentifier];
 end;
 
-function TOPPHelpRichtextHintReader.GetParagraph(bookmark: IdxRichEditBookmark): IdxRichEditParagraph;
+function TOPPHelpRichtextHintReader.GetParagraph(bookmark: dxRichEdit.NativeAPI.IdxRichEditBookmark): dxRichEdit.NativeAPI.IdxRichEditParagraph;
 begin
   result := nil;
   if not Assigned(bookmark) then
@@ -135,7 +135,7 @@ begin
   result := Document.Paragraphs.Get(bookmark.range.Start);
 end;
 
-function TOPPHelpRichtextHintReader.GetParagraph(position: IdxRichEditDocumentPosition): IdxRichEditParagraph;
+function TOPPHelpRichtextHintReader.GetParagraph(position: dxRichEdit.NativeAPI.IdxRichEditDocumentPosition): dxRichEdit.NativeAPI.IdxRichEditParagraph;
 begin
   result := nil;
   if not Assigned(position) then
@@ -143,7 +143,7 @@ begin
   result := Document.Paragraphs.Get(position);
 end;
 
-function TOPPHelpRichtextHintReader.GetPlainText(paragraph: IdxRichEditParagraph): String;
+function TOPPHelpRichtextHintReader.GetPlainText(paragraph: dxRichEdit.NativeAPI.IdxRichEditParagraph): String;
 var
   fragmentOptions: TdxRichEditTextFragmentOptions;
 begin
@@ -157,7 +157,7 @@ begin
   result := Document.GetText(paragraph.range, fragmentOptions);
 end;
 
-function TOPPHelpRichtextHintReader.GetRichText(paragraph: IdxRichEditParagraph): String;
+function TOPPHelpRichtextHintReader.GetRichText(paragraph: dxRichEdit.NativeAPI.IdxRichEditParagraph): String;
 begin
   result := '';
   if not Assigned(paragraph) then

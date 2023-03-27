@@ -103,13 +103,11 @@ requires
   dxSkinXmas2008BlueRS25;
 
 contains
-  OPP.Help.Hint.FormHelper in '..\OPP.Help\OPP.Help.Hint.FormHelper.pas',
   OPP.Help.Hint.Mapping.Filereader in '..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas',
   OPP.Help.Hint.Mapping in '..\OPP.Help\OPP.Help.Hint.Mapping.pas',
   OPP.Help.Hint in '..\OPP.Help\OPP.Help.Hint.pas',
   OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
   OPP.Help.Hint.Server in '..\OPP.Help\OPP.Help.Hint.Server.pas',
-  OPP.Help.JSON in '..\OPP.Help\OPP.Help.JSON.pas',
   OPP.Help.Meta.Enumerator in '..\OPP.Help\OPP.Help.Meta.Enumerator.pas',
   OPP.Help.Meta in '..\OPP.Help\OPP.Help.Meta.pas',
   OPP.Help.Nonatomic in '..\OPP.Help\OPP.Help.Nonatomic.pas',
@@ -123,7 +121,6 @@ contains
   OPP.Help.System.Thread in '..\OPP.Help\OPP.Help.System.Thread.pas',
   OPP.Help.Vcl.Control.Styler in '..\OPP.Help\OPP.Help.Vcl.Control.Styler.pas',
   OPP.Help.View.Fullscreen in '..\OPP.Help\OPP.Help.View.Fullscreen.pas',
-  OPP.Help.View.Hint in '..\OPP.Help\OPP.Help.View.Hint.pas',
   OPP.Help.View in '..\OPP.Help\OPP.Help.View.pas',
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
   OPP.Help.System.Stream in '..\OPP.Help\OPP.Help.System.Stream.pas',

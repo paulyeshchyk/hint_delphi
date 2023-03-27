@@ -196,13 +196,11 @@
         <DCCReference Include="dxSkinVS2010RS25.dcp"/>
         <DCCReference Include="dxSkinWhiteprintRS25.dcp"/>
         <DCCReference Include="dxSkinXmas2008BlueRS25.dcp"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.FormHelper.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Reader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.JSON.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.Enumerator.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Nonatomic.pas"/>
@@ -216,7 +214,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Thread.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Vcl.Control.Styler.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.View.Fullscreen.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.View.Hint.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.View.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>
