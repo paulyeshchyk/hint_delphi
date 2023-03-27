@@ -10,7 +10,6 @@ object SampleForm: TSampleForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -28,6 +27,8 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 735
+    ExplicitWidth = 1590
   end
   object GroupBox2: TGroupBox
     Left = 912
@@ -223,6 +224,6 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 256
     Top = 296
-    PixelsPerInch = 96
+    PixelsPerInch = 192
   end
 end

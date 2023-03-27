@@ -25,7 +25,6 @@ type
   end;
 
 implementation
-uses OppObjControl;
 
 function TOPPHelpComponentEnumerator.GetHelpMeta: TOPPHelpMeta;
 begin
@@ -41,11 +40,11 @@ begin
     result.propertyName := 'HelpKeyword';
     result.identifier := (self as TCheckBox).HelpKeyword;
   end else begin
-    if self.ClassName = 'TOppObjControl' then begin
-      result.propertyName := 'TypeObject';
-      result.identifier := (self as TOppObjControl).TypeObject;
-      //
-    end;
+//    if self.ClassName = 'TOppObjControl' then begin
+//      result.propertyName := 'TypeObject';
+//      result.identifier := (self as TOppObjControl).TypeObject;
+//      //
+//    end;
     // nothing to do here
   end;
 
