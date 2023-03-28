@@ -44,6 +44,8 @@ type
     fHintMapSet: TOPPHelpHintMapSet;
 
     fHintMetaDict: TDictionary<TSymbolName, String>;
+    fFileName: String;
+    fIsActive: Boolean;
 
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     procedure reloadConfigurationIfNeed(filename: String);
@@ -65,6 +67,9 @@ type
     procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
+  published
+    property fileName: String read fFileName write fFileName;
+    property isActive: Boolean read fIsActive write fIsActive;
   end;
 
 //function helpHintServer: IOPPHelpHintServer;
