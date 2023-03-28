@@ -15,7 +15,7 @@ uses
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
   cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGrid, OPP.Help.Hint.Server;
 
 type
   TSampleForm = class(TForm)
@@ -32,6 +32,7 @@ type
     Kod_MKC: TEdit;
     Button1: TButton;
     Button2: TButton;
+    fHintServer: TOPPHelpHintServer;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -60,7 +61,7 @@ implementation
 
 uses
   OPP.Help.Vcl.Control.Styler,
-  OPP.Help.Hint.Server,
+//  OPP.Help.Hint.Server,
   OPP.Help.Hint.Mapping,
 
   OPP.Help.System.Str,
@@ -104,11 +105,11 @@ end;
 
 procedure TSampleForm.Button3Click(Sender: TObject);
 begin
-  helpHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf',
+  fHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf',
     procedure(AList: TList<TOPPHelpHintMap>)
     begin
-      helpHintServer.MergeMaps(AList);
-      helpHintServer.SaveMaps('.\help\mapping\hints_matrix.json');
+      fHintServer.MergeMaps(AList);
+      fHintServer.SaveMaps('.\help\mapping\hints_matrix.json');
     end);
 end;
 
@@ -128,7 +129,7 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
-  helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.onHintViewsCreate);
+  fHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.onHintViewsCreate);
 
   self.restyle();
 end;

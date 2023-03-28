@@ -27,6 +27,8 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 734
+    ExplicitWidth = 1576
   end
   object GroupBox2: TGroupBox
     Left = 912
@@ -223,5 +225,9 @@ object SampleForm: TSampleForm
     Left = 256
     Top = 296
     PixelsPerInch = 192
+  end
+  object fHintServer: TOPPHelpHintServer
+    Left = 472
+    Top = 320
   end
 end

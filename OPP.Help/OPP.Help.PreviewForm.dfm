@@ -74,27 +74,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       end
     end
   end
-  object oppHelpView: TOPPHelpViewFullScreen
-    Left = 0
-    Top = 48
-    Width = 1504
-    Height = 973
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
-    Align = alClient
-    BevelOuter = bvNone
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 5
-    ExplicitWidth = 1490
-    ExplicitHeight = 972
-  end
   object dxDockingManager1: TdxDockingManager
     AutoHideMovingSize = 40
     Color = clBtnFace
@@ -123,7 +102,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -140,7 +119,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     DockControlHeights = (
       0
       0
-      48
+      31
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'default'

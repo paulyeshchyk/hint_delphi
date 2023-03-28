@@ -38,7 +38,7 @@ type
 
   end;
 
-  TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
+  TOPPHelpHintServer = class(TComponent, IOPPHelpHintServer)
   private
     fLoaded: Boolean;
     fHintMapSet: TOPPHelpHintMapSet;
@@ -50,9 +50,9 @@ type
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
   public
-    property loaded: Boolean read fLoaded;
+    property isLoaded: Boolean read fLoaded;
 
-    constructor Create;
+    constructor Create(AOwner:TComponent);override;
     destructor Destroy; override;
 
     function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
@@ -67,7 +67,8 @@ type
     procedure SaveMaps(AFileName: String);
   end;
 
-function helpHintServer: IOPPHelpHintServer;
+//function helpHintServer: IOPPHelpHintServer;
+ procedure Register;
 
 implementation
 
@@ -76,24 +77,25 @@ uses
 
 var
   fLock: TCriticalSection;
-  fHelpHintServer: IOPPHelpHintServer;
+  //fHelpHintServer: IOPPHelpHintServer;
 
-function helpHintServer: IOPPHelpHintServer;
-begin
-  fLock.Acquire;
-  try
-    if not Assigned(fHelpHintServer) then
-    begin
-      fHelpHintServer := TOPPHelpHintServer.Create;
-    end;
-    result := fHelpHintServer;
-  finally
-    fLock.Release;
-  end;
-end;
+//function helpHintServer: IOPPHelpHintServer;
+//begin
+//  fLock.Acquire;
+//  try
+//    if not Assigned(fHelpHintServer) then
+//    begin
+//      fHelpHintServer := TOPPHelpHintServer.Create(nil);
+//    end;
+//    result := fHelpHintServer;
+//  finally
+//    fLock.Release;
+//  end;
+//end;
 
-constructor TOPPHelpHintServer.Create;
+constructor TOPPHelpHintServer.Create(AOwner: TComponent);
 begin
+  inherited Create(AOwner);
   fHintDataReaders := TDictionary<String, IOPPHelpHintDataReader>.Create();
   fHintMapSet := TOPPHelpHintMapSet.Create();
   fHintMetaDict := TDictionary<TSymbolName, String>.Create();
@@ -301,6 +303,12 @@ end;
 procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpHintMap>);
 begin
   fHintMapSet.MergeMaps(AList);
+end;
+
+
+procedure Register;
+begin
+  RegisterComponents('OPPHelp', [TOPPHelpHintServer])
 end;
 
 { private }
