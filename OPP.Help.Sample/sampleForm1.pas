@@ -32,6 +32,7 @@ type
     Kod_MKC: TEdit;
     Button1: TButton;
     Button2: TButton;
+    Panel2: TPanel;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -146,6 +147,7 @@ begin
     if not assigned(fControl) then
       exit;
 
+    fControl.ShowHint := true;
     fScreenTip := tipsRepo.Items.add;
     fScreenTip.Width := 789;
 

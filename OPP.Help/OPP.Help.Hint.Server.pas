@@ -147,12 +147,16 @@ function TOPPHelpHintServer.findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapI
 var
   fMap: TOPPHelpHintMap;
   fPredicate: TOPPHelpPredicate;
+  outStr: String;
 begin
   result := nil;
 
   fMap := fHintMapSet.GetMap(AMetaIdentifier);
-  if not Assigned(fMap) then
+  if not Assigned(fMap) then begin
+    outStr := Format('map not found for %s',[AMetaIdentifier]);
+    OutputDebugString(outStr.toWideChar);
     exit;
+  end;
   fPredicate := fMap.Predicate;
   if not Assigned(fPredicate) then
   begin

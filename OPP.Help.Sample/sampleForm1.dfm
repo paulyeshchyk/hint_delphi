@@ -10,6 +10,7 @@ object SampleForm: TSampleForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -209,6 +210,16 @@ object SampleForm: TSampleForm
       OnClick = Button2Click
     end
   end
+  object Panel2: TPanel
+    Left = 392
+    Top = 328
+    Width = 185
+    Height = 41
+    Caption = 'Panel2'
+    ParentShowHint = False
+    ShowHint = False
+    TabOrder = 3
+  end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
     HintStyle.ScreenTipLinks = <>
@@ -222,6 +233,6 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 256
     Top = 296
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
 end

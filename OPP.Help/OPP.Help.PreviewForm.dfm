@@ -10,6 +10,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
@@ -42,8 +43,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Font.Height = -22
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 1020
-    ExplicitWidth = 1490
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4
@@ -76,27 +75,15 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   end
   object oppHelpView: TOPPHelpViewFullScreen
     Left = 0
-    Top = 48
+    Top = 25
     Width = 1504
-    Height = 973
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Height = 996
     Align = alClient
     BevelOuter = bvNone
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
+    Caption = 'oppHelpView'
     TabOrder = 5
-    ExplicitWidth = 1490
-    ExplicitHeight = 972
   end
   object dxDockingManager1: TdxDockingManager
-    AutoHideMovingSize = 40
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
@@ -108,22 +95,19 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
-    DockZonesWidth = 40
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -22
+    Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ResizeZonesWidth = 6
-    SelectionFrameWidth = 8
     Left = 304
     Top = 256
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -136,11 +120,11 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     UseSystemFont = True
     Left = 640
     Top = 328
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      48
+      25
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'default'
