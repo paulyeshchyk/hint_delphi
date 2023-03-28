@@ -39,6 +39,8 @@ type
     procedure openInternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
     procedure openExternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
     function sendOpenPage(AProcessHandle: THandle; Predicate: TOPPHelpPredicate): TOPPMessagePipeSendResult;
+    /// <remarks> copyright https://stackoverflow.com/a/12949757 </remarks>
+    function ForceForegroundWindow(hwnd: THandle): Boolean;
   public
     function loadPDF(AFileName: String): TMemoryStream;
     function exportControl(AControl: TControl): Boolean;
@@ -193,7 +195,10 @@ begin
       end else begin
 
         for hwnd in AList do
+        begin
           sendOpenPage(hwnd, APredicate);
+          ForceForegroundWindow(hwnd);
+        end;
 
         if Assigned(completion) then
           completion(prSuccess);
@@ -224,6 +229,55 @@ begin
       end);
   finally
     fMessagePipe.Free;
+  end;
+end;
+
+function TOPPHelpShortcutServer.ForceForegroundWindow(hwnd: THandle): Boolean;
+const
+  SPI_GETFOREGROUNDLOCKTIMEOUT = $2000;
+  SPI_SETFOREGROUNDLOCKTIMEOUT = $2001;
+var
+  ForegroundThreadID: DWORD;
+  ThisThreadID: DWORD;
+  timeout: DWORD;
+begin
+  if IsIconic(hwnd) then
+    ShowWindow(hwnd, SW_RESTORE);
+
+  if GetForegroundWindow = hwnd then
+    result := true
+  else
+  begin
+    // Windows 98/2000 doesn't want to foreground a window when some other
+    // window has keyboard focus
+
+    if ((Win32Platform = VER_PLATFORM_WIN32_NT) and (Win32MajorVersion > 4)) or ((Win32Platform = VER_PLATFORM_WIN32_WINDOWS) and ((Win32MajorVersion > 4) or ((Win32MajorVersion = 4) and (Win32MinorVersion > 0)))) then
+    begin
+      result := False;
+      ForegroundThreadID := GetWindowThreadProcessID(GetForegroundWindow, nil);
+      ThisThreadID := GetWindowThreadProcessID(hwnd, nil);
+      if AttachThreadInput(ThisThreadID, ForegroundThreadID, true) then
+      begin
+        BringWindowToTop(hwnd); // IE 5.5 related hack
+        SetForegroundWindow(hwnd);
+        AttachThreadInput(ThisThreadID, ForegroundThreadID, False);
+        result := (GetForegroundWindow = hwnd);
+      end;
+      if not result then
+      begin
+        // Code by Daniel P. Stasinski
+        SystemParametersInfo(SPI_GETFOREGROUNDLOCKTIMEOUT, 0, @timeout, 0);
+        SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT, 0, TObject(0), SPIF_SENDCHANGE);
+        BringWindowToTop(hwnd); // IE 5.5 related hack
+        SetForegroundWindow(hwnd);
+        SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT, 0, TObject(timeout), SPIF_SENDCHANGE);
+      end;
+    end else begin
+      BringWindowToTop(hwnd); // IE 5.5 related hack
+      SetForegroundWindow(hwnd);
+    end;
+
+    result := (GetForegroundWindow = hwnd);
   end;
 end;
 
