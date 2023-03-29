@@ -1,4 +1,4 @@
-unit OPP.Help.Meta.Factory;
+﻿unit OPP.Help.Meta.Factory;
 
 interface
 
@@ -8,30 +8,19 @@ uses
   OPP.Help.Meta;
 
 type
-  IOPPHelpMetaFactory = interface
-    /// <summary>
-    /// Возворащает список TOPPHelpMeta, применимых для данного компонента.
-    ///
-    /// Ключ для TOPPHelpMeta берётся из значения свойства компонента, указанного в аргументе propertyName
-    ///
-    /// </summary>
-    /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
 
-    {function GetChildrenHelpMeta(): TList<TOPPHelpMeta>;}
-  end;
-
-  TOPPHelpMetaHintFactory = class
+  TOPPHelpMetaHintFactory = class(TInterfacedObject, IOPPHelpMetaFactory)
   public
-    class function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
-    class function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
+    function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
+    function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
   end;
 
 implementation
 
-uses Vcl.Controls, Vcl.StdCtrls, Vcl.ExtCtrls,
+uses Vcl.Controls, Vcl.StdCtrls,
   OPP.Help.Component.Enumerator, OPP.Help.Log;
 
-class function TOPPHelpMetaHintFactory.GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
+function TOPPHelpMetaHintFactory.GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
 begin
 
   if not Assigned(AComponent) then
@@ -62,7 +51,7 @@ begin
 
 end;
 
-class function TOPPHelpMetaHintFactory.GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
+function TOPPHelpMetaHintFactory.GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
 var
   list: TList<TComponent>;
   child: TComponent;
@@ -73,7 +62,7 @@ begin
   list := AComponent.GetChildrenRecursive;
   for child in list do
   begin
-    fMeta := TOPPHelpMetaHintFactory.GetHintMeta(child);
+    fMeta := self.GetHintMeta(child);
     result.Add(fMeta)
   end;
 end;

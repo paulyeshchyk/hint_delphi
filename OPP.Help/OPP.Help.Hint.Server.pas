@@ -21,6 +21,7 @@ type
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpHintMap>);
 
+
   TOPPHelpHintServerOnHintTextsFilenameRequest = reference to function(): string;
 
   IOPPHelpHintServer = interface
@@ -36,6 +37,8 @@ type
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
 
+    procedure SetOnGetMetaFactory(AOnGetMetafactoryCompletion: IOPPHelpMetaFactory);
+    function GetOnGetMetaFactory: IOPPHelpMetaFactory;
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -44,14 +47,13 @@ type
     fHintMapSet: TOPPHelpHintMapSet;
 
     fHintMetaDict: TDictionary<TSymbolName, String>;
+    fOnGetMetaFactory: IOPPHelpMetaFactory;
 
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
     procedure reloadConfigurationIfNeed(filename: String);
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
   public
-    property loaded: Boolean read fLoaded;
-
     constructor Create;
     destructor Destroy; override;
 
@@ -59,12 +61,17 @@ type
     procedure GetHints(Control: TControl; filename: String; completion: TOPPHelpHintLoadCompletion); overload;
     procedure GetHints(hintsMetaList: TOPPHintIdList; filename: String; completion: TOPPHelpHintLoadCompletion); overload;
 
-    procedure registerHintMeta(propertyName: String; component: PTypeInfo);
+    procedure registerHintMeta(propertyName: String; Component: PTypeInfo);
 
     function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint; overload;
     procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
+
+    procedure SetOnGetMetaFactory(AOnGetMetafactoryCompletion: IOPPHelpMetaFactory);
+    function GetOnGetMetaFactory: IOPPHelpMetaFactory;
+    property OnGetMetaFactory: IOPPHelpMetaFactory read GetOnGetMetaFactory write SetOnGetMetaFactory;
+    property loaded: Boolean read fLoaded;
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -73,7 +80,6 @@ implementation
 
 uses
   OPP.Help.Hint.Mapping.Filereader, OPP.Help.System.Error,
-  OPP.Help.Meta.Factory,
   OPP.Help.Log;
 
 var
@@ -107,9 +113,19 @@ begin
   inherited Destroy;
 end;
 
-procedure TOPPHelpHintServer.registerHintMeta(propertyName: String; component: PTypeInfo);
+procedure TOPPHelpHintServer.registerHintMeta(propertyName: String; Component: PTypeInfo);
 begin
-  fHintMetaDict.Add(component.Name, propertyName);
+  fHintMetaDict.Add(Component.Name, propertyName);
+end;
+
+procedure TOPPHelpHintServer.SetOnGetMetaFactory(AOnGetMetafactoryCompletion: IOPPHelpMetaFactory);
+begin
+  fOnGetMetaFactory := AOnGetMetafactoryCompletion;
+end;
+
+function TOPPHelpHintServer.GetOnGetMetaFactory: IOPPHelpMetaFactory;
+begin
+  result := fOnGetMetaFactory;
 end;
 
 { private }
@@ -271,7 +287,13 @@ begin
     exit;
   end;
 
-  fChildrenHelpMetaList := TOPPHelpMetaHintFactory.GetChildrenHelpMeta(Control);
+  if not Assigned(fOnGetMetaFactory) then
+  begin
+    eventLogger.Log('GetHints - MetaFactory is not defined', lmError);
+    exit;
+  end;
+
+  fChildrenHelpMetaList := fOnGetMetaFactory.GetChildrenHelpMeta(Control);
   for fChildHelpMeta in fChildrenHelpMetaList do
   begin
     fMetaIdentifier := fChildHelpMeta.identifier;
@@ -289,9 +311,16 @@ var
   fMapList: TList<TOPPHelpHintMap>;
 begin
 
+  if not Assigned(fOnGetMetaFactory) then
+  begin
+    eventLogger.Log('GenerateMap - MetaFactory is not defined', lmError);
+    completion(nil);
+    exit;
+  end;
+
   fMapList := TList<TOPPHelpHintMap>.Create();
   try
-    fList := TOPPHelpMetaHintFactory.GetChildrenHelpMeta(AControl);
+    fList := fOnGetMetaFactory.GetChildrenHelpMeta(AControl);
     try
 
       for fMeta in fList do

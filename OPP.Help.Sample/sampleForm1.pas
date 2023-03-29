@@ -12,6 +12,7 @@ uses
   OPP.Help.Shortcut.Server,
   OPP.Help.Predicate,
   OPP.Help.Hint,
+  OPP.Help.Meta,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
   cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
@@ -42,8 +43,10 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
+    fMetaFactory: IOPPHelpMetaFactory;
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
+
   public
     { Public declarations }
   end;
@@ -69,7 +72,6 @@ uses
   OPP.Help.nonatomic,
   OPP.Help.View.FullScreen,
   OPP.Help.Component.Enumerator,
-  OPP.Help.Meta,
   OPP.Help.Meta.Factory;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
@@ -131,8 +133,10 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
+  fMetaFactory := TOPPHelpMetaHintFactory.Create;
   self.restyle();
 
+  helpHintServer.SetOnGetMetaFactory( fMetaFactory);
   helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.onHintViewsCreate);
 
 end;

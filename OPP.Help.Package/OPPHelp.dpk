@@ -130,7 +130,6 @@ contains
   OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
   OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas',
   OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas',
-  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas',
-  OPP.Help.Meta.Factory in '..\OPP.Help\OPP.Help.Meta.Factory.pas';
+  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas';
 
 end.
