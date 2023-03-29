@@ -89,7 +89,7 @@ begin
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
   self.restyle();
 
-  helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.OnCreateHintViewsCreate, self.OnGetHintFactory);
+  helpHintServer.GetHints(self, '.\help\mapping\hints_matrix.json', self.OnCreateHintViewsCreate, self.OnGetHintFactory);
 
 end;
 

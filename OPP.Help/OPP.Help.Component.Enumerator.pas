@@ -11,7 +11,6 @@ type
 
   TOPPHelpComponentEnumerator = class helper for TComponent
   public
-
     function GetChildrenRecursive(): TList<TComponent>;
     function FindSubControl(Meta: TOPPHelpMeta): TControl;
   end;

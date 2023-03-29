@@ -42,6 +42,7 @@ type
   private
     fShortcutDataset: TOPPHelpShortcutDataset;
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
+
     procedure openInternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
     procedure openExternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
     function sendOpenPage(AProcessHandle: THandle; Predicate: TOPPHelpPredicate): TOPPMessagePipeSendResult;
@@ -50,9 +51,10 @@ type
   public
     function loadPDF(AFileName: String): TMemoryStream;
     function exportControl(AControl: TControl): Boolean;
-    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
-    procedure showHelp(AViewerClassInfo: Pointer; ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
     procedure killExternalViewer();
+
+    procedure showHelp(AViewerClassInfo: Pointer; ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
+    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
