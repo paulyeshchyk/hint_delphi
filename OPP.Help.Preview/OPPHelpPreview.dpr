@@ -6,11 +6,9 @@ uses
 
 {$R *.res}
 
-var
-  f: TOPPHelpPreviewForm;
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TOPPHelpPreviewForm, f);
+  Application.CreateForm(TOPPHelpPreviewForm, OPPHelpPreviewForm);
   Application.Run;
 end.

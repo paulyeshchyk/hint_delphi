@@ -74,8 +74,8 @@ type
     procedure runPredicate(APredicate: TOPPHelpPredicate);
   end;
 
-  // var
-  // OPPHelpPreviewForm: TOPPHelpPreviewForm;
+   var
+   OPPHelpPreviewForm: TOPPHelpPreviewForm;
 
 implementation
 

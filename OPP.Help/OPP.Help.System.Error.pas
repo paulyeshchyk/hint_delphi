@@ -29,6 +29,7 @@ implementation
 
 uses
   WinAPI.Windows,
+  OPP.Help.Log,
   OPP.Help.System.Str;
 
 procedure ErrorHelper.Log;

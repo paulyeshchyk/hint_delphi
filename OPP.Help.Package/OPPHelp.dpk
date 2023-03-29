@@ -129,6 +129,7 @@ contains
   OPP.Help.Predicate in '..\OPP.Help\OPP.Help.Predicate.pas',
   OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
   OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas',
-  OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas';
+  OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas',
+  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas';
 
 end.

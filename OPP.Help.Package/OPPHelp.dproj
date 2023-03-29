@@ -225,6 +225,7 @@
         </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
         <None Include="..\OPP.Help\notes\readme.md"/>
         <None Include="..\OPP.Help\notes\hints_matrix.json"/>
         <None Include="..\OPP.Help\notes\shortcut_matrix.json"/>
