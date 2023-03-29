@@ -1,4 +1,4 @@
-unit OPP.Help.Meta;
+﻿unit OPP.Help.Meta;
 
 interface
 
@@ -8,6 +8,7 @@ uses
   OPP.Help.Nonatomic;
 
 type
+
   TOPPHelpMeta = record
     propertyName: String;
     identifier: TOPPHelpMetaIdentifierType;

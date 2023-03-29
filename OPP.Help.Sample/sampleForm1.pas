@@ -136,7 +136,11 @@ begin
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
   self.restyle();
 
-  helpHintServer.SetOnGetMetaFactory( fMetaFactory);
+  helpHintServer.SetOnGetMetaFactory( function():IOPPHelpMetaFactory
+    begin
+      result := fMetaFactory;
+    end
+  );
   helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.onHintViewsCreate);
 
 end;
