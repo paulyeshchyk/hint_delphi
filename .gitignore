@@ -8,3 +8,5 @@ __recovery/
 *__recovery*
 *.tvsconfig
 *.skincfg
+*.dcu
+*.dsk
