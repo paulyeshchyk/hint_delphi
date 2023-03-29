@@ -102,7 +102,7 @@ object SampleForm: TSampleForm
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
-      Caption = 'Button3'
+      Caption = 'Generate mapping'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -225,8 +225,6 @@ object SampleForm: TSampleForm
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
     UseHintControlLookAndFeel = True
-    OnShowHint = cxHintControllerShowHint
-    OnShowHintEx = cxHintControllerShowHintEx
     Left = 168
     Top = 288
   end

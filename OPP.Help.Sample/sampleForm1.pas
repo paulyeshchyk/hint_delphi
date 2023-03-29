@@ -13,6 +13,7 @@ uses
   OPP.Help.Predicate,
   OPP.Help.Hint,
   OPP.Help.Meta,
+  OPP.Help.Hint.Mapping,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
   cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
@@ -38,14 +39,16 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
-    procedure cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     fMetaFactory: IOPPHelpMetaFactory;
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
-    procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
+    { -- events -- }
+    procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
+    function OnGetHintFactory(): IOPPHelpMetaFactory;
+    procedure OnGenerateHint(AList: TList<TOPPHelpHintMap>);
+    procedure OnShowHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
 
   public
     { Public declarations }
@@ -65,7 +68,6 @@ uses
   OPP.Help.Log,
   OPP.Help.Controls.Styler,
   OPP.Help.Hint.Server,
-  OPP.Help.Hint.Mapping,
 
   OPP.Help.System.Str,
   OPP.Help.Shortcut.Request,
@@ -74,20 +76,32 @@ uses
   OPP.Help.Component.Enumerator,
   OPP.Help.Meta.Factory;
 
+procedure TSampleForm.FormCreate(Sender: TObject);
+begin
+
+  fMetaFactory := TOPPHelpMetaHintFactory.Create;
+  self.restyle();
+
+  helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.OnCreateHintViewsCreate, self.OnGetHintFactory);
+
+end;
+
+procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  // fHintBuilder.Free;
+  helpShortcutServer.killExternalViewer;
+end;
+
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
   fPredicate: TOPPHelpPredicate;
 begin
-  fPredicate := TOPPHelpPredicate.Create;
+  fPredicate := TOPPHelpPredicate.Create();
   fPredicate.keywordType := ktPage;
   fPredicate.value := '18';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate, vmInternal,
-    procedure(ACompletionResult: TOPPHelpShortcutPresentingResult)
-    begin
-      //
-    end);
+  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
@@ -100,52 +114,36 @@ begin
   fPredicate.value := '12';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate, vmExternal,
-    procedure(completionResult: TOPPHelpShortcutPresentingResult)
-    begin
-      //
-    end);
+  helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult);
 end;
 
 procedure TSampleForm.Button3Click(Sender: TObject);
 begin
-  helpHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf',
-    procedure(AList: TList<TOPPHelpHintMap>)
-    begin
-      helpHintServer.MergeMaps(AList);
-      helpHintServer.SaveMaps('.\help\mapping\hints_matrix.json');
-    end);
+  helpHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf', OnGenerateHint, OnGetHintFactory);
 end;
 
-procedure TSampleForm.WMHELP(var Msg: TWMHelp);
+{ -- events -- }
+
+procedure TSampleForm.OnShowHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
 var
-  fShortcutRequest: TOPPHelpShortcutRequest;
+  strmessage: String;
 begin
-  fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
-  helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-    procedure(completionResult: TOPPHelpShortcutPresentingResult)
-    begin
-      if completionResult = prFail then
-        ShowMessage('Nothing to show');
-    end);
+  strmessage := Format('show help completion result: %d', [Integer(completionResult)]);
+  eventLogger.Log(strmessage);
 end;
 
-procedure TSampleForm.FormCreate(Sender: TObject);
+procedure TSampleForm.OnGenerateHint(AList: TList<TOPPHelpHintMap>);
 begin
-
-  fMetaFactory := TOPPHelpMetaHintFactory.Create;
-  self.restyle();
-
-  helpHintServer.SetOnGetMetaFactory( function():IOPPHelpMetaFactory
-    begin
-      result := fMetaFactory;
-    end
-  );
-  helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.onHintViewsCreate);
-
+  helpHintServer.MergeMaps(AList);
+  helpHintServer.SaveMaps('.\help\mapping\hints_matrix.json');
 end;
 
-procedure TSampleForm.onHintViewsCreate(hints: TList<TOPPHelpHint>);
+function TSampleForm.OnGetHintFactory(): IOPPHelpMetaFactory;
+begin
+  result := fMetaFactory;
+end;
+
+procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
   fControl: TControl;
@@ -180,21 +178,18 @@ begin
   end;
 end;
 
-procedure TSampleForm.cxHintControllerShowHint(Sender: TObject; var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
+{ -- message handlers }
+procedure TSampleForm.WMHELP(var Msg: TWMHelp);
+var
+  fShortcutRequest: TOPPHelpShortcutRequest;
 begin
-  HintInfo.ReshowTimeout := MaxInt;
-end;
-
-procedure TSampleForm.cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
-begin
-  HintInfo.ReshowTimeout := MaxInt;
-  eventLogger.Log('will show hint');
-end;
-
-procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  // fHintBuilder.Free;
-  helpShortcutServer.killExternalViewer;
+  fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
+  helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
+    procedure(completionResult: TOPPHelpShortcutPresentingResult)
+    begin
+      if completionResult = prFail then
+        ShowMessage('Nothing to show');
+    end);
 end;
 
 initialization
