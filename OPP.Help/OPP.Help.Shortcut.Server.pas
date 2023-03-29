@@ -32,7 +32,7 @@ type
 
   IOPPHelpShortcutServer = interface
     function exportControl(AControl: TControl): Boolean;
-    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
+    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure showHelp(AViewerClassInfo: Pointer; ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
     function loadPDF(AFileName: String): TMemoryStream;
     procedure killExternalViewer();
@@ -43,8 +43,8 @@ type
     fShortcutDataset: TOPPHelpShortcutDataset;
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
 
-    procedure openInternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
-    procedure openExternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+    procedure openInternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
+    procedure openExternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
     function sendOpenPage(AProcessHandle: THandle; Predicate: TOPPHelpPredicate): TOPPMessagePipeSendResult;
     /// <remarks> copyright https://stackoverflow.com/a/12949757 </remarks>
     function ForceForegroundWindow(hwnd: THandle): Boolean;
@@ -53,8 +53,8 @@ type
     function exportControl(AControl: TControl): Boolean;
     procedure killExternalViewer();
 
+    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure showHelp(AViewerClassInfo: Pointer; ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
-    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -135,13 +135,13 @@ begin
   result := fStream;
 end;
 
-procedure TOPPHelpShortcutServer.showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+procedure TOPPHelpShortcutServer.showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
 begin
   case viewMode of
     vmInternal:
-      openInternalViewer(AViewerClassInfo, APredicate, completion, onGetIdentifier);
+      openInternalViewer(AViewerClassInfo, APredicate, completion);
     vmExternal:
-      openExternalViewer(AViewerClassInfo, APredicate, completion, onGetIdentifier);
+      openExternalViewer(AViewerClassInfo, APredicate, completion);
   end;
 end;
 
@@ -166,7 +166,7 @@ begin
     exit;
   end;
 
-  showHelp(AViewerClassInfo, fMapping.Predicate, viewMode, completion, onGetIdentifier);
+  showHelp(AViewerClassInfo, fMapping.Predicate, viewMode, completion);
 end;
 
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
@@ -174,7 +174,7 @@ begin
   result := true;
 end;
 
-procedure TOPPHelpShortcutServer.openInternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+procedure TOPPHelpShortcutServer.openInternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
 var
   result: Boolean;
   fViewer: TForm;
@@ -219,7 +219,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpShortcutServer.openExternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+procedure TOPPHelpShortcutServer.openExternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
 begin
   TOPPHelpSystemAppExecutor.Execute(OPPViewerProcessName, AViewerClassInfo,
     procedure(AList: TList<THandle>; executionResult: TOPPHelpSystemAppExecutionResultType)

@@ -135,7 +135,7 @@ begin
   fPredicate.value := '12';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmExternal, OnShowHelpResult, onGetShortcutIdentifier);
+  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmExternal, OnShowHelpResult);
 end;
 
 procedure TSampleForm.internalHelpViewerButtonClick(Sender: TObject);
@@ -146,7 +146,7 @@ begin
   fPredicate.keywordType := ktPage;
   fPredicate.value := '18';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
-  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmInternal, OnShowHelpResult, onGetShortcutIdentifier);
+  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmInternal, OnShowHelpResult);
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
