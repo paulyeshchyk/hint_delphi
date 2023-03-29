@@ -43,6 +43,8 @@ type
   private
     { Private declarations }
     fMetaFactory: IOPPHelpMetaFactory;
+    function GetWinControlHelpKeyword(AControl: TControl): String;
+    { -- messages -- }
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     { -- events -- }
     function onGetShortcutIdentifier(AControl: TControl): String;
@@ -125,26 +127,27 @@ begin
   helpHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf', OnGenerateHint, OnGetHintFactory);
 end;
 
+function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
+begin
+  if not Assigned(AControl) then
+  begin
+    result := '';
+    exit;
+  end;
+
+  eventLogger.Log(AControl.ClassName);
+  if Length(AControl.HelpKeyword) <> 0 then
+  begin
+    result := AControl.HelpKeyword;
+    exit;
+  end;
+
+  result := GetWinControlHelpKeyword(AControl.Parent);
+end;
+
 { -- events -- }
 
 function TSampleForm.onGetShortcutIdentifier(AControl: TControl): String;
-  function GetWinControlHelpKeyword(AControl: TControl): String;
-  begin
-    if not Assigned(AControl) then
-    begin
-      result := '';
-      exit;
-    end;
-
-    eventLogger.Log(AControl.ClassName);
-    if Length(AControl.HelpKeyword) <> 0 then
-    begin
-      result := AControl.HelpKeyword;
-      exit;
-    end;
-
-    result := GetWinControlHelpKeyword(AControl.Parent);
-  end;
 
 begin
   result := GetWinControlHelpKeyword(AControl);
@@ -190,7 +193,7 @@ begin
   begin
 
     fControl := self.FindSubControl(fHint.Meta);
-    if not assigned(fControl) then
+    if not Assigned(fControl) then
       exit;
 
     fControl.ShowHint := true;
