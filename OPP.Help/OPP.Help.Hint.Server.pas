@@ -54,9 +54,9 @@ type
     ///
     /// </summary>
     /// <remarks> </remarks>
-    procedure GetHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
+    procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
-    procedure GenerateMap(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
+    procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
   end;
@@ -79,9 +79,9 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure GetHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
+    procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
-    procedure GenerateMap(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
+    procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
 
@@ -269,7 +269,7 @@ begin
   completion(result);
 end;
 
-procedure TOPPHelpHintServer.GetHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion);
+procedure TOPPHelpHintServer.LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion);
 var
   fChildrenHelpMetaList: TList<TOPPHelpMeta>;
   fChildHelpMeta: TOPPHelpMeta;
@@ -305,7 +305,7 @@ begin
   self.GetHints(ARequest, fChildrenHelpMetaList, completion);
 end;
 
-procedure TOPPHelpHintServer.GenerateMap(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
+procedure TOPPHelpHintServer.SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
 var
   fList: TList<TOPPHelpMeta>;
   fMeta: TOPPHelpMeta;

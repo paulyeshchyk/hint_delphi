@@ -95,7 +95,7 @@ begin
     fRequest.mappingFileName := '.\help\mapping\hints_matrix.json';
     fRequest.control := self;
     fRequest.OnGetHintFactory := OnGetHintFactory;
-    helpHintServer.GetHints(fRequest, self.OnCreateHintViewsCreate);
+    helpHintServer.LoadHints(fRequest, self.OnCreateHintViewsCreate);
   finally
     fRequest.Free;
   end;
@@ -119,7 +119,7 @@ begin
     fRequest.DefaultPredicateFileName := '.\help\hints\gulfstream_manual_rtf.rtf';
     fRequest.control := self;
     fRequest.OnGetHintFactory := OnGetHintFactory;
-    helpHintServer.GenerateMap(fRequest, OnGenerateHint);
+    helpHintServer.SaveHints(fRequest, OnGenerateHint);
   finally
     fRequest.Free;
   end;
