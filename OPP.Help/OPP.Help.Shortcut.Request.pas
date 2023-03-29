@@ -25,7 +25,7 @@ type
 
 implementation
 
-uses OPP.Help.System.Str;
+uses OPP.Help.System.Str, OPP.Help.Log;
 
 constructor TOPPHelpShortcutRequest.Create(activeControl: TWinControl; msg: TWMHelp);
 var
@@ -35,21 +35,18 @@ begin
   fMsg := msg;
   fActiveControl := activeControl;
 
-  activecontrolclassname := activeControl.ClassName;
-  OutputDebugString(activecontrolclassname.toWideChar);
+  logger.Log(activeControl.ClassName);
 end;
 
 function TOPPHelpShortcutRequest.GetShortcutIdentifier(): String;
   function GetWinControlHelpKeyword(AControl: TWinControl): String;
-  var output: String;
   begin
     if not Assigned(AControl) then begin
       result := '';
       exit;
     end;
 
-    output := AControl.ClassName;
-    OutputDebugString(output.toWideChar);
+    logger.Log(AControl.ClassName);
 
 
     if Length(AControl.HelpKeyword) <> 0 then begin

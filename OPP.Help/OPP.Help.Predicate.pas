@@ -8,7 +8,7 @@ uses
   OPP.Help.Nonatomic;
 
 type
-  TOPPHelpPredicate = class (TObject)
+  TOPPHelpPredicate = class(TObject)
   private
     fValue: String;
     fKeywordType: TOPPKeywordType;
@@ -56,7 +56,7 @@ begin
 
   self.value := AStream.ReadString;
   self.keywordType := TOPPKeywordType(AStream.ReadInteger);
-  self.filename := AStream.ReadString;
+  self.fileName := AStream.ReadString;
   result := true;
 
 end;

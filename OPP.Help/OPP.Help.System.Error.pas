@@ -37,7 +37,7 @@ var
   output: String;
 begin
   output := Format('Error: %s (%s)', [self.ClassName, self.message]);
-  WinAPI.Windows.OutputDebugString(output.toWideChar);
+  logger.Log(output, lmError);
 end;
 
 constructor TOPPHelpShortcutDatasetError.Create(errorCode: Integer; errorMessage: String; errorClass: String);

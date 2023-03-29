@@ -27,8 +27,12 @@ var
 begin
 
   case messageType of
-    lmInfo: outresult := Format('[Info]: %s',[AString]);
-    lmError: outresult := Format('[Error]: %s',[AString]);
+    lmInfo:
+      outresult := Format('[Info]: %s', [AString]);
+    lmError:
+      outresult := Format('[Error]: %s', [AString]);
+    lmWarning:
+      outresult := Format('[Warning]: %s', [AString]);
   end;
   OutputDebugString(outresult.toWideChar);
 end;

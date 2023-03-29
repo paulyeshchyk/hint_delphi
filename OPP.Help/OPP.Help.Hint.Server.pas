@@ -123,6 +123,8 @@ begin
   if Length(filename) = 0 then
     exit;
 
+  logger.Log('will load config');
+
   fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpHintMap>; Error: Exception)
     begin
 

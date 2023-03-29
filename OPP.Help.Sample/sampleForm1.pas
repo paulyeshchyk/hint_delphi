@@ -32,7 +32,7 @@ type
     Kod_MKC: TEdit;
     Button1: TButton;
     Button2: TButton;
-    Panel2: TPanel;
+    paNavbar: TPanel;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);

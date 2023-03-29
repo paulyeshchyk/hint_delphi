@@ -210,12 +210,12 @@ object SampleForm: TSampleForm
       OnClick = Button2Click
     end
   end
-  object Panel2: TPanel
+  object paNavbar: TPanel
     Left = 392
     Top = 328
     Width = 185
     Height = 41
-    Caption = 'Panel2'
+    Caption = 'paNavbar'
     ParentShowHint = False
     ShowHint = False
     TabOrder = 3
