@@ -14,12 +14,17 @@ uses
   OPP.Help.Shortcut.Request,
   OPP.Help.Shortcut.Mapping,
   OPP.Help.System.Messaging,
-  OPP.Help.System.Messaging.Pipe,
-  OPP.Help.PreviewForm;
+  OPP.Help.System.Messaging.Pipe;
 
 type
+
+  IOPPHelpShortcutViewer = interface
+    ['{097D4F69-916A-4CB4-AB5F-E88D9BA1BB76}']
+    procedure runPredicate(APredicate: TOPPHelpPredicate);
+    procedure PresentModal;
+  end;
+
   TOPPHelpViewMode = (vmInternal, vmExternal);
-  TPreviewFormClass = class of TOPPHelpPreviewForm;
 
   TOPPHelpShortcutPresentingResult = (prSuccess, prFail);
   TOPPHelpShortcutPresentingCompletion = reference to procedure(APresentingResult: TOPPHelpShortcutPresentingResult);
@@ -27,8 +32,8 @@ type
 
   IOPPHelpShortcutServer = interface
     function exportControl(AControl: TControl): Boolean;
-    procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
-    procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
+    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
+    procedure showHelp(AViewerClassInfo: Pointer; ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
     function loadPDF(AFileName: String): TMemoryStream;
     procedure killExternalViewer();
   end;
@@ -37,16 +42,16 @@ type
   private
     fShortcutDataset: TOPPHelpShortcutDataset;
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
-    procedure openInternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
-    procedure openExternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+    procedure openInternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+    procedure openExternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
     function sendOpenPage(AProcessHandle: THandle; Predicate: TOPPHelpPredicate): TOPPMessagePipeSendResult;
     /// <remarks> copyright https://stackoverflow.com/a/12949757 </remarks>
     function ForceForegroundWindow(hwnd: THandle): Boolean;
   public
     function loadPDF(AFileName: String): TMemoryStream;
     function exportControl(AControl: TControl): Boolean;
-    procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
-    procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
+    procedure showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
+    procedure showHelp(AViewerClassInfo: Pointer; ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier); overload;
     procedure killExternalViewer();
 
     constructor Create(AOwner: TComponent); override;
@@ -63,7 +68,8 @@ implementation
 uses
   OPP.Help.System.AppExecutor,
   OPP.Help.System.Str,
-  OPP.Help.Log;
+  OPP.Help.Log,
+  System.TypInfo;
 
 const
   shortcutJSONFileName: String = 'help\mapping\shortcut_matrix.json';
@@ -127,23 +133,24 @@ begin
   result := fStream;
 end;
 
-procedure TOPPHelpShortcutServer.showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+procedure TOPPHelpShortcutServer.showHelp(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 begin
   case viewMode of
     vmInternal:
-      openInternalViewer(APredicate, completion, onGetIdentifier);
+      openInternalViewer(AViewerClassInfo, APredicate, completion, onGetIdentifier);
     vmExternal:
-      openExternalViewer(APredicate, completion, onGetIdentifier);
+      openExternalViewer(AViewerClassInfo, APredicate, completion, onGetIdentifier);
   end;
 end;
 
-procedure TOPPHelpShortcutServer.showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+procedure TOPPHelpShortcutServer.showHelp(AViewerClassInfo: Pointer; ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 var
   fMapping: TOPPHelpShortcutMap;
   fShortcutIdentifier: String;
 begin
 
-  if not Assigned(onGetIdentifier) then begin
+  if not Assigned(onGetIdentifier) then
+  begin
     eventLogger.Log('shortcutserver - onGetIdentifier is not defined', lmError);
     exit;
   end;
@@ -157,7 +164,7 @@ begin
     exit;
   end;
 
-  showHelp(fMapping.Predicate, viewMode, completion, onGetIdentifier);
+  showHelp(AViewerClassInfo, fMapping.Predicate, viewMode, completion, onGetIdentifier);
 end;
 
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
@@ -165,10 +172,11 @@ begin
   result := true;
 end;
 
-procedure TOPPHelpShortcutServer.openInternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+procedure TOPPHelpShortcutServer.openInternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 var
-  fPreviewForm: TOPPHelpPreviewForm;
   result: Boolean;
+  fViewer: TForm;
+  clazzType:TClass;
 begin
   result := Assigned(APredicate);
   if not result then
@@ -178,22 +186,40 @@ begin
     exit;
   end else begin
 
-    fPreviewForm := TOPPHelpPreviewForm.Create(nil);
-    try
-      fPreviewForm.runPredicate(APredicate);
-      fPreviewForm.showModal;
-    finally
-      FreeAndNil(fPreviewForm);
+    clazzType := GetTypeData(AViewerClassInfo).ClassType;
+    if not clazzType.InheritsFrom(TForm) then begin
+      eventLogger.Log('viewer is not supporting TFormClass', lmError);
+      exit;
     end;
+
+    if not Supports(clazzType, IOPPHelpShortcutViewer) then begin
+      eventLogger.Log('viewer is not supporting IOPPHelpShortcutViewer', lmError);
+      exit;
+    end;
+
+    fViewer := TFormClass(clazzType).Create(nil);
+    if not assigned(fViewer) then begin
+      eventLogger.Log('viewer was not created', lmError);
+      exit;
+    end;
+
+
+    try
+      (fViewer as IOPPHelpShortcutViewer).RunPredicate(APredicate);
+      (fViewer as IOPPHelpShortcutViewer).PresentModal;
+    finally
+      FreeAndNil(fViewer);
+    end;
+
     if Assigned(completion) then
       completion(prSuccess);
 
   end;
 end;
 
-procedure TOPPHelpShortcutServer.openExternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+procedure TOPPHelpShortcutServer.openExternalViewer(AViewerClassInfo: Pointer; APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion; onGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 begin
-  TOPPHelpSystemAppExecutor.Execute(OPPViewerProcessName, TOPPHelpPreviewForm,
+  TOPPHelpSystemAppExecutor.Execute(OPPViewerProcessName, AViewerClassInfo,
     procedure(AList: TList<THandle>; executionResult: TOPPHelpSystemAppExecutionResultType)
     var
       hwnd: THandle;

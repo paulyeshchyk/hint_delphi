@@ -4,9 +4,11 @@ interface
 
 uses
   System.Generics.Collections,
+  System.TypInfo,
   WinAPI.Windows, Vcl.Forms,
 
-  OPP.Help.System.Messaging;
+  OPP.Help.System.Messaging,
+  OPP.Help.Nonatomic;
 
 type
   TOPPHelpSystemAppExecutionResultType = (rtFailedDueUnableToRunProcess, rtNewInstance, rtExistingInstance);
@@ -15,20 +17,21 @@ type
 
   TOPPHelpSystemAppExecutor = class
   public
-    class procedure Execute(Appname: String; AWindowClass: TClass; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal = 300);
+    class procedure Execute(Appname: String; AViewerClassInfo: Pointer; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal = 300);
   end;
 
 implementation
 
 { TOPPHelpSystemAppExecutor }
 
-class procedure TOPPHelpSystemAppExecutor.Execute(Appname: String; AWindowClass: TClass; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal);
+class procedure TOPPHelpSystemAppExecutor.Execute(Appname: String; AViewerClassInfo: Pointer; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal);
 var
   fWindowClassHandleList: TList<THandle>;
   fSelfHandle: THandle;
   fOPPViewerClassName: String;
 begin
-  fOPPViewerClassName := AWindowClass.classname;
+
+  fOPPViewerClassName := GetTypeData(AViewerClassInfo).ClassType.ClassName;
 
   fSelfHandle := Application.Handle;
 

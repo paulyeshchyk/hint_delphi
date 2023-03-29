@@ -2,7 +2,7 @@ program OPPHelpPreview;
 
 uses
   Vcl.Forms,
-  OPP.Help.PreviewForm;
+  OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas';
 
 {$R *.res}
 

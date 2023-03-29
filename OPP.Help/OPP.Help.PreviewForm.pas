@@ -9,6 +9,8 @@ uses
 
   OPP.Help.View, OPP.Help.View.Fullscreen, OPP.Help.Predicate,
 
+  OPP.Help.Shortcut.Server,
+
   System.Classes, System.SysUtils, System.Variants,
   Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls,
   Winapi.Messages, Winapi.Windows, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
@@ -32,7 +34,7 @@ type
 
   TOPPHelpPreviewFormState = (fsCreated, fsLoading, fsHandlingMessage, fsSearching, fsSearchProgressing, fsSearchFinishing, fsIdle);
 
-  TOPPHelpPreviewForm = class(TForm, IOPPHelpViewEventListener)
+  TOPPHelpPreviewForm = class(TForm, IOPPHelpViewEventListener, IOPPHelpShortcutViewer)
     dxStatusBar1: TdxStatusBar;
     dxStatusBar1Container0: TdxStatusBarContainerControl;
     cxProgressBar1: TcxProgressBar;
@@ -71,6 +73,8 @@ type
 
   public
     { Public declarations }
+    function GetContainerClassName: String;
+    procedure presentModal();
     procedure runPredicate(APredicate: TOPPHelpPredicate);
   end;
 
@@ -83,9 +87,17 @@ implementation
 
 uses
 
-  OPP.Help.System.Stream,
+  OPP.Help.System.Stream;
 
-  OPP.Help.Shortcut.Server;
+function TOPPHelpPreviewForm.GetContainerClassName: String;
+begin
+  result := self.className;
+end;
+
+procedure TOPPHelpPreviewForm.PresentModal;
+begin
+  ShowModal;
+end;
 
 procedure TOPPHelpPreviewForm.setIsTreeVisible(AValue: Boolean);
 begin

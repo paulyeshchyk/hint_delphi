@@ -220,9 +220,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Events.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Predicate.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.PreviewForm.pas">
-            <Form>OPPHelpPreviewForm</Form>
-        </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>

@@ -79,7 +79,9 @@ uses
   OPP.Help.nonatomic,
   OPP.Help.View.FullScreen,
   OPP.Help.Component.Enumerator,
-  OPP.Help.Meta.Factory;
+  OPP.Help.Meta.Factory,
+  OPP.Help.PreviewForm
+  ;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
@@ -105,8 +107,7 @@ begin
   fPredicate.keywordType := ktPage;
   fPredicate.value := '18';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
-
-  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult, onGetShortcutIdentifier);
+  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmInternal, OnShowHelpResult, onGetShortcutIdentifier);
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
@@ -119,7 +120,7 @@ begin
   fPredicate.value := '12';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult, onGetShortcutIdentifier);
+  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmExternal, OnShowHelpResult, onGetShortcutIdentifier);
 end;
 
 procedure TSampleForm.Button3Click(Sender: TObject);
@@ -221,7 +222,7 @@ var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
-  helpShortcutServer.showHelp(fShortcutRequest, vmExternal, OnShowShortcutHelpResult, onGetShortcutIdentifier);
+  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fShortcutRequest, vmExternal, OnShowShortcutHelpResult, onGetShortcutIdentifier);
 end;
 
 initialization
