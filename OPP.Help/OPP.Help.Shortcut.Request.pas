@@ -12,53 +12,28 @@ type
   TOPPHelpShortcutRequest = class
   private
     fMsg: TWMHelp;
-    fActiveControl: TWinControl;
+    fActiveControl: TControl;
 
-    function GetShortcutIdentifier(): String;
   public
-    constructor Create(activeControl: TWinControl; msg: TWMHelp);
+    constructor Create(AActiveControl: TControl; msg: TWMHelp);
 
     property msg: TWMHelp read fMsg;
-    property activeControl: TWinControl read fActiveControl;
-    property shortcutIdentifier: String read GetShortcutIdentifier;
+    property ActiveControl: TControl read fActiveControl;
   end;
 
 implementation
 
-uses OPP.Help.System.Str, OPP.Help.Log;
+uses OPP.Help.Log;
 
-constructor TOPPHelpShortcutRequest.Create(activeControl: TWinControl; msg: TWMHelp);
+constructor TOPPHelpShortcutRequest.Create(AActiveControl: TControl; msg: TWMHelp);
 var
   activecontrolclassname: String;
 begin
   inherited Create;
   fMsg := msg;
-  fActiveControl := activeControl;
+  fActiveControl := AActiveControl;
 
-  eventLogger.Log(activeControl.ClassName);
-end;
-
-function TOPPHelpShortcutRequest.GetShortcutIdentifier(): String;
-  function GetWinControlHelpKeyword(AControl: TWinControl): String;
-  begin
-    if not Assigned(AControl) then
-    begin
-      result := '';
-      exit;
-    end;
-
-    eventLogger.Log(AControl.ClassName);
-    if Length(AControl.HelpKeyword) <> 0 then
-    begin
-      result := AControl.HelpKeyword;
-      exit;
-    end;
-
-    result := GetWinControlHelpKeyword(AControl.Parent);
-  end;
-
-begin
-  result := GetWinControlHelpKeyword(fActiveControl);
+  eventLogger.Log(fActiveControl.ClassName);
 end;
 
 end.

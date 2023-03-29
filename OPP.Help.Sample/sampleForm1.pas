@@ -45,6 +45,9 @@ type
     fMetaFactory: IOPPHelpMetaFactory;
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     { -- events -- }
+    function onGetShortcutIdentifier(AControl: TControl): String;
+    procedure OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
+    { -- events -- }
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
     function OnGetHintFactory(): IOPPHelpMetaFactory;
     procedure OnGenerateHint(AList: TList<TOPPHelpHintMap>);
@@ -101,7 +104,7 @@ begin
   fPredicate.value := '18';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
+  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult, onGetShortcutIdentifier);
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
@@ -114,12 +117,43 @@ begin
   fPredicate.value := '12';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult);
+  helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult, onGetShortcutIdentifier);
 end;
 
 procedure TSampleForm.Button3Click(Sender: TObject);
 begin
   helpHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf', OnGenerateHint, OnGetHintFactory);
+end;
+
+{ -- events -- }
+
+function TSampleForm.onGetShortcutIdentifier(AControl: TControl): String;
+  function GetWinControlHelpKeyword(AControl: TControl): String;
+  begin
+    if not Assigned(AControl) then
+    begin
+      result := '';
+      exit;
+    end;
+
+    eventLogger.Log(AControl.ClassName);
+    if Length(AControl.HelpKeyword) <> 0 then
+    begin
+      result := AControl.HelpKeyword;
+      exit;
+    end;
+
+    result := GetWinControlHelpKeyword(AControl.Parent);
+  end;
+
+begin
+  result := GetWinControlHelpKeyword(AControl);
+end;
+
+procedure TSampleForm.OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
+begin
+  if completionResult = prFail then
+    ShowMessage('Nothing to show');
 end;
 
 { -- events -- }
@@ -149,7 +183,6 @@ var
   fControl: TControl;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
-
 begin
   eventLogger.Log('will create screentips');
 
@@ -179,17 +212,13 @@ begin
 end;
 
 { -- message handlers }
+
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
 var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
-  helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-    procedure(completionResult: TOPPHelpShortcutPresentingResult)
-    begin
-      if completionResult = prFail then
-        ShowMessage('Nothing to show');
-    end);
+  helpShortcutServer.showHelp(fShortcutRequest, vmExternal, OnShowShortcutHelpResult, onGetShortcutIdentifier);
 end;
 
 initialization
