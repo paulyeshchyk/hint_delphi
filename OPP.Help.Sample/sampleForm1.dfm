@@ -158,7 +158,7 @@ object SampleForm: TSampleForm
       Height = 24
       Hint = 'cxHint test'
       HelpType = htKeyword
-      HelpKeyword = 'Kod_MKC'
+      HelpKeyword = 'bvMain'
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -227,8 +227,8 @@ object SampleForm: TSampleForm
     UseHintControlLookAndFeel = True
     OnShowHint = cxHintControllerShowHint
     OnShowHintEx = cxHintControllerShowHintEx
-    Left = 160
-    Top = 248
+    Left = 168
+    Top = 288
   end
   object tipsRepo: TdxScreenTipRepository
     Left = 256

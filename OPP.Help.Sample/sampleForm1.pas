@@ -42,7 +42,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
-
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
   public
@@ -61,7 +60,7 @@ implementation
 
 uses
   OPP.Help.Log,
-  OPP.Help.Vcl.Control.Styler,
+  OPP.Help.Controls.Styler,
   OPP.Help.Hint.Server,
   OPP.Help.Hint.Mapping,
 
@@ -69,7 +68,9 @@ uses
   OPP.Help.Shortcut.Request,
   OPP.Help.nonatomic,
   OPP.Help.View.FullScreen,
-  OPP.Help.Meta.Enumerator;
+  OPP.Help.Component.Enumerator,
+  OPP.Help.Meta,
+  OPP.Help.Meta.Factory;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
 var
@@ -130,17 +131,19 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
 
+  self.restyle();
+
   helpHintServer.getHints(self, '.\help\mapping\hints_matrix.json', self.onHintViewsCreate);
 
-  self.restyle();
 end;
 
 procedure TSampleForm.onHintViewsCreate(hints: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
+  fControl: TControl;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
-  fControl: TControl;
+
 begin
   eventLogger.Log('will create screentips');
 
@@ -152,7 +155,8 @@ begin
       exit;
 
     fControl.ShowHint := true;
-    fScreenTip := tipsRepo.Items.add;
+
+    fScreenTip := tipsRepo.Items.Add;
     fScreenTip.Width := 789;
 
     fScreenTip.Header.PlainText := true;
@@ -161,7 +165,7 @@ begin
     fScreenTip.Description.PlainText := false;
     fScreenTip.Description.Text := fHint.Data.rtf;
 
-    fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.add;
+    fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
     fScreenTipLink.ScreenTip := fScreenTip;
     fScreenTipLink.Control := fControl;
 
@@ -181,6 +185,7 @@ end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  // fHintBuilder.Free;
   helpShortcutServer.killExternalViewer;
 end;
 

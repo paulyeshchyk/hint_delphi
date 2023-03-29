@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Vcl.Control.Styler;
+﻿unit OPP.Help.Controls.Styler;
 
 interface
 
@@ -32,6 +32,7 @@ end;
 
 procedure TButtonStyler.restyle;
 begin
+
 end;
 
 procedure TLabelStyler.restyle;

@@ -31,7 +31,7 @@ constructor TOPPHelpShortcutRequest.Create(activeControl: TWinControl; msg: TWMH
 var
   activecontrolclassname: String;
 begin
-  inherited create;
+  inherited Create;
   fMsg := msg;
   fActiveControl := activeControl;
 
@@ -41,27 +41,24 @@ end;
 function TOPPHelpShortcutRequest.GetShortcutIdentifier(): String;
   function GetWinControlHelpKeyword(AControl: TWinControl): String;
   begin
-    if not Assigned(AControl) then begin
+    if not Assigned(AControl) then
+    begin
       result := '';
       exit;
     end;
 
     eventLogger.Log(AControl.ClassName);
-
-
-    if Length(AControl.HelpKeyword) <> 0 then begin
+    if Length(AControl.HelpKeyword) <> 0 then
+    begin
       result := AControl.HelpKeyword;
       exit;
     end;
 
     result := GetWinControlHelpKeyword(AControl.Parent);
-
   end;
 
 begin
   result := GetWinControlHelpKeyword(fActiveControl);
 end;
-
-
 
 end.

@@ -8,7 +8,7 @@ uses
   WinAPI.Windows,
   VCL.Controls,
   //
-  OPP.Help.Hint, OPP.Help.Meta.Enumerator,
+  OPP.Help.Hint, OPP.Help.Component.Enumerator,
   //
   OPP.Help.Nonatomic,
   OPP.Help.System.Str,
@@ -73,6 +73,7 @@ implementation
 
 uses
   OPP.Help.Hint.Mapping.Filereader, OPP.Help.System.Error,
+  OPP.Help.Meta.Factory,
   OPP.Help.Log;
 
 var
@@ -270,7 +271,7 @@ begin
     exit;
   end;
 
-  fChildrenHelpMetaList := Control.GetChildrenHelpMeta();
+  fChildrenHelpMetaList := TOPPHelpMetaHintFactory.GetChildrenHelpMeta(Control);
   for fChildHelpMeta in fChildrenHelpMetaList do
   begin
     fMetaIdentifier := fChildHelpMeta.identifier;
@@ -290,7 +291,7 @@ begin
 
   fMapList := TList<TOPPHelpHintMap>.Create();
   try
-    fList := AControl.GetChildrenHelpMeta();
+    fList := TOPPHelpMetaHintFactory.GetChildrenHelpMeta(AControl);
     try
 
       for fMeta in fList do

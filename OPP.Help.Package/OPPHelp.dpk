@@ -108,7 +108,7 @@ contains
   OPP.Help.Hint in '..\OPP.Help\OPP.Help.Hint.pas',
   OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
   OPP.Help.Hint.Server in '..\OPP.Help\OPP.Help.Hint.Server.pas',
-  OPP.Help.Meta.Enumerator in '..\OPP.Help\OPP.Help.Meta.Enumerator.pas',
+  OPP.Help.Component.Enumerator in '..\OPP.Help\OPP.Help.Component.Enumerator.pas',
   OPP.Help.Meta in '..\OPP.Help\OPP.Help.Meta.pas',
   OPP.Help.Nonatomic in '..\OPP.Help\OPP.Help.Nonatomic.pas',
   OPP.Help.Shortcut.Dataset in '..\OPP.Help\OPP.Help.Shortcut.Dataset.pas',
@@ -119,7 +119,7 @@ contains
   OPP.Help.System.Error in '..\OPP.Help\OPP.Help.System.Error.pas',
   OPP.Help.System.Str in '..\OPP.Help\OPP.Help.System.Str.pas',
   OPP.Help.System.Thread in '..\OPP.Help\OPP.Help.System.Thread.pas',
-  OPP.Help.Vcl.Control.Styler in '..\OPP.Help\OPP.Help.Vcl.Control.Styler.pas',
+  OPP.Help.Controls.Styler in '..\OPP.Help\OPP.Help.Controls.Styler.pas',
   OPP.Help.View.Fullscreen in '..\OPP.Help\OPP.Help.View.Fullscreen.pas',
   OPP.Help.View in '..\OPP.Help\OPP.Help.View.pas',
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
@@ -130,6 +130,7 @@ contains
   OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
   OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas',
   OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas',
-  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas';
+  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas',
+  OPP.Help.Meta.Factory in '..\OPP.Help\OPP.Help.Meta.Factory.pas';
 
 end.

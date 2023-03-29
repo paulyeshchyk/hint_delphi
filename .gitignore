@@ -7,3 +7,4 @@ __recovery/
 *.res
 *__recovery*
 *.tvsconfig
+*.skincfg
