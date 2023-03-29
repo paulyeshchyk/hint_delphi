@@ -60,6 +60,7 @@ implementation
 {$ENDIF}
 
 uses
+  OPP.Help.Log,
   OPP.Help.Vcl.Control.Styler,
   OPP.Help.Hint.Server,
   OPP.Help.Hint.Mapping,
@@ -141,8 +142,11 @@ var
   fScreenTipLink: TdxScreenTipLink;
   fControl: TControl;
 begin
+  eventLogger.Log('will create screentips');
+
   for fHint in hints do
   begin
+
     fControl := self.FindSubControl(fHint.Meta);
     if not assigned(fControl) then
       exit;
@@ -172,6 +176,7 @@ end;
 procedure TSampleForm.cxHintControllerShowHintEx(Sender: TObject; var Caption, HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
 begin
   HintInfo.ReshowTimeout := MaxInt;
+  eventLogger.Log('will show hint');
 end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);

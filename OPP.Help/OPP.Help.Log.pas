@@ -10,12 +10,11 @@ type
     procedure Log(AString: String; messageType: TOPPLogMessageType = lmInfo);
   end;
 
-function logger: TOPPHelpLog;
+function eventLogger: TOPPHelpLog;
 
 implementation
 
 uses
-
   System.SyncObjs,
   System.SysUtils,
   WinAPI.Windows,
@@ -39,29 +38,29 @@ end;
 
 { ------------ }
 var
-  fLock: TCriticalSection;
-  fLog: TOPPHelpLog;
+  fInfoLogLock: TCriticalSection;
+  fInfoLog: TOPPHelpLog;
 
-function logger: TOPPHelpLog;
+function eventLogger: TOPPHelpLog;
 begin
-  fLock.Acquire;
+  fInfoLogLock.Acquire;
   try
-    if not Assigned(fLog) then
+    if not Assigned(fInfoLog) then
     begin
-      fLog := TOPPHelpLog.Create;
+      fInfoLog := TOPPHelpLog.Create;
     end;
-    result := fLog;
+    result := fInfoLog;
   finally
-    fLock.Release;
+    fInfoLogLock.Release;
   end;
 end;
 
 initialization
 
-fLock := TCriticalSection.Create;
+fInfoLogLock := TCriticalSection.Create;
 
 finalization
 
-fLock.Free;
+fInfoLogLock.Free;
 
 end.

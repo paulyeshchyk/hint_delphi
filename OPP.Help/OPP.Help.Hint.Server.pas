@@ -123,7 +123,7 @@ begin
   if Length(filename) = 0 then
     exit;
 
-  logger.Log('will load config');
+  eventLogger.Log('will load config');
 
   fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpHintMap>; Error: Exception)
     begin
@@ -161,17 +161,17 @@ begin
   if not mapWasFound then
   begin
     outStr := Format('map not found for %s', [AMetaIdentifier]);
-    logger.Log(outStr, lmWarning);
+    eventLogger.Log(outStr, lmWarning);
     exit;
   end;
 
   outStr := Format('map was found for %s', [AMetaIdentifier]);
-  logger.Log(outStr, lmInfo);
+  eventLogger.Log(outStr, lmInfo);
 
   fPredicate := fMap.Predicate;
   if not Assigned(fPredicate) then
   begin
-    logger.Log('!!! PREDICATE NOT FOUND!!!', lmError);
+    eventLogger.Log('!!! PREDICATE NOT FOUND!!!', lmError);
     exit;
   end;
 
@@ -260,6 +260,8 @@ var
   fMetaIdentifier: TOPPHelpHintMapIdentifier;
 begin
 
+  eventLogger.Log('Hintserver.gethints(Control)');
+
   self.reloadConfigurationIfNeed(filename);
   if not fLoaded then
   begin
@@ -290,6 +292,7 @@ begin
   try
     fList := AControl.GetChildrenHelpMeta();
     try
+
       for fMeta in fList do
       begin
         fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);

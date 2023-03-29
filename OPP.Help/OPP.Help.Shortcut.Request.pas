@@ -35,7 +35,7 @@ begin
   fMsg := msg;
   fActiveControl := activeControl;
 
-  logger.Log(activeControl.ClassName);
+  eventLogger.Log(activeControl.ClassName);
 end;
 
 function TOPPHelpShortcutRequest.GetShortcutIdentifier(): String;
@@ -46,7 +46,7 @@ function TOPPHelpShortcutRequest.GetShortcutIdentifier(): String;
       exit;
     end;
 
-    logger.Log(AControl.ClassName);
+    eventLogger.Log(AControl.ClassName);
 
 
     if Length(AControl.HelpKeyword) <> 0 then begin
