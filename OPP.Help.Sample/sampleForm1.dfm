@@ -2,15 +2,14 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = 'SampleForm'
-  ClientHeight = 817
-  ClientWidth = 1590
+  ClientHeight = 815
+  ClientWidth = 1562
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -18,8 +17,8 @@ object SampleForm: TSampleForm
   TextHeight = 27
   object Panel1: TPanel
     Left = 0
-    Top = 735
-    Width = 1590
+    Top = 733
+    Width = 1562
     Height = 82
     Margins.Left = 6
     Margins.Top = 6
@@ -28,6 +27,8 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 732
+    ExplicitWidth = 1548
   end
   object GroupBox2: TGroupBox
     Left = 912
@@ -93,7 +94,7 @@ object SampleForm: TSampleForm
       TabOrder = 1
       Text = 'Edit1'
     end
-    object Button3: TButton
+    object generateHintMappingButton: TButton
       Left = 412
       Top = 122
       Width = 150
@@ -110,7 +111,7 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
-      OnClick = Button3Click
+      OnClick = generateHintMappingButtonClick
     end
   end
   object GroupBox1: TGroupBox
@@ -169,7 +170,7 @@ object SampleForm: TSampleForm
       TabOrder = 1
       Text = 'Kod_MKC'
     end
-    object Button1: TButton
+    object internalHelpViewerButton: TButton
       Left = 604
       Top = 126
       Width = 150
@@ -186,9 +187,9 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 3
-      OnClick = Button1Click
+      OnClick = internalHelpViewerButtonClick
     end
-    object Button2: TButton
+    object externalHelpViewerButton: TButton
       Left = 604
       Top = 48
       Width = 150
@@ -207,7 +208,7 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
-      OnClick = Button2Click
+      OnClick = externalHelpViewerButtonClick
     end
   end
   object paNavbar: TPanel
@@ -231,6 +232,6 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 256
     Top = 296
-    PixelsPerInch = 96
+    PixelsPerInch = 192
   end
 end

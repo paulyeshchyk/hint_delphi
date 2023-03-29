@@ -28,18 +28,18 @@ type
     Label1: TLabel;
     CheckBox1: TCheckBox;
     Edit1: TEdit;
-    Button3: TButton;
+    generateHintMappingButton: TButton;
     GroupBox1: TGroupBox;
     Kod_OKWED: TCheckBox;
     Kod_MKC: TEdit;
-    Button1: TButton;
-    Button2: TButton;
+    internalHelpViewerButton: TButton;
+    externalHelpViewerButton: TButton;
     paNavbar: TPanel;
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
+    procedure externalHelpViewerButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure generateHintMappingButtonClick(Sender: TObject);
+    procedure internalHelpViewerButtonClick(Sender: TObject);
   private
     { Private declarations }
     fMetaFactory: IOPPHelpMetaFactory;
@@ -80,16 +80,25 @@ uses
   OPP.Help.View.FullScreen,
   OPP.Help.Component.Enumerator,
   OPP.Help.Meta.Factory,
-  OPP.Help.PreviewForm
-  ;
+  OPP.Help.PreviewForm;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
+var
+  fRequest: TOPPHelpHintMappingLoadRequest;
 begin
 
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
   self.restyle();
 
-  helpHintServer.GetHints(self, '.\help\mapping\hints_matrix.json', self.OnCreateHintViewsCreate, self.OnGetHintFactory);
+  fRequest := TOPPHelpHintMappingLoadRequest.Create;
+  try
+    fRequest.mappingFileName := '.\help\mapping\hints_matrix.json';
+    fRequest.control := self;
+    fRequest.OnGetHintFactory := OnGetHintFactory;
+    helpHintServer.GetHints(fRequest, self.OnCreateHintViewsCreate);
+  finally
+    fRequest.Free;
+  end;
 
 end;
 
@@ -99,18 +108,24 @@ begin
   helpShortcutServer.killExternalViewer;
 end;
 
-procedure TSampleForm.Button1Click(Sender: TObject);
+
+procedure TSampleForm.generateHintMappingButtonClick(Sender: TObject);
 var
-  fPredicate: TOPPHelpPredicate;
+  fRequest: TOPPHelpHintMappingSaveRequest;
 begin
-  fPredicate := TOPPHelpPredicate.Create();
-  fPredicate.keywordType := ktPage;
-  fPredicate.value := '18';
-  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
-  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmInternal, OnShowHelpResult, onGetShortcutIdentifier);
+  fRequest := TOPPHelpHintMappingSaveRequest.Create;
+  try
+    fRequest.mappingFileName := '.\help\mapping\hints_matrix__.json';
+    fRequest.DefaultPredicateFileName := '.\help\hints\gulfstream_manual_rtf.rtf';
+    fRequest.control := self;
+    fRequest.OnGetHintFactory := OnGetHintFactory;
+    helpHintServer.GenerateMap(fRequest, OnGenerateHint);
+  finally
+    fRequest.Free;
+  end;
 end;
 
-procedure TSampleForm.Button2Click(Sender: TObject);
+procedure TSampleForm.externalHelpViewerButtonClick(Sender: TObject);
 var
   fPredicate: TOPPHelpPredicate;
 begin
@@ -123,9 +138,15 @@ begin
   helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmExternal, OnShowHelpResult, onGetShortcutIdentifier);
 end;
 
-procedure TSampleForm.Button3Click(Sender: TObject);
+procedure TSampleForm.internalHelpViewerButtonClick(Sender: TObject);
+var
+  fPredicate: TOPPHelpPredicate;
 begin
-  helpHintServer.GenerateMap(self, '.\help\hints\gulfstream_manual_rtf.rtf', OnGenerateHint, OnGetHintFactory);
+  fPredicate := TOPPHelpPredicate.Create();
+  fPredicate.keywordType := ktPage;
+  fPredicate.value := '18';
+  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
+  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmInternal, OnShowHelpResult, onGetShortcutIdentifier);
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
@@ -171,9 +192,11 @@ begin
 end;
 
 procedure TSampleForm.OnGenerateHint(AList: TList<TOPPHelpHintMap>);
+var
+  strmessage: String;
 begin
-  helpHintServer.MergeMaps(AList);
-  helpHintServer.SaveMaps('.\help\mapping\hints_matrix.json');
+  strmessage := Format('generated hints: %d', [Integer(AList.Count)]);
+  eventLogger.Log(strmessage);
 end;
 
 function TSampleForm.OnGetHintFactory(): IOPPHelpMetaFactory;
@@ -187,8 +210,10 @@ var
   fControl: TControl;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
+  s: String;
 begin
-  eventLogger.Log('will create screentips');
+  s := Format('will create screentips [%d]', [hints.Count]);
+  eventLogger.Log(s);
 
   for fHint in hints do
   begin
@@ -210,7 +235,7 @@ begin
 
     fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
     fScreenTipLink.ScreenTip := fScreenTip;
-    fScreenTipLink.Control := fControl;
+    fScreenTipLink.control := fControl;
 
   end;
 end;

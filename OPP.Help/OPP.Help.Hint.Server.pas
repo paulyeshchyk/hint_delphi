@@ -22,6 +22,31 @@ type
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpHintMap>);
   TOPPHelpHintServerOnGetMetaFactory = reference to function(): IOPPHelpMetaFactory;
 
+  TOPPHelpHintMappingRequest = class
+  private
+    fMappingFileName: String;
+    fControl: TControl;
+    fOnGetHintFactory: TOPPHelpHintServerOnGetMetaFactory;
+  public
+    property MappingFileName: String read fMappingFileName write fMappingFileName;
+    property Control: TControl read fControl write fControl;
+    property OnGetHintFactory: TOPPHelpHintServerOnGetMetaFactory read fOnGetHintFactory write fOnGetHintFactory;
+  end;
+
+  TOPPHelpHintMappingLoadRequest = class(TOPPHelpHintMappingRequest)
+  private
+    fReader: IOPPHelpHintDataReader;
+  public
+    property Reader: IOPPHelpHintDataReader read fReader write fReader;
+  end;
+
+  TOPPHelpHintMappingSaveRequest = class(TOPPHelpHintMappingRequest)
+  private
+    fDefaultPredicateFileName: String;
+  public
+    property DefaultPredicateFileName: String read fDefaultPredicateFileName write fDefaultPredicateFileName;
+  end;
+
   IOPPHelpHintServer = interface
 
     /// <summary>
@@ -29,9 +54,9 @@ type
     ///
     /// </summary>
     /// <remarks> </remarks>
-    procedure GetHints(Control: TControl; filename: String; completion: TOPPHelpHintLoadCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory); overload;
+    procedure GetHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
-    procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory);
+    procedure GenerateMap(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
   end;
@@ -44,6 +69,9 @@ type
     fHintMetaDict: TDictionary<TSymbolName, String>;
 
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
+    procedure GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
+    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint; overload;
+    function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
     procedure reloadConfigurationIfNeed(filename: String);
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -51,14 +79,9 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
-    procedure GetHints(Control: TControl; filename: String; completion: TOPPHelpHintLoadCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory); overload;
-    procedure GetHints(hintsMetaList: TOPPHintIdList; filename: String; completion: TOPPHelpHintLoadCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory); overload;
+    procedure GetHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
-    procedure registerHintMeta(propertyName: String; Component: PTypeInfo);
-
-    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint; overload;
-    procedure GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory);
+    procedure GenerateMap(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
 
@@ -102,11 +125,6 @@ destructor TOPPHelpHintServer.Destroy;
 begin
   fHintDataReaders := nil;
   inherited Destroy;
-end;
-
-procedure TOPPHelpHintServer.registerHintMeta(propertyName: String; Component: PTypeInfo);
-begin
-  fHintMetaDict.Add(Component.Name, propertyName);
 end;
 
 { private }
@@ -224,14 +242,14 @@ begin
   result.Meta := hintMeta;
 end;
 
-procedure TOPPHelpHintServer.GetHints(hintsMetaList: TOPPHintIdList; filename: String; completion: TOPPHelpHintLoadCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory);
+procedure TOPPHelpHintServer.GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion);
 var
   fHintMeta: TOPPHelpMeta;
   fHint: TOPPHelpHint;
   result: TList<TOPPHelpHint>;
 begin
 
-  self.reloadConfigurationIfNeed(filename);
+  self.reloadConfigurationIfNeed(ARequest.MappingFileName);
   if not fLoaded then
   begin
     if Assigned(completion) then
@@ -251,7 +269,7 @@ begin
   completion(result);
 end;
 
-procedure TOPPHelpHintServer.GetHints(Control: TControl; filename: String; completion: TOPPHelpHintLoadCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory);
+procedure TOPPHelpHintServer.GetHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion);
 var
   fChildrenHelpMetaList: TList<TOPPHelpMeta>;
   fChildHelpMeta: TOPPHelpMeta;
@@ -261,7 +279,7 @@ begin
 
   eventLogger.Log('Hintserver.gethints(Control)');
 
-  self.reloadConfigurationIfNeed(filename);
+  self.reloadConfigurationIfNeed(ARequest.MappingFileName);
   if not fLoaded then
   begin
     if Assigned(completion) then
@@ -269,25 +287,25 @@ begin
     exit;
   end;
 
-  if not Assigned(onGetHintFactory) then
+  if not Assigned(ARequest.OnGetHintFactory) then
   begin
-    eventLogger.Log('GetHints - MetaFactory is not defined', lmError);
+    eventLogger.Log('GetHints - OnGetHintFactory is not defined', lmError);
     exit;
   end;
 
-  fFactory := onGetHintFactory();
+  fFactory := ARequest.OnGetHintFactory();
 
-  fChildrenHelpMetaList := fFactory.GetChildrenHelpMeta(Control);
+  fChildrenHelpMetaList := fFactory.GetChildrenHelpMeta(ARequest.Control);
   for fChildHelpMeta in fChildrenHelpMetaList do
   begin
     fMetaIdentifier := fChildHelpMeta.identifier;
     self.findOrCreateReader(fMetaIdentifier);
   end;
 
-  self.GetHints(fChildrenHelpMetaList, filename, completion, onGetHintFactory);
+  self.GetHints(ARequest, fChildrenHelpMetaList, completion);
 end;
 
-procedure TOPPHelpHintServer.GenerateMap(AControl: TControl; defaultPredicateFileName: String; completion: TOPPHelpMapGenerationCompletion; onGetHintFactory: TOPPHelpHintServerOnGetMetaFactory);
+procedure TOPPHelpHintServer.GenerateMap(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
 var
   fList: TList<TOPPHelpMeta>;
   fMeta: TOPPHelpMeta;
@@ -296,30 +314,35 @@ var
   fFactory: IOPPHelpMetaFactory;
 begin
 
-  if not Assigned(onGetHintFactory) then
+  if not Assigned(ARequest.OnGetHintFactory) then
   begin
-    eventLogger.Log('GenerateMap - MetaFactory is not defined', lmError);
+    eventLogger.Log('GenerateMap - OnGetHintFactory is not defined', lmError);
     completion(nil);
     exit;
   end;
 
-  fFactory:= onGetHintFactory();
+  fFactory := ARequest.OnGetHintFactory();
 
   fMapList := TList<TOPPHelpHintMap>.Create();
   try
-    fList := fFactory.GetChildrenHelpMeta(AControl);
+    fList := fFactory.GetChildrenHelpMeta(ARequest.Control);
     try
 
       for fMeta in fList do
       begin
         fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);
-        if Length(defaultPredicateFileName) > 0 then
-          fMap.Predicate.filename := defaultPredicateFileName;
+        if Length(ARequest.DefaultPredicateFileName) > 0 then
+          fMap.Predicate.filename := ARequest.DefaultPredicateFileName;
         fMapList.Add(fMap);
       end;
 
+      helpHintServer.MergeMaps(fMapList);
+      helpHintServer.SaveMaps(ARequest.MappingFileName);
+
       if Assigned(completion) then
+      begin
         completion(fMapList);
+      end;
     finally
       fList.Free;
     end;
