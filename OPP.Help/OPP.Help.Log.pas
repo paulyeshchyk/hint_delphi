@@ -3,7 +3,7 @@ unit OPP.Help.Log;
 interface
 
 type
-  TOPPLogMessageType = (lmInfo, lmError);
+  TOPPLogMessageType = (lmInfo, lmError, lmWarning);
 
   TOPPHelpLog = class
   public

@@ -72,7 +72,8 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
-  OPP.Help.Hint.Mapping.Filereader, OPP.Help.System.Error;
+  OPP.Help.Hint.Mapping.Filereader, OPP.Help.System.Error,
+  OPP.Help.Log;
 
 var
   fLock: TCriticalSection;
@@ -148,19 +149,27 @@ var
   fMap: TOPPHelpHintMap;
   fPredicate: TOPPHelpPredicate;
   outStr: String;
+  mapWasFound: Boolean;
 begin
   result := nil;
 
   fMap := fHintMapSet.GetMap(AMetaIdentifier);
-  if not Assigned(fMap) then begin
-    outStr := Format('map not found for %s',[AMetaIdentifier]);
-    OutputDebugString(outStr.toWideChar);
+  mapWasFound := Assigned(fMap);
+
+  if not mapWasFound then
+  begin
+    outStr := Format('map not found for %s', [AMetaIdentifier]);
+    logger.Log(outStr, lmWarning);
     exit;
   end;
+
+  outStr := Format('map was found for %s', [AMetaIdentifier]);
+  logger.Log(outStr, lmInfo);
+
   fPredicate := fMap.Predicate;
   if not Assigned(fPredicate) then
   begin
-    WinAPI.Windows.OutputDebugString('!!! PREDICATE NOT FOUND!!!'.toWidechar);
+    logger.Log('!!! PREDICATE NOT FOUND!!!', lmError);
     exit;
   end;
 
