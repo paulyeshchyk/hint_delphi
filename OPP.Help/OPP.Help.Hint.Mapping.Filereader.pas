@@ -4,8 +4,7 @@ interface
 uses
   System.Generics.Collections,
   System.SysUtils,
-  System.JSON, System.IOUtils,
-  OPP.Help.System.Error,
+
   OPP.Help.Hint.Mapping;
 
 type
@@ -22,6 +21,9 @@ type
 implementation
 
 uses
+  OPP.Help.System.Error,
+
+  System.JSON, System.IOUtils,
   DBXJSONReflect, REST.JSON;
 
 class procedure TOPPHelpHintMapFileReader.parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPHelpHintMapJSONReadCallback);

@@ -199,7 +199,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Reader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Component.Enumerator.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
@@ -214,7 +213,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Thread.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Controls.Styler.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.View.Fullscreen.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.View.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Events.pas"/>
@@ -223,9 +221,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
-        <None Include="..\OPP.Help\notes\readme.md"/>
-        <None Include="..\OPP.Help\notes\hints_matrix.json"/>
-        <None Include="..\OPP.Help\notes\shortcut_matrix.json"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Interfaces.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

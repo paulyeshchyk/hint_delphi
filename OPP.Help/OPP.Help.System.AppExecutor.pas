@@ -17,21 +17,67 @@ type
 
   TOPPHelpSystemAppExecutor = class
   public
-    class procedure Execute(Appname: String; AViewerClassInfo: Pointer; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal = 300);
+    class function FindAnyClass(const Name: string): Pointer;
+    class function FindClass(AName: String): Pointer;
+    class procedure Execute(Appname: String; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal = 300);
   end;
 
 implementation
 
+uses System.RTTI,
+  System.StrUtils,
+  System.Classes;
+
 { TOPPHelpSystemAppExecutor }
 
-class procedure TOPPHelpSystemAppExecutor.Execute(Appname: String; AViewerClassInfo: Pointer; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal);
+class function TOPPHelpSystemAppExecutor.FindClass(AName: String): Pointer;
+var
+  fFoundClass: TClass;
+  fRTTIContext: TRttiContext;
+  fFoundType: TRttiType;
+begin
+  result := nil;
+  fRTTIContext := TRttiContext.Create;
+  try
+    fFoundType := fRTTIContext.FindType(AName);
+    if (fFoundType <> nil) and (fFoundType.IsInstance) then
+    begin
+      fFoundClass := fFoundType.AsInstance.MetaClassType;
+      result := fFoundClass.ClassInfo;
+    end;
+  finally
+    fRTTIContext.Free;
+  end;
+end;
+
+class function TOPPHelpSystemAppExecutor.FindAnyClass(const Name: string): Pointer;
+var
+  ctx: TRttiContext;
+  fType: TRttiType;
+  fTypeArray: TArray<TRttiType>;
+begin
+  result := nil;
+  ctx := TRttiContext.Create;
+  fTypeArray := ctx.GetTypes;
+  for fType in fTypeArray do
+  begin
+    if fType.IsInstance and (EndsText(Name, fType.Name)) then
+    begin
+      result := fType.AsInstance.MetaClassType.ClassInfo;
+      break;
+    end;
+  end;
+  ctx.Free;
+end;
+
+class procedure TOPPHelpSystemAppExecutor.Execute(Appname: String; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal);
 var
   fWindowClassHandleList: TList<THandle>;
   fSelfHandle: THandle;
   fOPPViewerClassName: String;
 begin
 
-  fOPPViewerClassName := GetTypeData(AViewerClassInfo).ClassType.ClassName;
+  fOPPViewerClassName := 'TOPPHelpPreviewForm';//GetTypeData(AViewerClassInfo).ClassType.ClassName;
 
   fSelfHandle := Application.Handle;
 

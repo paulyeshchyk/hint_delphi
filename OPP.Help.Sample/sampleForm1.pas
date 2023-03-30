@@ -80,26 +80,16 @@ uses
   OPP.Help.View.FullScreen,
   OPP.Help.Component.Enumerator,
   OPP.Help.Meta.Factory,
-  OPP.Help.PreviewForm;
+  OPP.Help.Hint.Reader,
+  OPP.Help.Interfaces,
+  OPP.Help.System.AppExecutor,
+
+  SampleOnly.Help.Hint.Setup,
+  SampleOnly.Help.Shortcut.Setup;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
-var
-  fRequest: TOPPHelpHintMappingLoadRequest;
 begin
-
-  fMetaFactory := TOPPHelpMetaHintFactory.Create;
-  self.restyle();
-
-  fRequest := TOPPHelpHintMappingLoadRequest.Create;
-  try
-    fRequest.mappingFileName := '.\help\mapping\hints_matrix.json';
-    fRequest.control := self;
-    fRequest.OnGetHintFactory := OnGetHintFactory;
-    helpHintServer.LoadHints(fRequest, self.OnCreateHintViewsCreate);
-  finally
-    fRequest.Free;
-  end;
-
+  TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo);
 end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -108,6 +98,12 @@ begin
   helpShortcutServer.killExternalViewer;
 end;
 
+procedure TSampleForm.WMHELP(var Msg: TWMHelp);
+begin
+  TOPPClientHelpShortcutHelper.showHelp(Msg);
+end;
+
+{ ------------ }
 
 procedure TSampleForm.generateHintMappingButtonClick(Sender: TObject);
 var
@@ -128,6 +124,7 @@ end;
 procedure TSampleForm.externalHelpViewerButtonClick(Sender: TObject);
 var
   fPredicate: TOPPHelpPredicate;
+  // fClassInfo: Pointer;
 begin
 
   fPredicate := TOPPHelpPredicate.Create();
@@ -135,23 +132,39 @@ begin
   fPredicate.value := '12';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmExternal, OnShowHelpResult);
+  // fClassInfo := TOPPHelpSystemAppExecutor.FindAnyClass('OPP.Help.PreviewForm.TOPPHelpPreviewForm');
+  // if not assigned(fClassInfo) then
+  // begin
+  // eventLogger.Log('TOPPHelpPreviewForm not found', lmError);
+  // exit;
+  // end;
+
+  helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult);
 end;
 
 procedure TSampleForm.internalHelpViewerButtonClick(Sender: TObject);
 var
   fPredicate: TOPPHelpPredicate;
+  fClassInfo: Pointer;
 begin
   fPredicate := TOPPHelpPredicate.Create();
   fPredicate.keywordType := ktPage;
   fPredicate.value := '18';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
-  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fPredicate, vmInternal, OnShowHelpResult);
+
+  // fClassInfo := TOPPHelpSystemAppExecutor.FindClass('OPP.Help.PreviewForm.TOPPHelpPreviewForm');
+  // if not assigned(fClassInfo) then
+  // begin
+  // eventLogger.Log('TOPPHelpPreviewForm not found', lmError);
+  // exit;
+  // end;
+
+  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
 begin
-  if not Assigned(AControl) then
+  if not assigned(AControl) then
   begin
     result := '';
     exit;
@@ -210,16 +223,14 @@ var
   fControl: TControl;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
-  s: String;
 begin
-  s := Format('will create screentips [%d]', [hints.Count]);
-  eventLogger.Log(s);
+  eventLogger.Log(Format('will create screentips [%d]', [hints.Count]));
 
   for fHint in hints do
   begin
 
     fControl := self.FindSubControl(fHint.Meta);
-    if not Assigned(fControl) then
+    if not assigned(fControl) then
       exit;
 
     fControl.ShowHint := true;
@@ -242,16 +253,51 @@ end;
 
 { -- message handlers }
 
-procedure TSampleForm.WMHELP(var Msg: TWMHelp);
-var
-  fShortcutRequest: TOPPHelpShortcutRequest;
+function GetWinControlHelpKeyword(AControl: TControl): String;
 begin
-  fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, Msg);
-  helpShortcutServer.showHelp(TOPPHelpPreviewForm.ClassInfo, fShortcutRequest, vmExternal, OnShowShortcutHelpResult, onGetShortcutIdentifier);
+  if not assigned(AControl) then
+  begin
+    result := '';
+    exit;
+  end;
+
+  eventLogger.Log(AControl.ClassName);
+
+  if AControl.ClassType.InheritsFrom(TForm) then
+  begin
+    result := AControl.Name;
+  end
+  else if AControl.ClassType.InheritsFrom(TEdit) then
+  begin
+    result := AControl.HelpKeyword;
+  end
+  else if Length(AControl.HelpKeyword) <> 0 then
+  begin
+    result := AControl.HelpKeyword;
+  end else begin
+    result := GetWinControlHelpKeyword(AControl.Parent);
+  end;
+end;
+
+function ControlHelpIdentifier(AControl: TControl): String;
+begin
+  result := GetWinControlHelpKeyword(AControl);
+end;
+
+function CreateHintReader(AMap: TOPPHelpHintMap): IOPPHelpHintDataReader;
+begin
+  result := TOPPHelpRichtextHintReader.Create;
+  result.loadData(AMap.Predicate.fileName);
 end;
 
 initialization
 
+helpShortcutServer.setDefaultOnGetIdentifier(ControlHelpIdentifier);
+helpHintServer.setDefaultOnHintReaderCreator(CreateHintReader);
+
 finalization
+
+helpHintServer.setDefaultOnHintReaderCreator(nil);
+helpShortcutServer.setDefaultOnGetIdentifier(nil);
 
 end.

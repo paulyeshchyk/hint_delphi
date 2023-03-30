@@ -106,7 +106,7 @@ contains
   OPP.Help.Hint.Mapping.Filereader in '..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas',
   OPP.Help.Hint.Mapping in '..\OPP.Help\OPP.Help.Hint.Mapping.pas',
   OPP.Help.Hint in '..\OPP.Help\OPP.Help.Hint.pas',
-  OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
+  //OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
   OPP.Help.Hint.Server in '..\OPP.Help\OPP.Help.Hint.Server.pas',
   OPP.Help.Component.Enumerator in '..\OPP.Help\OPP.Help.Component.Enumerator.pas',
   OPP.Help.Meta in '..\OPP.Help\OPP.Help.Meta.pas',
@@ -121,7 +121,6 @@ contains
   OPP.Help.System.Thread in '..\OPP.Help\OPP.Help.System.Thread.pas',
   OPP.Help.Controls.Styler in '..\OPP.Help\OPP.Help.Controls.Styler.pas',
   OPP.Help.View.Fullscreen in '..\OPP.Help\OPP.Help.View.Fullscreen.pas',
-  OPP.Help.View in '..\OPP.Help\OPP.Help.View.pas',
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
   OPP.Help.System.Stream in '..\OPP.Help\OPP.Help.System.Stream.pas',
   OPP.Help.Events in '..\OPP.Help\OPP.Help.Events.pas',
@@ -129,6 +128,7 @@ contains
   OPP.Help.Predicate in '..\OPP.Help\OPP.Help.Predicate.pas',
   OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas',
   OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas',
-  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas';
+  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas',
+  OPP.Help.Interfaces in '..\OPP.Help\OPP.Help.Interfaces.pas';
 
 end.

@@ -10,6 +10,7 @@ object SampleForm: TSampleForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -27,8 +28,6 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 732
-    ExplicitWidth = 1548
   end
   object GroupBox2: TGroupBox
     Left = 912
@@ -159,7 +158,7 @@ object SampleForm: TSampleForm
       Height = 24
       Hint = 'cxHint test'
       HelpType = htKeyword
-      HelpKeyword = 'bvMain'
+      HelpKeyword = '!'#1058#1077#1084#1072
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -232,6 +231,6 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 256
     Top = 296
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
 end

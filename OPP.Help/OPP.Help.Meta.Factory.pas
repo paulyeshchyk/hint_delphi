@@ -17,8 +17,10 @@ type
 
 implementation
 
-uses Vcl.Controls, Vcl.StdCtrls,
-  OPP.Help.Component.Enumerator, OPP.Help.Log;
+uses
+  Vcl.Controls, Vcl.StdCtrls,
+  OPP.Help.Component.Enumerator,
+  OPP.Help.Log;
 
 function TOPPHelpMetaHintFactory.GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
 begin

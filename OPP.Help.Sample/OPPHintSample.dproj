@@ -119,6 +119,9 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.Factory.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Reader.pas"/>
+        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas"/>
+        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

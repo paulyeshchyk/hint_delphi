@@ -1,13 +1,30 @@
-unit OPP.Help.View;
+unit OPP.Help.Interfaces;
 
 interface
 
 uses
   System.Classes,
-  OPP.Help.Predicate;
+  OPP.Help.Predicate,
+  OPP.Help.Hint;
 
 type
-  TOPPHelpViewStateChangedEvent = procedure of object;
+
+  IOPPHelpHintDataReader = interface
+
+    /// <summary>
+    /// Загружает файл подсказок
+    ///
+    /// </summary>
+    function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
+
+    function FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;
+  end;
+
+  IOPPHelpShortcutViewer = interface
+    ['{097D4F69-916A-4CB4-AB5F-E88D9BA1BB76}']
+    procedure runPredicate(APredicate: TOPPHelpPredicate);
+    procedure PresentModal;
+  end;
 
   IOPPHelpViewEventListener = interface
     procedure LoadStarted();

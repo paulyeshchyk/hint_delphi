@@ -4,22 +4,15 @@ interface
 
 uses
   System.SysUtils,
+
   dxRichEdit.Control, dxRichEdit.NativeAPI,
+
+  OPP.Help.Interfaces,
   OPP.Help.Nonatomic,
   OPP.Help.Predicate,
   OPP.Help.Hint;
 
 type
-  IOPPHelpHintDataReader = interface
-
-    /// <summary>
-    /// Загружает файл подсказок
-    ///
-    /// </summary>
-    function loadData(AFileName: String): TOPPHelpHintServerLoadResultType;
-
-    function FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;
-  end;
 
   TOPPHelpRichtextHintReader = class(TInterfacedObject, IOPPHelpHintDataReader)
   const

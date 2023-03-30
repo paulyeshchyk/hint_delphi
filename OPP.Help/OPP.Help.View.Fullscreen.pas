@@ -11,10 +11,10 @@ uses
   Vcl.StdCtrls,
   dxPDFViewer, dxPDFDocument, dxCustomPreview,
 
-  OPP.Help.Nonatomic,
+  OPP.Help.Interfaces,
   OPP.Help.Predicate,
-  OPP.Help.System.Thread,
-  OPP.Help.View;
+  OPP.Help.Nonatomic,
+  OPP.Help.System.Thread;
 
 type
 
