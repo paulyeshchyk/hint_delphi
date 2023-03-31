@@ -34,17 +34,10 @@ var
   fFileName: String;
 begin
 
-  if Length(AFilename) <> 0 then
-    fFileName := AFileName
-  else
-    fFileName := '.\help\mapping\hints_matrix.json';
-
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
 
-  fRequest := TOPPHelpHintMappingLoadRequest.Create;
+  fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
   try
-    fRequest.mappingFileName := fFileName;
-    fRequest.control := AForm;
     fRequest.OnGetHintFactory := OnGetHintFactory;
     helpHintServer.LoadHints(fRequest,
       procedure(hints: TList<TOPPHelpHint>)

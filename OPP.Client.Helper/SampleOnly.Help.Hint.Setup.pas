@@ -1,4 +1,4 @@
-unit SampleOnly.Help.Hint.Setup;
+﻿unit SampleOnly.Help.Hint.Setup;
 
 interface
 
@@ -35,10 +35,8 @@ begin
 
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
 
-  fRequest := TOPPHelpHintMappingLoadRequest.Create;
+  fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
   try
-    fRequest.mappingFileName := '.\help\mapping\hints_matrix.json';
-    fRequest.control := AForm;
     fRequest.OnGetHintFactory := OnGetHintFactory;
     helpHintServer.LoadHints(fRequest,
       procedure(hints: TList<TOPPHelpHint>)

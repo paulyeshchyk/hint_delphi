@@ -109,11 +109,11 @@ procedure TSampleForm.generateHintMappingButtonClick(Sender: TObject);
 var
   fRequest: TOPPHelpHintMappingSaveRequest;
 begin
-  fRequest := TOPPHelpHintMappingSaveRequest.Create;
+  fRequest := TOPPHelpHintMappingSaveRequest.Create(self, '.\help\mapping\hints_matrix__.json');
   try
-    fRequest.mappingFileName := '.\help\mapping\hints_matrix__.json';
+//    fRequest.mappingFileName := '.\help\mapping\hints_matrix__.json';
+//    fRequest.control := self;
     fRequest.DefaultPredicateFileName := '.\help\hints\gulfstream_manual_rtf.rtf';
-    fRequest.control := self;
     fRequest.OnGetHintFactory := OnGetHintFactory;
     helpHintServer.SaveHints(fRequest, OnGenerateHint);
   finally

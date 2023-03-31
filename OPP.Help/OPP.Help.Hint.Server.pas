@@ -21,7 +21,7 @@ type
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpHintMap>);
   TOPPHelpHintServerOnGetMetaFactory = reference to function(): IOPPHelpMetaFactory;
-  TOPPHelpHintViewCreator = reference to function(AHintMap:TOPPHelpHintMap): IOPPHelpHintDataReader;
+  TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpHintMap): IOPPHelpHintDataReader;
 
   TOPPHelpHintMappingRequest = class
   private
@@ -29,8 +29,9 @@ type
     fControl: TControl;
     fOnGetHintFactory: TOPPHelpHintServerOnGetMetaFactory;
   public
-    property MappingFileName: String read fMappingFileName write fMappingFileName;
-    property Control: TControl read fControl write fControl;
+    constructor Create(AControl: TControl; AMappingFileName: String = '');
+    property MappingFileName: String read fMappingFileName;
+    property Control: TControl read fControl;
     property OnGetHintFactory: TOPPHelpHintServerOnGetMetaFactory read fOnGetHintFactory write fOnGetHintFactory;
   end;
 
@@ -61,7 +62,7 @@ type
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
 
-    procedure setDefaultOnHintReaderCreator(ACreator:TOPPHelpHintViewCreator);
+    procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -89,7 +90,7 @@ type
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
 
-    procedure setDefaultOnHintReaderCreator(ACreator:TOPPHelpHintViewCreator);
+    procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
 
     property loaded: Boolean read fLoaded;
   end;
@@ -119,6 +120,18 @@ begin
   finally
     fLock.Release;
   end;
+end;
+
+constructor TOPPHelpHintMappingRequest.Create(AControl: TControl; AMappingFileName: String);
+begin
+  inherited Create;
+
+  fControl := AControl;
+
+  if Length(AMappingFileName) <> 0 then
+    fMappingFileName := AMappingFileName
+  else
+    fMappingFileName := '.\help\mapping\hints_matrix.json';
 end;
 
 constructor TOPPHelpHintServer.Create;
@@ -182,7 +195,7 @@ begin
 
   if not mapWasFound then
   begin
-    //eventLogger.Log(Format('map not found for %s', [AMetaIdentifier]), lmWarning);
+    // eventLogger.Log(Format('map not found for %s', [AMetaIdentifier]), lmWarning);
     exit;
   end;
 
@@ -191,31 +204,34 @@ begin
   fPredicate := fMap.Predicate;
   if not Assigned(fPredicate) then
   begin
-    eventLogger.Log(Format('predicate was not found for %s',[AMetaIdentifier]), lmError);
+    eventLogger.Log(Format('predicate was not found for %s', [AMetaIdentifier]), lmError);
     exit;
   end;
 
   result := getReader(fMap.Predicate.filename);
-  if Assigned(result) then begin
-    eventLogger.Log(Format('reader was found for:[%s]',[fMap.Predicate.filename]));
+  if Assigned(result) then
+  begin
+    eventLogger.Log(Format('reader was found for:[%s]', [fMap.Predicate.filename]));
     exit;
   end;
 
-  if not assigned(fDefaultOnHintReaderCreator) then begin
-    eventLogger.Log(Format('hintreader creator was not defined for:[%s]',[fMap.Predicate.filename]));
+  if not Assigned(fDefaultOnHintReaderCreator) then
+  begin
+    eventLogger.Log(Format('hintreader creator was not defined for:[%s]', [fMap.Predicate.filename]));
     exit;
   end;
 
   result := fDefaultOnHintReaderCreator(fMap);
-  if not assigned(result) then begin
-    eventLogger.Log(Format('hintreader was not created for:[%s]',[fMap.Predicate.filename]));
+  if not Assigned(result) then
+  begin
+    eventLogger.Log(Format('hintreader was not created for:[%s]', [fMap.Predicate.filename]));
     exit;
   end;
 
   fHintDataReaders.Add(fMap.Predicate.filename, result);
 end;
 
-procedure TOPPHelpHintServer.setDefaultOnHintReaderCreator(ACreator:TOPPHelpHintViewCreator);
+procedure TOPPHelpHintServer.setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
 begin
   fDefaultOnHintReaderCreator := ACreator;
 end;
@@ -225,11 +241,11 @@ begin
 
   result := nil;
 
-  if fHintDataReaders.Count = 0 then begin
-    eventLogger.Log(Format('Found no reader for file: %s',[AFileName]));
+  if fHintDataReaders.Count = 0 then
+  begin
+    eventLogger.Log(Format('Found no reader for file: %s', [AFileName]));
     exit;
   end;
-
 
   try
     try
@@ -303,7 +319,7 @@ var
   fFactory: IOPPHelpMetaFactory;
 begin
 
-  eventLogger.Log(Format('Loading hints for %s',[ARequest.Control.Name]));
+  eventLogger.Log(Format('Loading hints for %s', [ARequest.Control.Name]));
 
   self.reloadConfigurationIfNeed(ARequest.MappingFileName);
   if not fLoaded then
