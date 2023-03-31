@@ -127,6 +127,7 @@ contains
   OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas',
   OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas',
   OPP.Help.Interfaces in '..\OPP.Help\OPP.Help.Interfaces.pas',
-  OPP.Help.System.Hook.Keyboard in '..\OPP.Help\OPP.Help.System.Hook.Keyboard.pas';
+  OPP.Help.System.Hook.Keyboard in '..\OPP.Help\OPP.Help.System.Hook.Keyboard.pas',
+  OPP.Help.System.Constants in '..\OPP.Help\OPP.Help.System.Constants.pas';
 
 end.

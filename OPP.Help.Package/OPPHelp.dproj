@@ -220,6 +220,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Interfaces.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Hook.Keyboard.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Constants.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

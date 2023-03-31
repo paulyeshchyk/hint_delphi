@@ -74,7 +74,7 @@ begin
           result := fMetaFactory.GetChildrenHelpMeta(AComponent)
         end;
 
-      helpHintServer.SaveHints(fRequest, nil);
+      helpHintServer.SaveHints(fRequest, false, nil);
 
     finally
       fRequest.Free;
