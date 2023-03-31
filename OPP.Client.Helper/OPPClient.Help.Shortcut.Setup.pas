@@ -6,6 +6,7 @@ uses
   system.classes,
   WinAPI.Messages,
   Vcl.Controls, Vcl.Dialogs;
+
 type
   TOPPClientHelpShortcutHelper = class
   public
@@ -29,20 +30,18 @@ uses
 
   OPP.Help.Log;
 
-
 class procedure TOPPClientHelpShortcutHelper.showHelp(AMessage: TWMHelp);
 var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, AMessage);
-  helpShortcutServer.showHelp(fShortcutRequest, vmExternal, procedure(completionResult: TOPPHelpShortcutPresentingResult)
+  helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
+    procedure(completionResult: TOPPHelpShortcutPresentingResult)
     begin
       if completionResult = prFail then
         ShowMessage('Nothing to show');
-    end
-  );
+    end);
 end;
-
 
 function GetWinControlHelpKeyword(AControl: TControl): String;
 begin

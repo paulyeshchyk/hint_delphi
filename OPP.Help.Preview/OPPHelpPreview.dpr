@@ -2,7 +2,8 @@ program OPPHelpPreview;
 
 uses
   Vcl.Forms,
-  OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas';
+  OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas',
+  OPP.Help.View.Fullscreen in '..\OPP.PDF.View\OPP.Help.View.Fullscreen.pas';
 
 {$R *.res}
 

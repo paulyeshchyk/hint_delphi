@@ -3,17 +3,22 @@
 interface
 
 uses
+  System.Classes,
   Vcl.Controls, System.Generics.Collections, System.SysUtils,
   dxScreenTip, cxHint,
   OPP.Help.Hint, OPP.Help.Meta;
 
 type
   TOPPClientHintHelper = class
-  public
-    class procedure LoadHints(AForm: TControl; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; AFilename: String = '');
   private
-    class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
-    class function OnGetHintFactory(): IOPPHelpMetaFactory;
+    fHintController: TcxHintStyleController;
+    fRepo: TdxScreenTipRepository;
+    procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>);
+  public
+    constructor Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
+    destructor Destroy; override;
+    procedure LoadHints(AForm: TControl; AFilename: String = '');
+    procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
   end;
 
 implementation
@@ -23,41 +28,97 @@ uses
   OPP.Help.Component.Enumerator,
 
   OPP.Help.Hint.Server,
-  OPP.Help.Meta.Factory;
+  OPPClient.Help.Meta.Factory;
 
+constructor TOPPClientHintHelper.Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
+begin
+  fHintController := AHintController;
+  fRepo := ARepo;
+end;
+
+destructor TOPPClientHintHelper.Destroy;
+begin
+  fHintController := nil;
+  fRepo := nil;
+  inherited Destroy;
+end;
+
+procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String);
 var
   fMetaFactory: TOPPHelpMetaHintFactory;
-
-class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; AFilename: String);
-var
   fRequest: TOPPHelpHintMappingLoadRequest;
   fFileName: String;
 begin
-
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
-
-  fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
   try
-    fRequest.OnGetHintFactory := OnGetHintFactory;
-    helpHintServer.LoadHints(fRequest,
-      procedure(hints: TList<TOPPHelpHint>)
-      begin
-        TOPPClientHintHelper.CreateHintViews(AForm, hints, hintController, repo);
-      end);
+    fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
+    try
+      //
+      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
+        begin
+          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
+        end;
+
+      helpHintServer.LoadHints(fRequest,
+        procedure(hints: TList<TOPPHelpHint>)
+        begin
+          self.CreateHintViews(AForm, hints);
+        end);
+    finally
+      fRequest.Free;
+    end;
   finally
-    fRequest.Free;
+    fMetaFactory.Free;
   end;
 end;
 
-class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
+procedure TOPPClientHintHelper.SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
+var
+  fRequest: TOPPHelpHintMappingSaveRequest;
+  fMetaFactory: TOPPHelpMetaHintFactory;
+begin
+
+  fMetaFactory := TOPPHelpMetaHintFactory.Create;
+  try
+    fRequest := TOPPHelpHintMappingSaveRequest.Create(AForm, AFilename);
+    try
+      fRequest.DefaultPredicateFileName := predicateFileName;
+      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
+        begin
+          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
+        end;
+
+      helpHintServer.SaveHints(fRequest, nil);
+
+    finally
+      fRequest.Free;
+    end;
+  finally
+    fMetaFactory.Free;
+  end;
+end;
+
+procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
   fControl: TControl;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
-  eventLogger.Log(Format('will create screentips [%d]', [hints.Count]));
 
+  if not assigned(fHintController) then
+  begin
+    eventLogger.Log(Format('%s not assigned', ['HintController']));
+    exit;
+  end;
+
+  if not assigned(fRepo) then
+  begin
+    eventLogger.Log(Format('%s not assigned', ['ScreenRepo']));
+    exit;
+  end;
+
+  eventLogger.Log(Format('will create screentips [%d]', [hints.Count]));
   for fHint in hints do
   begin
 
@@ -67,25 +128,21 @@ begin
 
     fControl.ShowHint := true;
 
-    fScreenTip := repo.Items.Add;
+    fScreenTip := fRepo.Items.Add;
     fScreenTip.Width := 789;
 
     fScreenTip.Header.PlainText := true;
     fScreenTip.Header.Text := ''; // Заголовок
 
     fScreenTip.Description.PlainText := false;
-    fScreenTip.Description.Text := fHint.Data.rtf;
+    fScreenTip.Description.Text := fHint.Data.Text; // rtf;
 
-    fScreenTipLink := TdxScreenTipStyle(hintController.HintStyle).ScreenTipLinks.Add;
+    //TdxScreenTipStyle.Create(self).ScreenTipLinks.Add;
+    fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
     fScreenTipLink.ScreenTip := fScreenTip;
     fScreenTipLink.control := fControl;
 
   end;
-end;
-
-class function TOPPClientHintHelper.OnGetHintFactory(): IOPPHelpMetaFactory;
-begin
-  result := fMetaFactory;
 end;
 
 end.

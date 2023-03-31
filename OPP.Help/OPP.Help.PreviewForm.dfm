@@ -73,16 +73,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       end
     end
   end
-  object oppHelpView: TOPPHelpViewFullScreen
-    Left = 0
-    Top = 25
-    Width = 1504
-    Height = 996
-    Align = alClient
-    BevelOuter = bvNone
-    Caption = 'oppHelpView'
-    TabOrder = 5
-  end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>

@@ -178,7 +178,7 @@ object SampleForm: TSampleForm
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
-      Caption = #1055#1086#1084#1086#1097#1100
+      Caption = 'Internal'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13

@@ -10,6 +10,7 @@ type
     function isEmpty(): Boolean;
     function toWideChar: PWideChar;
     function hashString(): String;
+    function toRTF(): String;
   end;
 
 implementation
@@ -46,6 +47,13 @@ end;
 function StringHelper.isEmpty: Boolean;
 begin
   Result := (Length(self) = 0);
+end;
+
+function StringHelper.toRTF(): String;
+const
+  template: String = '{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset0 Calibri;}}\viewkind4\uc1\pard\sl240\slmult1\f0\fs22\lang9 %s\par}';
+begin
+  Result := Format(template, [self]);
 end;
 
 end.

@@ -10,7 +10,6 @@ uses
   Vcl.Controls,
   Vcl.StdCtrls,
   dxPDFViewer, dxPDFDocument, dxCustomPreview,
-
   OPP.Help.Interfaces,
   OPP.Help.Predicate,
   OPP.Help.Nonatomic,
@@ -60,8 +59,6 @@ type
     procedure searchWork();
 
   end;
-
-procedure Register;
 
 implementation
 
@@ -286,11 +283,6 @@ begin
     if assigned(fListener) then
       fListener.SearchEnded;
   end;
-end;
-
-procedure Register;
-begin
-  RegisterComponents('OPPHelp', [TOPPHelpViewFullScreen])
 end;
 
 end.

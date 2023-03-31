@@ -28,7 +28,6 @@ type
     /// </summary>
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
 
-    {function GetChildrenHelpMeta(): TList<TOPPHelpMeta>;}
     function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
     function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
   end;

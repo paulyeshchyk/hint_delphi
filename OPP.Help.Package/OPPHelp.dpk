@@ -35,7 +35,6 @@ requires
   dxCoreRS25,
   dxDockingRS25,
   dxGDIPlusRS25,
-  dxPDFViewerRS25,
   dxRichEditControlCoreRS25,
   dxRichEditControlRS25,
   dxRichEditCoreRS25,
@@ -106,7 +105,6 @@ contains
   OPP.Help.Hint.Mapping.Filereader in '..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas',
   OPP.Help.Hint.Mapping in '..\OPP.Help\OPP.Help.Hint.Mapping.pas',
   OPP.Help.Hint in '..\OPP.Help\OPP.Help.Hint.pas',
-  //OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
   OPP.Help.Hint.Server in '..\OPP.Help\OPP.Help.Hint.Server.pas',
   OPP.Help.Component.Enumerator in '..\OPP.Help\OPP.Help.Component.Enumerator.pas',
   OPP.Help.Meta in '..\OPP.Help\OPP.Help.Meta.pas',
@@ -120,7 +118,6 @@ contains
   OPP.Help.System.Str in '..\OPP.Help\OPP.Help.System.Str.pas',
   OPP.Help.System.Thread in '..\OPP.Help\OPP.Help.System.Thread.pas',
   OPP.Help.Controls.Styler in '..\OPP.Help\OPP.Help.Controls.Styler.pas',
-  OPP.Help.View.Fullscreen in '..\OPP.Help\OPP.Help.View.Fullscreen.pas',
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
   OPP.Help.System.Stream in '..\OPP.Help\OPP.Help.System.Stream.pas',
   OPP.Help.Events in '..\OPP.Help\OPP.Help.Events.pas',
@@ -129,6 +126,7 @@ contains
   OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas',
   OPP.Help.Shortcut.DatasetBind in '..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas',
   OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas',
-  OPP.Help.Interfaces in '..\OPP.Help\OPP.Help.Interfaces.pas';
+  OPP.Help.Interfaces in '..\OPP.Help\OPP.Help.Interfaces.pas',
+  OPP.Help.System.Hook.Keyboard in '..\OPP.Help\OPP.Help.System.Hook.Keyboard.pas';
 
 end.

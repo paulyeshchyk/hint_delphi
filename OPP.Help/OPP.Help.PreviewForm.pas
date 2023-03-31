@@ -8,12 +8,20 @@ uses
   dxDockControl, dxDockPanel, dxStatusBar,
 
   OPP.Help.Interfaces, OPP.Help.Predicate,
-  //OPP.Help.View,
-  OPP.Help.View.Fullscreen,
 
   System.Classes, System.SysUtils, System.Variants,
   Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls,
-  Winapi.Messages, Winapi.Windows;
+  Winapi.Messages, Winapi.Windows, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans,
+  dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin,
+  dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray, dxSkinOffice2013White,
+  dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
+  dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  OPP.Help.View.Fullscreen;
 
 type
 
@@ -33,7 +41,6 @@ type
     dxDockingManager1: TdxDockingManager;
     dxBarManager1: TdxBarManager;
     dxBarManager1Bar1: TdxBar;
-    oppHelpView: TOPPHelpViewFullScreen;
     dxBarButtonExit: TdxBarButton;
     dxBarSubItem1: TdxBarSubItem;
     dxBarSubItem2: TdxBarSubItem;
@@ -47,6 +54,8 @@ type
     procedure dxBarButtonExitClick(Sender: TObject);
   private
     { Private declarations }
+
+    oppHelpView: TOPPHelpViewFullScreen;
     fIsTreeVisible: Boolean;
     fCurrentState: TOPPHelpPreviewFormState;
     procedure WMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
@@ -147,6 +156,11 @@ end;
 
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
+
+  oppHelpView := TOPPHelpViewFullScreen.Create(self);
+  oppHelpView.Parent := self;
+  oppHelpView.Align := alClient;
+
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
 

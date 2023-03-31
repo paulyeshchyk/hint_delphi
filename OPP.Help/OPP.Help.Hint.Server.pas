@@ -20,7 +20,7 @@ uses
 type
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpHintMap>);
-  TOPPHelpHintServerOnGetMetaFactory = reference to function(): IOPPHelpMetaFactory;
+  TOPPHelpHintServerOnGetMetaFactory = reference to function(AComponent: TComponent): TList<TOPPHelpMeta>;
   TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpHintMap): IOPPHelpHintDataReader;
 
   TOPPHelpHintMappingRequest = class
@@ -271,10 +271,12 @@ begin
   fReader := findOrCreateReader(AHintIdentifier);
   if Assigned(fReader) then
   begin
-
     fHintMap := fHintMapSet.GetMap(AHintIdentifier);
     if Assigned(fHintMap) then
       result := fReader.FindHintDataForBookmarkIdentifier(fHintMap.Predicate);
+  end else begin
+    //FAKE hint
+    result.rtf := AHintIdentifier.toRTF;
   end;
 end;
 
@@ -335,9 +337,7 @@ begin
     exit;
   end;
 
-  fFactory := ARequest.OnGetHintFactory();
-
-  fChildrenHelpMetaList := fFactory.GetChildrenHelpMeta(ARequest.Control);
+  fChildrenHelpMetaList := ARequest.OnGetHintFactory(ARequest.Control);
   for fChildHelpMeta in fChildrenHelpMetaList do
   begin
     fMetaIdentifier := fChildHelpMeta.identifier;
@@ -353,7 +353,6 @@ var
   fMeta: TOPPHelpMeta;
   fMap: TOPPHelpHintMap;
   fMapList: TList<TOPPHelpHintMap>;
-  fFactory: IOPPHelpMetaFactory;
 begin
 
   if not Assigned(ARequest.OnGetHintFactory) then
@@ -363,13 +362,10 @@ begin
     exit;
   end;
 
-  fFactory := ARequest.OnGetHintFactory();
-
   fMapList := TList<TOPPHelpHintMap>.Create();
   try
-    fList := fFactory.GetChildrenHelpMeta(ARequest.Control);
+    fList := ARequest.OnGetHintFactory(ARequest.Control);
     try
-
       for fMeta in fList do
       begin
         fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);

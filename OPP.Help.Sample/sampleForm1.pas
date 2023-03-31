@@ -42,16 +42,15 @@ type
     procedure internalHelpViewerButtonClick(Sender: TObject);
   private
     { Private declarations }
-    fMetaFactory: IOPPHelpMetaFactory;
     function GetWinControlHelpKeyword(AControl: TControl): String;
     { -- messages -- }
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
+    procedure WMHOOK(var msg: TMessage);message WM_User + 3;
     { -- events -- }
     function onGetShortcutIdentifier(AControl: TControl): String;
     procedure OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
     { -- events -- }
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
-    function OnGetHintFactory(): IOPPHelpMetaFactory;
     procedure OnGenerateHint(AList: TList<TOPPHelpHintMap>);
     procedure OnShowHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
 
@@ -77,15 +76,17 @@ uses
   OPP.Help.System.Str,
   OPP.Help.Shortcut.Request,
   OPP.Help.nonatomic,
-  OPP.Help.View.FullScreen,
+//  OPP.Help.View.FullScreen,
   OPP.Help.Component.Enumerator,
-  OPP.Help.Meta.Factory,
+  SampleOnly.Help.Meta.Factory,
   OPP.Help.Hint.Reader,
   OPP.Help.Interfaces,
   OPP.Help.System.AppExecutor,
 
   SampleOnly.Help.Hint.Setup,
-  SampleOnly.Help.Shortcut.Setup;
+  SampleOnly.Help.Shortcut.Setup,
+
+  OPP.Help.System.Hook.Keyboard;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
@@ -103,22 +104,16 @@ begin
   TOPPClientHelpShortcutHelper.showHelp(Msg);
 end;
 
+procedure TSampleForm.WMHOOK(var msg: TMessage);
+begin
+  TOPPClientHintHelper.SaveHints(Screen.ActiveForm,'.\help\mapping\hints_matrix__.json','.\help\hints\gulfstream_manual_rtf.rtf');
+end;
+
 { ------------ }
 
 procedure TSampleForm.generateHintMappingButtonClick(Sender: TObject);
-var
-  fRequest: TOPPHelpHintMappingSaveRequest;
 begin
-  fRequest := TOPPHelpHintMappingSaveRequest.Create(self, '.\help\mapping\hints_matrix__.json');
-  try
-//    fRequest.mappingFileName := '.\help\mapping\hints_matrix__.json';
-//    fRequest.control := self;
-    fRequest.DefaultPredicateFileName := '.\help\hints\gulfstream_manual_rtf.rtf';
-    fRequest.OnGetHintFactory := OnGetHintFactory;
-    helpHintServer.SaveHints(fRequest, OnGenerateHint);
-  finally
-    fRequest.Free;
-  end;
+  TOPPClientHintHelper.SaveHints(Screen.ActiveForm,'.\help\mapping\hints_matrix__.json','.\help\hints\gulfstream_manual_rtf.rtf');
 end;
 
 procedure TSampleForm.externalHelpViewerButtonClick(Sender: TObject);
@@ -132,34 +127,20 @@ begin
   fPredicate.value := '12';
   fPredicate.fileName := '.\help\shortcuts\readme.pdf';
 
-  // fClassInfo := TOPPHelpSystemAppExecutor.FindAnyClass('OPP.Help.PreviewForm.TOPPHelpPreviewForm');
-  // if not assigned(fClassInfo) then
-  // begin
-  // eventLogger.Log('TOPPHelpPreviewForm not found', lmError);
-  // exit;
-  // end;
-
   helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult);
 end;
 
 procedure TSampleForm.internalHelpViewerButtonClick(Sender: TObject);
-var
-  fPredicate: TOPPHelpPredicate;
-  fClassInfo: Pointer;
+//var
+//  fPredicate: TOPPHelpPredicate;
+//  fClassInfo: Pointer;
 begin
-  fPredicate := TOPPHelpPredicate.Create();
-  fPredicate.keywordType := ktPage;
-  fPredicate.value := '18';
-  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
-
-  // fClassInfo := TOPPHelpSystemAppExecutor.FindClass('OPP.Help.PreviewForm.TOPPHelpPreviewForm');
-  // if not assigned(fClassInfo) then
-  // begin
-  // eventLogger.Log('TOPPHelpPreviewForm not found', lmError);
-  // exit;
-  // end;
-
-  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
+  ShowMessage('Not implemented');
+//  fPredicate := TOPPHelpPredicate.Create();
+//  fPredicate.keywordType := ktPage;
+//  fPredicate.value := '12';
+//  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
+//  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
@@ -210,11 +191,6 @@ var
 begin
   strmessage := Format('generated hints: %d', [Integer(AList.Count)]);
   eventLogger.Log(strmessage);
-end;
-
-function TSampleForm.OnGetHintFactory(): IOPPHelpMetaFactory;
-begin
-  result := fMetaFactory;
 end;
 
 procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);

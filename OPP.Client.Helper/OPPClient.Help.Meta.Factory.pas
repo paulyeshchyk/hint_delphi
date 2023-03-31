@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Meta.Factory;
+﻿unit OPPClient.Help.Meta.Factory;
 
 interface
 
@@ -19,6 +19,7 @@ implementation
 
 uses
   Vcl.Controls, Vcl.StdCtrls,
+  OPPRTTIUtils,
   OPP.Help.Component.Enumerator,
   OPP.Help.Log;
 
@@ -42,13 +43,11 @@ begin
   begin
     result.propertyName := 'HelpKeyword';
     result.identifier := (AComponent as TCheckBox).HelpKeyword;
-  end else begin
-    // if self.ClassName = 'TOppObjControl' then begin
-    // result.propertyName := 'TypeObject';
-    // result.identifier := (AComponent as TOppObjControl).TypeObject;
-    // //
-    // end;
-    // nothing to do here
+  end
+  else if 'TOppObjControl' = AComponent.ClassName then
+  begin
+    result.propertyName := 'TypeObject';
+    result.identifier := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent,'TypeObject');
   end;
 
 end;

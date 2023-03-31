@@ -33,7 +33,11 @@ implementation
 
 function TOPPHelpHintHelper.isEmpty(): Boolean;
 begin
-  result := text.isEmpty() or rtf.isEmpty();
+  if text.isEmpty() then begin
+    result := rtf.isEmpty();
+  end else begin
+    result := false;
+  end;
 end;
 
 end.

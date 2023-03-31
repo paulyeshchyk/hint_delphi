@@ -191,25 +191,26 @@ begin
       completion(prFail);
     exit;
   end else begin
-
-    {
-      clazzType := GetTypeData(AViewerClassInfo).ClassType;
-      if not clazzType.InheritsFrom(TForm) then begin
+    clazzType := GetClass('TOPPHelpPreviewForm'); //->TOPPHelpViewFullScreen
+    {clazzType := GetTypeData(AViewerClassInfo).ClassType};
+    if not clazzType.InheritsFrom(TForm) then
+    begin
       eventLogger.Log('viewer is not supporting TFormClass', lmError);
       exit;
-      end;
+    end;
 
-      if not Supports(clazzType, IOPPHelpShortcutViewer) then begin
+    if not Supports(clazzType, IOPPHelpShortcutViewer) then
+    begin
       eventLogger.Log('viewer is not supporting IOPPHelpShortcutViewer', lmError);
       exit;
-      end;
+    end;
 
-      fViewer := TFormClass(clazzType).Create(nil);
-      if not assigned(fViewer) then begin
+    fViewer := TFormClass(clazzType).Create(nil);
+    if not Assigned(fViewer) then
+    begin
       eventLogger.Log('viewer was not created', lmError);
       exit;
-      end;
-    }
+    end;
 
     try
       (fViewer as IOPPHelpShortcutViewer).RunPredicate(APredicate);
