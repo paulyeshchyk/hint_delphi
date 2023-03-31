@@ -1,21 +1,21 @@
-unit OPP.Help.Hint.Mapping.Filereader;
+unit OPP.Help.Map.Filereader;
 
 interface
 uses
   System.Generics.Collections,
   System.SysUtils,
 
-  OPP.Help.Hint.Mapping;
+  OPP.Help.Map;
 
 type
-  TOPPHelpHintMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpHintMap>; error: Exception);
+  TOPPHelpHintMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpMap>; error: Exception);
 
-  TOPPHelpHintMapFileReader = class helper for TOPPHelpHintMap
+  TOPPHelpHintMapFileReader = class helper for TOPPHelpMap
   private
     class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpHintMapJSONReadCallback = nil);
   public
     class procedure readJSON(AFileName: String; callback: TOPPHelpHintMapJSONReadCallback);
-    class function saveJSON(AList: TList<TOPPHelpHintMap>; AFileName: String): Integer;
+    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
   end;
 
 implementation
@@ -30,17 +30,17 @@ class procedure TOPPHelpHintMapFileReader.parseJSONBytes(ABytes: System.TArray<S
 var
   deSerializer: TJSONUnMarshal;
   jsonObject: TJSONObject;
-  mapList: TOPPHelpHintMapSet;
-  list: TList<TOPPHelpHintMap>;
+  mapList: TOPPHelpMapSet;
+  list: TList<TOPPHelpMap>;
   error: Exception;
 begin
   error := nil;
   deSerializer := TJSONUnMarshal.Create;
-  list := TList<TOPPHelpHintMap>.Create;
+  list := TList<TOPPHelpMap>.Create;
   try
     jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
     try
-      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpHintMapSet;
+      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpMapSet;
       list.AddRange(mapList.list);
       FreeAndNil(mapList);
     except
@@ -80,7 +80,7 @@ begin
   end;
 end;
 
-class function TOPPHelpHintMapFileReader.saveJSON(AList: TList<TOPPHelpHintMap>; AFileName: String): Integer;
+class function TOPPHelpHintMapFileReader.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -89,7 +89,7 @@ begin
   //
   serializer := TJSONMarshal.Create;
 
-  jsonObj := serializer.marshal(TOPPHelpHintMapSet.Create(AList)) as TJSONObject;
+  jsonObj := serializer.marshal(TOPPHelpMapSet.Create(AList)) as TJSONObject;
   try
     jsonString := TJson.JsonEncode(jsonObj);
     try

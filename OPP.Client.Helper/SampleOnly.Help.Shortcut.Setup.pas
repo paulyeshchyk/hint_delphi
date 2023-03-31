@@ -24,7 +24,7 @@ uses
   OPP.Help.Shortcut.Server,
 
   OPP.Help.Hint.Server,
-  OPP.Help.Hint.Mapping,
+  OPP.Help.Map,
   OPP.Help.Hint.Reader,
 
   OPP.Help.Log;
@@ -75,7 +75,7 @@ begin
   result := GetWinControlHelpKeyword(AControl);
 end;
 
-function CreateHintReader(AMap: TOPPHelpHintMap): IOPPHelpHintDataReader;
+function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
 begin
   result := TOPPHelpRichtextHintReader.Create;
   result.loadData(AMap.Predicate.filename);

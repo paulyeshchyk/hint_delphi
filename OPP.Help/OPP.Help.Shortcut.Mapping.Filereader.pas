@@ -6,17 +6,17 @@ uses
   System.Generics.Collections,
   System.SysUtils,
   System.JSON, System.IOUtils,
-  OPP.Help.Shortcut.Mapping;
+  OPP.Help.Map;
 
 type
-  TOPPHelpShortcutMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpShortcutMap>; error: Exception);
+  TOPPHelpShortcutMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpMap>; error: Exception);
 
-  TOPPHelpShortcutMapFileReader = class helper for TOPPHelpShortcutMap
+  TOPPHelpShortcutMapFileReader = class helper for TOPPHelpMap
   private
     class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpShortcutMapJSONReadCallback = nil);
   public
     class procedure readJSON(AFileName: String; callback: TOPPHelpShortcutMapJSONReadCallback);
-    class function saveJSON(AList: TList<TOPPHelpShortcutMap>; AFileName: String): Integer;
+    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
   end;
 
 implementation
@@ -28,17 +28,17 @@ class procedure TOPPHelpShortcutMapFileReader.parseJSONBytes(ABytes: System.TArr
 var
   deSerializer: TJSONUnMarshal;
   jsonObject: TJSONObject;
-  mapList: TOPPHelpShortcutMapSet;
-  list: TList<TOPPHelpShortcutMap>;
+  mapList: TOPPHelpMapSet;
+  list: TList<TOPPHelpMap>;
   error: Exception;
 begin
   error := nil;
   deSerializer := TJSONUnMarshal.Create;
-  list := TList<TOPPHelpShortcutMap>.Create;
+  list := TList<TOPPHelpMap>.Create;
   try
     jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
     try
-      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpShortcutMapSet;
+      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpMapSet;
       list.AddRange(mapList.list);
       FreeAndNil(mapList);
     except
@@ -77,7 +77,7 @@ begin
   end;
 end;
 
-class function TOPPHelpShortcutMapFileReader.saveJSON(AList: TList<TOPPHelpShortcutMap>; AFileName: String): Integer;
+class function TOPPHelpShortcutMapFileReader.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -86,7 +86,7 @@ begin
   //
   serializer := TJSONMarshal.Create;
 
-  jsonObj := serializer.marshal(TOPPHelpShortcutMapSet.Create(AList)) as TJSONObject;
+  jsonObj := serializer.marshal(TOPPHelpMapSet.Create(AList)) as TJSONObject;
   try
     jsonString := TJson.Format(jsonObj); // formatted
     // jsonString := jsonObj.ToString;//unformatted

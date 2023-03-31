@@ -13,7 +13,7 @@ uses
   OPP.Help.Predicate,
   OPP.Help.Hint,
   OPP.Help.Meta,
-  OPP.Help.Hint.Mapping,
+  OPP.Help.Map,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
   cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
@@ -51,7 +51,7 @@ type
     procedure OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
     { -- events -- }
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
-    procedure OnGenerateHint(AList: TList<TOPPHelpHintMap>);
+    procedure OnGenerateHint(AList: TList<TOPPHelpMap>);
     procedure OnShowHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
 
   public
@@ -185,7 +185,7 @@ begin
   eventLogger.Log(strmessage);
 end;
 
-procedure TSampleForm.OnGenerateHint(AList: TList<TOPPHelpHintMap>);
+procedure TSampleForm.OnGenerateHint(AList: TList<TOPPHelpMap>);
 var
   strmessage: String;
 begin
@@ -260,7 +260,7 @@ begin
   result := GetWinControlHelpKeyword(AControl);
 end;
 
-function CreateHintReader(AMap: TOPPHelpHintMap): IOPPHelpHintDataReader;
+function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
 begin
   result := TOPPHelpRichtextHintReader.Create;
   result.loadData(AMap.Predicate.fileName);

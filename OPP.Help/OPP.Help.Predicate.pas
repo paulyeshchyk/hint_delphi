@@ -14,8 +14,6 @@ type
     fKeywordType: TOPPKeywordType;
     fFileName: String;
   public
-    function copy(): TOPPHelpPredicate;
-
     property value: String read fValue write fValue;
     property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
     property fileName: String read fFileName write fFileName;
@@ -27,14 +25,6 @@ type
   end;
 
 implementation
-
-function TOPPHelpPredicate.copy(): TOPPHelpPredicate;
-begin
-  result := TOPPHelpPredicate.Create();
-  result.value := self.value;
-  result.keywordType := self.keywordType;
-  result.fileName := self.fileName;
-end;
 
 function TOPPHelpPredicateStreamHelper.writeToStream(AStream: TStream): Boolean;
 begin

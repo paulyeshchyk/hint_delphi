@@ -194,8 +194,8 @@
         <DCCReference Include="dxSkinVS2010RS25.dcp"/>
         <DCCReference Include="dxSkinWhiteprintRS25.dcp"/>
         <DCCReference Include="dxSkinXmas2008BlueRS25.dcp"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.Filereader.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Mapping.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Map.Filereader.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Map.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Component.Enumerator.pas"/>
@@ -203,7 +203,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Nonatomic.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Dataset.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Mapping.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Request.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Server.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Error.pas"/>

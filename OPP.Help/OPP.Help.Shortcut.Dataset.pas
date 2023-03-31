@@ -4,17 +4,16 @@ interface
 
 uses
   System.Generics.Collections,
-
-  OPP.Help.Shortcut.Mapping;
+  OPP.Help.Map;
 
 type
   TOPPHelpShortcutDataset = class
   private
-    fShortcutHelpMatrix: TDictionary<String, TOPPHelpShortcutMap>;
+    fShortcutHelpMatrix: TDictionary<String, TOPPHelpMap>;
   public
     constructor Create;
     function load(AFilename: String): Integer;
-    function getMapping(key: String): TOPPHelpShortcutMap;
+    function getMapping(key: String): TOPPHelpMap;
   end;
 
 implementation
@@ -26,16 +25,16 @@ uses
 
 constructor TOPPHelpShortcutDataset.Create;
 begin
-  fShortcutHelpMatrix := TDictionary<String, TOPPHelpShortcutMap>.Create;
+  fShortcutHelpMatrix := TDictionary<String, TOPPHelpMap>.Create;
 end;
 
 function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
 var
   callback: TOPPHelpShortcutMapJSONReadCallback;
 begin
-  callback := procedure(AList: TList<TOPPHelpShortcutMap>; Error: Exception)
+  callback := procedure(AList: TList<TOPPHelpMap>; Error: Exception)
     var
-      map: TOPPHelpShortcutMap;
+      map: TOPPHelpMap;
     begin
       fShortcutHelpMatrix.Clear;
       if Assigned(Error) then
@@ -51,13 +50,13 @@ begin
       end;
     end;
 
-  TOPPHelpShortcutMap.readJSON(AFilename, callback);
+  TOPPHelpMap.readJSON(AFilename, callback);
   result := 0;
 end;
 
-function TOPPHelpShortcutDataset.GetMapping(key: string): TOPPHelpShortcutMap;
+function TOPPHelpShortcutDataset.GetMapping(key: string): TOPPHelpMap;
 var
-  Mapping: TOPPHelpShortcutMap;
+  Mapping: TOPPHelpMap;
 begin
   try
     Mapping := nil;

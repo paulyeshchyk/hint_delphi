@@ -15,7 +15,7 @@ uses
   OPP.Help.Predicate,
   OPP.Help.Shortcut.Dataset,
   OPP.Help.Shortcut.Request,
-  OPP.Help.Shortcut.Mapping,
+  OPP.Help.Map,
   OPP.Help.System.Messaging,
   OPP.Help.System.Messaging.Pipe;
 
@@ -147,7 +147,7 @@ end;
 
 procedure TOPPHelpShortcutServer.showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
 var
-  fMapping: TOPPHelpShortcutMap;
+  fMapping: TOPPHelpMap;
   fShortcutIdentifier: String;
   fOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier;
 begin

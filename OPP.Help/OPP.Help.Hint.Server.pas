@@ -13,15 +13,15 @@ uses
   OPP.Help.Nonatomic,
   OPP.Help.System.Str,
   OPP.Help.Predicate,
-  OPP.Help.Hint.Mapping,
+  OPP.Help.Map,
   OPP.Help.Interfaces,
   OPP.Help.Meta;
 
 type
   TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
-  TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpHintMap>);
+  TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpMap>);
   TOPPHelpHintServerOnGetMetaFactory = reference to function(AComponent: TComponent): TList<TOPPHelpMeta>;
-  TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpHintMap): IOPPHelpHintDataReader;
+  TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpMap): IOPPHelpHintDataReader;
 
   TOPPHelpHintMappingRequest = class
   private
@@ -59,9 +59,9 @@ type
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
-    procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
+    procedure MergeMaps(AList: TList<TOPPHelpMap>);
     procedure SaveMaps(AFileName: String);
-    procedure SaveCustomList(AList: TList<TOPPHelpHintMap>; AFileName: String);
+    procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
   end;
@@ -69,7 +69,7 @@ type
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
   private
     fLoaded: Boolean;
-    fHintMapSet: TOPPHelpHintMapSet;
+    fHintMapSet: TOPPHelpMapSet;
 
     fHintMetaDict: TDictionary<TSymbolName, String>;
     fDefaultOnHintReaderCreator: TOPPHelpHintViewCreator;
@@ -88,9 +88,9 @@ type
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
-    procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
+    procedure MergeMaps(AList: TList<TOPPHelpMap>);
     procedure SaveMaps(AFileName: String);
-    procedure SaveCustomList(AList: TList<TOPPHelpHintMap>; AFileName: String);
+    procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
 
@@ -102,7 +102,7 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
-  OPP.Help.Hint.Mapping.Filereader,
+  OPP.Help.Map.Filereader,
   OPP.Help.System.Error,
   OPP.Help.Log;
 
@@ -139,7 +139,7 @@ end;
 constructor TOPPHelpHintServer.Create;
 begin
   fHintDataReaders := TDictionary<String, IOPPHelpHintDataReader>.Create();
-  fHintMapSet := TOPPHelpHintMapSet.Create();
+  fHintMapSet := TOPPHelpMapSet.Create();
   fHintMetaDict := TDictionary<TSymbolName, String>.Create();
 end;
 
@@ -163,7 +163,7 @@ begin
 
   eventLogger.Log('will load config');
 
-  fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpHintMap>; Error: Exception)
+  fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpMap>; Error: Exception)
     begin
 
       self.fLoaded := true;
@@ -176,7 +176,7 @@ begin
       fHintMapSet.AddMaps(AList);
     end;
 
-  TOPPHelpHintMap.readJSON(filename, fOPPHelpHintMapJSONReadCallback);
+  TOPPHelpMap.readJSON(filename, fOPPHelpHintMapJSONReadCallback);
 
 end;
 
@@ -186,7 +186,7 @@ end;
 // reader will take predicate from hintmap and then it should run search using predicate
 function TOPPHelpHintServer.findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
 var
-  fMap: TOPPHelpHintMap;
+  fMap: TOPPHelpMap;
   fPredicate: TOPPHelpPredicate;
   mapWasFound: Boolean;
 begin
@@ -267,7 +267,7 @@ end;
 function TOPPHelpHintServer.GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
 var
   fReader: IOPPHelpHintDataReader;
-  fHintMap: TOPPHelpHintMap;
+  fHintMap: TOPPHelpMap;
 begin
 
   fReader := findOrCreateReader(AHintIdentifier);
@@ -353,8 +353,8 @@ procedure TOPPHelpHintServer.SaveHints(ARequest: TOPPHelpHintMappingSaveRequest;
 var
   fList: TList<TOPPHelpMeta>;
   fMeta: TOPPHelpMeta;
-  fMap: TOPPHelpHintMap;
-  fMapList: TList<TOPPHelpHintMap>;
+  fMap: TOPPHelpMap;
+  fMapList: TList<TOPPHelpMap>;
   fListOfUniques: TList<String>;
 begin
 
@@ -366,7 +366,7 @@ begin
   end;
 
   fListOfUniques := TList<String>.Create();
-  fMapList := TList<TOPPHelpHintMap>.Create();
+  fMapList := TList<TOPPHelpMap>.Create();
   try
     fList := ARequest.OnGetHintFactory(ARequest.Control);
     try
@@ -376,7 +376,9 @@ begin
           continue;
         fListOfUniques.Add(fMeta.identifier);
 
-        fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);
+        fMap := TOPPHelpMap.Create();
+        fMap.identifier := fMeta.identifier;
+        fMap.Predicate := TOPPHelpPredicate.Create;
         if Length(ARequest.DefaultPredicateFileName) > 0 then
           fMap.Predicate.filename := ARequest.DefaultPredicateFileName;
         fMapList.Add(fMap);
@@ -406,15 +408,15 @@ end;
 
 procedure TOPPHelpHintServer.SaveMaps(AFileName: String);
 begin
-  TOPPHelpHintMap.saveJSON(fHintMapSet.list, AFileName);
+  TOPPHelpMap.saveJSON(fHintMapSet.list, AFileName);
 end;
 
-procedure TOPPHelpHintServer.SaveCustomList(AList: TList<TOPPHelpHintMap>; AFileName: String);
+procedure TOPPHelpHintServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
 begin
-  TOPPHelpHintMap.saveJSON(AList, AFileName);
+  TOPPHelpMap.saveJSON(AList, AFileName);
 end;
 
-procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpHintMap>);
+procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpMap>);
 begin
   fHintMapSet.MergeMaps(AList);
 end;
