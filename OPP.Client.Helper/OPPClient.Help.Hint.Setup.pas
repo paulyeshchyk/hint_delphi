@@ -1,4 +1,4 @@
-unit OPPClient.Help.Hint.Setup;
+﻿unit OPPClient.Help.Hint.Setup;
 
 interface
 
@@ -10,7 +10,7 @@ uses
 type
   TOPPClientHintHelper = class
   public
-    class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
+    class procedure LoadHints(AForm: TControl; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; AFilename: String = '');
   private
     class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
     class function OnGetHintFactory(): IOPPHelpMetaFactory;
@@ -28,16 +28,22 @@ uses
 var
   fMetaFactory: TOPPHelpMetaHintFactory;
 
-class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
+class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; AFilename: String);
 var
   fRequest: TOPPHelpHintMappingLoadRequest;
+  fFileName: String;
 begin
+
+  if Length(AFilename) <> 0 then
+    fFileName := AFileName
+  else
+    fFileName := '.\help\mapping\hints_matrix.json';
 
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
 
   fRequest := TOPPHelpHintMappingLoadRequest.Create;
   try
-    fRequest.mappingFileName := '.\help\mapping\hints_matrix.json';
+    fRequest.mappingFileName := fFileName;
     fRequest.control := AForm;
     fRequest.OnGetHintFactory := OnGetHintFactory;
     helpHintServer.LoadHints(fRequest,
