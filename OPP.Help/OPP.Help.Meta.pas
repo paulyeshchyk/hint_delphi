@@ -4,7 +4,7 @@ interface
 
 uses
   System.Generics.Collections,
-  System.Classes,
+  System.Classes, System.SysUtils,
   OPP.Help.Nonatomic;
 
 type
@@ -43,7 +43,7 @@ end;
 
 function TOPPHelpMeta.GetIsValid(): Boolean;
 begin
-  result := Length(identifier) <> 0
+  result := Length(Trim(identifier)) <> 0
 end;
 
 end.

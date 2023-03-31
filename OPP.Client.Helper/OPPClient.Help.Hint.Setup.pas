@@ -18,7 +18,7 @@ type
     constructor Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
     destructor Destroy; override;
     procedure LoadHints(AForm: TControl; AFilename: String = '');
-    procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
+    procedure SaveHints(AForm: TControl; useGlobal: Boolean; AFilename: String; predicateFileName: String);
   end;
 
 implementation
@@ -72,7 +72,7 @@ begin
   end;
 end;
 
-procedure TOPPClientHintHelper.SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
+procedure TOPPClientHintHelper.SaveHints(AForm: TControl;useGlobal: Boolean;  AFilename: String; predicateFileName: String);
 var
   fRequest: TOPPHelpHintMappingSaveRequest;
   fMetaFactory: TOPPHelpMetaHintFactory;
@@ -88,7 +88,7 @@ begin
           result := fMetaFactory.GetChildrenHelpMeta(AComponent)
         end;
 
-      helpHintServer.SaveHints(fRequest, nil);
+      helpHintServer.SaveHints(fRequest, useGlobal, nil);
 
     finally
       fRequest.Free;

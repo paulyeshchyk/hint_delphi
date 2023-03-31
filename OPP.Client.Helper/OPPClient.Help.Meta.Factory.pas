@@ -18,12 +18,21 @@ type
 implementation
 
 uses
+  System.SysUtils,
   Vcl.Controls, Vcl.StdCtrls,
   OPPRTTIUtils,
   OPP.Help.Component.Enumerator,
-  OPP.Help.Log;
+  OPP.Help.Log,
+  cxEdit, cxButtons;
 
 function TOPPHelpMetaHintFactory.GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
+var
+  fListOfValidClasses: TList<TClass>;
+  fIsValidProperty, fIsValidClass: Boolean;
+  fClassToTest: TClass;
+  fPropertyName: String;
+  fPropertyValue: String;
+  fListOfValidProperties: TList<String>;
 begin
 
   if not Assigned(AComponent) then
@@ -32,22 +41,48 @@ begin
     exit;
   end;
 
-  result := TOPPHelpMeta.Create('Name', AComponent.Name);
+  fListOfValidClasses := TList<TClass>.Create;
+  fListOfValidClasses.Add(TEdit);
+  fListOfValidClasses.Add(TButton);
+  fListOfValidClasses.Add(TcxCustomEdit);
+  fListOfValidClasses.Add(TcxButton);
 
-  if TEdit = AComponent.ClassType then
-  begin
-    result.propertyName := 'HelpKeyword';
-    result.identifier := (AComponent as TEdit).HelpKeyword;
-  end
-  else if TCheckBox = AComponent.ClassType then
-  begin
-    result.propertyName := 'HelpKeyword';
-    result.identifier := (AComponent as TCheckBox).HelpKeyword;
-  end
-  else if 'TOppObjControl' = AComponent.ClassName then
+  fListOfValidProperties := TList<String>.Create;
+  fListOfValidProperties.Add('HelpKeyword');
+  fListOfValidProperties.Add('Name');
+
+
+  if 'TOppObjControl' = AComponent.ClassName then
   begin
     result.propertyName := 'TypeObject';
-    result.identifier := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent,'TypeObject');
+    result.identifier := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent, 'TypeObject');
+    exit;
+  end;
+
+  fIsValidClass := false;
+  for fClassToTest in fListOfValidClasses do
+  begin
+    if AComponent is fClassToTest then
+    begin
+      fIsValidClass := true;
+      break;
+    end;
+  end;
+
+  if fIsValidClass then
+  begin
+    fIsValidProperty := false;
+    for fPropertyName in fListOfValidProperties do
+    begin
+      fPropertyValue := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent, fPropertyName);
+      fIsValidProperty := Length(Trim(fPropertyValue)) <> 0;
+      if fIsValidProperty then
+      begin
+        result.propertyName := fPropertyName;
+        result.identifier := fPropertyValue;
+        break;
+      end;
+    end;
   end;
 
 end;
@@ -64,7 +99,10 @@ begin
   for child in list do
   begin
     fMeta := self.GetHintMeta(child);
-    result.Add(fMeta)
+    if fMeta.isValid then
+    begin
+      result.Add(fMeta);
+    end;
   end;
 end;
 

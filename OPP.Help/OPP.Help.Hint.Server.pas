@@ -58,9 +58,10 @@ type
     /// <remarks> </remarks>
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
-    procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
+    procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
+    procedure SaveCustomList(AList: TList<TOPPHelpHintMap>; AFileName: String);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
   end;
@@ -86,9 +87,10 @@ type
 
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
-    procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
+    procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpHintMap>);
     procedure SaveMaps(AFileName: String);
+    procedure SaveCustomList(AList: TList<TOPPHelpHintMap>; AFileName: String);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
 
@@ -275,7 +277,7 @@ begin
     if Assigned(fHintMap) then
       result := fReader.FindHintDataForBookmarkIdentifier(fHintMap.Predicate);
   end else begin
-    //FAKE hint
+    // FAKE hint
     result.rtf := AHintIdentifier.toRTF;
   end;
 end;
@@ -347,12 +349,13 @@ begin
   self.GetHints(ARequest, fChildrenHelpMetaList, completion);
 end;
 
-procedure TOPPHelpHintServer.SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; completion: TOPPHelpMapGenerationCompletion);
+procedure TOPPHelpHintServer.SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
 var
   fList: TList<TOPPHelpMeta>;
   fMeta: TOPPHelpMeta;
   fMap: TOPPHelpHintMap;
   fMapList: TList<TOPPHelpHintMap>;
+  fListOfUniques: TList<String>;
 begin
 
   if not Assigned(ARequest.OnGetHintFactory) then
@@ -362,20 +365,31 @@ begin
     exit;
   end;
 
+  fListOfUniques := TList<String>.Create();
   fMapList := TList<TOPPHelpHintMap>.Create();
   try
     fList := ARequest.OnGetHintFactory(ARequest.Control);
     try
       for fMeta in fList do
       begin
+        if fListOfUniques.Contains(fMeta.identifier) then
+          continue;
+        fListOfUniques.Add(fMeta.identifier);
+
         fMap := TOPPHelpHintMap.Create(fMeta.identifier, TOPPHelpPredicate.Create);
         if Length(ARequest.DefaultPredicateFileName) > 0 then
           fMap.Predicate.filename := ARequest.DefaultPredicateFileName;
         fMapList.Add(fMap);
       end;
 
-      helpHintServer.MergeMaps(fMapList);
-      helpHintServer.SaveMaps(ARequest.MappingFileName);
+      if useGlobal then
+      begin
+        helpHintServer.MergeMaps(fMapList);
+        helpHintServer.SaveMaps(ARequest.MappingFileName);
+      end else begin
+
+        helpHintServer.SaveCustomList(fMapList, ARequest.MappingFileName);
+      end;
 
       if Assigned(completion) then
       begin
@@ -386,12 +400,18 @@ begin
     end;
   finally
     fMapList.Free;
+    fListOfUniques.Free;
   end;
 end;
 
 procedure TOPPHelpHintServer.SaveMaps(AFileName: String);
 begin
   TOPPHelpHintMap.saveJSON(fHintMapSet.list, AFileName);
+end;
+
+procedure TOPPHelpHintServer.SaveCustomList(AList: TList<TOPPHelpHintMap>; AFileName: String);
+begin
+  TOPPHelpHintMap.saveJSON(AList, AFileName);
 end;
 
 procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpHintMap>);
