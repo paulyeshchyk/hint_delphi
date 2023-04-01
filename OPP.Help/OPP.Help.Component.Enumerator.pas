@@ -10,21 +10,23 @@ uses
 type
 
   TOPPHelpComponentComparator = reference to function(AComponent: TComponent): Boolean;
+  TOPPHelpComponentEnumeratorCompletion = reference to procedure(AComponent: TComponent);
 
   TOPPHelpComponentEnumerator = class helper for TComponent
   public
-    function GetChildrenRecursive(AComparator: TOPPHelpComponentComparator; IsControlOnly: Boolean = false): TList<TComponent>;
+    function GetChildrenRecursive(AComparator: TOPPHelpComponentComparator = nil; ACompletion: TOPPHelpComponentEnumeratorCompletion = nil): TList<TComponent>;
     function FindSubControl(Meta: TOPPHelpMeta): TComponent;
     function isSupportingMeta(Meta: TOPPHelpMeta): Boolean;
+    function canApplyHintsRecursively(): Boolean;
   end;
 
 implementation
 
 uses OPP.Help.Log;
 
-function TOPPHelpComponentEnumerator.GetChildrenRecursive(AComparator: TOPPHelpComponentComparator; IsControlOnly: Boolean = false): TList<TComponent>;
+function TOPPHelpComponentEnumerator.GetChildrenRecursive(AComparator: TOPPHelpComponentComparator; ACompletion: TOPPHelpComponentEnumeratorCompletion): TList<TComponent>;
 var
-  fChildComponent: TComponent;
+  fChild: TComponent;
   i: Integer;
   fComparatorResult: Boolean;
 begin
@@ -32,22 +34,32 @@ begin
 
   for i := 0 to ComponentCount - 1 do
   begin
-    fChildComponent := self.Components[i];
+    fChild := self.Components[i];
 
-    eventLogger.Flow(Format('enumerator: adding [%s]', [fChildComponent.ClassName]));
+    eventLogger.Flow(Format('iterating [%s]', [fChild.ClassName]));
 
     if assigned(AComparator) then
     begin
-      fComparatorResult := AComparator(fChildComponent);
+      fComparatorResult := AComparator(fChild);
       if fComparatorResult = true then
       begin
-        result.Add(fChildComponent);
-        result.AddRange(fChildComponent.GetChildrenRecursive(AComparator, IsControlOnly));
+        eventLogger.Flow(Format('adding [%s]', [fChild.ClassName]), 'Enumerator');
+        result.Add(fChild);
+        if assigned(ACompletion) then
+          ACompletion(fChild);
       end;
 
+      // recursion: add all children, even parent is not valid
+      result.AddRange(fChild.GetChildrenRecursive(AComparator, ACompletion));
+
     end else begin
-      result.Add(fChildComponent);
-      result.AddRange(fChildComponent.GetChildrenRecursive(AComparator, IsControlOnly));
+      eventLogger.Flow(Format('adding [%s]', [fChild.ClassName]), 'Enumerator');
+      result.Add(fChild);
+      if assigned(ACompletion) then
+        ACompletion(fChild);
+
+      // recursion
+      result.AddRange(fChild.GetChildrenRecursive(AComparator, ACompletion));
     end;
   end;
 end;
@@ -62,7 +74,20 @@ begin
     valueToCompare := String(GetPropValue(self, Meta.propertyName));
     result := CompareStr(valueToCompare, Meta.identifier) = 0;
   end;
+end;
 
+function TOPPHelpComponentEnumerator.canApplyHintsRecursively(): Boolean;
+const
+  fListOfClasses: array of String = ['TOppAttrControl', 'TOppObjControl'];
+var
+  i: Integer;
+begin
+  for i := 0 to Length(fListOfClasses) - 1 do
+  begin
+    result := self.ClassName = fListOfClasses[i];
+    if result then
+      break;
+  end;
 end;
 
 function TOPPHelpComponentEnumerator.FindSubControl(Meta: TOPPHelpMeta): TComponent;
@@ -78,7 +103,12 @@ begin
     function(AComponent: TComponent): Boolean
     begin
       result := true;
+    end,
+    procedure(AComponent: TComponent)
+    begin
+      //
     end);
+
   for child in fChildren do
   begin
     eventLogger.Debug(Format('Form [%s] Iterating over component [%s]', [self.ClassName, child.ClassName]));

@@ -13,8 +13,8 @@ type
   private
     fHintController: TcxHintStyleController;
     fRepo: TdxScreenTipRepository;
-    procedure CreateHintViews(AForm: TControl; AHintTexts: TList<TOPPHelpHint>);
-    procedure ApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
+    procedure CreateHintViews(AForm: TControl; AHintList: TList<TOPPHelpHint>);
+    procedure AddDXScreenTip(AComponent: TComponent; AHint: TOPPHelpHint);
     procedure RecursiveApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
   public
     constructor Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
@@ -100,15 +100,12 @@ begin
   end;
 end;
 
-procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; AHintTexts: TList<TOPPHelpHint>);
+procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; AHintList: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
-  fControl: TControl;
-  fChild: TComponent;
-  fChildren: TList<TComponent>;
 begin
 
-  if (not assigned(AHintTexts)) or (AHintTexts.Count = 0) then
+  if (not assigned(AHintList)) or (AHintList.Count = 0) then
   begin
     eventLogger.Warning(Format('No Screentip be created, because hints are not available for [%s]', [AForm.ClassName]));
     exit;
@@ -126,37 +123,23 @@ begin
     exit;
   end;
 
-  fChildren := AForm.GetChildrenRecursive(nil);
-
-  eventLogger.Debug(Format('will create [%d] hints for [%s]', [AHintTexts.Count, AForm.ClassName]));
-  for fHint in AHintTexts do
-  begin
-
-    eventLogger.Debug(Format('looking for control with hint.id [%s]', [fHint.Meta.identifier]));
-
-    fControl := nil;
-    for fChild in fChildren do
+  AForm.GetChildrenRecursive(nil,
+    procedure(AComponent: TComponent)
+    var
+      fHint: TOPPHelpHint;
+      fIsHintSupported: Boolean;
     begin
-      if fChild.isSupportingMeta(fHint.Meta) then
+      for fHint in AHintList do
       begin
-        fControl := fChild as TControl;
-        break;
+        fIsHintSupported := AComponent.isSupportingMeta(fHint.Meta);
+        if fIsHintSupported then
+        begin
+          RecursiveApplyHint(AComponent, fHint);
+          AddDXScreenTip(AComponent, fHint);
+          break;
+        end;
       end;
-    end;
-
-    if not assigned(fControl) then
-    begin
-      eventLogger.Debug(Format('will not create hint window for hint.id [%s], because form [%s] has no component supporting that', [fHint.Meta.identifier, AForm.ClassName]));
-      continue;
-    end;
-
-    eventLogger.Debug(Format('will create hint window for hint.id [%s] with text', [fHint.Meta.identifier, fHint.Data.rtf]));
-
-    RecursiveApplyHint(fControl, fHint);
-
-    ApplyHint(fControl, fHint);
-
-  end;
+    end);
 end;
 
 procedure TOPPClientHintHelper.RecursiveApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
@@ -164,14 +147,17 @@ var
   fHintedControlChildren, fChildren: TList<TComponent>;
   fHintedChild: TComponent;
 begin
-  fHintedControlChildren := AComponent.GetChildrenRecursive(nil);
+  if not AComponent.canApplyHintsRecursively() then
+    exit;
+
+  fHintedControlChildren := AComponent.GetChildrenRecursive(nil, nil);
   for fHintedChild in fHintedControlChildren do
   begin
-    ApplyHint(fHintedChild, AHint);
+    AddDXScreenTip(fHintedChild, AHint);
   end;
 end;
 
-procedure TOPPClientHintHelper.ApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
+procedure TOPPClientHintHelper.AddDXScreenTip(AComponent: TComponent; AHint: TOPPHelpHint);
 var
   fControl: TControl;
   fScreenTip: TdxScreenTip;

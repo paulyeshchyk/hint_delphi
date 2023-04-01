@@ -33,9 +33,10 @@ constructor TOPPHelpMetaHintFactory.Create;
 begin
   inherited Create;
   fComponentPropertyMapping := TDictionary<String, TOPPHelpMetaMappingValue>.Create();
-  // fComponentPropertyMapping.Add('TOppObjControl', ['TypeObject']);
-  // fComponentPropertyMapping.Add('TcxTabSheet', ['Caption', 'HelpKeyword']);
-  fComponentPropertyMapping.Add('TPanel', ['HelpKeyword']);
+  fComponentPropertyMapping.Add('TOppObjControl', ['TypeObject']);
+  fComponentPropertyMapping.Add('TOppAttrControl', ['Attribute']);
+  //fComponentPropertyMapping.Add('TdxDockPanel', ['HelpKeyword']);
+  // fComponentPropertyMapping.Add('TPanel', ['HelpKeyword']);
   // fComponentPropertyMapping.Add('TButton', ['HelpKeyword']);
   // fComponentPropertyMapping.Add('TEdit', ['HelpKeyword']);
   // fComponentPropertyMapping.Add('TcxButton', ['HelpKeyword']);
@@ -77,7 +78,7 @@ begin
 
   for i := 0 to Length(mappedPropertyNames) - 1 do
   begin
-    identifier := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent, mappedPropertyNames[i]);
+    identifier := OPPRTTIUtils.OPPObjectDOTPropertyValueGet(AComponent, mappedPropertyNames[i]);
     if (VarIsNull(identifier) or VarIsEmpty(identifier)) then
       continue;
 
@@ -99,18 +100,26 @@ begin
 
   fFilter := TList<String>.Create();
   try
-
     list := AComponent.GetChildrenRecursive(
       function(AComponent: TComponent): Boolean
+      var
+        fMeta: TOPPHelpMeta;
       begin
         fMeta := self.GetHintMeta(AComponent);
         result := (fMeta.isValid and (not fFilter.Contains(fMeta.identifier)));
+      end,
+      procedure(AComponent: TComponent)
+      var
+        fMeta: TOPPHelpMeta;
+      begin
+        fMeta := self.GetHintMeta(AComponent);
+        fFilter.Add(fMeta.identifier);
       end);
 
     for child in list do
     begin
+      fMeta := self.GetHintMeta(child);
       result.Add(fMeta);
-      fFilter.Add(fMeta.identifier);
     end;
   finally
     fFilter.Free;
