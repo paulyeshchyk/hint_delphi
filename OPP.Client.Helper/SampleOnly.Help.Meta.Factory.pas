@@ -27,7 +27,7 @@ begin
 
   if not Assigned(AComponent) then
   begin
-    eventLogger.Log('trying to get hint meta from nil component', lmWarning);
+    eventLogger.Warning('trying to get hint meta from nil component');
     exit;
   end;
 

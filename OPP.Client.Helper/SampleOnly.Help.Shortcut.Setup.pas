@@ -52,7 +52,7 @@ begin
     exit;
   end;
 
-  eventLogger.Log(AControl.ClassName);
+  eventLogger.Debug(AControl.ClassName);
 
   if AControl.ClassType.InheritsFrom(TcxTreeView) then
   begin

@@ -151,7 +151,7 @@ begin
     exit;
   end;
 
-  eventLogger.Log(AControl.ClassName);
+  eventLogger.Debug(AControl.ClassName);
   if Length(AControl.HelpKeyword) <> 0 then
   begin
     result := AControl.HelpKeyword;
@@ -182,7 +182,7 @@ var
   strmessage: String;
 begin
   strmessage := Format('show help completion result: %d', [Integer(completionResult)]);
-  eventLogger.Log(strmessage);
+  eventLogger.Debug(strmessage);
 end;
 
 procedure TSampleForm.OnGenerateHint(AList: TList<TOPPHelpMap>);
@@ -190,17 +190,17 @@ var
   strmessage: String;
 begin
   strmessage := Format('generated hints: %d', [Integer(AList.Count)]);
-  eventLogger.Log(strmessage);
+  eventLogger.Debug(strmessage);
 end;
 
 procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
-  fControl: TControl;
+  fControl: TComponent;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
-  eventLogger.Log(Format('will create screentips [%d]', [hints.Count]));
+  eventLogger.Debug(Format('will create screentips [%d]', [hints.Count]));
 
   for fHint in hints do
   begin
@@ -209,7 +209,7 @@ begin
     if not assigned(fControl) then
       exit;
 
-    fControl.ShowHint := true;
+    TControl(fControl).ShowHint := true;
 
     fScreenTip := tipsRepo.Items.Add;
     fScreenTip.Width := 789;
@@ -222,7 +222,7 @@ begin
 
     fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
     fScreenTipLink.ScreenTip := fScreenTip;
-    fScreenTipLink.control := fControl;
+    fScreenTipLink.control := TControl(fControl);
 
   end;
 end;
@@ -237,7 +237,7 @@ begin
     exit;
   end;
 
-  eventLogger.Log(AControl.ClassName);
+  eventLogger.Debug(AControl.ClassName);
 
   if AControl.ClassType.InheritsFrom(TForm) then
   begin
