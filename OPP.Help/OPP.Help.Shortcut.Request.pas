@@ -33,7 +33,7 @@ begin
   fMsg := msg;
   fActiveControl := AActiveControl;
 
-  eventLogger.Log(fActiveControl.ClassName);
+  eventLogger.Debug(fActiveControl.ClassName);
 end;
 
 end.

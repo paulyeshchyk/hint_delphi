@@ -8,9 +8,14 @@ uses
   OPP.Help.Meta;
 
 type
+  TOPPHelpMetaMappingValue = array of string;
 
   TOPPHelpMetaHintFactory = class(TInterfacedObject, IOPPHelpMetaFactory)
+  private
+    fComponentPropertyMapping: TDictionary<String, TOPPHelpMetaMappingValue>;
   public
+    constructor Create;
+    destructor Destroy; override;
     function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
     function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
   end;
@@ -18,12 +23,30 @@ type
 implementation
 
 uses
-  System.SysUtils,
-  Vcl.Controls, Vcl.StdCtrls,
+  System.SysUtils, Variants,
   OPPRTTIUtils,
+
   OPP.Help.Component.Enumerator,
-  OPP.Help.Log,
-  cxEdit, cxButtons;
+  OPP.Help.Log;
+
+constructor TOPPHelpMetaHintFactory.Create;
+begin
+  inherited Create;
+  fComponentPropertyMapping := TDictionary<String, TOPPHelpMetaMappingValue>.Create();
+  // fComponentPropertyMapping.Add('TOppObjControl', ['TypeObject']);
+  // fComponentPropertyMapping.Add('TcxTabSheet', ['Caption', 'HelpKeyword']);
+  fComponentPropertyMapping.Add('TPanel', ['HelpKeyword']);
+  // fComponentPropertyMapping.Add('TButton', ['HelpKeyword']);
+  // fComponentPropertyMapping.Add('TEdit', ['HelpKeyword']);
+  // fComponentPropertyMapping.Add('TcxButton', ['HelpKeyword']);
+  // fComponentPropertyMapping.Add('TcxEdit', ['HelpKeyword']);
+end;
+
+destructor TOPPHelpMetaHintFactory.Destroy;
+begin
+  fComponentPropertyMapping.Free;
+  inherited Destroy;
+end;
 
 function TOPPHelpMetaHintFactory.GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
 var
@@ -33,56 +56,34 @@ var
   fPropertyName: String;
   fPropertyValue: String;
   fListOfValidProperties: TList<String>;
+  mappedPropertyNames: TOPPHelpMetaMappingValue;
+  i: Integer;
+  identifier: Variant;
 begin
+  result.propertyName := '';
+  result.identifier := '';
 
   if not Assigned(AComponent) then
   begin
-    eventLogger.Log('trying to get hint meta from nil component', lmWarning);
+    eventLogger.Warning('trying to get hint meta from nil component');
     exit;
   end;
 
-  fListOfValidClasses := TList<TClass>.Create;
-  fListOfValidClasses.Add(TEdit);
-  fListOfValidClasses.Add(TButton);
-  fListOfValidClasses.Add(TcxCustomEdit);
-  fListOfValidClasses.Add(TcxButton);
-
-  fListOfValidProperties := TList<String>.Create;
-  fListOfValidProperties.Add('HelpKeyword');
-  fListOfValidProperties.Add('Name');
-
-
-  if 'TOppObjControl' = AComponent.ClassName then
+  fComponentPropertyMapping.TryGetValue(AComponent.ClassName, mappedPropertyNames);
+  if (Length(mappedPropertyNames) = 0) then
   begin
-    result.propertyName := 'TypeObject';
-    result.identifier := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent, 'TypeObject');
     exit;
   end;
 
-  fIsValidClass := false;
-  for fClassToTest in fListOfValidClasses do
+  for i := 0 to Length(mappedPropertyNames) - 1 do
   begin
-    if AComponent is fClassToTest then
-    begin
-      fIsValidClass := true;
-      break;
-    end;
-  end;
+    identifier := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent, mappedPropertyNames[i]);
+    if (VarIsNull(identifier) or VarIsEmpty(identifier)) then
+      continue;
 
-  if fIsValidClass then
-  begin
-    fIsValidProperty := false;
-    for fPropertyName in fListOfValidProperties do
-    begin
-      fPropertyValue := OPPRTTIUtils.OPPObjectPropertyValueGet(AComponent, fPropertyName);
-      fIsValidProperty := Length(Trim(fPropertyValue)) <> 0;
-      if fIsValidProperty then
-      begin
-        result.propertyName := fPropertyName;
-        result.identifier := fPropertyValue;
-        break;
-      end;
-    end;
+    result.propertyName := mappedPropertyNames[i];
+    result.identifier := identifier;
+    break;
   end;
 
 end;
@@ -92,17 +93,27 @@ var
   list: TList<TComponent>;
   child: TComponent;
   fMeta: TOPPHelpMeta;
+  fFilter: TList<String>;
 begin
   result := TList<TOPPHelpMeta>.Create();
 
-  list := AComponent.GetChildrenRecursive;
-  for child in list do
-  begin
-    fMeta := self.GetHintMeta(child);
-    if fMeta.isValid then
+  fFilter := TList<String>.Create();
+  try
+
+    list := AComponent.GetChildrenRecursive(
+      function(AComponent: TComponent): Boolean
+      begin
+        fMeta := self.GetHintMeta(AComponent);
+        result := (fMeta.isValid and (not fFilter.Contains(fMeta.identifier)));
+      end);
+
+    for child in list do
     begin
       result.Add(fMeta);
+      fFilter.Add(fMeta.identifier);
     end;
+  finally
+    fFilter.Free;
   end;
 end;
 

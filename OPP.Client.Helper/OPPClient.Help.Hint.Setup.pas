@@ -13,7 +13,9 @@ type
   private
     fHintController: TcxHintStyleController;
     fRepo: TdxScreenTipRepository;
-    procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>);
+    procedure CreateHintViews(AForm: TControl; AHintTexts: TList<TOPPHelpHint>);
+    procedure ApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
+    procedure RecursiveApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
   public
     constructor Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
     destructor Destroy; override;
@@ -60,9 +62,9 @@ begin
         end;
 
       helpHintServer.LoadHints(fRequest,
-        procedure(hints: TList<TOPPHelpHint>)
+        procedure(HintTexts: TList<TOPPHelpHint>)
         begin
-          self.CreateHintViews(AForm, hints);
+          self.CreateHintViews(AForm, HintTexts);
         end);
     finally
       fRequest.Free;
@@ -72,7 +74,7 @@ begin
   end;
 end;
 
-procedure TOPPClientHintHelper.SaveHints(AForm: TControl;useGlobal: Boolean;  AFilename: String; predicateFileName: String);
+procedure TOPPClientHintHelper.SaveHints(AForm: TControl; useGlobal: Boolean; AFilename: String; predicateFileName: String);
 var
   fRequest: TOPPHelpHintMappingSaveRequest;
   fMetaFactory: TOPPHelpMetaHintFactory;
@@ -98,51 +100,102 @@ begin
   end;
 end;
 
-procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>);
+procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; AHintTexts: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
   fControl: TControl;
-  fScreenTip: TdxScreenTip;
-  fScreenTipLink: TdxScreenTipLink;
+  fChild: TComponent;
+  fChildren: TList<TComponent>;
 begin
+
+  if (not assigned(AHintTexts)) or (AHintTexts.Count = 0) then
+  begin
+    eventLogger.Warning(Format('No Screentip be created, because hints are not available for [%s]', [AForm.ClassName]));
+    exit;
+  end;
 
   if not assigned(fHintController) then
   begin
-    eventLogger.Log(Format('%s not assigned', ['HintController']));
+    eventLogger.Warning(Format('No Screentip be created, because HintController is not defined in [%s]', [AForm.ClassName]));
     exit;
   end;
 
   if not assigned(fRepo) then
   begin
-    eventLogger.Log(Format('%s not assigned', ['ScreenRepo']));
+    eventLogger.Warning(Format('No Screentip be created, because Tips repository is not defined in [%s]', [AForm.ClassName]));
     exit;
   end;
 
-  eventLogger.Log(Format('will create screentips [%d]', [hints.Count]));
-  for fHint in hints do
+  fChildren := AForm.GetChildrenRecursive(nil);
+
+  eventLogger.Debug(Format('will create [%d] hints for [%s]', [AHintTexts.Count, AForm.ClassName]));
+  for fHint in AHintTexts do
   begin
 
-    fControl := AForm.FindSubControl(fHint.Meta);
+    eventLogger.Debug(Format('looking for control with hint.id [%s]', [fHint.Meta.identifier]));
+
+    fControl := nil;
+    for fChild in fChildren do
+    begin
+      if fChild.isSupportingMeta(fHint.Meta) then
+      begin
+        fControl := fChild as TControl;
+        break;
+      end;
+    end;
+
     if not assigned(fControl) then
-      exit;
+    begin
+      eventLogger.Debug(Format('will not create hint window for hint.id [%s], because form [%s] has no component supporting that', [fHint.Meta.identifier, AForm.ClassName]));
+      continue;
+    end;
 
-    fControl.ShowHint := true;
+    eventLogger.Debug(Format('will create hint window for hint.id [%s] with text', [fHint.Meta.identifier, fHint.Data.rtf]));
 
-    fScreenTip := fRepo.Items.Add;
-    fScreenTip.Width := 789;
+    RecursiveApplyHint(fControl, fHint);
 
-    fScreenTip.Header.PlainText := true;
-    fScreenTip.Header.Text := ''; // Заголовок
-
-    fScreenTip.Description.PlainText := false;
-    fScreenTip.Description.Text := fHint.Data.Text; // rtf;
-
-    //TdxScreenTipStyle.Create(self).ScreenTipLinks.Add;
-    fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
-    fScreenTipLink.ScreenTip := fScreenTip;
-    fScreenTipLink.control := fControl;
+    ApplyHint(fControl, fHint);
 
   end;
+end;
+
+procedure TOPPClientHintHelper.RecursiveApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
+var
+  fHintedControlChildren, fChildren: TList<TComponent>;
+  fHintedChild: TComponent;
+begin
+  fHintedControlChildren := AComponent.GetChildrenRecursive(nil);
+  for fHintedChild in fHintedControlChildren do
+  begin
+    ApplyHint(fHintedChild, AHint);
+  end;
+end;
+
+procedure TOPPClientHintHelper.ApplyHint(AComponent: TComponent; AHint: TOPPHelpHint);
+var
+  fControl: TControl;
+  fScreenTip: TdxScreenTip;
+  fScreenTipLink: TdxScreenTipLink;
+
+begin
+  if not(AComponent is TControl) then
+    exit;
+  fControl := AComponent as TControl;
+
+  fControl.ShowHint := true;
+  fScreenTip := fRepo.Items.Add;
+  fScreenTip.Width := 789;
+
+  fScreenTip.Header.PlainText := true;
+  fScreenTip.Header.Text := ''; // Заголовок
+
+  fScreenTip.Description.PlainText := false;
+  fScreenTip.Description.Text := AHint.Data.rtf; // rtf;
+
+  fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
+  fScreenTipLink.ScreenTip := fScreenTip;
+  fScreenTipLink.control := fControl;
+
 end;
 
 end.

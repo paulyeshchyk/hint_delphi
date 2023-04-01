@@ -18,7 +18,7 @@ uses
   OPP.Help.Meta;
 
 type
-  TOPPHelpHintLoadCompletion = reference to procedure(loadedHints: TList<TOPPHelpHint>);
+  TOPPHelpHintLoadCompletion = reference to procedure(HintTexts: TList<TOPPHelpHint>);
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpMap>);
   TOPPHelpHintServerOnGetMetaFactory = reference to function(AComponent: TComponent): TList<TOPPHelpMeta>;
   TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpMap): IOPPHelpHintDataReader;
@@ -155,13 +155,18 @@ procedure TOPPHelpHintServer.reloadConfigurationIfNeed(filename: String);
 var
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
 begin
-  if fLoaded then
-    exit;
 
   if Length(filename) = 0 then
+  begin
+    eventLogger.Error('configs filename is not defined');
     exit;
+  end;
 
-  eventLogger.Log('will load config');
+  eventLogger.Debug(Format('start load config from %s', [filename]));
+  if fLoaded then
+  begin
+    exit;
+  end;
 
   fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpMap>; Error: Exception)
     begin
@@ -173,6 +178,7 @@ begin
         Error.Log();
         exit;
       end;
+      eventLogger.Debug(Format('finish load config; added [%d] maps', [AList.Count]));
       fHintMapSet.AddMaps(AList);
     end;
 
@@ -188,45 +194,48 @@ function TOPPHelpHintServer.findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapI
 var
   fMap: TOPPHelpMap;
   fPredicate: TOPPHelpPredicate;
-  mapWasFound: Boolean;
 begin
   result := nil;
 
-  fMap := fHintMapSet.GetMap(AMetaIdentifier);
-  mapWasFound := Assigned(fMap);
-
-  if not mapWasFound then
+  if fHintMapSet.list.Count = 0 then
   begin
-    // eventLogger.Log(Format('map not found for %s', [AMetaIdentifier]), lmWarning);
+    eventLogger.Warning(Format('maps list is empty; skipping search for [%s]', [AMetaIdentifier]));
     exit;
   end;
 
-  eventLogger.Log(Format('map was found for %s', [AMetaIdentifier]), lmInfo);
+  fMap := fHintMapSet.GetMap(AMetaIdentifier);
+  if not Assigned(fMap) then
+  begin
+    eventLogger.Debug(Format('map was not found for identifier [%s]', [AMetaIdentifier]));
+    exit;
+  end;
+
+  eventLogger.Debug(Format('map was found for %s', [AMetaIdentifier]));
 
   fPredicate := fMap.Predicate;
   if not Assigned(fPredicate) then
   begin
-    eventLogger.Log(Format('predicate was not found for %s', [AMetaIdentifier]), lmError);
+    eventLogger.Error(Format('predicate was not found for %s', [AMetaIdentifier]));
     exit;
   end;
 
   result := getReader(fMap.Predicate.filename);
   if Assigned(result) then
   begin
-    eventLogger.Log(Format('reader was found for:[%s]', [fMap.Predicate.filename]));
+    eventLogger.Debug(Format('reader was found for:[%s]', [fMap.Predicate.filename]));
     exit;
   end;
 
   if not Assigned(fDefaultOnHintReaderCreator) then
   begin
-    eventLogger.Log(Format('hintreader creator was not defined for:[%s]', [fMap.Predicate.filename]));
+    eventLogger.Debug(Format('hintreader creator was not defined for:[%s]', [fMap.Predicate.filename]));
     exit;
   end;
 
   result := fDefaultOnHintReaderCreator(fMap);
   if not Assigned(result) then
   begin
-    eventLogger.Log(Format('hintreader was not created for:[%s]', [fMap.Predicate.filename]));
+    eventLogger.Debug(Format('hintreader was not created for:[%s]', [fMap.Predicate.filename]));
     exit;
   end;
 
@@ -245,7 +254,7 @@ begin
 
   if fHintDataReaders.Count = 0 then
   begin
-    eventLogger.Log(Format('Found no reader for file: %s', [AFileName]));
+    eventLogger.Debug(Format('Found no reader for file: %s', [AFileName]));
     exit;
   end;
 
@@ -271,15 +280,14 @@ var
 begin
 
   fReader := findOrCreateReader(AHintIdentifier);
-  if Assigned(fReader) then
-  begin
-    fHintMap := fHintMapSet.GetMap(AHintIdentifier);
-    if Assigned(fHintMap) then
-      result := fReader.FindHintDataForBookmarkIdentifier(fHintMap.Predicate);
-  end else begin
-    // FAKE hint
-    result.rtf := AHintIdentifier.toRTF;
-  end;
+  if not Assigned(fReader) then
+    exit;
+
+  fHintMap := fHintMapSet.GetMap(AHintIdentifier);
+  if not Assigned(fHintMap) then
+    exit;
+
+  result := fReader.FindHintDataForBookmarkIdentifier(fHintMap.Predicate);
 end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
@@ -292,7 +300,7 @@ procedure TOPPHelpHintServer.GetHints(ARequest: TOPPHelpHintMappingLoadRequest; 
 var
   fHintMeta: TOPPHelpMeta;
   fHint: TOPPHelpHint;
-  result: TList<TOPPHelpHint>;
+  fHintTexts: TList<TOPPHelpHint>;
 begin
 
   self.reloadConfigurationIfNeed(ARequest.MappingFileName);
@@ -303,16 +311,16 @@ begin
     exit;
   end;
 
-  result := TList<TOPPHelpHint>.Create;
+  fHintTexts := TList<TOPPHelpHint>.Create;
   for fHintMeta in hintsMetaList do
   begin
     fHint := GetHint(fHintMeta);
     if not fHint.data.isEmpty() then
     begin
-      result.Add(fHint);
+      fHintTexts.Add(fHint);
     end;
   end;
-  completion(result);
+  completion(fHintTexts);
 end;
 
 procedure TOPPHelpHintServer.LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion);
@@ -323,7 +331,7 @@ var
   fFactory: IOPPHelpMetaFactory;
 begin
 
-  eventLogger.Log(Format('Loading hints for %s', [ARequest.Control.Name]));
+  eventLogger.Debug(Format('Loading hints for [%s]', [ARequest.Control.ClassName]));
 
   self.reloadConfigurationIfNeed(ARequest.MappingFileName);
   if not fLoaded then
@@ -335,11 +343,18 @@ begin
 
   if not Assigned(ARequest.OnGetHintFactory) then
   begin
-    eventLogger.Log('GetHints - OnGetHintFactory is not defined', lmError);
+    eventLogger.Error('GetHints - OnGetHintFactory is not defined');
     exit;
   end;
 
   fChildrenHelpMetaList := ARequest.OnGetHintFactory(ARequest.Control);
+  if (not Assigned(fChildrenHelpMetaList)) or (fChildrenHelpMetaList.Count = 0) then
+  begin
+    eventLogger.Debug(Format('Class [%s] has no controls, that are suporting hints', [ARequest.Control.ClassName]));
+    completion(nil);
+    exit;
+  end;
+
   for fChildHelpMeta in fChildrenHelpMetaList do
   begin
     fMetaIdentifier := fChildHelpMeta.identifier;
@@ -360,7 +375,7 @@ begin
 
   if not Assigned(ARequest.OnGetHintFactory) then
   begin
-    eventLogger.Log('GenerateMap - OnGetHintFactory is not defined', lmError);
+    eventLogger.Error('GenerateMap - OnGetHintFactory is not defined');
     completion(nil);
     exit;
   end;

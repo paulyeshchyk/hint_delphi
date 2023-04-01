@@ -9,18 +9,24 @@ uses
 
 type
 
+  TOPPHelpComponentComparator = reference to function(AComponent: TComponent): Boolean;
+
   TOPPHelpComponentEnumerator = class helper for TComponent
   public
-    function GetChildrenRecursive(): TList<TComponent>;
-    function FindSubControl(Meta: TOPPHelpMeta): TControl;
+    function GetChildrenRecursive(AComparator: TOPPHelpComponentComparator; IsControlOnly: Boolean = false): TList<TComponent>;
+    function FindSubControl(Meta: TOPPHelpMeta): TComponent;
+    function isSupportingMeta(Meta: TOPPHelpMeta): Boolean;
   end;
 
 implementation
 
-function TOPPHelpComponentEnumerator.GetChildrenRecursive(): TList<TComponent>;
+uses OPP.Help.Log;
+
+function TOPPHelpComponentEnumerator.GetChildrenRecursive(AComparator: TOPPHelpComponentComparator; IsControlOnly: Boolean = false): TList<TComponent>;
 var
   fChildComponent: TComponent;
   i: Integer;
+  fComparatorResult: Boolean;
 begin
   result := TList<TComponent>.Create();
 
@@ -28,45 +34,61 @@ begin
   begin
     fChildComponent := self.Components[i];
 
-    result.Add(fChildComponent);
+    eventLogger.Flow(Format('enumerator: adding [%s]', [fChildComponent.ClassName]));
 
-    result.AddRange(fChildComponent.GetChildrenRecursive());
+    if assigned(AComparator) then
+    begin
+      fComparatorResult := AComparator(fChildComponent);
+      if fComparatorResult = true then
+      begin
+        result.Add(fChildComponent);
+        result.AddRange(fChildComponent.GetChildrenRecursive(AComparator, IsControlOnly));
+      end;
+
+    end else begin
+      result.Add(fChildComponent);
+      result.AddRange(fChildComponent.GetChildrenRecursive(AComparator, IsControlOnly));
+    end;
   end;
 end;
 
-function TOPPHelpComponentEnumerator.FindSubControl(Meta: TOPPHelpMeta): TControl;
+function TOPPHelpComponentEnumerator.isSupportingMeta(Meta: TOPPHelpMeta): Boolean;
 var
-  i: Integer;
-  child, nextLevelChild: TComponent;
   valueToCompare: String;
-  found: Boolean;
 begin
-  result := nil;
-  for i := 0 to ComponentCount - 1 do
+  result := false;
+  if (IsPublishedProp(self, Meta.propertyName)) then
   begin
-    child := self.Components[i];
-    if not(child is TControl) then
-      continue;
-    if (IsPublishedProp(child, Meta.propertyName)) then
+    valueToCompare := String(GetPropValue(self, Meta.propertyName));
+    result := CompareStr(valueToCompare, Meta.identifier) = 0;
+  end;
+
+end;
+
+function TOPPHelpComponentEnumerator.FindSubControl(Meta: TOPPHelpMeta): TComponent;
+var
+  child: TComponent;
+  found: Boolean;
+  fChildren: TList<TComponent>;
+begin
+
+  result := nil;
+
+  fChildren := self.GetChildrenRecursive(
+    function(AComponent: TComponent): Boolean
     begin
-      valueToCompare := String(GetPropValue(child, Meta.propertyName));
-      found := CompareStr(valueToCompare, Meta.identifier) = 0;
-      if found then
-      begin
-        result := TControl(child);
-        break;
-      end;
+      result := true;
+    end);
+  for child in fChildren do
+  begin
+    eventLogger.Debug(Format('Form [%s] Iterating over component [%s]', [self.ClassName, child.ClassName]));
 
-      // recursion
-
-      nextLevelChild := TWinControl(child).FindSubControl(Meta);
-      if assigned(nextLevelChild) then
-      begin
-        result := TControl(nextLevelChild);
-        break;
-      end;
-
+    if child.isSupportingMeta(Meta) then
+    begin
+      result := child;
+      break;
     end;
+
   end;
 
 end;

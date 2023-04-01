@@ -156,7 +156,7 @@ begin
 
   if not Assigned(fOnGetIdentifier) then
   begin
-    eventLogger.Log('shortcutserver - onGetIdentifier is not defined in global', lmError);
+    eventLogger.Error('shortcutserver - onGetIdentifier is not defined in global');
     exit;
   end;
 
@@ -195,20 +195,20 @@ begin
     {clazzType := GetTypeData(AViewerClassInfo).ClassType};
     if not clazzType.InheritsFrom(TForm) then
     begin
-      eventLogger.Log('viewer is not supporting TFormClass', lmError);
+      eventLogger.Error('viewer is not supporting TFormClass');
       exit;
     end;
 
     if not Supports(clazzType, IOPPHelpShortcutViewer) then
     begin
-      eventLogger.Log('viewer is not supporting IOPPHelpShortcutViewer', lmError);
+      eventLogger.Error('viewer is not supporting IOPPHelpShortcutViewer');
       exit;
     end;
 
     fViewer := TFormClass(clazzType).Create(nil);
     if not Assigned(fViewer) then
     begin
-      eventLogger.Log('viewer was not created', lmError);
+      eventLogger.Error('viewer was not created');
       exit;
     end;
 

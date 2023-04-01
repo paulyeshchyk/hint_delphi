@@ -25,7 +25,7 @@ uses
   OPP.Help.Shortcut.Server,
 
   OPP.Help.Hint.Server,
-  OPP.Help.Hint.Mapping,
+  OPP.Help.Map,
   OPP.Help.Hint.Reader,
 
   OPP.Help.Log;
@@ -51,7 +51,7 @@ begin
     exit;
   end;
 
-  eventLogger.Log(AControl.ClassName);
+  eventLogger.Flow('Hook', AControl.ClassName);
 
   if AControl.ClassType.InheritsFrom(TcxTreeView) then
   begin
@@ -74,7 +74,7 @@ begin
   result := GetWinControlHelpKeyword(AControl);
 end;
 
-function CreateHintReader(AMap: TOPPHelpHintMap): IOPPHelpHintDataReader;
+function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
 begin
   result := TOPPHelpRichtextHintReader.Create;
   result.loadData(AMap.Predicate.filename);
