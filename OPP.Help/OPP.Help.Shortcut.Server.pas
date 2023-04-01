@@ -170,7 +170,7 @@ begin
     exit;
   end;
 
-  showHelp(fMapping.Predicate, viewMode, completion);
+  showHelp(fMapping.predicate, viewMode, completion);
 end;
 
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
