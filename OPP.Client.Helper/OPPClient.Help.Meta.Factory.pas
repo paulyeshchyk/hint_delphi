@@ -35,12 +35,7 @@ begin
   fComponentPropertyMapping := TDictionary<String, TOPPHelpMetaMappingValue>.Create();
   fComponentPropertyMapping.Add('TOppObjControl', ['TypeObject']);
   fComponentPropertyMapping.Add('TOppAttrControl', ['Attribute']);
-  //fComponentPropertyMapping.Add('TdxDockPanel', ['HelpKeyword']);
-  // fComponentPropertyMapping.Add('TPanel', ['HelpKeyword']);
-  // fComponentPropertyMapping.Add('TButton', ['HelpKeyword']);
-  // fComponentPropertyMapping.Add('TEdit', ['HelpKeyword']);
-  // fComponentPropertyMapping.Add('TcxButton', ['HelpKeyword']);
-  // fComponentPropertyMapping.Add('TcxEdit', ['HelpKeyword']);
+  fComponentPropertyMapping.Add('TdxDockPanel', ['Caption']);
 end;
 
 destructor TOPPHelpMetaHintFactory.Destroy;

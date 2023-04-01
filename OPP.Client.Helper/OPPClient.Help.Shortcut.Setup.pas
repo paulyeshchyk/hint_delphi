@@ -51,8 +51,6 @@ begin
     exit;
   end;
 
-  eventLogger.Flow('Hook', AControl.ClassName);
-
   if AControl.ClassType.InheritsFrom(TcxTreeView) then
   begin
     result := AControl.Name;
