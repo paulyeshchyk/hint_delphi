@@ -44,9 +44,6 @@ type
     dxBarManager1Bar1: TdxBar;
     dxBarButtonExit: TdxBarButton;
     dxBarSubItem1: TdxBarSubItem;
-    dxBarSubItem2: TdxBarSubItem;
-    dxBarButton1: TdxBarButton;
-    dxBarSeparator1: TdxBarSeparator;
     TrayIcon1: TTrayIcon;
     ApplicationEvents1: TApplicationEvents;
     procedure ApplicationEvents1Activate(Sender: TObject);
@@ -54,16 +51,13 @@ type
     procedure ApplicationEvents1Restore(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
-    procedure dxBarButtonShowTreeClick(Sender: TObject);
     procedure dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
-    procedure dxBarButton1Click(Sender: TObject);
     procedure dxBarButtonExitClick(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
   private
     { Private declarations }
 
     oppHelpView: TOPPHelpViewFullScreen;
-    fIsTreeVisible: Boolean;
     fCurrentState: TOPPHelpPreviewFormState;
     procedure WMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
     { --- }
@@ -76,9 +70,6 @@ type
     procedure SendToBackground();
     procedure RestoreFromBackground();
 
-    procedure setIsTreeVisible(AValue: Boolean);
-
-    property isTreeVisible: Boolean read fIsTreeVisible write setIsTreeVisible;
     procedure setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     property currentState: TOPPHelpPreviewFormState read fCurrentState write setCurrentState;
 
@@ -127,12 +118,6 @@ begin
   ShowModal;
 end;
 
-procedure TOPPHelpPreviewForm.setIsTreeVisible(AValue: Boolean);
-begin
-  fIsTreeVisible := AValue;
-  //
-end;
-
 procedure TOPPHelpPreviewForm.setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
 begin
   fCurrentState := ACurrentState;
@@ -154,25 +139,14 @@ begin
   end;
 end;
 
-procedure TOPPHelpPreviewForm.dxBarButton1Click(Sender: TObject);
-begin
-  oppHelpView.triggerFindPanel;
-end;
-
 procedure TOPPHelpPreviewForm.dxBarButtonExitClick(Sender: TObject);
 begin
   self.close();
 end;
 
-procedure TOPPHelpPreviewForm.dxBarButtonShowTreeClick(Sender: TObject);
-begin
-  isTreeVisible := not isTreeVisible;
-end;
-
 procedure TOPPHelpPreviewForm.dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
 begin
   CanClose := false;
-  isTreeVisible := false;
 end;
 
 procedure TOPPHelpPreviewForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -189,8 +163,6 @@ begin
 
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
-
-  isTreeVisible := true;
 end;
 
 procedure TOPPHelpPreviewForm.WMCopyData(var Msg: TWMCopyData);

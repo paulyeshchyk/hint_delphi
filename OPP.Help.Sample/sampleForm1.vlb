@@ -1,9 +1,6 @@
 ﻿[]
-Coordinates=0,0,59,58
-Visible=True
-
-[Panel1]
 Coordinates=171,78,55,58
+Visible=True
 
 [tipsRepo]
 Coordinates=0,137,65,36

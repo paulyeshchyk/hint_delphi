@@ -6,7 +6,8 @@ uses
   OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
   SampleOnly.Help.Hint.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas',
   SampleOnly.Help.Shortcut.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas',
-  SampleOnly.Help.Meta.Factory in '..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas';
+  SampleOnly.Help.Meta.Factory in '..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas',
+  sampleFormHelper in 'sampleFormHelper.pas';
 
 {$R *.res}
 

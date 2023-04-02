@@ -15,7 +15,9 @@ uses
   OPP.Help.Predicate,
   OPP.Help.Map,
   OPP.Help.Interfaces,
-  OPP.Help.Meta;
+  OPP.Help.Meta,
+
+  Datasnap.DBClient, Data.DB;
 
 type
   TOPPHelpHintLoadCompletion = reference to procedure(HintTexts: TList<TOPPHelpHint>);
@@ -64,6 +66,13 @@ type
     procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
+
+    procedure makeRecordsDataset(AClientDataSet: TClientDataset);
+    procedure loadRecordsDataset(AClientDataSet: TClientDataset);
+
+    procedure makePredicatesDataset(AClientDataSet: TClientDataset);
+    procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
+
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -93,6 +102,12 @@ type
     procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
+
+    procedure makeRecordsDataset(AClientDataSet: TClientDataset);
+    procedure loadRecordsDataset(AClientDataSet: TClientDataset);
+
+    procedure makePredicatesDataset(AClientDataSet: TClientDataset);
+    procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
 
     property loaded: Boolean read fLoaded;
   end;
@@ -434,6 +449,84 @@ end;
 procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpMap>);
 begin
   fHintMapSet.MergeMaps(AList);
+end;
+
+procedure TOPPHelpHintServer.makeRecordsDataset(AClientDataSet: TClientDataset);
+begin
+  if not assigned(AClientDataSet) then
+  begin
+    eventLogger.Error('Dataset is not assigned');
+    exit;
+  end;
+
+  AClientDataSet.Close;
+  AClientDataSet.FieldDefs.Add('Identifier', ftString, 255, true);
+  AClientDataSet.CreateDataSet;
+end;
+
+procedure TOPPHelpHintServer.loadRecordsDataset(AClientDataSet: TClientDataset);
+var
+  hint: TOPPHelpMap;
+begin
+  if not assigned(AClientDataSet) then
+  begin
+    eventLogger.Error('Dataset is not assigned');
+    exit;
+  end;
+  if not AClientDataSet.Active then
+  begin
+    eventLogger.Error('Dataset is not Active');
+    exit;
+  end;
+
+  for hint in fHintMapSet.list do
+  begin
+    AClientDataset.Insert;
+    AClientDataset.Fields.FieldByName('identifier').asString := hint.identifier;
+    AClientDataset.Post;
+  end;
+end;
+
+procedure TOPPHelpHintServer.makePredicatesDataset(AClientDataSet: TClientDataset);
+begin
+  if not assigned(AClientDataSet) then
+  begin
+    eventLogger.Error('Dataset is not assigned');
+    exit;
+  end;
+
+  AClientDataSet.Close;
+  AClientDataSet.FieldDefs.Add('Identifier', ftString, 255, true);
+  AClientDataSet.FieldDefs.Add('Predicate', ftString, 255, false);
+  AClientDataSet.FieldDefs.Add('KeywordType', ftInteger, 0, false);
+  AClientDataSet.CreateDataSet;
+end;
+
+procedure TOPPHelpHintServer.loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
+var
+  fMap: TOPPHelpMap;
+begin
+  if not assigned(AClientDataSet) then
+  begin
+    eventLogger.Error('Dataset is not assigned');
+    exit;
+  end;
+  if not AClientDataSet.Active then
+  begin
+    eventLogger.Error('Dataset is not Active');
+    exit;
+  end;
+  fMap := fHintMapSet.GetMap(ARecordId);
+  if not assigned(fMap) then
+    exit;
+
+
+  AClientDataset.EmptyDataSet;
+  AClientDataset.insert;
+  AClientDataset.Fields[0].AsString := fMap.identifier;
+  AClientDataset.Fields[1].AsString := fMap.predicate.value;
+  AClientDataset.Fields[2].AsInteger := Integer(fMap.predicate.keywordType);
+  AClientDataset.post;
 end;
 
 { private }

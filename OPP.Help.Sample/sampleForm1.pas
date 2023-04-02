@@ -8,6 +8,7 @@ uses
   Vcl.Controls, Vcl.StdCtrls, Vcl.Dialogs,
 
   Vcl.ExtCtrls, Vcl.ComCtrls, Data.DB, dxScreenTip,
+  Datasnap.DBClient,
   cxClasses, dxCustomHint, cxHint,
   OPP.Help.Shortcut.Server,
   OPP.Help.Predicate,
@@ -16,14 +17,25 @@ uses
   OPP.Help.Map,
 
   cxGraphics, cxStyles, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
-  cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid;
+  cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxGrid, dxSkinsCore, dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle,
+  dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky,
+  dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinOffice2019Black,
+  dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
+  dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dxDateRanges, dxScrollbarAnnotations, FireDAC.Phys.TDBXDef, FireDAC.Stan.Intf, FireDAC.Phys, FireDAC.Phys.TDBXBase,
+  FireDAC.Phys.TDBX, dxBar, cxPC, dxDockControl, dxDockPanel, Datasnap.Provider, cxSplitter;
 
 type
   TSampleForm = class(TForm)
     cxHintController: TcxHintStyleController;
     tipsRepo: TdxScreenTipRepository;
-    Panel1: TPanel;
     Panel2: TPanel;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -41,20 +53,53 @@ type
     GroupBox3: TGroupBox;
     Button1: TButton;
     Memo1: TMemo;
-    Button3: TButton;
     Button4: TButton;
     Button2: TButton;
     Button5: TButton;
     TabSheet3: TTabSheet;
+    dxBarManager1: TdxBarManager;
+    dxBarManager1Bar1: TdxBar;
+    dxBarButton1: TdxBarButton;
+    recordsDataset: TClientDataSet;
+    DataSource1: TDataSource;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    dxBarManager1Bar2: TdxBar;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxDockPanel1: TdxDockPanel;
+    dxDockSite1: TdxDockSite;
+    dxLayoutDockSite1: TdxLayoutDockSite;
+    dxDockSite2: TdxDockSite;
+    dxDockPanel2: TdxDockPanel;
+    dxLayoutDockSite2: TdxLayoutDockSite;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    cxGrid1: TcxGrid;
+    cxGrid2DBTableView1: TcxGridDBTableView;
+    cxGrid2Level1: TcxGridLevel;
+    cxGrid2: TcxGrid;
+    DataSource2: TDataSource;
+    dxBarDockControl1: TdxBarDockControl;
+    dxBarDockControl2: TdxBarDockControl;
+    dxBarManager1Bar3: TdxBar;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    predicatesDataset: TClientDataSet;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure cxGrid1DBTableView1FocusedRecordChanged(Sender:
+        TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord:
+        TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
     procedure externalHelpViewerButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure generateHintMappingButtonClick(Sender: TObject);
     procedure internalHelpViewerButtonClick(Sender: TObject);
+    procedure dxBarButton3Click(Sender: TObject);
   private
 
     { Private declarations }
@@ -67,8 +112,6 @@ type
     procedure OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
     { -- events -- }
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
-    procedure OnGenerateHint(AList: TList<TOPPHelpMap>);
-    procedure OnShowHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
 
   public
     { Public declarations }
@@ -85,6 +128,7 @@ implementation
 {$ENDIF}
 
 uses
+  sampleFormHelper,
   OPP.Help.Log,
   OPP.Help.Controls.Styler,
   OPP.Help.Hint.Server,
@@ -107,121 +151,62 @@ uses
   OPP.Help.System.Hook.Keyboard;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
-var
-  fPredicate, fPredicate2: TOPPHelpPredicate;
-  fStream, fStream2: TMemoryStream;
 begin
-
-  fStream := TMemoryStream.Create;
-  try
-    fPredicate := TOPPHelpPredicate.Create;
-    try
-      fPredicate.value := 'Lorem ipsum';
-      fPredicate.keywordType := ktSearch;
-      fPredicate.writeToStream(fStream);
-
-      fPredicate2 := TOPPHelpPredicate.Create;
-      try
-        fPredicate2.readFromStream(fStream, true);
-        fStream2 := TMemoryStream.Create;
-        try
-          fPredicate2.writeToStream(fStream2);
-          fStream2.Position := 0;
-          Memo1.Lines.LoadFromStream(fStream2);
-        finally
-          fStream2.Free;
-        end;
-      finally
-        fPredicate2.Free;
-      end;
-
-    finally
-      fPredicate.Free;
-    end;
-
-  finally
-    fStream.Free;
-  end;
+  TSampleFormHelper.savePredicateToStream;
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
-var
-  fMap: TOPPHelpMap;
-  fPredicate, fChild: TOPPHelpPredicate;
-  fList: TList<TOPPHelpMap>;
 begin
-
-  fList := TList<TOPPHelpMap>.Create();
-  try
-
-    fPredicate := TOPPHelpPredicate.Create;
-    fPredicate.value := 'Lorem ipsum';
-    fChild := TOPPHelpPredicate.Create;
-    fChild.value := 'Lorem ipsum dolor sit';
-    fPredicate.predicates.add(fChild);
-    try
-
-      fMap := TOPPHelpMap.Create;
-      try
-        fMap.Predicate := fPredicate;
-        fList.add(fMap);
-        TOPPHelpMap.saveJSON(fList, '.\help\tests\predicates.json');
-      finally
-        fMap.Free;
-      end;
-    finally
-      fPredicate.Free;
-    end;
-  finally
-    fList.Free;
-  end;
-  //
+  TSampleFormHelper.savePredicateToFile;
 end;
 
 procedure TSampleForm.Button4Click(Sender: TObject);
-var
-  fPredicate, fCopy: TOPPHelpPredicate;
 begin
-
-  fPredicate := TOPPHelpPredicate.Create;
-  try
-    fPredicate.value := 'Lorem ipsum';
-    fPredicate.keywordType := ktSearch;
-    fCopy := fPredicate.copy();
-  finally
-    fCopy.Free;
-    fPredicate.Free;
-  end;
+  TSampleFormHelper.copyPredicate;
 end;
 
 procedure TSampleForm.Button5Click(Sender: TObject);
-var
-  fList: TList<TOPPHelpMap>;
 begin
-  fList := TList<TOPPHelpMap>.Create();
-  try
-    TOPPHelpMap.readJSON('.\help\tests\predicates.json',
-      procedure(AList: TList<TOPPHelpMap>; error: Exception)
-      begin
-        fList.addRange(AList);
-      end);
-  finally
-    fList.Free;
-  end;
+  TSampleFormHelper.readPredicateFromFile;
+end;
+
+procedure TSampleForm.cxGrid1DBTableView1FocusedRecordChanged(Sender:
+    TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord:
+    TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+var
+  fValue: Variant;
+begin
+
+  if Sender.DataController.ItemCount = 0 then
+  exit;
+//  if Sender.DataController.FocusedRecordIndex < 0 then
+//    exit;
+
+  fValue := Sender.DataController.Values[Sender.DataController.FocusedRecordIndex,0];
+  TSampleFormHelper.loadPredicatesDataset(predicatesDataset, fValue);
+end;
+
+procedure TSampleForm.dxBarButton3Click(Sender: TObject);
+begin
+  TSampleFormHelper.makeRecordsDataset(recordsDataset);
+  TSampleFormHelper.makePredicatesDataset(predicatesDataset);
+
+  cxGrid1DBTableView1.DataController.CreateAllItems();
+  cxGrid1DBTableView1.ApplyBestFit();
+
+  cxGrid2DBTableView1.DataController.CreateAllItems();
+  cxGrid2DBTableView1.ApplyBestFit();
+
 end;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
-  // fStream := TMemoryStream.Create;
-
   TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo);
 end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  // fHintBuilder.Free;
   helpShortcutServer.killExternalViewer;
-  // fStream.Free;
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
@@ -238,46 +223,17 @@ end;
 
 procedure TSampleForm.generateHintMappingButtonClick(Sender: TObject);
 begin
-  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\help\mapping\hints_matrix__.json', '.\help\hints\gulfstream_manual_rtf.rtf');
+  TSampleFormHelper.generateHintMapping;
 end;
 
 procedure TSampleForm.externalHelpViewerButtonClick(Sender: TObject);
-var
-  fPredicate: TOPPHelpPredicate;
-  fChild: TOPPHelpPredicate;
 begin
-
-  fChild := TOPPHelpPredicate.Create;
-  try
-    fChild.value := 'начальник цеха, табельщик';
-    fChild.keywordType := ktSearch;
-
-    fPredicate := TOPPHelpPredicate.Create();
-    try
-      fPredicate.keywordType := ktPage;
-      fPredicate.value := '800';
-      fPredicate.fileName := 'D:\Compiled\Executable\help\shortcuts\huge_readme.pdf';
-      fPredicate.predicates.Add(fChild);
-      helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult);
-    finally
-      fPredicate.Free;
-    end;
-  finally
-    fChild.Free;
-  end;
+  TSampleFormHelper.openExternalHelp;
 end;
 
 procedure TSampleForm.internalHelpViewerButtonClick(Sender: TObject);
-// var
-// fPredicate: TOPPHelpPredicate;
-// fClassInfo: Pointer;
 begin
-  ShowMessage('Not implemented');
-  // fPredicate := TOPPHelpPredicate.Create();
-  // fPredicate.keywordType := ktPage;
-  // fPredicate.value := '12';
-  // fPredicate.fileName := '.\help\shortcuts\readme.pdf';
-  // helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
+  TSampleFormHelper.openInternalHelp;
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
@@ -313,22 +269,6 @@ begin
 end;
 
 { -- events -- }
-
-procedure TSampleForm.OnShowHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
-var
-  strmessage: String;
-begin
-  strmessage := Format('show help completion result: %d', [Integer(completionResult)]);
-  eventLogger.Debug(strmessage);
-end;
-
-procedure TSampleForm.OnGenerateHint(AList: TList<TOPPHelpMap>);
-var
-  strmessage: String;
-begin
-  strmessage := Format('generated hints: %d', [Integer(AList.Count)]);
-  eventLogger.Debug(strmessage);
-end;
 
 procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
 var

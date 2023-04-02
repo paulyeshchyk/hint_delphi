@@ -2,27 +2,27 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Left = 0
   Top = 0
   Caption = 'OPPHelpPreviewForm'
-  ClientHeight = 1060
+  ClientHeight = 1061
   ClientWidth = 1490
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -24
   Font.Name = 'Tahoma'
   Font.Style = []
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 29
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 1020
+    Top = 1021
     Width = 1490
     Height = 40
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Margins.Left = 7
+    Margins.Top = 7
+    Margins.Right = 7
+    Margins.Bottom = 7
     Panels = <
       item
         PanelStyleClassName = 'TdxStatusBarContainerPanelStyle'
@@ -39,31 +39,31 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       end>
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -22
+    Font.Height = -23
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 1019
+    ExplicitTop = 1020
     ExplicitWidth = 1476
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4
       Width = 280
       Height = 34
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
+      Margins.Left = 7
+      Margins.Top = 7
+      Margins.Right = 7
+      Margins.Bottom = 7
       object cxProgressBar1: TcxProgressBar
         Left = 0
         Top = 0
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
+        Margins.Left = 7
+        Margins.Top = 7
+        Margins.Right = 7
+        Margins.Bottom = 7
         Align = alClient
         AutoSize = False
         ParentColor = False
-        Properties.PeakSize = 4
+        Properties.PeakSize = 5
         Properties.PeakValue = 42.000000000000000000
         Style.BorderStyle = ebsNone
         Style.Color = clBtnFace
@@ -90,20 +90,20 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     DockZonesWidth = 40
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -22
+    Font.Height = -23
     Font.Name = 'Tahoma'
     Font.Style = []
-    ResizeZonesWidth = 6
+    ResizeZonesWidth = 7
     SelectionFrameWidth = 8
     Left = 304
     Top = 256
     PixelsPerInch = 192
   end
   object dxBarManager1: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -112,14 +112,14 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Categories.Visibles = (
       True)
     PopupMenuLinks = <>
-    UseSystemFont = True
+    UseSystemFont = False
     Left = 640
     Top = 328
     PixelsPerInch = 192
     DockControlHeights = (
       0
       0
-      31
+      30
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'default'
@@ -161,31 +161,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarSeparator1'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButtonExit'
         end>
-    end
-    object dxBarSubItem2: TdxBarSubItem
-      Caption = 'New SubItem'
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <>
-    end
-    object dxBarButton1: TdxBarButton
-      Caption = 'New Button'
-      Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
-    end
-    object dxBarSeparator1: TdxBarSeparator
-      Caption = 'New separator'
-      Category = 0
-      Hint = 'New separator'
-      Visible = ivAlways
-      ShowCaption = False
     end
   end
   object TrayIcon1: TTrayIcon

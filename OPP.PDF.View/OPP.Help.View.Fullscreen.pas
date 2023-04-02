@@ -43,10 +43,6 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    procedure reloadControls;
-
-    procedure triggerFindPanel;
-
     procedure loadContent(AStream: TMemoryStream);
     procedure setPredicate(const APredicate: TOPPHelpPredicate);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
@@ -95,16 +91,6 @@ begin
   inherited;
 end;
 
-procedure TOPPHelpViewFullScreen.reloadControls;
-begin
-  //
-end;
-
-procedure TOPPHelpViewFullScreen.triggerFindPanel;
-begin
-  fPDFViewer.ShowFindPanel;
-end;
-
 function TOPPHelpViewFullScreen.GetEventListeners: TList<IOPPHelpViewEventListener>;
 begin
   if not assigned(fEventListeners) then
@@ -121,7 +107,6 @@ end;
 procedure TOPPHelpViewFullScreen.setHasLoadedDocument(AHasLoadedDocument: Boolean);
 begin
   fHasLoadedDocument := AHasLoadedDocument;
-  reloadControls;
 end;
 
 procedure TOPPHelpViewFullScreen.loadContent(AStream: TMemoryStream);
