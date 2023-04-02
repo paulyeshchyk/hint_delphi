@@ -1,0 +1,54 @@
+{
+  "type": "OPP.Help.Map.TOPPHelpMapSet",
+  "id": 1,
+  "fields": {
+    "fList": {
+      "type": "System.Generics.Collections.TList<OPP.Help.Map.TOPPHelpMap>",
+      "id": 2,
+      "fields": {
+        "FListHelper": [
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 3,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 4,
+                "fields": {
+                  "fValue": "Lorem ipsum",
+                  "fKeywordType": "ktAny",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 5,
+                    "fields": {
+                      "FListHelper": [
+                        {
+                          "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                          "id": 6,
+                          "fields": {
+                            "fValue": "Lorem ipsum dolor sit",
+                            "fKeywordType": "ktAny",
+                            "fFileName": "",
+                            "fPredicates": {
+                              "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                              "id": 7,
+                              "fields": {
+                                "FListHelper": []
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "fIdentifier": ""
+            }
+          }
+        ]
+      }
+    }
+  }
+}

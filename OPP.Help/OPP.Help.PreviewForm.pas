@@ -10,7 +10,7 @@ uses
   OPP.Help.Interfaces, OPP.Help.Predicate,
 
   System.Classes, System.SysUtils, System.Variants,
-  Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls,
+  Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls, Vcl.AppEvnts,
   Winapi.Messages, Winapi.Windows, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans,
   dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin,
@@ -47,12 +47,18 @@ type
     dxBarSubItem2: TdxBarSubItem;
     dxBarButton1: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    TrayIcon1: TTrayIcon;
+    ApplicationEvents1: TApplicationEvents;
+    procedure ApplicationEvents1Activate(Sender: TObject);
+    procedure ApplicationEvents1Minimize(Sender: TObject);
+    procedure ApplicationEvents1Restore(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure dxBarButtonShowTreeClick(Sender: TObject);
     procedure dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
     procedure dxBarButton1Click(Sender: TObject);
     procedure dxBarButtonExitClick(Sender: TObject);
+    procedure TrayIcon1Click(Sender: TObject);
   private
     { Private declarations }
 
@@ -66,6 +72,9 @@ type
     procedure SearchProgress();
     procedure SearchEnded();
     { --- }
+
+    procedure SendToBackground();
+    procedure RestoreFromBackground();
 
     procedure setIsTreeVisible(AValue: Boolean);
 
@@ -91,6 +100,22 @@ uses
 
   OPP.Help.Shortcut.Server,
   OPP.Help.System.Stream;
+
+procedure TOPPHelpPreviewForm.ApplicationEvents1Activate(Sender: TObject);
+begin
+//
+end;
+
+procedure TOPPHelpPreviewForm.ApplicationEvents1Minimize(Sender: TObject);
+begin
+  self.SendToBackground();
+  TrayIcon1.Visible := true;
+end;
+
+procedure TOPPHelpPreviewForm.ApplicationEvents1Restore(Sender: TObject);
+begin
+  TrayIcon1.Visible := false;
+end;
 
 function TOPPHelpPreviewForm.GetContainerClassName: String;
 begin
@@ -176,12 +201,19 @@ begin
   currentState := fsHandlingMessage;
 
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
-  fPredicate := TOPPHelpPredicate.Create();
-  fPredicate.readFromStream(fNotificationStream, true);
+  try
+    fPredicate := TOPPHelpPredicate.Create();
+    try
+      fPredicate.readFromStream(fNotificationStream, true);
+      runPredicate(fPredicate);
+    finally
+      fPredicate.Free;
+    end;
+  finally
+    fNotificationStream.Free;
+  end;
 
-  runPredicate(fPredicate);
   Msg.Result := 10000;
-  // fPredicate.Free;
 end;
 
 { --------- }
@@ -224,6 +256,26 @@ begin
         oppHelpView.setPredicate(APredicate);
       end;
     end);
+end;
+
+procedure TOPPHelpPreviewForm.TrayIcon1Click(Sender: TObject);
+begin
+  self.RestoreFromBackground();
+end;
+
+procedure TOPPHelpPreviewForm.SendToBackground;
+begin
+  self.Hide();
+  self.WindowState := TWindowState.wsMinimized;
+
+end;
+
+procedure TOPPHelpPreviewForm.RestoreFromBackground;
+begin
+  Application.Restore;
+  Application.BringToFront();
+  self.Show();
+  self.WindowState := TWindowState.wsNormal;
 end;
 
 end.
