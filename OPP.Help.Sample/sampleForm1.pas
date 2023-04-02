@@ -113,7 +113,7 @@ begin
 
       fPredicate2 := TOPPHelpPredicate.Create;
       try
-        fPredicate2.readFromStream(fStream);
+        fPredicate2.readFromStream(fStream, true);
         fStream2 := TMemoryStream.Create;
         try
           fPredicate2.writeToStream(fStream2);

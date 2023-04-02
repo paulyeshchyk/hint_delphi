@@ -26,7 +26,7 @@ type
 
   TOPPHelpPredicateStreamHelper = class helper for TOPPHelpPredicate
     function writeToStream(AStream: TStream): Boolean;
-    function readFromStream(AStream: TStream): Boolean;
+    function readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
   end;
 
 implementation
@@ -57,7 +57,7 @@ begin
   result := true;
 end;
 
-function TOPPHelpPredicateStreamHelper.readFromStream(AStream: TStream): Boolean;
+function TOPPHelpPredicateStreamHelper.readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
 var
   i, cnt: Integer;
   child: TOPPHelpPredicate;
@@ -65,7 +65,9 @@ begin
   result := false;
   if not assigned(AStream) then
     exit;
-  AStream.Position := 0;
+
+  if moveCursorToStart then
+    AStream.Position := 0;
 
   self.value := AStream.ReadString;
   self.keywordType := TOPPKeywordType(AStream.ReadInteger);
@@ -74,7 +76,7 @@ begin
     for i := 0 to cnt - 1 do
     begin
       child := TOPPHelpPredicate.Create;
-      child.readFromStream(AStream);
+      child.readFromStream(AStream, false);
       self.Predicates.Add(child);
     end;
   result := true;
@@ -96,7 +98,9 @@ function TOPPHelpPredicate.copy(): TOPPHelpPredicate;
 var
   fChild, fNewChild:TOPPHelpPredicate;
 begin
+
   result := TOPPHelpPredicate.Create();
+
   result.value := self.value;
   result.keywordType := self.keywordType;
   result.fileName := self.fileName;

@@ -177,7 +177,7 @@ begin
 
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
   fPredicate := TOPPHelpPredicate.Create();
-  fPredicate.readFromStream(fNotificationStream);
+  fPredicate.readFromStream(fNotificationStream, true);
 
   runPredicate(fPredicate);
   Msg.Result := 10000;
