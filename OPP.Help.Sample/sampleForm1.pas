@@ -34,18 +34,27 @@ type
     Kod_MKC: TEdit;
     internalHelpViewerButton: TButton;
     externalHelpViewerButton: TButton;
-    paNavbar: TPanel;
+    GroupBox3: TGroupBox;
+    Button1: TButton;
+    Memo1: TMemo;
+    Button3: TButton;
+    Button4: TButton;
+    Button2: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
     procedure externalHelpViewerButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure generateHintMappingButtonClick(Sender: TObject);
     procedure internalHelpViewerButtonClick(Sender: TObject);
   private
+
     { Private declarations }
     function GetWinControlHelpKeyword(AControl: TControl): String;
     { -- messages -- }
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
-    procedure WMHOOK(var msg: TMessage);message WM_User + 3;
+    procedure WMHOOK(var Msg: TMessage); message WM_User + 3;
     { -- events -- }
     function onGetShortcutIdentifier(AControl: TControl): String;
     procedure OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
@@ -76,7 +85,7 @@ uses
   OPP.Help.System.Str,
   OPP.Help.Shortcut.Request,
   OPP.Help.nonatomic,
-//  OPP.Help.View.FullScreen,
+  // OPP.Help.View.FullScreen,
   OPP.Help.Component.Enumerator,
   SampleOnly.Help.Meta.Factory,
   OPP.Help.Hint.Reader,
@@ -88,8 +97,69 @@ uses
 
   OPP.Help.System.Hook.Keyboard;
 
+procedure TSampleForm.Button1Click(Sender: TObject);
+var
+  fPredicate, fPredicate2: TOPPHelpPredicate;
+  fStream, fStream2: TMemoryStream;
+begin
+
+  fStream := TMemoryStream.Create;
+  try
+    fPredicate := TOPPHelpPredicate.Create;
+    try
+      fPredicate.value := 'Lorem ipsum';
+      fPredicate.keywordType := ktSearch;
+      fPredicate.writeToStream(fStream);
+
+      fPredicate2 := TOPPHelpPredicate.Create;
+      try
+        fPredicate2.readFromStream(fStream);
+        fStream2 := TMemoryStream.Create;
+        try
+          fPredicate2.writeToStream(fStream2);
+          fStream2.Position := 0;
+          Memo1.Lines.LoadFromStream(fStream2);
+        finally
+          fStream2.Free;
+        end;
+      finally
+        fPredicate2.Free;
+      end;
+
+    finally
+      fPredicate.Free;
+    end;
+
+  finally
+    fStream.Free;
+  end;
+end;
+
+procedure TSampleForm.Button2Click(Sender: TObject);
+begin
+//
+end;
+
+procedure TSampleForm.Button4Click(Sender: TObject);
+var
+  fPredicate, fCopy: TOPPHelpPredicate;
+begin
+
+  fPredicate := TOPPHelpPredicate.Create;
+  try
+    fPredicate.value := 'Lorem ipsum';
+    fPredicate.keywordType := ktSearch;
+    fCopy := fPredicate.copy();
+  finally
+    fCopy.Free;
+    fPredicate.Free;
+  end;
+end;
+
 procedure TSampleForm.FormCreate(Sender: TObject);
 begin
+  // fStream := TMemoryStream.Create;
+
   TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo);
 end;
 
@@ -97,6 +167,7 @@ procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   // fHintBuilder.Free;
   helpShortcutServer.killExternalViewer;
+  // fStream.Free;
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
@@ -104,16 +175,16 @@ begin
   TOPPClientHelpShortcutHelper.showHelp(Msg);
 end;
 
-procedure TSampleForm.WMHOOK(var msg: TMessage);
+procedure TSampleForm.WMHOOK(var Msg: TMessage);
 begin
-  TOPPClientHintHelper.SaveHints(Screen.ActiveForm,'.\help\mapping\hints_matrix__.json','.\help\hints\gulfstream_manual_rtf.rtf');
+  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\help\mapping\hints_matrix__.json', '.\help\hints\gulfstream_manual_rtf.rtf');
 end;
 
 { ------------ }
 
 procedure TSampleForm.generateHintMappingButtonClick(Sender: TObject);
 begin
-  TOPPClientHintHelper.SaveHints(Screen.ActiveForm,'.\help\mapping\hints_matrix__.json','.\help\hints\gulfstream_manual_rtf.rtf');
+  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\help\mapping\hints_matrix__.json', '.\help\hints\gulfstream_manual_rtf.rtf');
 end;
 
 procedure TSampleForm.externalHelpViewerButtonClick(Sender: TObject);
@@ -131,16 +202,16 @@ begin
 end;
 
 procedure TSampleForm.internalHelpViewerButtonClick(Sender: TObject);
-//var
-//  fPredicate: TOPPHelpPredicate;
-//  fClassInfo: Pointer;
+// var
+// fPredicate: TOPPHelpPredicate;
+// fClassInfo: Pointer;
 begin
   ShowMessage('Not implemented');
-//  fPredicate := TOPPHelpPredicate.Create();
-//  fPredicate.keywordType := ktPage;
-//  fPredicate.value := '12';
-//  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
-//  helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
+  // fPredicate := TOPPHelpPredicate.Create();
+  // fPredicate.keywordType := ktPage;
+  // fPredicate.value := '12';
+  // fPredicate.fileName := '.\help\shortcuts\readme.pdf';
+  // helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;

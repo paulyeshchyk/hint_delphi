@@ -65,6 +65,7 @@ begin
   result := false;
   if not assigned(AStream) then
     exit;
+  AStream.Position := 0;
 
   self.value := AStream.ReadString;
   self.keywordType := TOPPKeywordType(AStream.ReadInteger);
@@ -92,11 +93,18 @@ begin
 end;
 
 function TOPPHelpPredicate.copy(): TOPPHelpPredicate;
+var
+  fChild, fNewChild:TOPPHelpPredicate;
 begin
   result := TOPPHelpPredicate.Create();
   result.value := self.value;
   result.keywordType := self.keywordType;
   result.fileName := self.fileName;
+  for fChild in self.predicates do begin
+    fNewChild := fChild.copy();
+    result.predicates.Add(fNewChild);
+
+  end;
 end;
 
 end.

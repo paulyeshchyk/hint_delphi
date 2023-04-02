@@ -10,7 +10,6 @@ object SampleForm: TSampleForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -28,6 +27,8 @@ object SampleForm: TSampleForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 732
+    ExplicitWidth = 1548
   end
   object GroupBox2: TGroupBox
     Left = 912
@@ -210,27 +211,93 @@ object SampleForm: TSampleForm
       OnClick = externalHelpViewerButtonClick
     end
   end
-  object paNavbar: TPanel
-    Left = 392
-    Top = 328
-    Width = 185
-    Height = 41
-    Caption = 'paNavbar'
-    ParentShowHint = False
-    ShowHint = False
+  object GroupBox3: TGroupBox
+    Left = 16
+    Top = 254
+    Width = 850
+    Height = 467
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+    Caption = 'TOPPHelpPredicate'
     TabOrder = 3
+    object Button1: TButton
+      Left = 32
+      Top = 48
+      Width = 210
+      Height = 50
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'Save to Stream'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+    object Memo1: TMemo
+      Left = 304
+      Top = 48
+      Width = 513
+      Height = 225
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Lines.Strings = (
+        'Memo1')
+      TabOrder = 1
+    end
+    object Button3: TButton
+      Left = 32
+      Top = 176
+      Width = 210
+      Height = 50
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'Add child'
+      TabOrder = 2
+    end
+    object Button4: TButton
+      Left = 32
+      Top = 240
+      Width = 210
+      Height = 50
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'Copy'
+      TabOrder = 3
+      OnClick = Button4Click
+    end
+    object Button2: TButton
+      Left = 32
+      Top = 114
+      Width = 210
+      Height = 50
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'Save to file'
+      TabOrder = 4
+      OnClick = Button2Click
+    end
   end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
     UseHintControlLookAndFeel = True
-    Left = 168
-    Top = 288
+    Left = 392
+    Top = 64
   end
   object tipsRepo: TdxScreenTipRepository
-    Left = 256
-    Top = 296
-    PixelsPerInch = 96
+    Left = 512
+    Top = 72
+    PixelsPerInch = 192
   end
 end
