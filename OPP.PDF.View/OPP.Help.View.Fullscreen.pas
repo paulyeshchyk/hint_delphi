@@ -9,7 +9,7 @@ uses
   Vcl.ExtCtrls,
   Vcl.Controls,
   Vcl.StdCtrls,
-  dxPDFViewer, dxPDFDocument, dxCustomPreview,
+  dxPDFViewer, dxPDFDocument, dxPDFText, dxCustomPreview,
   OPP.Help.Interfaces,
   OPP.Help.Predicate,
   OPP.Help.Nonatomic,
@@ -18,6 +18,7 @@ uses
 type
 
   TOPPHelpViewSearchInstanciator = (siDocumentLoad, siPredicate);
+  TOPPHelpViewPredicateExecutionCompletion = reference to procedure(AResult: Integer);
 
   TOPPHelpViewFullScreen = class(TPanel)
   private
@@ -33,7 +34,7 @@ type
     procedure onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
     procedure doSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
     procedure onTimerTick(Sender: TObject);
-    function GetEventListeners():TList<IOPPHelpViewEventListener>;
+    function GetEventListeners(): TList<IOPPHelpViewEventListener>;
     procedure setHasLoadedDocument(AHasLoadedDocument: Boolean);
     property HasLoadedDocument: Boolean read fHasLoadedDocument write setHasLoadedDocument;
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
@@ -56,13 +57,13 @@ type
 
     procedure searchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
     procedure searchWorkEnded(AResult: Integer);
-    procedure searchWork();
-
+    procedure searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
+    procedure execute(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
   end;
 
 implementation
 
-uses System.SysUtils;
+uses System.SysUtils, OPP.Help.Log;
 
 constructor TOPPHelpViewFullScreen.Create(AOwner: TComponent);
 begin
@@ -106,7 +107,7 @@ end;
 
 function TOPPHelpViewFullScreen.GetEventListeners: TList<IOPPHelpViewEventListener>;
 begin
-  if not assigned( fEventListeners) then
+  if not assigned(fEventListeners) then
     fEventListeners := TList<IOPPHelpViewEventListener>.Create();
   result := fEventListeners;
 end;
@@ -133,8 +134,6 @@ begin
     begin
       loadWorkStarted(loadWorkEnded);
     end);
-
-  // TOPPSystemThread.Create(loadWorkStarted, loadWorkEnded);
 end;
 
 procedure TOPPHelpViewFullScreen.onTimerTick(Sender: TObject);
@@ -193,6 +192,7 @@ var
 begin
 
   fSearchIsInProgress := true;
+  fSearchTimer.Enabled := true;
 
   for fListener in EventListeners do
   begin
@@ -200,17 +200,7 @@ begin
       fListener.SearchStarted;
   end;
 
-  if not assigned(fPredicate) then
-  begin
-    if assigned(onFinish) then
-      onFinish(0);
-    exit;
-  end;
-
-  searchWork();
-
-  if assigned(onFinish) then
-    onFinish(0);
+  searchWork(fPredicate, onFinish);
 end;
 
 procedure TOPPHelpViewFullScreen.searchWorkEnded(AResult: Integer);
@@ -227,32 +217,27 @@ begin
   fSearchIsInProgress := false;
 end;
 
-procedure TOPPHelpViewFullScreen.searchWork();
-var
-  fSearchResult: TdxPDFDocumentTextSearchResult;
+procedure TOPPHelpViewFullScreen.searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
 begin
-  fSearchTimer.Enabled := true;
 
-  case fPredicate.keywordType of
-    ktSearch:
-      begin
-        fSearchResult := pdfDocument.FindText(fPredicate.value);
-        fPDFViewer.CurrentPageIndex := fSearchResult.range.pageIndex;
-      end;
-    ktBookmark:
-      begin
-        //
-      end;
-    ktPage:
-      begin
-        fPDFViewer.CurrentPageIndex := StrToInt(fPredicate.value);
-      end;
-    ktAny:
-      begin
-        //
-      end;
+  if not assigned(onFinish) then
+  begin
+    eventLogger.Error('onFinish is not defined');
+    exit;
   end;
 
+  if not assigned(APredicate) then
+  begin
+    eventLogger.Error('predicate is not defined');
+    onFinish(-1);
+    exit;
+  end;
+
+  execute(fPredicate,
+    procedure(AResult: Integer)
+    begin
+      onFinish(AResult);
+    end);
 end;
 
 procedure TOPPHelpViewFullScreen.loadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
@@ -283,6 +268,46 @@ begin
     if assigned(fListener) then
       fListener.SearchEnded;
   end;
+end;
+
+procedure TOPPHelpViewFullScreen.execute(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
+var
+  fSearchResult: TdxPDFDocumentTextSearchResult;
+  nested: TOPPHelpPredicate;
+  fCurrentPageIndex: Integer;
+begin
+  case APredicate.keywordType of
+    ktSearch:
+      begin
+        fCurrentPageIndex := fPDFViewer.CurrentPageIndex;
+        fSearchResult := pdfDocument.FindText(APredicate.value, TdxPDFDocumentTextSearchOptions.Default, fCurrentPageIndex);
+        fPDFViewer.CurrentPageIndex := fSearchResult.range.pageIndex;
+      end;
+    ktBookmark:
+      begin
+        //
+      end;
+    ktPage:
+      begin
+        fPDFViewer.CurrentPageIndex := StrToInt(APredicate.value);
+      end;
+    ktAny:
+      begin
+        //
+      end;
+  end;
+
+  for nested in APredicate.predicates do
+  begin
+    self.execute(nested,
+      procedure(AResult: Integer)
+      begin
+      end);
+  end;
+
+  if assigned(completion) then
+    completion(0);
+
 end;
 
 end.

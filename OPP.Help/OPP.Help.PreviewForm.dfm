@@ -2,8 +2,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Left = 0
   Top = 0
   Caption = 'OPPHelpPreviewForm'
-  ClientHeight = 1061
-  ClientWidth = 1504
+  ClientHeight = 1060
+  ClientWidth = 1490
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   TextHeight = 27
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 1021
-    Width = 1504
+    Top = 1020
+    Width = 1490
     Height = 40
     Margins.Left = 6
     Margins.Top = 6

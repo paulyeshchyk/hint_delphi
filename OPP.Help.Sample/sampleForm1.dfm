@@ -30,261 +30,329 @@ object SampleForm: TSampleForm
     ExplicitTop = 732
     ExplicitWidth = 1548
   end
-  object GroupBox2: TGroupBox
-    Left = 912
-    Top = 16
-    Width = 626
-    Height = 226
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 1562
+    Height = 733
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    Caption = 'GroupBox2'
+    Align = alClient
+    BevelOuter = bvNone
     TabOrder = 1
-    object Label1: TLabel
-      Left = 32
-      Top = 48
-      Width = 37
-      Height = 16
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'Label2'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object CheckBox1: TCheckBox
-      Left = 32
-      Top = 130
-      Width = 194
-      Height = 34
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'CheckBox1'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
+    ExplicitWidth = 1548
+    ExplicitHeight = 732
+    object PageControl1: TPageControl
+      AlignWithMargins = True
+      Left = 12
+      Top = 12
+      Width = 1538
+      Height = 709
+      Margins.Left = 12
+      Margins.Top = 12
+      Margins.Right = 12
+      Margins.Bottom = 12
+      ActivePage = TabSheet1
+      Align = alClient
+      Style = tsFlatButtons
       TabOrder = 0
-    end
-    object Edit1: TEdit
-      Left = 320
-      Top = 42
-      Width = 242
-      Height = 24
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-      Text = 'Edit1'
-    end
-    object generateHintMappingButton: TButton
-      Left = 412
-      Top = 122
-      Width = 150
-      Height = 50
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'Generate mapping'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      OnClick = generateHintMappingButtonClick
-    end
-  end
-  object GroupBox1: TGroupBox
-    Left = 16
-    Top = 16
-    Width = 850
-    Height = 226
-    Hint = 'Kod_OKWED wrong hint'
-    HelpType = htKeyword
-    HelpKeyword = 'Kod_KWED2'
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
-    Caption = 'Help && Hints'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 2
-    object Kod_OKWED: TCheckBox
-      Left = 48
-      Top = 56
-      Width = 194
-      Height = 34
-      HelpType = htKeyword
-      HelpKeyword = 'Kod_OKWED'
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = '1Kod_OKWED'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 0
-    end
-    object Kod_MKC: TEdit
-      Left = 48
-      Top = 130
-      Width = 242
-      Height = 24
-      Hint = 'cxHint test'
-      HelpType = htKeyword
-      HelpKeyword = '!'#1058#1077#1084#1072
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      ParentCustomHint = False
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 1
-      Text = 'Kod_MKC'
-    end
-    object internalHelpViewerButton: TButton
-      Left = 604
-      Top = 126
-      Width = 150
-      Height = 50
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'Internal'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 3
-      OnClick = internalHelpViewerButtonClick
-    end
-    object externalHelpViewerButton: TButton
-      Left = 604
-      Top = 48
-      Width = 150
-      Height = 50
-      HelpType = htKeyword
-      HelpKeyword = 'Kod_OKWED'
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'External'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      OnClick = externalHelpViewerButtonClick
-    end
-  end
-  object GroupBox3: TGroupBox
-    Left = 16
-    Top = 254
-    Width = 850
-    Height = 467
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
-    Caption = 'TOPPHelpPredicate'
-    TabOrder = 3
-    object Button1: TButton
-      Left = 32
-      Top = 48
-      Width = 210
-      Height = 50
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'Save to Stream'
-      TabOrder = 0
-      OnClick = Button1Click
-    end
-    object Memo1: TMemo
-      Left = 304
-      Top = 48
-      Width = 513
-      Height = 225
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Lines.Strings = (
-        'Memo1')
-      TabOrder = 1
-    end
-    object Button3: TButton
-      Left = 32
-      Top = 176
-      Width = 210
-      Height = 50
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'Add child'
-      TabOrder = 2
-    end
-    object Button4: TButton
-      Left = 32
-      Top = 240
-      Width = 210
-      Height = 50
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'Copy'
-      TabOrder = 3
-      OnClick = Button4Click
-    end
-    object Button2: TButton
-      Left = 32
-      Top = 114
-      Width = 210
-      Height = 50
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = 'Save to file'
-      TabOrder = 4
-      OnClick = Button2Click
+      ExplicitWidth = 1524
+      ExplicitHeight = 708
+      object TabSheet1: TTabSheet
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
+        Caption = 'TabSheet1'
+        object GroupBox1: TGroupBox
+          Left = 16
+          Top = 16
+          Width = 850
+          Height = 226
+          Hint = 'Kod_OKWED wrong hint'
+          HelpType = htKeyword
+          HelpKeyword = 'Kod_KWED2'
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          Caption = 'Help && Hints'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          object Kod_OKWED: TCheckBox
+            Left = 48
+            Top = 56
+            Width = 194
+            Height = 34
+            HelpType = htKeyword
+            HelpKeyword = 'Kod_OKWED'
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = '[Kod_OKWED]'
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 0
+          end
+          object Kod_MKC: TEdit
+            Left = 48
+            Top = 130
+            Width = 242
+            Height = 24
+            Hint = 'cxHint test'
+            HelpType = htKeyword
+            HelpKeyword = '!'#1058#1077#1084#1072
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            ParentCustomHint = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 1
+            Text = '[!'#1058#1077#1084#1072']'
+          end
+          object internalHelpViewerButton: TButton
+            Left = 604
+            Top = 126
+            Width = 150
+            Height = 50
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Internal'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 3
+            OnClick = internalHelpViewerButtonClick
+          end
+          object externalHelpViewerButton: TButton
+            Left = 604
+            Top = 29
+            Width = 150
+            Height = 50
+            HelpType = htKeyword
+            HelpKeyword = 'Kod_OKWED'
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'External [Kod_OKWED]'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
+            OnClick = externalHelpViewerButtonClick
+          end
+        end
+        object GroupBox2: TGroupBox
+          Left = 912
+          Top = 16
+          Width = 626
+          Height = 226
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          Caption = 'GroupBox2'
+          TabOrder = 1
+          object Label1: TLabel
+            Left = 32
+            Top = 48
+            Width = 37
+            Height = 16
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Label2'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object CheckBox1: TCheckBox
+            Left = 32
+            Top = 130
+            Width = 194
+            Height = 34
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'CheckBox1'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+          end
+          object Edit1: TEdit
+            Left = 320
+            Top = 42
+            Width = 242
+            Height = 24
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            Text = 'Edit1'
+          end
+          object generateHintMappingButton: TButton
+            Left = 412
+            Top = 122
+            Width = 150
+            Height = 50
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Generate mapping'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
+            OnClick = generateHintMappingButtonClick
+          end
+        end
+      end
+      object TabSheet2: TTabSheet
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
+        Caption = 'TabSheet2'
+        ImageIndex = 1
+        object GroupBox3: TGroupBox
+          Left = 6
+          Top = 6
+          Width = 850
+          Height = 467
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          Caption = 'TOPPHelpPredicate'
+          TabOrder = 0
+          object Button1: TButton
+            Left = 32
+            Top = 48
+            Width = 210
+            Height = 50
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Save to Stream'
+            TabOrder = 0
+            OnClick = Button1Click
+          end
+          object Memo1: TMemo
+            Left = 304
+            Top = 48
+            Width = 513
+            Height = 225
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Lines.Strings = (
+              'Memo1')
+            TabOrder = 1
+          end
+          object Button3: TButton
+            Left = 32
+            Top = 258
+            Width = 210
+            Height = 50
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Add child'
+            TabOrder = 2
+          end
+          object Button4: TButton
+            Left = 32
+            Top = 320
+            Width = 210
+            Height = 50
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Copy'
+            TabOrder = 3
+            OnClick = Button4Click
+          end
+          object Button2: TButton
+            Left = 32
+            Top = 114
+            Width = 210
+            Height = 50
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Save to file'
+            TabOrder = 4
+            OnClick = Button2Click
+          end
+          object Button5: TButton
+            Left = 32
+            Top = 176
+            Width = 210
+            Height = 50
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Caption = 'Read from file'
+            TabOrder = 5
+            OnClick = Button5Click
+          end
+        end
+      end
+      object TabSheet3: TTabSheet
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
+        Caption = 'TabSheet3'
+        ImageIndex = 2
+      end
     end
   end
   object cxHintController: TcxHintStyleController

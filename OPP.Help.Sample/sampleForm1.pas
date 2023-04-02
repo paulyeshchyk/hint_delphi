@@ -7,7 +7,7 @@ uses
   System.Classes, System.Generics.Collections,
   Vcl.Controls, Vcl.StdCtrls, Vcl.Dialogs,
 
-  Vcl.ExtCtrls, cxStyles, Data.DB, dxScreenTip,
+  Vcl.ExtCtrls, Vcl.ComCtrls, Data.DB, dxScreenTip,
   cxClasses, dxCustomHint, cxHint,
   OPP.Help.Shortcut.Server,
   OPP.Help.Predicate,
@@ -15,7 +15,7 @@ uses
   OPP.Help.Meta,
   OPP.Help.Map,
 
-  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
+  cxGraphics, cxStyles, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
   cxDBData, Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid;
 
@@ -24,25 +24,32 @@ type
     cxHintController: TcxHintStyleController;
     tipsRepo: TdxScreenTipRepository;
     Panel1: TPanel;
-    GroupBox2: TGroupBox;
-    Label1: TLabel;
-    CheckBox1: TCheckBox;
-    Edit1: TEdit;
-    generateHintMappingButton: TButton;
+    Panel2: TPanel;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
     GroupBox1: TGroupBox;
     Kod_OKWED: TCheckBox;
     Kod_MKC: TEdit;
     internalHelpViewerButton: TButton;
     externalHelpViewerButton: TButton;
+    GroupBox2: TGroupBox;
+    Label1: TLabel;
+    CheckBox1: TCheckBox;
+    Edit1: TEdit;
+    generateHintMappingButton: TButton;
+    TabSheet2: TTabSheet;
     GroupBox3: TGroupBox;
     Button1: TButton;
     Memo1: TMemo;
     Button3: TButton;
     Button4: TButton;
     Button2: TButton;
+    Button5: TButton;
+    TabSheet3: TTabSheet;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
     procedure externalHelpViewerButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -95,6 +102,8 @@ uses
   SampleOnly.Help.Hint.Setup,
   SampleOnly.Help.Shortcut.Setup,
 
+  OPP.Help.Map.Filereader,
+
   OPP.Help.System.Hook.Keyboard;
 
 procedure TSampleForm.Button1Click(Sender: TObject);
@@ -136,8 +145,37 @@ begin
 end;
 
 procedure TSampleForm.Button2Click(Sender: TObject);
+var
+  fMap: TOPPHelpMap;
+  fPredicate, fChild: TOPPHelpPredicate;
+  fList: TList<TOPPHelpMap>;
 begin
-//
+
+  fList := TList<TOPPHelpMap>.Create();
+  try
+
+    fPredicate := TOPPHelpPredicate.Create;
+    fPredicate.value := 'Lorem ipsum';
+    fChild := TOPPHelpPredicate.Create;
+    fChild.value := 'Lorem ipsum dolor sit';
+    fPredicate.predicates.add(fChild);
+    try
+
+      fMap := TOPPHelpMap.Create;
+      try
+        fMap.Predicate := fPredicate;
+        fList.add(fMap);
+        TOPPHelpMap.saveJSON(fList, '.\help\tests\predicates.json');
+      finally
+        fMap.Free;
+      end;
+    finally
+      fPredicate.Free;
+    end;
+  finally
+    fList.Free;
+  end;
+  //
 end;
 
 procedure TSampleForm.Button4Click(Sender: TObject);
@@ -153,6 +191,22 @@ begin
   finally
     fCopy.Free;
     fPredicate.Free;
+  end;
+end;
+
+procedure TSampleForm.Button5Click(Sender: TObject);
+var
+  fList: TList<TOPPHelpMap>;
+begin
+  fList := TList<TOPPHelpMap>.Create();
+  try
+    TOPPHelpMap.readJSON('.\help\tests\predicates.json',
+      procedure(AList: TList<TOPPHelpMap>; error: Exception)
+      begin
+        fList.addRange(AList);
+      end);
+  finally
+    fList.Free;
   end;
 end;
 
@@ -190,15 +244,27 @@ end;
 procedure TSampleForm.externalHelpViewerButtonClick(Sender: TObject);
 var
   fPredicate: TOPPHelpPredicate;
-  // fClassInfo: Pointer;
+  fChild: TOPPHelpPredicate;
 begin
 
-  fPredicate := TOPPHelpPredicate.Create();
-  fPredicate.keywordType := ktPage;
-  fPredicate.value := '12';
-  fPredicate.fileName := '.\help\shortcuts\readme.pdf';
+  fChild := TOPPHelpPredicate.Create;
+  try
+    fChild.value := 'начальник цеха, табельщик';
+    fChild.keywordType := ktSearch;
 
-  helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult);
+    fPredicate := TOPPHelpPredicate.Create();
+    try
+      fPredicate.keywordType := ktPage;
+      fPredicate.value := '800';
+      fPredicate.fileName := 'D:\Compiled\Executable\help\shortcuts\huge_readme.pdf';
+      fPredicate.predicates.Add(fChild);
+      helpShortcutServer.showHelp(fPredicate, vmExternal, OnShowHelpResult);
+    finally
+      fPredicate.Free;
+    end;
+  finally
+    fChild.Free;
+  end;
 end;
 
 procedure TSampleForm.internalHelpViewerButtonClick(Sender: TObject);

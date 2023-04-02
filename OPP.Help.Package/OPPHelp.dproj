@@ -170,6 +170,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Interfaces.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Hook.Keyboard.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Constants.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Serializer.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

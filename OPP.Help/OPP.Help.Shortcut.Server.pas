@@ -26,12 +26,14 @@ type
   TOPPHelpShortcutPresentingResult = (prSuccess, prFail);
   TOPPHelpShortcutPresentingCompletion = reference to procedure(APresentingResult: TOPPHelpShortcutPresentingResult);
   TOPPHelpShortcutOnGetIdentifier = reference to function(AControl: TControl): String;
+  TOPPHelpShortcutServerLoadStreamStatus = (ssCreated, ssReused);
+  TOPPHelpShortcutServerLoadStreamCompletion = reference to procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus);
 
   IOPPHelpShortcutServer = interface
     function exportControl(AControl: TControl): Boolean;
     procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
-    function loadPDF(AFileName: String): TMemoryStream;
+    procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
   end;
@@ -48,7 +50,7 @@ type
     /// <remarks> copyright https://stackoverflow.com/a/12949757 </remarks>
     function ForceForegroundWindow(hwnd: THandle): Boolean;
   public
-    function loadPDF(AFileName: String): TMemoryStream;
+    procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     function exportControl(AControl: TControl): Boolean;
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
@@ -114,25 +116,28 @@ begin
   inherited Destroy;
 end;
 
-function TOPPHelpShortcutServer.loadPDF(AFileName: String): TMemoryStream;
+procedure TOPPHelpShortcutServer.loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
 var
   fFileNameHash: String;
   fStream: TMemoryStream;
 begin
   fFileNameHash := AFileName.hashString;
   fPDFMemoryStream.TryGetValue(fFileNameHash, fStream);
-  if not Assigned(fStream) then
+  if Assigned(fStream) then
   begin
+    if assigned(completion) then
+      completion(fStream, ssReused);
+  end else begin
     fStream := TMemoryStream.Create;
     try
       fStream.loadFromFile(AFileName);
       fStream.Position := 0;
       fPDFMemoryStream.Add(fFileNameHash, fStream);
     finally
+      if assigned(completion) then
+        completion(fStream, ssCreated);
     end;
-
   end;
-  result := fStream;
 end;
 
 procedure TOPPHelpShortcutServer.showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
@@ -191,8 +196,8 @@ begin
       completion(prFail);
     exit;
   end else begin
-    clazzType := GetClass('TOPPHelpPreviewForm'); //->TOPPHelpViewFullScreen
-    {clazzType := GetTypeData(AViewerClassInfo).ClassType};
+    clazzType := GetClass('TOPPHelpPreviewForm'); // ->TOPPHelpViewFullScreen
+    { clazzType := GetTypeData(AViewerClassInfo).ClassType };
     if not clazzType.InheritsFrom(TForm) then
     begin
       eventLogger.Error('viewer is not supporting TFormClass');

@@ -80,8 +80,8 @@ type
     procedure runPredicate(APredicate: TOPPHelpPredicate);
   end;
 
-   var
-   OPPHelpPreviewForm: TOPPHelpPreviewForm;
+var
+  OPPHelpPreviewForm: TOPPHelpPreviewForm;
 
 implementation
 
@@ -213,15 +213,17 @@ begin
 end;
 
 procedure TOPPHelpPreviewForm.runPredicate(APredicate: TOPPHelpPredicate);
-var
-  fPDFStream: TMemoryStream;
 begin
-  fPDFStream := helpShortcutServer.loadPDF(APredicate.fileName);
-  try
-    oppHelpView.loadContent(fPDFStream);
-    oppHelpView.setPredicate(APredicate);
-  finally
-  end;
+  helpShortcutServer.loadPDF(APredicate.fileName,
+    procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus)
+    begin
+      try
+        if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssCreated then
+          oppHelpView.loadContent(AStream);
+      finally
+        oppHelpView.setPredicate(APredicate);
+      end;
+    end);
 end;
 
 end.
