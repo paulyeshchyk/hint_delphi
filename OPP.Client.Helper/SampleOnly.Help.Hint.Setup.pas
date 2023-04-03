@@ -13,6 +13,7 @@ type
   public
     class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
+    class function SaveMaps(AFilename: String = ''): Integer;
   private
     class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
     class function OnGetHintFactory(): IOPPHelpMetaFactory;
@@ -82,6 +83,11 @@ begin
   finally
     fMetaFactory.Free;
   end;
+end;
+
+class function TOPPClientHintHelper.SaveMaps(AFilename: String = ''): Integer;
+begin
+  result := helpHintServer.SaveMaps(AFileName);
 end;
 
 class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);

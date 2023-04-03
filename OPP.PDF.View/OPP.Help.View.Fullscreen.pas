@@ -9,7 +9,7 @@ uses
   Vcl.ExtCtrls,
   Vcl.Controls,
   Vcl.StdCtrls,
-  dxPDFViewer, dxPDFDocument, dxPDFText, dxCustomPreview,
+  dxPDFViewer, dxPDFDocument, dxCustomPreview,
   OPP.Help.Interfaces,
   OPP.Help.Predicate,
   OPP.Help.Nonatomic,

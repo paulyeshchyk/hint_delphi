@@ -36,6 +36,10 @@ type
     procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+
+    function AddShortcutMap(AMap: TOPPHelpMap): Integer;
+    function SaveMaps(AFileName: String): Integer;
   end;
 
   TOPPHelpShortcutServer = class(TComponent, IOPPHelpShortcutServer)
@@ -58,6 +62,10 @@ type
     procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
 
+    function AddShortcutMap(AMap: TOPPHelpMap): Integer;
+    function SaveMaps(AFileName: String = ''): Integer;
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property ShortcutDataset: TOPPHelpShortcutDataset read fShortcutDataset write fShortcutDataset;
@@ -73,11 +81,14 @@ uses
   OPP.Help.System.AppExecutor,
   OPP.Help.System.Str,
   OPP.Help.Log,
-  System.TypInfo;
+  OPP.Help.System.Files,
+  System.TypInfo,
+  OPP.Help.Map.Filereader;
 
 const
-  shortcutJSONFileName: String = 'help\mapping\shortcut_matrix.json';
   OPPViewerProcessName: String = 'OPPHelpPreview.exe';
+const
+  kShortcutMappingDefaultFileName: String = '.\help\mapping\shortcut_matrix.json';
 
 var
   fLock: TCriticalSection;
@@ -106,7 +117,7 @@ begin
   fPDFMemoryStream := TDictionary<String, TMemoryStream>.Create;
 
   fShortcutDataset := TOPPHelpShortcutDataset.Create;
-  fShortcutDataset.load(shortcutJSONFileName);
+  fShortcutDataset.load(kShortcutMappingDefaultFileName);
 end;
 
 destructor TOPPHelpShortcutServer.Destroy;
@@ -281,6 +292,27 @@ begin
   end;
 end;
 
+function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+begin
+  result := TOPPHelpMap.saveJSON(AList, AFileName);
+end;
+
+function TOPPHelpShortcutServer.SaveMaps(AFileName: String = ''): Integer;
+var
+  fFileName: String;
+  fFileNameFullPath: String;
+begin
+  if Length(AFileName) = 0 then
+    fFileName := kShortcutMappingDefaultFileName
+  else
+    fFileName := AFileName;
+
+  fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
+
+  result := SaveCustomList(fShortcutDataset.list, fFileNameFullPath);
+end;
+
+
 procedure TOPPHelpShortcutServer.setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 begin
   fDefaultOnGetIdentifier := AOnGetIdentifier;
@@ -338,6 +370,11 @@ end;
 procedure TOPPHelpShortcutServer.killExternalViewer();
 begin
   TOPPSystemMessageHelper.KillProcess(OPPViewerProcessName);
+end;
+
+function TOPPHelpShortcutServer.AddShortcutMap(AMap: TOPPHelpMap): Integer;
+begin
+  result := fShortcutDataset.AddMap(AMap);
 end;
 
 procedure Register;

@@ -10,6 +10,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Font.Height = -24
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
@@ -75,7 +76,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     end
   end
   object dxDockingManager1: TdxDockingManager
-    AutoHideMovingSize = 40
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
@@ -87,17 +87,15 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
-    DockZonesWidth = 40
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -23
+    Font.Height = -12
     Font.Name = 'Tahoma'
     Font.Style = []
-    ResizeZonesWidth = 7
-    SelectionFrameWidth = 8
+    ResizeZonesWidth = 4
     Left = 304
     Top = 256
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = ANSI_CHARSET
@@ -115,11 +113,11 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     UseSystemFont = False
     Left = 640
     Top = 328
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      30
+      24
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'default'

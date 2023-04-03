@@ -3,7 +3,7 @@ unit OPP.Help.Nonatomic;
 interface
 
 type
-  TOPPKeywordType = (ktAny = 0, ktBookmark = 1, ktSearch = 2, ktPage = 3);
+  TOPPKeywordType = (ktBookmark = 0, ktSearch = 1, ktPage = 2, ktAny = 3);
 
   TOPPHelpHintMapIdentifier = String;
   TOPPHelpMetaIdentifierType = String;

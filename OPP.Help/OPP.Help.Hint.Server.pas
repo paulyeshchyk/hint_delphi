@@ -62,8 +62,8 @@ type
 
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpMap>);
-    procedure SaveMaps(AFileName: String);
-    procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
+    function SaveMaps(AFileName: String): Integer;
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
 
@@ -72,6 +72,8 @@ type
 
     procedure makePredicatesDataset(AClientDataSet: TClientDataset);
     procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
+
+    function addHintMap(AMap: TOPPHelpMap): Boolean;
 
   end;
 
@@ -98,8 +100,8 @@ type
 
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
     procedure MergeMaps(AList: TList<TOPPHelpMap>);
-    procedure SaveMaps(AFileName: String);
-    procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
+    function SaveMaps(AFileName: String = ''): Integer;
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
 
@@ -109,6 +111,8 @@ type
     procedure makePredicatesDataset(AClientDataSet: TClientDataset);
     procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
 
+    function addHintMap(AMap: TOPPHelpMap): Boolean;
+
     property loaded: Boolean read fLoaded;
   end;
 
@@ -117,9 +121,13 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
+  OPP.Help.System.Files,
   OPP.Help.Map.Filereader,
   OPP.Help.System.Error,
   OPP.Help.Log;
+
+const
+  kHintsMappingDefaultFileName: String = '.\help\mapping\hints_matrix.json';
 
 var
   fLock: TCriticalSection;
@@ -148,7 +156,7 @@ begin
   if Length(AMappingFileName) <> 0 then
     fMappingFileName := AMappingFileName
   else
-    fMappingFileName := '.\help\mapping\hints_matrix.json';
+    fMappingFileName := kHintsMappingDefaultFileName;
 end;
 
 constructor TOPPHelpHintServer.Create;
@@ -171,7 +179,7 @@ var
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
 begin
 
-  if Length(filename) = 0 then
+  if not FileExists(filename) then
   begin
     eventLogger.Error('configs filename is not defined');
     exit;
@@ -307,7 +315,7 @@ end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
 begin
-  result.data := GetHintData(hintMeta.identifier);
+  result.Data := GetHintData(hintMeta.identifier);
   result.Meta := hintMeta;
 end;
 
@@ -330,7 +338,7 @@ begin
   for fHintMeta in hintsMetaList do
   begin
     fHint := GetHint(fHintMeta);
-    if not fHint.data.isEmpty() then
+    if not fHint.Data.isEmpty() then
     begin
       fHintTexts.Add(fHint);
     end;
@@ -436,14 +444,24 @@ begin
   end;
 end;
 
-procedure TOPPHelpHintServer.SaveMaps(AFileName: String);
+function TOPPHelpHintServer.SaveMaps(AFileName: String = ''): Integer;
+var
+  fFileName: String;
+  fFileNameFullPath: String;
 begin
-  TOPPHelpMap.saveJSON(fHintMapSet.list, AFileName);
+  if Length(AFileName) = 0 then
+    fFileName := kHintsMappingDefaultFileName
+  else
+    fFileName := AFileName;
+
+  fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
+
+  result := SaveCustomList(fHintMapSet.list, fFileNameFullPath);
 end;
 
-procedure TOPPHelpHintServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String);
+function TOPPHelpHintServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
 begin
-  TOPPHelpMap.saveJSON(AList, AFileName);
+  result := TOPPHelpMap.saveJSON(AList, AFileName);
 end;
 
 procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpMap>);
@@ -453,7 +471,7 @@ end;
 
 procedure TOPPHelpHintServer.makeRecordsDataset(AClientDataSet: TClientDataset);
 begin
-  if not assigned(AClientDataSet) then
+  if not Assigned(AClientDataSet) then
   begin
     eventLogger.Error('Dataset is not assigned');
     exit;
@@ -466,9 +484,9 @@ end;
 
 procedure TOPPHelpHintServer.loadRecordsDataset(AClientDataSet: TClientDataset);
 var
-  hint: TOPPHelpMap;
+  Hint: TOPPHelpMap;
 begin
-  if not assigned(AClientDataSet) then
+  if not Assigned(AClientDataSet) then
   begin
     eventLogger.Error('Dataset is not assigned');
     exit;
@@ -479,17 +497,17 @@ begin
     exit;
   end;
 
-  for hint in fHintMapSet.list do
+  for Hint in fHintMapSet.list do
   begin
-    AClientDataset.Insert;
-    AClientDataset.Fields.FieldByName('identifier').asString := hint.identifier;
-    AClientDataset.Post;
+    AClientDataSet.Insert;
+    AClientDataSet.Fields.FieldByName('identifier').asString := Hint.identifier;
+    AClientDataSet.Post;
   end;
 end;
 
 procedure TOPPHelpHintServer.makePredicatesDataset(AClientDataSet: TClientDataset);
 begin
-  if not assigned(AClientDataSet) then
+  if not Assigned(AClientDataSet) then
   begin
     eventLogger.Error('Dataset is not assigned');
     exit;
@@ -506,7 +524,7 @@ procedure TOPPHelpHintServer.loadPredicatesDataset(AClientDataSet: TClientDatase
 var
   fMap: TOPPHelpMap;
 begin
-  if not assigned(AClientDataSet) then
+  if not Assigned(AClientDataSet) then
   begin
     eventLogger.Error('Dataset is not assigned');
     exit;
@@ -517,18 +535,31 @@ begin
     exit;
   end;
   fMap := fHintMapSet.GetMap(ARecordId);
-  if not assigned(fMap) then
+  if not Assigned(fMap) then
     exit;
 
-
-  AClientDataset.EmptyDataSet;
-  AClientDataset.insert;
-  AClientDataset.Fields[0].AsString := fMap.identifier;
-  AClientDataset.Fields[1].AsString := fMap.predicate.value;
-  AClientDataset.Fields[2].AsInteger := Integer(fMap.predicate.keywordType);
-  AClientDataset.post;
+  AClientDataSet.EmptyDataSet;
+  AClientDataSet.Insert;
+  AClientDataSet.Fields[0].asString := fMap.identifier;
+  AClientDataSet.Fields[1].asString := fMap.Predicate.value;
+  AClientDataSet.Fields[2].AsInteger := Integer(fMap.Predicate.keywordType);
+  AClientDataSet.Post;
 end;
 
+function TOPPHelpHintServer.addHintMap(AMap: TOPPHelpMap): Boolean;
+var
+  fIndex: Integer;
+begin
+  result := false;
+  if not Assigned(AMap) then
+  begin
+    eventLogger.Error('HintMap is not defined');
+    exit;
+  end;
+
+  fIndex := fHintMapSet.list.Add(AMap);
+  result := (fIndex >= 0);
+end;
 { private }
 
 initialization

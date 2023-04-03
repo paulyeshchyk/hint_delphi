@@ -10,6 +10,7 @@ type
   TOPPClientHelpShortcutHelper = class
   public
     class procedure showHelp(AMessage: TWMHelp);
+    class function SaveMaps(AFileName: String = ''): Integer;
   end;
 
 implementation
@@ -43,6 +44,10 @@ begin
   );
 end;
 
+class function TOPPClientHelpShortcutHelper.SaveMaps(AFileName: String = ''): Integer;
+begin
+  result := helpShortcutServer.SaveMaps(AFileName);
+end;
 
 function GetWinControlHelpKeyword(AControl: TControl): String;
 begin

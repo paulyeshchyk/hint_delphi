@@ -10,10 +10,14 @@ type
   TOPPHelpShortcutDataset = class
   private
     fShortcutHelpMatrix: TDictionary<String, TOPPHelpMap>;
+    function GetList: TList<TOPPHelpMap>;
   public
     constructor Create;
     function load(AFilename: String): Integer;
     function getMapping(key: String): TOPPHelpMap;
+    function addMap(AMap: TOPPHelpMap): Integer;
+
+    property list: TList<TOPPHelpMap> read GetList;
   end;
 
 implementation
@@ -34,7 +38,7 @@ var
 begin
   callback := procedure(AList: TList<TOPPHelpMap>; Error: Exception)
     var
-      map: TOPPHelpMap;
+      Map: TOPPHelpMap;
     begin
       fShortcutHelpMatrix.Clear;
       if Assigned(Error) then
@@ -43,10 +47,9 @@ begin
         exit;
       end;
 
-      for map in AList do
+      for Map in AList do
       begin
-        if Assigned(map) then
-          self.fShortcutHelpMatrix.add(map.identifier, map);
+        self.addMap(Map);
       end;
     end;
 
@@ -54,7 +57,28 @@ begin
   result := 0;
 end;
 
-function TOPPHelpShortcutDataset.GetMapping(key: string): TOPPHelpMap;
+function TOPPHelpShortcutDataset.GetList: TList<TOPPHelpMap>;
+var pair: TPair<String, TOPPHelpMap>;
+begin
+  result := TList<TOPPHelpMap>.Create;
+  for pair in fShortcutHelpMatrix.ToArray do begin
+    result.Add(pair.Value);
+  end;
+end;
+
+function TOPPHelpShortcutDataset.addMap(AMap: TOPPHelpMap): Integer;
+begin
+  result := 0;
+  if not Assigned(AMap) then
+  begin
+    result := -1;
+    exit;
+  end;
+  self.fShortcutHelpMatrix.add(AMap.identifier, AMap);
+
+end;
+
+function TOPPHelpShortcutDataset.getMapping(key: string): TOPPHelpMap;
 var
   Mapping: TOPPHelpMap;
 begin

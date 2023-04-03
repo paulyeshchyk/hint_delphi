@@ -1,6 +1,7 @@
 unit OPP.Help.Map.Filereader;
 
 interface
+
 uses
   System.Generics.Collections,
   System.SysUtils,
@@ -21,7 +22,7 @@ type
 implementation
 
 uses
-  OPP.Help.System.Error,
+  OPP.Help.System.error,
 
   System.JSON, System.IOUtils,
   DBXJSONReflect, REST.JSON;
@@ -38,11 +39,19 @@ begin
   deSerializer := TJSONUnMarshal.Create;
   list := TList<TOPPHelpMap>.Create;
   try
-    jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
     try
-      mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpMapSet;
-      list.AddRange(mapList.list);
-      FreeAndNil(mapList);
+      jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
+      try
+        mapList := deSerializer.unmarshal(jsonObject) as TOPPHelpMapSet;
+        list.AddRange(mapList.list);
+        FreeAndNil(mapList);
+      except
+        on E: Exception do
+        begin
+          E.Log();
+          error := E;
+        end;
+      end;
     except
       on E: Exception do
       begin
@@ -86,6 +95,8 @@ var
   jsonObj: TJSONObject;
   jsonString: String;
 begin
+  result := 0;
+
   //
   serializer := TJSONMarshal.Create;
 
@@ -97,6 +108,7 @@ begin
     except
       on E: Exception do
       begin
+        result := -1;
         E.Log;
       end;
     end;
@@ -104,8 +116,6 @@ begin
     jsonObj.free;
     FreeAndNil(serializer);
   end;
-
-  result := 0;
 end;
 
 end.

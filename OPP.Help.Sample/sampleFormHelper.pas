@@ -69,7 +69,7 @@ begin
     try
       fPredicate.keywordType := ktPage;
       fPredicate.value := '800';
-      fPredicate.fileName := 'D:\Compiled\Executable\help\shortcuts\huge_readme.pdf';
+      fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\huge_readme.pdf';
       fPredicate.predicates.Add(fChild);
       helpShortcutServer.showHelp(fPredicate, vmExternal,
         procedure(completionResult: TOPPHelpShortcutPresentingResult)

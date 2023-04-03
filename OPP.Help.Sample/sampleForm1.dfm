@@ -2,14 +2,15 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = 'SampleForm'
-  ClientHeight = 829
-  ClientWidth = 1552
+  ClientHeight = 517
+  ClientWidth = 1046
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -18,8 +19,8 @@ object SampleForm: TSampleForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1552
-    Height = 829
+    Width = 1046
+    Height = 517
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -31,14 +32,20 @@ object SampleForm: TSampleForm
       AlignWithMargins = True
       Left = 12
       Top = 12
-      Width = 1528
-      Height = 805
+      Width = 1022
+      Height = 493
       Margins.Left = 12
       Margins.Top = 12
       Margins.Right = 12
       Margins.Bottom = 12
-      ActivePage = TabSheet1
+      ActivePage = TabSheet4
       Align = alClient
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       Style = tsFlatButtons
       TabOrder = 0
       object TabSheet1: TTabSheet
@@ -48,9 +55,9 @@ object SampleForm: TSampleForm
         Margins.Bottom = 6
         Caption = 'TabSheet1'
         object GroupBox1: TGroupBox
-          Left = 16
-          Top = 16
-          Width = 850
+          Left = 0
+          Top = 0
+          Width = 505
           Height = 226
           Hint = 'Kod_OKWED wrong hint'
           HelpType = htKeyword
@@ -70,8 +77,8 @@ object SampleForm: TSampleForm
           ShowHint = True
           TabOrder = 0
           object Kod_OKWED: TCheckBox
-            Left = 48
-            Top = 56
+            Left = 16
+            Top = 16
             Width = 194
             Height = 34
             HelpType = htKeyword
@@ -86,13 +93,13 @@ object SampleForm: TSampleForm
             TabOrder = 0
           end
           object Kod_MKC: TEdit
-            Left = 48
-            Top = 130
+            Left = 16
+            Top = 62
             Width = 242
             Height = 24
             Hint = 'cxHint test'
             HelpType = htKeyword
-            HelpKeyword = '!'#1058#1077#1084#1072
+            HelpKeyword = '!'#1054#1089#1085#1086#1074#1072#1085#1080#1077
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -101,13 +108,13 @@ object SampleForm: TSampleForm
             ParentShowHint = False
             ShowHint = True
             TabOrder = 1
-            Text = '[!'#1058#1077#1084#1072']'
+            Text = '[!'#1054#1089#1085#1086#1074#1072#1085#1080#1077']'
           end
           object internalHelpViewerButton: TButton
-            Left = 604
-            Top = 126
+            Left = 292
+            Top = 63
             Width = 150
-            Height = 50
+            Height = 36
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -115,7 +122,7 @@ object SampleForm: TSampleForm
             Caption = 'Internal'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -13
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
@@ -123,10 +130,10 @@ object SampleForm: TSampleForm
             OnClick = internalHelpViewerButtonClick
           end
           object externalHelpViewerButton: TButton
-            Left = 604
-            Top = 29
+            Left = 292
+            Top = 15
             Width = 150
-            Height = 50
+            Height = 36
             HelpType = htKeyword
             HelpKeyword = 'Kod_OKWED'
             Margins.Left = 6
@@ -145,9 +152,9 @@ object SampleForm: TSampleForm
           end
         end
         object GroupBox2: TGroupBox
-          Left = 912
+          Left = 533
           Top = 16
-          Width = 626
+          Width = 409
           Height = 226
           Margins.Left = 6
           Margins.Top = 6
@@ -191,8 +198,8 @@ object SampleForm: TSampleForm
             TabOrder = 0
           end
           object Edit1: TEdit
-            Left = 320
-            Top = 42
+            Left = 112
+            Top = 45
             Width = 242
             Height = 24
             Margins.Left = 6
@@ -209,10 +216,10 @@ object SampleForm: TSampleForm
             Text = 'Edit1'
           end
           object generateHintMappingButton: TButton
-            Left = 412
-            Top = 122
+            Left = 156
+            Top = 129
             Width = 150
-            Height = 50
+            Height = 36
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -240,7 +247,7 @@ object SampleForm: TSampleForm
           Left = 6
           Top = 6
           Width = 850
-          Height = 467
+          Height = 361
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
@@ -250,8 +257,8 @@ object SampleForm: TSampleForm
           object Button1: TButton
             Left = 32
             Top = 48
-            Width = 210
-            Height = 50
+            Width = 105
+            Height = 25
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -276,8 +283,8 @@ object SampleForm: TSampleForm
           object Button4: TButton
             Left = 32
             Top = 320
-            Width = 210
-            Height = 50
+            Width = 105
+            Height = 25
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -289,8 +296,8 @@ object SampleForm: TSampleForm
           object Button2: TButton
             Left = 32
             Top = 114
-            Width = 210
-            Height = 50
+            Width = 105
+            Height = 25
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -302,8 +309,8 @@ object SampleForm: TSampleForm
           object Button5: TButton
             Left = 32
             Top = 176
-            Width = 210
-            Height = 50
+            Width = 105
+            Height = 25
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -322,10 +329,10 @@ object SampleForm: TSampleForm
         Caption = 'TabSheet3'
         ImageIndex = 2
         object dxDockSite1: TdxDockSite
-          Left = 920
+          Left = 414
           Top = 0
           Width = 600
-          Height = 760
+          Height = 462
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
@@ -333,17 +340,16 @@ object SampleForm: TSampleForm
           Align = alRight
           DockingType = 5
           OriginalWidth = 600
-          OriginalHeight = 760
+          OriginalHeight = 462
           object dxLayoutDockSite1: TdxLayoutDockSite
             Left = 0
             Top = 0
             Width = 600
-            Height = 760
+            Height = 462
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
-            ExplicitHeight = 759
             DockingType = 0
             OriginalWidth = 600
             OriginalHeight = 400
@@ -352,7 +358,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 600
-            Height = 760
+            Height = 462
             AllowClosing = False
             AllowFloating = False
             AutoHide = False
@@ -366,13 +372,11 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 28
               Width = 596
-              Height = 690
+              Height = 406
               Align = alClient
               TabOrder = 0
-              ExplicitHeight = 689
               object cxGrid2DBTableView1: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
-                ScrollbarAnnotations.CustomAnnotations = <>
                 DataController.DataSource = DataSource2
                 DataController.Summary.DefaultGroupSummaryItems = <>
                 DataController.Summary.FooterSummaryItems = <>
@@ -399,23 +403,21 @@ object SampleForm: TSampleForm
         object dxDockSite2: TdxDockSite
           Left = 0
           Top = 0
-          Width = 920
-          Height = 760
+          Width = 414
+          Height = 462
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
           Align = alClient
           DockingType = 5
-          OriginalWidth = 920
-          OriginalHeight = 760
+          OriginalWidth = 414
+          OriginalHeight = 462
           object dxLayoutDockSite2: TdxLayoutDockSite
             Left = 0
             Top = 0
-            Width = 920
-            Height = 760
-            ExplicitWidth = 906
-            ExplicitHeight = 759
+            Width = 414
+            Height = 462
             DockingType = 0
             OriginalWidth = 300
             OriginalHeight = 200
@@ -423,8 +425,8 @@ object SampleForm: TSampleForm
           object dxDockPanel2: TdxDockPanel
             Left = 0
             Top = 0
-            Width = 920
-            Height = 760
+            Width = 414
+            Height = 462
             AllowClosing = False
             AllowFloating = False
             AutoHide = False
@@ -437,15 +439,12 @@ object SampleForm: TSampleForm
             object cxGrid1: TcxGrid
               Left = 0
               Top = 28
-              Width = 916
-              Height = 690
+              Width = 410
+              Height = 406
               Align = alClient
               TabOrder = 0
-              ExplicitWidth = 902
-              ExplicitHeight = 689
               object cxGrid1DBTableView1: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
-                ScrollbarAnnotations.CustomAnnotations = <>
                 OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
                 DataController.DataSource = DataSource1
                 DataController.Summary.DefaultGroupSummaryItems = <>
@@ -459,7 +458,7 @@ object SampleForm: TSampleForm
             object dxBarDockControl1: TdxBarDockControl
               Left = 0
               Top = 0
-              Width = 916
+              Width = 410
               Height = 28
               Margins.Left = 6
               Margins.Top = 6
@@ -471,6 +470,266 @@ object SampleForm: TSampleForm
           end
         end
       end
+      object TabSheet4: TTabSheet
+        Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077
+        ImageIndex = 3
+        object panelAddContaner: TPanel
+          Left = 0
+          Top = 0
+          Width = 1014
+          Height = 462
+          Align = alClient
+          BevelInner = bvLowered
+          BevelOuter = bvNone
+          TabOrder = 0
+          object panelAddBorder: TPanel
+            Left = 1
+            Top = 1
+            Width = 1012
+            Height = 460
+            Align = alClient
+            TabOrder = 0
+            object GroupBox4: TGroupBox
+              Left = 510
+              Top = 8
+              Width = 489
+              Height = 441
+              Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1072
+              TabOrder = 0
+              object cxLabel1: TcxLabel
+                Left = 24
+                Top = 32
+                Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
+              end
+              object cxEditHintIdentifierName: TcxTextEdit
+                Left = 24
+                Top = 55
+                TabOrder = 1
+                Text = 'KWOD12'
+                Width = 441
+              end
+              object cxLabel2: TcxLabel
+                Left = 24
+                Top = 90
+                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' - '#1043#1076#1077
+              end
+              object cxLabel3: TcxLabel
+                Left = 24
+                Top = 140
+                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' - '#1050#1072#1082
+              end
+              object cxLabel4: TcxLabel
+                Left = 24
+                Top = 190
+                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' - '#1063#1090#1086
+              end
+              object Panel1: TPanel
+                Left = 2
+                Top = 398
+                Width = 485
+                Height = 41
+                Align = alBottom
+                BevelOuter = bvNone
+                TabOrder = 5
+                object cxButton1: TcxButton
+                  Left = 296
+                  Top = 8
+                  Width = 75
+                  Height = 25
+                  Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                  TabOrder = 0
+                  OnClick = cxButton1Click
+                end
+                object cxButton2: TcxButton
+                  Left = 384
+                  Top = 8
+                  Width = 75
+                  Height = 25
+                  Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+                  TabOrder = 1
+                  OnClick = cxButton2Click
+                end
+              end
+              object cxComboBoxHintKeywordType: TcxComboBox
+                Left = 24
+                Top = 163
+                Properties.Items.Strings = (
+                  'ktBookmark'
+                  'ktSearch'
+                  'ktPage')
+                TabOrder = 6
+                Text = 'ktSearch'
+                Width = 441
+              end
+              object cxEditHintPredicateFilename: TcxButtonEdit
+                Left = 24
+                Top = 113
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
+                TabOrder = 7
+                Width = 441
+              end
+              object cxTextEditHintPredicateValue: TcxTextEdit
+                Left = 24
+                Top = 213
+                TabOrder = 8
+                Width = 441
+              end
+              object cxLabel11: TcxLabel
+                Left = 24
+                Top = 348
+                Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1063#1090#1086
+              end
+              object cxTextEditHintDetailsPredicateValue: TcxTextEdit
+                Left = 24
+                Top = 371
+                TabOrder = 10
+                Width = 441
+              end
+              object cxLabel12: TcxLabel
+                Left = 24
+                Top = 298
+                Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1050#1072#1082
+              end
+              object cxComboBoxHintDetailsKeywordType: TcxComboBox
+                Left = 24
+                Top = 321
+                Properties.Items.Strings = (
+                  'ktBookmark'
+                  'ktPage'
+                  'ktSearch')
+                TabOrder = 12
+                Text = 'ktSearch'
+                Width = 441
+              end
+            end
+            object GroupBox5: TGroupBox
+              Left = 8
+              Top = 8
+              Width = 489
+              Height = 441
+              Caption = #1055#1086#1084#1086#1097#1100
+              TabOrder = 1
+              object cxLabel5: TcxLabel
+                Left = 24
+                Top = 32
+                Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
+              end
+              object cxEditShortcutIdentifierName: TcxTextEdit
+                Left = 24
+                Top = 55
+                TabOrder = 1
+                Text = 'KWOD12'
+                Width = 441
+              end
+              object cxLabel6: TcxLabel
+                Left = 24
+                Top = 90
+                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1084#1086#1097#1080' - '#1043#1076#1077
+              end
+              object cxLabel7: TcxLabel
+                Left = 24
+                Top = 140
+                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1084#1086#1097#1080' - '#1050#1072#1082
+              end
+              object cxLabel8: TcxLabel
+                Left = 24
+                Top = 190
+                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1084#1086#1097#1080' - '#1063#1090#1086
+              end
+              object Panel3: TPanel
+                Left = 2
+                Top = 398
+                Width = 485
+                Height = 41
+                Align = alBottom
+                BevelOuter = bvNone
+                TabOrder = 5
+                object cxButton3: TcxButton
+                  Left = 296
+                  Top = 8
+                  Width = 75
+                  Height = 25
+                  Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                  TabOrder = 0
+                  OnClick = cxButton3Click
+                end
+                object cxButton4: TcxButton
+                  Left = 384
+                  Top = 8
+                  Width = 75
+                  Height = 25
+                  Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+                  TabOrder = 1
+                  OnClick = cxButton4Click
+                end
+              end
+              object cxComboBoxShortcutKeywordType: TcxComboBox
+                Left = 24
+                Top = 163
+                Properties.Items.Strings = (
+                  'ktBookmark'
+                  'ktSearch'
+                  'ktPage')
+                TabOrder = 6
+                Text = 'ktSearch'
+                Width = 441
+              end
+              object cxEditShortcutPredicateFilename: TcxButtonEdit
+                Left = 24
+                Top = 113
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
+                TabOrder = 7
+                Width = 441
+              end
+              object cxTextEditShortcutPredicateValue: TcxTextEdit
+                Left = 24
+                Top = 213
+                TabOrder = 8
+                Width = 441
+              end
+              object cxLabel9: TcxLabel
+                Left = 24
+                Top = 348
+                Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1063#1090#1086
+              end
+              object cxTextEditShortcutDetailsPredicateValue: TcxTextEdit
+                Left = 24
+                Top = 371
+                TabOrder = 10
+                Width = 441
+              end
+              object cxComboBoxShortcutDetailsKeywordType: TcxComboBox
+                Left = 24
+                Top = 321
+                Properties.Items.Strings = (
+                  'ktBookmark'
+                  'ktPage'
+                  'ktSearch')
+                TabOrder = 11
+                Text = 'ktSearch'
+                Width = 441
+              end
+              object cxLabel10: TcxLabel
+                Left = 24
+                Top = 298
+                Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1050#1072#1082
+              end
+            end
+          end
+        end
+      end
     end
   end
   object cxHintController: TcxHintStyleController
@@ -478,13 +737,13 @@ object SampleForm: TSampleForm
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
     UseHintControlLookAndFeel = True
-    Left = 120
-    Top = 592
+    Left = 96
+    Top = 416
   end
   object tipsRepo: TdxScreenTipRepository
-    Left = 128
-    Top = 488
-    PixelsPerInch = 192
+    Left = 168
+    Top = 384
+    PixelsPerInch = 96
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -500,9 +759,9 @@ object SampleForm: TSampleForm
       True)
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 120
-    Top = 696
-    PixelsPerInch = 192
+    Left = 312
+    Top = 368
+    PixelsPerInch = 96
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
       AllowCustomizing = False
@@ -874,23 +1133,28 @@ object SampleForm: TSampleForm
   object recordsDataset: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
-    Top = 211
+    Left = 64
+    Top = 419
   end
   object DataSource1: TDataSource
     DataSet = recordsDataset
-    Left = 336
-    Top = 195
+    Left = 248
+    Top = 411
   end
   object DataSource2: TDataSource
     DataSet = predicatesDataset
-    Left = 1167
-    Top = 308
+    Left = 815
+    Top = 372
   end
   object predicatesDataset: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 1100
-    Top = 443
+    Left = 724
+    Top = 395
+  end
+  object OpenTextFileDialog1: TOpenTextFileDialog
+    Filter = 'RTF|*.rtf|PDF|*.pdf'
+    Left = 585
+    Top = 472
   end
 end

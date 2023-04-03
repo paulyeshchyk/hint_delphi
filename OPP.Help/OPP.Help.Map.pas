@@ -56,6 +56,8 @@ begin
   result := nil;
   for fHintMap in fList do
   begin
+    if fHintMap = nil then
+      continue;
     if fHintMap.identifier = AHintIdentifier then
     begin
       result := fHintMap;

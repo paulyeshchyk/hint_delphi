@@ -14,11 +14,12 @@ type
     fKeywordType: TOPPKeywordType;
     fFileName: String;
     fPredicates: TList<TOPPHelpPredicate>;
+    procedure SetValue(AValue: String);
   public
     constructor Create;
     destructor Destroy; override;
     function copy(): TOPPHelpPredicate;
-    property value: String read fValue write fValue;
+    property value: String read fValue write SetValue;
     property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
     property fileName: String read fFileName write fFileName;
     property predicates: TList<TOPPHelpPredicate> read fPredicates;
@@ -30,6 +31,8 @@ type
   end;
 
 implementation
+uses
+  System.SysUtils;
 
 function TOPPHelpPredicateStreamHelper.writeToStream(AStream: TStream): Boolean;
 var
@@ -73,12 +76,12 @@ begin
   self.keywordType := TOPPKeywordType(AStream.ReadInteger);
   self.fileName := AStream.ReadString;
   cnt := AStream.ReadInteger;
-    for i := 0 to cnt - 1 do
-    begin
-      child := TOPPHelpPredicate.Create;
-      child.readFromStream(AStream, false);
-      self.Predicates.Add(child);
-    end;
+  for i := 0 to cnt - 1 do
+  begin
+    child := TOPPHelpPredicate.Create;
+    child.readFromStream(AStream, false);
+    self.predicates.Add(child);
+  end;
   result := true;
 
 end;
@@ -96,7 +99,7 @@ end;
 
 function TOPPHelpPredicate.copy(): TOPPHelpPredicate;
 var
-  fChild, fNewChild:TOPPHelpPredicate;
+  fChild, fNewChild: TOPPHelpPredicate;
 begin
 
   result := TOPPHelpPredicate.Create();
@@ -104,11 +107,20 @@ begin
   result.value := self.value;
   result.keywordType := self.keywordType;
   result.fileName := self.fileName;
-  for fChild in self.predicates do begin
+  for fChild in self.predicates do
+  begin
     fNewChild := fChild.copy();
     result.predicates.Add(fNewChild);
-
   end;
+end;
+
+procedure TOPPHelpPredicate.SetValue(AValue: String);
+var
+  fTrimmed: String;
+begin
+  fTrimmed := StringReplace(AValue, #13, '', [rfReplaceAll]);
+  fTrimmed := StringReplace(fTrimmed, #10, '', [rfReplaceAll]);
+  fValue := fTrimmed;
 end;
 
 end.

@@ -18,21 +18,24 @@ uses
 
   cxGraphics, cxStyles, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid, dxSkinsCore, dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
-  dxSkinCaramel, dxSkinCoffee, dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle,
+  cxGridTableView, cxGridDBTableView, cxGrid,
+  FireDAC.Phys.TDBXDef, FireDAC.Stan.Intf, FireDAC.Phys, FireDAC.Phys.TDBXBase,
+  FireDAC.Phys.TDBX, dxBar, cxPC, dxDockControl, dxDockPanel, Datasnap.Provider, cxSplitter,
+  cxDataControllerConditionalFormattingRulesManagerDialog, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle,
   dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky,
   dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
   dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
-  dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinOffice2019Black,
-  dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
-  dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dxDateRanges, dxScrollbarAnnotations, FireDAC.Phys.TDBXDef, FireDAC.Stan.Intf, FireDAC.Phys, FireDAC.Phys.TDBXBase,
-  FireDAC.Phys.TDBX, dxBar, cxPC, dxDockControl, dxDockPanel, Datasnap.Provider, cxSplitter;
+  dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxContainer, Vcl.Menus, cxButtons,
+  cxMemo, cxMaskEdit, cxDropDownEdit, cxTextEdit, cxLabel, cxButtonEdit, Vcl.ExtDlgs;
 
 type
+  THelpMapSaveCompletion = reference to procedure(AHelpMap: TOPPHelpMap);
+
   TSampleForm = class(TForm)
     cxHintController: TcxHintStyleController;
     tipsRepo: TdxScreenTipRepository;
@@ -87,19 +90,59 @@ type
     dxBarButton7: TdxBarButton;
     dxBarButton8: TdxBarButton;
     predicatesDataset: TClientDataSet;
+    TabSheet4: TTabSheet;
+    panelAddContaner: TPanel;
+    panelAddBorder: TPanel;
+    GroupBox4: TGroupBox;
+    cxLabel1: TcxLabel;
+    cxEditHintIdentifierName: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    Panel1: TPanel;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxComboBoxHintKeywordType: TcxComboBox;
+    OpenTextFileDialog1: TOpenTextFileDialog;
+    cxEditHintPredicateFilename: TcxButtonEdit;
+    cxTextEditHintPredicateValue: TcxTextEdit;
+    GroupBox5: TGroupBox;
+    cxLabel5: TcxLabel;
+    cxEditShortcutIdentifierName: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    Panel3: TPanel;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    cxComboBoxShortcutKeywordType: TcxComboBox;
+    cxEditShortcutPredicateFilename: TcxButtonEdit;
+    cxTextEditShortcutPredicateValue: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    cxTextEditShortcutDetailsPredicateValue: TcxTextEdit;
+    cxComboBoxShortcutDetailsKeywordType: TcxComboBox;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    cxTextEditHintDetailsPredicateValue: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    cxComboBoxHintDetailsKeywordType: TcxComboBox;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
-    procedure cxGrid1DBTableView1FocusedRecordChanged(Sender:
-        TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord:
-        TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+    procedure cxGrid1DBTableView1FocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
     procedure externalHelpViewerButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure generateHintMappingButtonClick(Sender: TObject);
     procedure internalHelpViewerButtonClick(Sender: TObject);
     procedure dxBarButton3Click(Sender: TObject);
+    procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure cxButton1Click(Sender: TObject);
+    procedure cxButton2Click(Sender: TObject);
+    procedure cxButton4Click(Sender: TObject);
+    procedure cxButton3Click(Sender: TObject);
+    procedure cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
   private
 
     { Private declarations }
@@ -112,6 +155,9 @@ type
     procedure OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
     { -- events -- }
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
+
+    procedure wipeFields(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit);
+    procedure saveSample(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit; completion: THelpMapSaveCompletion);
 
   public
     { Public declarations }
@@ -147,6 +193,7 @@ uses
   SampleOnly.Help.Shortcut.Setup,
 
   OPP.Help.Map.Filereader,
+  OPP.Help.System.Files,
 
   OPP.Help.System.Hook.Keyboard;
 
@@ -170,19 +217,100 @@ begin
   TSampleFormHelper.readPredicateFromFile;
 end;
 
-procedure TSampleForm.cxGrid1DBTableView1FocusedRecordChanged(Sender:
-    TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord:
-    TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+procedure TSampleForm.cxButton1Click(Sender: TObject);
+begin
+  saveSample(cxEditHintIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue,
+    procedure(AHelpMap: TOPPHelpMap)
+    begin
+      if not assigned(AHelpMap) then
+        exit;
+
+      if helpHintServer.AddHintMap(AHelpMap) then
+      begin
+        if TOPPClientHintHelper.SaveMaps() = 0 then
+        begin
+          wipeFields(cxEditHintIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue);
+        end else begin
+          eventLogger.Error('Hintmap was not saved');
+        end;
+      end else begin
+        eventLogger.Error('Hintmap was not added');
+      end;
+
+    end);
+end;
+
+procedure TSampleForm.cxButton2Click(Sender: TObject);
+begin
+  wipeFields(cxEditHintIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue);
+end;
+
+procedure TSampleForm.cxButton3Click(Sender: TObject);
+begin
+  saveSample(cxEditShortcutIdentifierName, cxEditShortcutPredicateFilename, cxComboBoxShortcutKeywordType, cxTextEditShortcutPredicateValue, cxComboBoxShortcutDetailsKeywordType, cxTextEditShortcutDetailsPredicateValue,
+    procedure(AHelpMap: TOPPHelpMap)
+    begin
+      if not assigned(AHelpMap) then
+        exit;
+
+      if helpShortcutServer.AddShortcutMap(AHelpMap) = 0 then
+      begin
+        if TOPPClientHelpShortcutHelper.SaveMaps() = 0 then
+        begin
+          wipeFields(cxEditShortcutIdentifierName, cxEditShortcutPredicateFilename, cxComboBoxShortcutKeywordType, cxTextEditShortcutPredicateValue);
+        end else begin
+          eventLogger.Error('Hintmap was not saved');
+        end;
+      end else begin
+        eventLogger.Error('Hintmap was not added');
+      end;
+
+    end);
+end;
+
+procedure TSampleForm.cxButton4Click(Sender: TObject);
+begin
+  wipeFields(cxEditShortcutIdentifierName, cxEditShortcutPredicateFilename, cxComboBoxShortcutKeywordType, cxTextEditShortcutPredicateValue);
+end;
+
+procedure TSampleForm.cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  OpenTextFileDialog1.InitialDir := ExtractFileDir(Application.ExeName);
+  OpenTextFileDialog1.Filter := 'RTF|*.rtf';
+  if OpenTextFileDialog1.Execute(self.Handle) then
+  begin
+    if FileExists(OpenTextFileDialog1.filename) then
+    begin
+      cxEditHintPredicateFilename.Text := TOPPHelpSystemFilesHelper.RelativePath(OpenTextFileDialog1.filename);
+    end;
+  end;
+end;
+
+procedure TSampleForm.cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  OpenTextFileDialog1.InitialDir := ExtractFileDir(Application.ExeName);
+  OpenTextFileDialog1.Filter := 'PDF|*.pdf';
+  if OpenTextFileDialog1.Execute(self.Handle) then
+  begin
+    if FileExists(OpenTextFileDialog1.filename) then
+    begin
+      cxEditShortcutPredicateFilename.Text := TOPPHelpSystemFilesHelper.RelativePath(OpenTextFileDialog1.filename);
+    end;
+  end;
+
+end;
+
+procedure TSampleForm.cxGrid1DBTableView1FocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 var
   fValue: Variant;
 begin
 
   if Sender.DataController.ItemCount = 0 then
-  exit;
-//  if Sender.DataController.FocusedRecordIndex < 0 then
-//    exit;
+    exit;
+  // if Sender.DataController.FocusedRecordIndex < 0 then
+  // exit;
 
-  fValue := Sender.DataController.Values[Sender.DataController.FocusedRecordIndex,0];
+  fValue := Sender.DataController.Values[Sender.DataController.FocusedRecordIndex, 0];
   TSampleFormHelper.loadPredicatesDataset(predicatesDataset, fValue);
 end;
 
@@ -270,6 +398,54 @@ end;
 
 { -- events -- }
 
+procedure TSampleForm.wipeFields(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit);
+begin
+  identifier.Text := '';
+  filename.Text := '';
+  keyword.ItemIndex := -1;
+  value.Text := '';
+end;
+
+procedure TSampleForm.saveSample(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit; completion: THelpMapSaveCompletion);
+var
+  fHelpMap: TOPPHelpMap;
+  fPredicate, fDetailsPredicate: TOPPHelpPredicate;
+begin
+  if not assigned(completion) then
+    exit;
+
+  fHelpMap := TOPPHelpMap.Create;
+  try
+
+    fHelpMap.identifier := identifier.Text;
+
+    fPredicate := TOPPHelpPredicate.Create;
+    try
+      fPredicate.value := value.Text;
+      fPredicate.keywordType := TOPPKeywordType(keyword.ItemIndex);
+      fPredicate.filename := filename.Text;
+
+      if Length(detailsvalue.Text) <> 0 then begin
+        fDetailsPredicate := TOPPHelpPredicate.Create;
+        fDetailsPredicate.value := detailsvalue.Text;
+        fDetailsPredicate.keywordType := TOPPKeywordType(detailskeyword.ItemIndex);
+        fDetailsPredicate.filename := filename.Text;
+        fPredicate.predicates.Add(fDetailsPredicate);
+      end;
+
+
+      fHelpMap.Predicate := fPredicate;
+
+      completion(fHelpMap);
+
+    finally
+      fPredicate.Free;
+    end;
+  finally
+    fHelpMap.Free;
+  end;
+end;
+
 procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
@@ -340,7 +516,7 @@ end;
 function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
 begin
   result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(AMap.Predicate.fileName);
+  result.loadData(AMap.Predicate.filename);
 end;
 
 initialization
