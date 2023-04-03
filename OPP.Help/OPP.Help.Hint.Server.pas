@@ -74,6 +74,10 @@ type
     procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
 
     function addHintMap(AMap: TOPPHelpMap): Boolean;
+    function FindMap(const AIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpMap;
+
+    function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
+    function removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
 
   end;
 
@@ -95,6 +99,10 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+
+    function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
+    function removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
+    function FindMap(const AIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpMap;
 
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
@@ -170,6 +178,71 @@ destructor TOPPHelpHintServer.Destroy;
 begin
   fHintDataReaders := nil;
   inherited Destroy;
+end;
+
+function TOPPHelpHintServer.removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
+var
+  itemsToRemove: TList<TOPPHelpMap>;
+  fMap: TOPPHelpMap;
+begin
+
+  result := -1;
+
+  itemsToRemove := TList<TOPPHelpMap>.Create();
+  try
+    for fMap in self.fHintMapSet.list do
+    begin
+      if fMap = nil then
+        continue;
+      if fMap.identifier = AIdentifier then
+        itemsToRemove.Add(fMap);
+    end;
+
+    for fMap in itemsToRemove do
+    begin
+      if fMap = nil then
+        continue;
+      fHintMapSet.list.Remove(fMap);
+    end;
+
+  finally
+    itemsToRemove.Free;
+    result := self.SaveMaps();
+  end;
+
+end;
+
+function TOPPHelpHintServer.FindMap(const AIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpMap;
+var
+  fMap: TOPPHelpMap;
+begin
+  result := nil;
+  for fMap in fHintMapSet.list do
+  begin
+    if fMap = nil then
+      continue;
+    if not assigned(fMap) then
+      continue;
+    if fMap.identifier = AIdentifier then
+    begin
+      result := fMap;
+      exit;
+    end;
+  end;
+end;
+
+function TOPPHelpHintServer.availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
+var
+  fMeta: TOPPHelpMap;
+begin
+  reloadConfigurationIfNeed(kHintsMappingDefaultFileName);
+
+  result := TList<TOPPHelpMetaIdentifierType>.Create;
+  for fMeta in fHintMapSet.list do
+  begin
+    if fMeta <> nil then
+      result.Add(fMeta.identifier);
+  end;
 end;
 
 { private }

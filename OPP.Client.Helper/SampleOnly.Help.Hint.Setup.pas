@@ -6,7 +6,8 @@ uses
   System.Classes,
   Vcl.Controls, System.Generics.Collections, System.SysUtils,
   dxScreenTip, cxHint,
-  OPP.Help.Hint, OPP.Help.Meta;
+  OPP.Help.Hint, OPP.Help.Meta,
+  OPP.Help.Nonatomic;
 
 type
   TOPPClientHintHelper = class
@@ -14,6 +15,7 @@ type
     class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
     class function SaveMaps(AFilename: String = ''): Integer;
+    class function AvailableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
   private
     class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
     class function OnGetHintFactory(): IOPPHelpMetaFactory;
@@ -31,6 +33,11 @@ uses
 var
   fMetaFactory: TOPPHelpMetaHintFactory;
 
+class function TOPPClientHintHelper.AvailableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
+begin
+  result := helpHintServer.AvailableIdentifiers;
+end;
+
 class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
 var
   fRequest: TOPPHelpHintMappingLoadRequest;
@@ -39,8 +46,8 @@ begin
   fMetaFactory := TOPPHelpMetaHintFactory.Create;
   try
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
-    try
 
+    try
       fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
         begin
           result := fMetaFactory.GetChildrenHelpMeta(AComponent)
@@ -87,7 +94,7 @@ end;
 
 class function TOPPClientHintHelper.SaveMaps(AFilename: String = ''): Integer;
 begin
-  result := helpHintServer.SaveMaps(AFileName);
+  result := helpHintServer.SaveMaps(AFilename);
 end;
 
 class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);

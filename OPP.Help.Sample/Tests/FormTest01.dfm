@@ -1,0 +1,115 @@
+object FormTest1: TFormTest1
+  Left = 0
+  Top = 0
+  Caption = 'FormTest1'
+  ClientHeight = 299
+  ClientWidth = 635
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object GroupBox11: TGroupBox
+    AlignWithMargins = True
+    Left = 6
+    Top = 6
+    Width = 623
+    Height = 287
+    Hint = 'Kod_OKWED wrong hint'
+    HelpType = htKeyword
+    HelpKeyword = 'Kod_KWED2'
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+    Align = alClient
+    Caption = 'Help && Hints'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 0
+    object Kod_OKWED: TCheckBox
+      Left = 16
+      Top = 16
+      Width = 194
+      Height = 34
+      HelpType = htKeyword
+      HelpKeyword = 'Kod_OKWED'
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = '[Kod_OKWED]'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object Kod_MKC: TEdit
+      Left = 16
+      Top = 62
+      Width = 242
+      Height = 24
+      Hint = 'cxHint test'
+      HelpType = htKeyword
+      HelpKeyword = '!'#1054#1089#1085#1086#1074#1072#1085#1080#1077
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      ParentCustomHint = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+      Text = '[!'#1054#1089#1085#1086#1074#1072#1085#1080#1077']'
+    end
+    object internalHelpViewerButton: TButton
+      Left = 292
+      Top = 63
+      Width = 150
+      Height = 36
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'Internal'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      OnClick = internalHelpViewerButtonClick
+    end
+    object externalHelpViewerButton: TButton
+      Left = 292
+      Top = 15
+      Width = 150
+      Height = 36
+      HelpType = htKeyword
+      HelpKeyword = 'Kod_OKWED'
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = 'External [Kod_OKWED]'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+      OnClick = externalHelpViewerButtonClick
+    end
+  end
+end

@@ -123,15 +123,31 @@
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas"/>
         <DCCReference Include="sampleFormHelper.pas"/>
+        <DCCReference Include="Tests\FormTest01.pas">
+            <Form>FormTest1</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Tests\FormTest02.pas">
+            <Form>FormTest2</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Tests\FormTest03.pas">
+            <Form>FormTest3</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Tests\FormTest04.pas">
+            <Form>FormTest4</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
