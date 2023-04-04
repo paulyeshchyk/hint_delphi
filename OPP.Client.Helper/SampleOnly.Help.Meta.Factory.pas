@@ -19,6 +19,7 @@ implementation
 
 uses
   Vcl.Controls, Vcl.StdCtrls,
+  cxButtons,
   OPP.Help.Component.Enumerator,
   OPP.Help.Log;
 
@@ -42,6 +43,11 @@ begin
   begin
     result.propertyName := 'HelpKeyword';
     result.identifier := (AComponent as TCheckBox).HelpKeyword;
+  end
+  else if TcxButton = AComponent.ClassType then
+  begin
+    result.propertyName := 'HelpKeyword';
+    result.identifier := (AComponent as TcxButton).HelpKeyword;
   end;
 
 end;

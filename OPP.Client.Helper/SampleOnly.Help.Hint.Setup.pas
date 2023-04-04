@@ -12,9 +12,10 @@ uses
   OPP.Help.Hint.Server;
 
 type
+  TOPPClientHintHelperLoadCompletion = reference to procedure();
   TOPPClientHintHelper = class
   public
-    class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
+    class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
     class procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
   private
@@ -34,7 +35,7 @@ uses
 var
   fMetaFactory: TOPPHelpMetaHintFactory;
 
-class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
+class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
 var
   fRequest: TOPPHelpHintMappingLoadRequest;
 begin
@@ -53,6 +54,8 @@ begin
         procedure(hints: TList<TOPPHelpHint>)
         begin
           TOPPClientHintHelper.CreateHintViews(AForm, hints, hintController, repo);
+          if assigned(completion) then
+            completion();
         end);
     finally
       fRequest.Free;

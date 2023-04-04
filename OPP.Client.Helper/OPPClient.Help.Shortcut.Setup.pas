@@ -28,7 +28,8 @@ uses
   OPP.Help.Map,
   OPP.Help.Hint.Reader,
 
-  OPP.Help.Log;
+  OPP.Help.Log,
+  OPPClientChild;
 
 class procedure TOPPClientHelpShortcutHelper.showHelp(AMessage: TWMHelp);
 var
@@ -54,6 +55,10 @@ begin
   if AControl.ClassType.InheritsFrom(TcxTreeView) then
   begin
     result := AControl.Name;
+  end
+  else if AControl.ClassType.InheritsFrom(TfmChild) then
+  begin
+    result := TfmChild(AControl).Task.Name;
   end
   else if AControl.ClassType.InheritsFrom(TForm) then
   begin

@@ -72,20 +72,6 @@ var
 begin
 
   case APredicate.keywordType of
-    ktBookmark:
-      begin
-        bookmark := self.GetBookmark(APredicate.value);
-        paragraph := self.GetParagraph(bookmark);
-        result.text := self.GetPlainText(paragraph);
-        result.rtf := self.GetRichText(paragraph);
-      end;
-    ktAny:
-      begin
-        bookmark := self.GetBookmark(APredicate.value);
-        paragraph := self.GetParagraph(bookmark);
-        result.text := self.GetPlainText(paragraph);
-        result.rtf := self.GetRichText(paragraph);
-      end;
     ktSearch:
       begin
         bookmark := self.GetBookmark(APredicate.value);
@@ -94,6 +80,20 @@ begin
         result.rtf := self.GetRichText(paragraph);
       end;
     ktPage:
+      begin
+        bookmark := self.GetBookmark(APredicate.value);
+        paragraph := self.GetParagraph(bookmark);
+        result.text := self.GetPlainText(paragraph);
+        result.rtf := self.GetRichText(paragraph);
+      end;
+    ktBookmark:
+      begin
+        bookmark := self.GetBookmark(APredicate.value);
+        paragraph := self.GetParagraph(bookmark);
+        result.text := self.GetPlainText(paragraph);
+        result.rtf := self.GetRichText(paragraph);
+      end;
+    ktAny:
       begin
         bookmark := self.GetBookmark(APredicate.value);
         paragraph := self.GetParagraph(bookmark);
