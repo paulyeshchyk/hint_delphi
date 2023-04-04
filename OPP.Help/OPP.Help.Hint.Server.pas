@@ -24,6 +24,7 @@ type
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TList<TOPPHelpMap>);
   TOPPHelpHintServerOnGetMetaFactory = reference to function(AComponent: TComponent): TList<TOPPHelpMeta>;
   TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpMap): IOPPHelpHintDataReader;
+  TOPPHelpMapsCompletion = reference to procedure(AList: TList<TOPPHelpMap>);
 
   TOPPHelpHintMappingRequest = class
   private
@@ -53,11 +54,14 @@ type
 
   IOPPHelpHintServer = interface
 
+    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+
     /// <summary>
     /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
     ///
     /// </summary>
     /// <remarks> </remarks>
+    ///
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
@@ -74,10 +78,11 @@ type
     procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
 
     function addHintMap(AMap: TOPPHelpMap): Boolean;
-    function FindMap(const AIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpMap;
+    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 
     function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
     function removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
+    procedure AvailableMaps(completion:TOPPHelpMapsCompletion);
 
   end;
 
@@ -100,9 +105,11 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    procedure NewMap(newGUID: TGUID;completion: TOPPHelpMapCompletion);
+
     function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
     function removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
-    function FindMap(const AIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpMap;
+    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
 
@@ -122,6 +129,7 @@ type
     function addHintMap(AMap: TOPPHelpMap): Boolean;
 
     property loaded: Boolean read fLoaded;
+    procedure AvailableMaps(completion:TOPPHelpMapsCompletion);
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -180,6 +188,40 @@ begin
   inherited Destroy;
 end;
 
+procedure TOPPHelpHintServer.AvailableMaps(completion:TOPPHelpMapsCompletion);
+begin
+  if not assigned(completion) then exit;
+  completion(fHintMapSet.list);
+end;
+
+procedure TOPPHelpHintServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+var
+  fHelpMap: TOPPHelpMap;
+  fPredicate: TOPPHelpPredicate;
+begin
+  if not assigned(completion) then begin
+    eventLogger.Error('NewMap completion was not defined');
+    exit;
+  end;
+
+  fHelpMap := TOPPHelpMap.Create;
+
+  try
+    fHelpMap.identifier := GUIDToString(newGUID);
+
+    fPredicate := TOPPHelpPredicate.Create;
+    try
+      fHintMapSet.AddMap(fHelpMap);
+      completion(fHelpMap);
+
+    finally
+      //fPredicate.Free;
+    end;
+  finally
+    //fHelpMap.Free;
+  end;
+end;
+
 function TOPPHelpHintServer.removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
 var
   itemsToRemove: TList<TOPPHelpMap>;
@@ -212,23 +254,31 @@ begin
 
 end;
 
-function TOPPHelpHintServer.FindMap(const AIdentifier: TOPPHelpMetaIdentifierType): TOPPHelpMap;
+procedure TOPPHelpHintServer.FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 var
-  fMap: TOPPHelpMap;
+  result, fMap: TOPPHelpMap;
 begin
   result := nil;
+  if not Assigned(completion) then
+  begin
+    eventLogger.Error('FindMap completion is not defined');
+    exit;
+  end;
+
   for fMap in fHintMapSet.list do
   begin
     if fMap = nil then
       continue;
-    if not assigned(fMap) then
+    if not Assigned(fMap) then
       continue;
     if fMap.identifier = AIdentifier then
     begin
       result := fMap;
-      exit;
+      break;
     end;
   end;
+
+  completion(result);
 end;
 
 function TOPPHelpHintServer.availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
@@ -489,7 +539,7 @@ begin
 
         fMap := TOPPHelpMap.Create();
         fMap.identifier := fMeta.identifier;
-        fMap.Predicate := TOPPHelpPredicate.Create;
+
         if Length(ARequest.DefaultPredicateFileName) > 0 then
           fMap.Predicate.filename := ARequest.DefaultPredicateFileName;
         fMapList.Add(fMap);

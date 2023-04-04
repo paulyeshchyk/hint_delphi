@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = 'SampleForm'
-  ClientHeight = 397
+  ClientHeight = 510
   ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,7 +13,7 @@ object SampleForm: TSampleForm
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = True
-  Position = poDesigned
+  Position = poScreenCenter
   Scaled = False
   Visible = True
   OnClose = FormClose
@@ -24,7 +24,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 763
-    Height = 397
+    Height = 510
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -32,10 +32,11 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 377
     object Splitter1: TSplitter
       Left = 265
       Top = 0
-      Height = 397
+      Height = 510
       ExplicitLeft = 384
       ExplicitTop = 208
       ExplicitHeight = 100
@@ -44,7 +45,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 265
-      Height = 397
+      Height = 510
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'Panel1'
@@ -55,24 +56,7 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      object ListView1: TListView
-        AlignWithMargins = True
-        Left = 3
-        Top = 27
-        Width = 259
-        Height = 367
-        Align = alClient
-        BorderStyle = bsNone
-        Columns = <>
-        ColumnClick = False
-        Ctl3D = False
-        HideSelection = False
-        ReadOnly = True
-        ShowColumnHeaders = False
-        TabOrder = 0
-        ViewStyle = vsList
-        OnSelectItem = ListView1SelectItem
-      end
+      ExplicitHeight = 377
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -80,7 +64,7 @@ object SampleForm: TSampleForm
         Height = 24
         Align = alTop
         BevelOuter = bvNone
-        TabOrder = 1
+        TabOrder = 0
         object SpeedButton1: TSpeedButton
           Left = 0
           Top = 0
@@ -172,31 +156,96 @@ object SampleForm: TSampleForm
           ExplicitTop = 8
           ExplicitHeight = 22
         end
+        object SpeedButton3: TSpeedButton
+          Left = 48
+          Top = 0
+          Width = 23
+          Height = 22
+          Glyph.Data = {
+            36040000424D3604000000000000360000002800000010000000100000000100
+            2000000000000004000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000000000030000000B00000013000000190000001A0000
+            00140000000B0000000300000000000000000000000000000000000000000000
+            000000000000000000060402011C4827118B7C431ED2A65927FFA55927FF7E44
+            1ED442230F7B0100000F0000000E000000070000000000000000000000000000
+            000000000005120A05348A4F26DDC58A53FFDCB37CFFEFD298FFEFD198FFB676
+            43FF2E1A0C62100904398F5127E10E05013A0000000600000000000000000000
+            0002040201198D552BDCD1A169FFF1D6A5FFCE9E6EFFC08656FFBD8251FF613A
+            1DA6000000227D4B26CBE2B97BFF5F290FCF0101001900000003000000000000
+            00074C2F1B82C99765FFECD2A3FFB98154FB5238238A120C07300F0A06270201
+            01194C2F1B88CE9D66FFF6DC9BFFBA8657FF3F1C0C910000000D000000000000
+            000A8C5B36D0E3C598FFCB9D75FF573B258C0000000C00000003000000062014
+            0C43BD875AFBF8E5BCFFF8DFA5FFF7E4BAFFA16540FC1C0E074C000000080000
+            0014B37A4BFAF5E6BDFFBC8356FF0D0704300000000C00000003000000079666
+            3FD5B87D4DFFBB8153FFF2D9A1FFB87D4DFFB87C4DFF9C6941DE845331D3A263
+            3BFFBB8557FFF6E7BFFFBF8B5EFFA06238FF87522FDC00000006000000020000
+            000B0D08042FA1653CFFF4DEAEFFB68155FA000000180000000A1F170F34C79D
+            75FBFBF5DCFFFCF3CCFFFAF4DAFFB3855FFB21150C4100000004000000020000
+            0009492C1886BA8B5EFFE7CEA7FF926B48CB0000000900000000000000045540
+            2D77DDC1A2FFFDF7D9FFD4B598FF5037227F0202010C0D08041F110A05274B2D
+            1986A1683EFAF3E4C3FFD8B692FF533F2C780000000400000000000000000000
+            00058F6F50BCEFE1CDFF886343C20202010D58382091A3693CFFA66F43FFBE94
+            6DFFF4E9D1FFE3CAADFFA47E5BD60504030E0000000100000000000000000000
+            0001130F0B1DAB8863DA18130E242C1E1248B78B63FDF8F3E2FFF9F3E4FFEDDE
+            C7FFDCC1A1FFA3815ED215110C22000000020000000000000000000000000000
+            000000000001000000010101000342301E629A7B5CC2C6A078F9C6A078F9997B
+            5DC3564634710504030A00000001000000000000000000000000000000000000
+            0000000000000000000000000000000000010000000200000002000000020000
+            0002000000010000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000}
+          OnClick = SpeedButton3Click
+        end
+      end
+      object cxListView1: TcxListView
+        Left = 0
+        Top = 24
+        Width = 265
+        Height = 486
+        Align = alClient
+        ColumnClick = False
+        Columns = <
+          item
+          end>
+        HideSelection = False
+        RowSelect = True
+        ShowColumnHeaders = False
+        TabOrder = 1
+        ViewStyle = vsReport
+        OnSelectItem = cxListView1SelectItem
+        ExplicitLeft = 48
+        ExplicitTop = 112
+        ExplicitWidth = 121
+        ExplicitHeight = 97
       end
     end
     object panelAddContaner: TPanel
       Left = 268
       Top = 0
       Width = 495
-      Height = 397
+      Height = 510
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 377
       object panelAddBorder: TPanel
         Left = 0
         Top = 0
         Width = 495
-        Height = 397
+        Height = 510
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitHeight = 377
         object PageControl1: TPageControl
           AlignWithMargins = True
           Left = 3
-          Top = 3
+          Top = 76
           Width = 489
-          Height = 391
-          ActivePage = TabSheet1
+          Height = 390
+          ActivePage = TabSheet2
           Align = alClient
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -206,14 +255,18 @@ object SampleForm: TSampleForm
           ParentFont = False
           Style = tsFlatButtons
           TabOrder = 0
+          ExplicitTop = 88
+          ExplicitHeight = 286
           object TabSheet1: TTabSheet
             Caption = #1055#1086#1084#1086#1097#1100
+            ExplicitHeight = 340
             object Panel5: TPanel
               Left = 0
               Top = 0
               Width = 481
-              Height = 360
+              Height = 359
               Align = alClient
+              BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
               Font.Height = -11
@@ -221,26 +274,16 @@ object SampleForm: TSampleForm
               Font.Style = []
               ParentFont = False
               TabOrder = 0
-              object cxLabel5: TcxLabel
-                Left = 8
-                Top = 8
-                Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
-              end
-              object cxEditShortcutIdentifierName: TcxTextEdit
-                Left = 8
-                Top = 31
-                TabOrder = 1
-                Text = 'KWOD12'
-                Width = 441
-              end
+              ExplicitLeft = -1
+              ExplicitHeight = 255
               object cxLabel6: TcxLabel
                 Left = 8
-                Top = 66
-                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1084#1086#1097#1080' - '#1043#1076#1077
+                Top = 9
+                Caption = #1048#1089#1090#1086#1095#1085#1080#1082
               end
               object cxEditShortcutPredicateFilename: TcxButtonEdit
-                Left = 8
-                Top = 89
+                Left = 112
+                Top = 8
                 Properties.Buttons = <
                   item
                     Default = True
@@ -248,62 +291,62 @@ object SampleForm: TSampleForm
                   end>
                 Properties.ReadOnly = True
                 Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
-                TabOrder = 3
-                Width = 441
+                TabOrder = 1
+                Width = 337
               end
               object cxLabel7: TcxLabel
                 Left = 8
-                Top = 116
-                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1084#1086#1097#1080' - '#1050#1072#1082
+                Top = 36
+                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
               end
               object cxComboBoxShortcutKeywordType: TcxComboBox
-                Left = 8
-                Top = 139
+                Left = 112
+                Top = 35
                 Properties.Items.Strings = (
                   'ktBookmark'
                   'ktSearch'
                   'ktPage')
-                TabOrder = 5
+                TabOrder = 3
                 Text = 'ktSearch'
-                Width = 441
+                Width = 97
               end
               object cxLabel8: TcxLabel
                 Left = 8
-                Top = 166
-                Caption = #1055#1086#1080#1089#1082' '#1087#1086#1084#1086#1097#1080' - '#1063#1090#1086
+                Top = 63
+                Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
               end
               object cxTextEditShortcutPredicateValue: TcxTextEdit
-                Left = 8
-                Top = 189
-                TabOrder = 7
-                Width = 441
+                Left = 112
+                Top = 62
+                TabOrder = 5
+                Width = 337
               end
               object cxLabel10: TcxLabel
                 Left = 8
-                Top = 306
-                Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1050#1072#1082
+                Top = 126
+                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
               end
               object cxComboBoxShortcutDetailsKeywordType: TcxComboBox
-                Left = 8
-                Top = 329
+                Left = 112
+                Top = 125
                 Properties.Items.Strings = (
                   'ktBookmark'
                   'ktPage'
                   'ktSearch')
-                TabOrder = 9
+                TabOrder = 7
                 Text = 'ktSearch'
-                Width = 441
+                Width = 97
               end
               object cxLabel9: TcxLabel
                 Left = 8
-                Top = 240
-                Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1063#1090#1086
+                Top = 153
+                Caption = #1047#1085#1072#1095#1077#1085#1080#1077
               end
               object cxTextEditShortcutDetailsPredicateValue: TcxTextEdit
-                Left = 8
-                Top = 263
-                TabOrder = 11
-                Width = 441
+                Left = 112
+                Top = 152
+                TabOrder = 9
+                Width = 337
               end
               object cxButton4: TcxButton
                 Left = 376
@@ -311,8 +354,7 @@ object SampleForm: TSampleForm
                 Width = 75
                 Height = 25
                 Caption = #1054#1095#1080#1089#1090#1080#1090#1100
-                TabOrder = 12
-                OnClick = cxButton4Click
+                TabOrder = 10
               end
               object cxButton3: TcxButton
                 Left = 280
@@ -320,59 +362,33 @@ object SampleForm: TSampleForm
                 Width = 75
                 Height = 25
                 Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-                TabOrder = 13
-                OnClick = cxButton3Click
+                TabOrder = 11
+              end
+              object cxLabel13: TcxLabel
+                Left = 8
+                Top = 103
+                Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
               end
             end
           end
           object TabSheet2: TTabSheet
             Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1080
             ImageIndex = 1
+            ExplicitHeight = 415
             object Panel4: TPanel
               Left = 0
               Top = 0
               Width = 481
-              Height = 360
+              Height = 359
               Align = alClient
+              BevelOuter = bvNone
               TabOrder = 0
-              object Panel6: TPanel
-                Left = 1
-                Top = 318
-                Width = 479
-                Height = 41
-                Align = alBottom
-                BevelOuter = bvNone
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = []
-                ParentFont = False
-                TabOrder = 0
-                object cxButton1: TcxButton
-                  Left = 287
-                  Top = 8
-                  Width = 75
-                  Height = 25
-                  Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-                  TabOrder = 0
-                  OnClick = cxButton1Click
-                end
-                object cxButton2: TcxButton
-                  Left = 368
-                  Top = 8
-                  Width = 75
-                  Height = 25
-                  Caption = #1054#1095#1080#1089#1090#1080#1090#1100
-                  TabOrder = 1
-                  OnClick = cxButton2Click
-                end
-              end
+              ExplicitHeight = 415
               object Panel7: TPanel
-                Left = 1
-                Top = 1
-                Width = 479
-                Height = 317
+                Left = 0
+                Top = 0
+                Width = 481
+                Height = 359
                 Align = alClient
                 BevelOuter = bvNone
                 Font.Charset = DEFAULT_CHARSET
@@ -381,64 +397,68 @@ object SampleForm: TSampleForm
                 Font.Name = 'Tahoma'
                 Font.Style = []
                 ParentFont = False
-                TabOrder = 1
+                TabOrder = 0
+                ExplicitLeft = 1
+                ExplicitTop = 1
+                ExplicitWidth = 479
+                ExplicitHeight = 372
                 object cxComboBoxHintDetailsKeywordType: TcxComboBox
-                  Left = 8
-                  Top = 293
+                  Left = 112
+                  Top = 125
                   Properties.Items.Strings = (
                     'ktBookmark'
                     'ktPage'
                     'ktSearch')
                   TabOrder = 0
                   Text = 'ktSearch'
-                  Width = 441
+                  Width = 97
                 end
                 object cxLabel12: TcxLabel
                   Left = 8
-                  Top = 270
-                  Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1050#1072#1082
+                  Top = 126
+                  Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
                 end
                 object cxTextEditHintDetailsPredicateValue: TcxTextEdit
-                  Left = 8
-                  Top = 243
+                  Left = 112
+                  Top = 152
                   TabOrder = 2
-                  Width = 441
+                  Width = 337
                 end
                 object cxLabel11: TcxLabel
                   Left = 8
-                  Top = 220
-                  Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' - '#1063#1090#1086
+                  Top = 153
+                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
                 end
                 object cxTextEditHintPredicateValue: TcxTextEdit
-                  Left = 8
-                  Top = 182
+                  Left = 112
+                  Top = 62
                   TabOrder = 4
-                  Width = 441
+                  Width = 337
                 end
                 object cxLabel4: TcxLabel
                   Left = 8
-                  Top = 159
-                  Caption = #1055#1086#1080#1089#1082' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' - '#1063#1090#1086
+                  Top = 63
+                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
                 end
                 object cxComboBoxHintKeywordType: TcxComboBox
-                  Left = 8
-                  Top = 121
+                  Left = 112
+                  Top = 35
                   Properties.Items.Strings = (
                     'ktBookmark'
                     'ktSearch'
                     'ktPage')
                   TabOrder = 6
                   Text = 'ktSearch'
-                  Width = 441
+                  Width = 97
                 end
                 object cxLabel3: TcxLabel
                   Left = 8
-                  Top = 102
-                  Caption = #1055#1086#1080#1089#1082' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' - '#1050#1072#1082
+                  Top = 36
+                  Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
                 end
                 object cxEditHintPredicateFilename: TcxButtonEdit
-                  Left = 8
-                  Top = 78
+                  Left = 112
+                  Top = 8
                   Properties.Buttons = <
                     item
                       Default = True
@@ -447,27 +467,82 @@ object SampleForm: TSampleForm
                   Properties.ReadOnly = True
                   Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
                   TabOrder = 8
-                  Width = 441
+                  Width = 337
                 end
                 object cxLabel2: TcxLabel
                   Left = 8
-                  Top = 62
-                  Caption = #1055#1086#1080#1089#1082' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' - '#1043#1076#1077
-                end
-                object cxEditHintIdentifierName: TcxTextEdit
-                  Left = 16
-                  Top = 39
-                  TabOrder = 10
-                  Text = 'KWOD12'
-                  Width = 441
+                  Top = 9
+                  Caption = #1048#1089#1090#1086#1095#1085#1080#1082
                 end
                 object cxLabel1: TcxLabel
-                  Left = 16
-                  Top = 16
-                  Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
+                  Left = 8
+                  Top = 103
+                  Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
                 end
               end
             end
+          end
+        end
+        object Panel8: TPanel
+          Left = 0
+          Top = 0
+          Width = 495
+          Height = 73
+          Align = alTop
+          BevelOuter = bvNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+          object cxLabel5: TcxLabel
+            Left = 16
+            Top = 16
+            Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
+          end
+          object cxEditIdentifierName: TcxTextEdit
+            Left = 16
+            Top = 40
+            TabOrder = 1
+            Text = 'KWOD12'
+            Width = 441
+          end
+        end
+        object Panel9: TPanel
+          Left = 0
+          Top = 469
+          Width = 495
+          Height = 41
+          Align = alBottom
+          BevelOuter = bvNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 2
+          ExplicitLeft = 152
+          ExplicitTop = 232
+          ExplicitWidth = 273
+          object cxButton1: TcxButton
+            Left = 302
+            Top = 9
+            Width = 75
+            Height = 25
+            Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+            TabOrder = 0
+            OnClick = cxButton1Click
+          end
+          object cxButton2: TcxButton
+            Left = 398
+            Top = 9
+            Width = 75
+            Height = 25
+            Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+            TabOrder = 1
           end
         end
       end

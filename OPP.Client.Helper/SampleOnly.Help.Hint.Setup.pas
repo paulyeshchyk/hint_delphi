@@ -6,16 +6,17 @@ uses
   System.Classes,
   Vcl.Controls, System.Generics.Collections, System.SysUtils,
   dxScreenTip, cxHint,
-  OPP.Help.Hint, OPP.Help.Meta,
-  OPP.Help.Nonatomic;
+  OPP.Help.Hint, OPP.Help.Meta, OPP.Help.Map,
+  OPP.Help.Nonatomic,
+
+  OPP.Help.Hint.Server;
 
 type
   TOPPClientHintHelper = class
   public
     class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
-    class function SaveMaps(AFilename: String = ''): Integer;
-    class function AvailableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
+    class procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
   private
     class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
     class function OnGetHintFactory(): IOPPHelpMetaFactory;
@@ -27,16 +28,11 @@ uses
   OPP.Help.Log,
   OPP.Help.Component.Enumerator,
 
-  OPP.Help.Hint.Server,
+
   SampleOnly.Help.Meta.Factory;
 
 var
   fMetaFactory: TOPPHelpMetaHintFactory;
-
-class function TOPPClientHintHelper.AvailableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
-begin
-  result := helpHintServer.AvailableIdentifiers;
-end;
 
 class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
 var
@@ -92,11 +88,6 @@ begin
   end;
 end;
 
-class function TOPPClientHintHelper.SaveMaps(AFilename: String = ''): Integer;
-begin
-  result := helpHintServer.SaveMaps(AFilename);
-end;
-
 class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
 var
   fHint: TOPPHelpHint;
@@ -129,6 +120,11 @@ begin
     fScreenTipLink.control := TControl(fControl);
 
   end;
+end;
+
+class procedure TOPPClientHintHelper.AvailableMaps(completion:TOPPHelpMapsCompletion);
+begin
+  helpHintServer.AvailableMaps(completion);
 end;
 
 class function TOPPClientHintHelper.OnGetHintFactory(): IOPPHelpMetaFactory;

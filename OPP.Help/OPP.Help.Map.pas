@@ -9,16 +9,21 @@ uses
 
 type
 
+  POPPHelpMap = ^TOPPHelpMap;
   TOPPHelpMap = class(TObject)
   private
     fPredicate: TOPPHelpPredicate;
     fIdentifier: TOPPHelpHintMapIdentifier;
     function GetIsValid: Boolean;
   public
+    constructor Create;
     property identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
     property Predicate: TOPPHelpPredicate read fPredicate write fPredicate;
     property isValid: Boolean read GetIsValid;
   end;
+
+  TOPPHelpMapCompletion = reference to procedure(AMap: TOPPHelpMap);
+
 
   TOPPHelpMapSet = class(TObject)
   private
@@ -28,12 +33,20 @@ type
     constructor Create(AList: TList<TOPPHelpMap> = nil);
     function GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpMap;
 
+    procedure AddMap(AMap: TOPPHelpMap);
     procedure AddMaps(AList: TList<TOPPHelpMap>);
     procedure MergeMaps(AList: TList<TOPPHelpMap>);
     property list: TList<TOPPHelpMap> read GetList;
   end;
 
 implementation
+
+constructor TOPPHelpMap.Create;
+begin
+  inherited Create;
+
+  fPredicate := TOPPHelpPredicate.Create;
+end;
 
 function TOPPHelpMap.GetIsValid: Boolean;
 begin
@@ -69,6 +82,15 @@ end;
 function TOPPHelpMapSet.GetList: TList<TOPPHelpMap>;
 begin
   result := fList;
+end;
+
+procedure TOPPHelpMapSet.AddMap(AMap: TOPPHelpMap);
+begin
+  if not assigned(AMap) then begin
+    exit;
+  end;
+
+  fList.Add(AMap);
 end;
 
 procedure TOPPHelpMapSet.AddMaps(AList: TList<TOPPHelpMap>);

@@ -27,7 +27,7 @@ uses
 
 procedure TOPPHelpLog.Debug(AString: string);
 begin
-  // self.Log(AString, '', lmDebug);
+   self.Log(AString, '', lmDebug);
 end;
 
 procedure TOPPHelpLog.Flow(AString: string; AFlowName: String);
@@ -62,11 +62,13 @@ begin
       outresult := Format('[Warning]: %s', [AString]);
     lmFlow:
       begin
+        {
         if length(postfix) = 0 then
           completeString := 'Flow'
         else
           completeString := postfix;
         outresult := Format('[%s]: %s', [completeString, AString]);
+        }
       end;
   end;
 

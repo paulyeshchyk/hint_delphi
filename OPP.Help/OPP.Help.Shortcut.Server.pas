@@ -10,6 +10,7 @@ uses
   WinAPI.Windows,
   Vcl.Controls, Vcl.StdCtrls, Vcl.Forms,
 
+  OPP.Help.nonatomic,
   OPP.Help.Interfaces,
 
   OPP.Help.Predicate,
@@ -37,9 +38,13 @@ type
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
     function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+
+    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String): Integer;
+    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
   end;
 
   TOPPHelpShortcutServer = class(TComponent, IOPPHelpShortcutServer)
@@ -61,10 +66,15 @@ type
 
     procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
+    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+
+    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String = ''): Integer;
     function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+
+    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -87,6 +97,7 @@ uses
 
 const
   OPPViewerProcessName: String = 'OPPHelpPreview.exe';
+
 const
   kShortcutMappingDefaultFileName: String = '.\help\mapping\shortcut_matrix.json';
 
@@ -127,6 +138,65 @@ begin
   inherited Destroy;
 end;
 
+function TOPPHelpShortcutServer.removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
+var
+  itemsToRemove: TList<TOPPHelpMap>;
+  fMap: TOPPHelpMap;
+begin
+
+  result := -1;
+
+  itemsToRemove := TList<TOPPHelpMap>.Create();
+  try
+    for fMap in self.fShortcutDataset.list do
+    begin
+      if fMap = nil then
+        continue;
+      if fMap.identifier = AIdentifier then
+        itemsToRemove.Add(fMap);
+    end;
+
+    for fMap in itemsToRemove do
+    begin
+      if fMap = nil then
+        continue;
+      fShortcutDataset.list.Remove(fMap);
+    end;
+
+  finally
+    itemsToRemove.Free;
+    result := self.SaveMaps();
+  end;
+
+end;
+
+procedure TOPPHelpShortcutServer.FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+var
+  result, fMap: TOPPHelpMap;
+begin
+  result := nil;
+  if not Assigned(completion) then
+  begin
+    eventLogger.Error('FindMap completion is not defined');
+    exit;
+  end;
+
+  for fMap in fShortcutDataset.list do
+  begin
+    if fMap = nil then
+      continue;
+    if not Assigned(fMap) then
+      continue;
+    if fMap.identifier = AIdentifier then
+    begin
+      result := fMap;
+      break;
+    end;
+  end;
+
+  completion(result);
+end;
+
 procedure TOPPHelpShortcutServer.loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
 var
   fFileNameHash: String;
@@ -136,7 +206,7 @@ begin
   fPDFMemoryStream.TryGetValue(fFileNameHash, fStream);
   if Assigned(fStream) then
   begin
-    if assigned(completion) then
+    if Assigned(completion) then
       completion(fStream, ssReused);
   end else begin
     fStream := TMemoryStream.Create;
@@ -145,9 +215,37 @@ begin
       fStream.Position := 0;
       fPDFMemoryStream.Add(fFileNameHash, fStream);
     finally
-      if assigned(completion) then
+      if Assigned(completion) then
         completion(fStream, ssCreated);
     end;
+  end;
+end;
+
+procedure TOPPHelpShortcutServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+var
+  fHelpMap: TOPPHelpMap;
+  fPredicate: TOPPHelpPredicate;
+begin
+  if not assigned(completion) then begin
+    eventLogger.Error('TOPPHelpShortcutServer.NewMap completion was not defined');
+    exit;
+  end;
+
+  fHelpMap := TOPPHelpMap.Create;
+
+  try
+    fHelpMap.identifier := GUIDToString(newGUID);
+
+    fPredicate := TOPPHelpPredicate.Create;
+    try
+      fShortcutDataset.AddMap(fHelpMap);
+      completion(fHelpMap);
+
+    finally
+      //fPredicate.Free;
+    end;
+  finally
+    //fHelpMap.Free;
   end;
 end;
 
@@ -186,7 +284,7 @@ begin
     exit;
   end;
 
-  showHelp(fMapping.predicate, viewMode, completion);
+  showHelp(fMapping.Predicate, viewMode, completion);
 end;
 
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
@@ -311,7 +409,6 @@ begin
 
   result := SaveCustomList(fShortcutDataset.list, fFileNameFullPath);
 end;
-
 
 procedure TOPPHelpShortcutServer.setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 begin
