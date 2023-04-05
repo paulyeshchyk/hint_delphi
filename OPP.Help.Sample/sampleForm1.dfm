@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = 'SampleForm'
-  ClientHeight = 450
+  ClientHeight = 610
   ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,15 +17,15 @@ object SampleForm: TSampleForm
   Scaled = False
   Visible = True
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 27
   object Panel2: TPanel
     Left = 0
     Top = 0
     Width = 763
-    Height = 450
+    Height = 610
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -33,22 +33,23 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 450
     object Splitter1: TSplitter
       Left = 265
       Top = 0
-      Height = 450
+      Height = 610
       ExplicitLeft = 384
       ExplicitTop = 208
       ExplicitHeight = 100
     end
-    object Panel1: TPanel
+    object panelList: TPanel
       Left = 0
       Top = 0
       Width = 265
-      Height = 450
+      Height = 610
       Align = alLeft
       BevelOuter = bvNone
-      Caption = 'Panel1'
+      Caption = 'panelList'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -56,162 +57,13 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      object Panel3: TPanel
-        Left = 0
-        Top = 0
-        Width = 265
-        Height = 24
-        Align = alTop
-        BevelOuter = bvNone
-        TabOrder = 0
-        object SpeedButton1: TSpeedButton
-          Left = 0
-          Top = 28
-          Width = 23
-          Height = 21
-          Align = alLeft
-          Flat = True
-          Glyph.Data = {
-            36040000424D3604000000000000360000002800000010000000100000000100
-            2000000000000004000000000000000000000000000000000000000000000000
-            0000000000020000000A170D0738542D1894814626D193502AEA924F2AE87F45
-            25D0522C17931209053000000009000000010000000000000000000000000000
-            00030201011159311B97A96239FAC58957FFD6A36DFFDDAF75FFDDAF74FFD6A4
-            6BFFC58956FFA46137F53C2112730000000F0000000300000000000000020201
-            0110744226B9BC7C4DFFDDAE77FFDEB076FFE2B782FFE3BB87FFE3BC86FFE1B7
-            82FFDEAF74FFDBAB72FFBD7E4EFF6F3E24B50000001000000002000000085C36
-            2095BE8053FFE0B37CFFDFB076FFDEB177FFB78254FFAA7144FFAB7245FFBC88
-            59FFDFB279FFDFB277FFDEB077FFC08253FF55321D920000000A190F0932B070
-            47FADFB27DFFDFB27AFFE0B37BFFE0B57DFFA56B3FFFF5EFEAFFF8F3EEFFAB72
-            45FFE2B67EFFE0B47CFFE0B47BFFDEB079FFB3734AFB130B072F613C2795CD9B
-            6FFFE2B780FFE5BD89FFE7C291FFE8C393FFA56B3FFFF1E6DEFFF9F5F1FFAA71
-            44FFE8C494FFE8C393FFE5BF8CFFE1B77FFFD09C6EFF5434218B935E3DD2DCB3
-            83FFE3B781FFBA8659FFA97043FFAB7245FFAC7346FFF5EDE6FFFAF6F3FFAD75
-            47FFB0784AFFB17A4BFFC29162FFE4B983FFDEB17EFF8E5B3BD0B0744CF2E3BF
-            8FFFE4BB84FFA56B3FFFF3EBE6FFFAF6F3FFF6EFE8FFF7F0EAFFFBF7F5FFFAF7
-            F4FFFAF7F3FFFAF6F2FFAB7245FFE5BD87FFE5BE8BFFAB714CEEAE764FECE9C9
-            A0FFE5BE89FFA56B3FFFE0D2CAFFE1D3CCFFE3D5CFFFF2EAE4FFF8F3EFFFEADF
-            D9FFE6DAD4FFE9DED9FFAA7144FFE7C08CFFEACA9DFFAE764FEE9A6A49D0E9CD
-            ACFFEAC796FFB78456FFA56B3FFFA56B3FFFA56B3FFFF1EAE5FFFAF6F3FFA56B
-            3FFFA56B3FFFA56B3FFFB78457FFEACA99FFEBD1ADFF996A49D46E4E3697DDBB
-            9DFFEED3A9FFEECFA2FFEED2A5FFF0D6A9FFA56B3FFFF0EAE7FFFDFCFBFFA56B
-            3FFFF1D6AAFFF0D5A8FFEED2A5FFEFD4A7FFE0C2A2FF6246318F1C140E2BC794
-            6CFCF5E8CCFFEFD6ABFFF1D8AEFFF2DAB0FFA56B3FFFDECFC9FFDFD1CBFFA56B
-            3FFFF3DCB2FFF1DBB0FFF1D8ADFFF7EACDFFC69470FA1A120D2E000000036F52
-            3C92D7B08CFFF8EFD3FFF3E0B9FFF3DFB7FFB98A5FFFA56B3FFFA56B3FFFBA8A
-            5FFFF4E1B9FFF4E2BDFFFAF1D5FFD9B390FF664B368C00000006000000010202
-            0107906C4EB8D9B38FFFF7EDD3FFF8EED0FFF7EBC9FFF6E8C4FFF6E8C5FFF7EC
-            CAFFF8EED0FFF4E8CDFFD7AF8BFF88664AB30202010B00000001000000000000
-            00010202010770543F8FCFA078FCE2C4A2FFEBD7B8FFF4E9CDFFF4EACEFFECD8
-            B9FFE3C5A3FFC59973F24C392A67000000060000000100000000000000000000
-            000000000001000000022019122C6C543E89A47E5FCCC59770F1C19570EEA47E
-            60CD6C543F8B16110D2200000003000000010000000000000000}
-          ExplicitLeft = 24
-          ExplicitTop = 0
-          ExplicitHeight = 22
-        end
-        object SpeedButton2: TSpeedButton
-          Left = 23
-          Top = 28
-          Width = 23
-          Height = 21
-          Align = alLeft
-          Flat = True
-          Glyph.Data = {
-            36040000424D3604000000000000360000002800000010000000100000000100
-            2000000000000004000000000000000000000000000000000000000000000000
-            0000000000020000000C05031A46110852AB190C76E31D0E89FF1C0E89FF190C
-            76E4120852AD06031B4D0000000E000000030000000000000000000000000000
-            000301010519130A55A9211593FF2225AEFF2430C2FF2535CBFF2535CCFF2430
-            C3FF2225AFFF211594FF140B58B20101051E0000000400000000000000020101
-            03151C1270CD2522A6FF2D3DCCFF394BD3FF3445D1FF2939CDFF2839CDFF3344
-            D0FF394AD4FF2D3CCDFF2523A8FF1C1270D20101051D00000003000000091912
-            5BA72A27AAFF2F41D0FF3541C7FF2726ABFF3137BCFF384AD3FF384BD3FF3137
-            BCFF2726ABFF3540C7FF2E40D0FF2927ACFF1A115EB10000000D08061C3D3129
-            A2FD2C3CCCFF3842C6FF5F5DBDFFEDEDF8FF8B89CEFF3337B9FF3437B9FF8B89
-            CEFFEDEDF8FF5F5DBDFF3741C6FF2B3ACDFF3028A4FF0907204A1E185F9F373B
-            BCFF3042D0FF2621A5FFECE7ECFFF5EBE4FFF8F2EEFF9491D1FF9491D1FFF8F1
-            EDFFF3E9E2FFECE6EBFF2621A5FF2E3FCFFF343ABEFF201A66B0312A92E03542
-            CBFF3446D1FF2C2FB5FF8070ADFFEBDBD3FFF4EAE4FFF7F2EDFFF8F1EDFFF4E9
-            E2FFEADAD1FF7F6FACFF2B2EB5FF3144D0FF3040CBFF312A95E53E37AEFA3648
-            D0FF374AD3FF3A4ED5FF3234B4FF8A7FB9FFF6ECE7FFF5ECE6FFF4EBE5FFF6EB
-            E5FF897DB8FF3233B4FF384BD3FF3547D2FF3446D1FF3E37AEFA453FB4FA4557
-            D7FF3B50D5FF4C5FDAFF4343B7FF9189C7FFF7EFE9FFF6EEE9FFF6EFE8FFF7ED
-            E8FF9087C5FF4242B7FF495DD8FF394CD4FF3F52D4FF443FB3FA403DA1DC5967
-            DAFF5B6EDDFF4F4DBAFF8F89CAFFFBF6F4FFF7F1ECFFEDE1D9FFEDE0D9FFF7F0
-            EAFFFAF5F2FF8F89CAFF4E4DB9FF576ADCFF5765D9FF403EA4E12E2D70987C85
-            DDFF8798E8FF291D9BFFE5DADEFFF6EEEBFFEDDFDAFF816EA9FF816EA9FFEDDF
-            D8FFF4ECE7FFE5D9DCFF291D9BFF8494E7FF7A81DDFF33317BAC111125356768
-            D0FC9EACEDFF686FCEFF5646A1FFCCB6BCFF7A68A8FF4C4AB6FF4D4BB7FF7A68
-            A8FFCBB5BCFF5646A1FF666DCCFF9BAAEEFF696CD0FD1212273F000000043B3B
-            79977D84DFFFA5B6F1FF6D74D0FF2D219BFF5151B9FF8EA2ECFF8EA1ECFF5252
-            BBFF2D219BFF6B72D0FFA2B3F0FF8086E0FF404183A700000008000000010303
-            050C4E509DBC8087E2FFAEBDF3FFA3B6F1FF9DAFF0FF95A9EEFF95A8EEFF9BAD
-            EFFFA2B3F0FFACBCF3FF838AE3FF4F52A0C10303051100000002000000000000
-            000100000005323464797378D9F8929CEAFFA1AEEFFFB0BFF3FFB0BFF4FFA2AE
-            EFFF939DE9FF7479DAF83234647D000000080000000200000000000000000000
-            000000000000000000031213232D40437D935D61B5D07378DFFC7378DFFC5D61
-            B5D040437D951212223000000004000000010000000000000000}
-          ExplicitLeft = 64
-          ExplicitTop = 8
-          ExplicitHeight = 22
-        end
-        object SpeedButton3: TSpeedButton
-          Left = 48
-          Top = 0
-          Width = 23
-          Height = 22
-          Flat = True
-          Glyph.Data = {
-            36040000424D3604000000000000360000002800000010000000100000000100
-            2000000000000004000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000000000030000000B00000013000000190000001A0000
-            00140000000B0000000300000000000000000000000000000000000000000000
-            000000000000000000060402011C4827118B7C431ED2A65927FFA55927FF7E44
-            1ED442230F7B0100000F0000000E000000070000000000000000000000000000
-            000000000005120A05348A4F26DDC58A53FFDCB37CFFEFD298FFEFD198FFB676
-            43FF2E1A0C62100904398F5127E10E05013A0000000600000000000000000000
-            0002040201198D552BDCD1A169FFF1D6A5FFCE9E6EFFC08656FFBD8251FF613A
-            1DA6000000227D4B26CBE2B97BFF5F290FCF0101001900000003000000000000
-            00074C2F1B82C99765FFECD2A3FFB98154FB5238238A120C07300F0A06270201
-            01194C2F1B88CE9D66FFF6DC9BFFBA8657FF3F1C0C910000000D000000000000
-            000A8C5B36D0E3C598FFCB9D75FF573B258C0000000C00000003000000062014
-            0C43BD875AFBF8E5BCFFF8DFA5FFF7E4BAFFA16540FC1C0E074C000000080000
-            0014B37A4BFAF5E6BDFFBC8356FF0D0704300000000C00000003000000079666
-            3FD5B87D4DFFBB8153FFF2D9A1FFB87D4DFFB87C4DFF9C6941DE845331D3A263
-            3BFFBB8557FFF6E7BFFFBF8B5EFFA06238FF87522FDC00000006000000020000
-            000B0D08042FA1653CFFF4DEAEFFB68155FA000000180000000A1F170F34C79D
-            75FBFBF5DCFFFCF3CCFFFAF4DAFFB3855FFB21150C4100000004000000020000
-            0009492C1886BA8B5EFFE7CEA7FF926B48CB0000000900000000000000045540
-            2D77DDC1A2FFFDF7D9FFD4B598FF5037227F0202010C0D08041F110A05274B2D
-            1986A1683EFAF3E4C3FFD8B692FF533F2C780000000400000000000000000000
-            00058F6F50BCEFE1CDFF886343C20202010D58382091A3693CFFA66F43FFBE94
-            6DFFF4E9D1FFE3CAADFFA47E5BD60504030E0000000100000000000000000000
-            0001130F0B1DAB8863DA18130E242C1E1248B78B63FDF8F3E2FFF9F3E4FFEDDE
-            C7FFDCC1A1FFA3815ED215110C22000000020000000000000000000000000000
-            000000000001000000010101000342301E629A7B5CC2C6A078F9C6A078F9997B
-            5DC3564634710504030A00000001000000000000000000000000000000000000
-            0000000000000000000000000000000000010000000200000002000000020000
-            0002000000010000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000}
-        end
-        object dxBarDockControl1: TdxBarDockControl
-          Left = 0
-          Top = 0
-          Width = 265
-          Height = 28
-          Align = dalTop
-          BarManager = dxBarManager1
-        end
-      end
+      ExplicitHeight = 450
       object cxListView1: TcxListView
-        Left = 0
-        Top = 24
-        Width = 265
-        Height = 426
+        AlignWithMargins = True
+        Left = 3
+        Top = 31
+        Width = 259
+        Height = 576
         Align = alClient
         ColumnClick = False
         Columns = <
@@ -221,50 +73,158 @@ object SampleForm: TSampleForm
         ReadOnly = True
         RowSelect = True
         ShowColumnHeaders = False
-        TabOrder = 1
+        TabOrder = 0
         ViewStyle = vsReport
         OnSelectItem = cxListView1SelectItem
+        ExplicitLeft = 0
+        ExplicitTop = 24
+        ExplicitWidth = 265
+        ExplicitHeight = 426
+      end
+      object dxBarDockControl3: TdxBarDockControl
+        Left = 0
+        Top = 0
+        Width = 265
+        Height = 28
+        Align = dalTop
+        BarManager = dxBarManager1
       end
     end
-    object panelAddContaner: TPanel
+    object panelAddBorder: TPanel
       Left = 268
       Top = 0
       Width = 495
-      Height = 450
+      Height = 610
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      object panelAddBorder: TPanel
-        Left = 0
-        Top = 0
-        Width = 495
-        Height = 450
+      ExplicitLeft = 3
+      ExplicitTop = 48
+      ExplicitHeight = 450
+      object PageControl1: TPageControl
+        AlignWithMargins = True
+        Left = 3
+        Top = 104
+        Width = 489
+        Height = 503
+        ActivePage = TabSheet1
         Align = alClient
-        BevelOuter = bvNone
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        Style = tsFlatButtons
         TabOrder = 0
-        object PageControl1: TPageControl
-          AlignWithMargins = True
-          Left = 3
-          Top = 76
-          Width = 489
-          Height = 330
-          ActivePage = TabSheet2
-          Align = alClient
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          Style = tsFlatButtons
-          TabOrder = 0
-          object TabSheet1: TTabSheet
-            Caption = #1055#1086#1084#1086#1097#1100
-            object Panel5: TPanel
+        ExplicitTop = 76
+        ExplicitHeight = 330
+        object TabSheet1: TTabSheet
+          Caption = #1055#1086#1084#1086#1097#1100
+          object Panel5: TPanel
+            Left = 0
+            Top = 0
+            Width = 481
+            Height = 472
+            Align = alClient
+            BevelOuter = bvNone
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            object cxLabel6: TcxLabel
+              Left = 8
+              Top = 9
+              Caption = #1048#1089#1090#1086#1095#1085#1080#1082
+            end
+            object ShortcutPredicateFilenameEdit: TcxButtonEdit
+              Left = 112
+              Top = 8
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
+              Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
+              TabOrder = 1
+              OnEditing = onControlEditing
+              Width = 337
+            end
+            object cxLabel7: TcxLabel
+              Left = 8
+              Top = 36
+              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+            end
+            object ShortcutKeywordTypeComboBox: TcxComboBox
+              Left = 112
+              Top = 35
+              TabOrder = 3
+              OnEditing = onControlEditing
+              Width = 169
+            end
+            object cxLabel8: TcxLabel
+              Left = 8
+              Top = 63
+              Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
+            end
+            object ShortcutPredicateValueEdit: TcxTextEdit
+              Left = 112
+              Top = 62
+              TabOrder = 5
+              OnEditing = onControlEditing
+              Width = 337
+            end
+            object cxLabel10: TcxLabel
+              Left = 8
+              Top = 126
+              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+            end
+            object ShortcutDetailsKeywordTypeComboBox: TcxComboBox
+              Left = 112
+              Top = 125
+              TabOrder = 7
+              OnEditing = onControlEditing
+              Width = 169
+            end
+            object cxLabel9: TcxLabel
+              Left = 8
+              Top = 153
+              Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+            end
+            object ShortcutDetailsPredicateValueEdit: TcxTextEdit
+              Left = 112
+              Top = 152
+              TabOrder = 9
+              OnEditing = onControlEditing
+              Width = 337
+            end
+            object cxLabel13: TcxLabel
+              Left = 8
+              Top = 103
+              Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
+            end
+          end
+        end
+        object TabSheet2: TTabSheet
+          Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1080
+          ImageIndex = 1
+          object Panel4: TPanel
+            Left = 0
+            Top = 0
+            Width = 481
+            Height = 472
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 0
+            object Panel7: TPanel
               Left = 0
               Top = 0
               Width = 481
-              Height = 299
+              Height = 472
               Align = alClient
               BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
@@ -274,12 +234,55 @@ object SampleForm: TSampleForm
               Font.Style = []
               ParentFont = False
               TabOrder = 0
-              object cxLabel6: TcxLabel
-                Left = 8
-                Top = 9
-                Caption = #1048#1089#1090#1086#1095#1085#1080#1082
+              object cxComboBoxHintDetailsKeywordType: TcxComboBox
+                Left = 112
+                Top = 125
+                TabOrder = 0
+                OnEditing = onControlEditing
+                Width = 169
               end
-              object ShortcutPredicateFilenameEdit: TcxButtonEdit
+              object cxLabel12: TcxLabel
+                Left = 8
+                Top = 126
+                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+              end
+              object cxTextEditHintDetailsPredicateValue: TcxTextEdit
+                Left = 112
+                Top = 152
+                TabOrder = 2
+                OnEditing = onControlEditing
+                Width = 337
+              end
+              object cxLabel11: TcxLabel
+                Left = 8
+                Top = 153
+                Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+              end
+              object cxTextEditHintPredicateValue: TcxTextEdit
+                Left = 112
+                Top = 62
+                TabOrder = 4
+                OnEditing = onControlEditing
+                Width = 337
+              end
+              object cxLabel4: TcxLabel
+                Left = 8
+                Top = 63
+                Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
+              end
+              object cxComboBoxHintKeywordType: TcxComboBox
+                Left = 112
+                Top = 35
+                TabOrder = 6
+                OnEditing = onControlEditing
+                Width = 169
+              end
+              object cxLabel3: TcxLabel
+                Left = 8
+                Top = 36
+                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+              end
+              object cxEditHintPredicateFilename: TcxButtonEdit
                 Left = 112
                 Top = 8
                 Properties.Buttons = <
@@ -288,290 +291,59 @@ object SampleForm: TSampleForm
                     Kind = bkEllipsis
                   end>
                 Properties.ReadOnly = True
-                Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
-                TabOrder = 1
+                Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
+                TabOrder = 8
                 OnEditing = onControlEditing
                 Width = 337
               end
-              object cxLabel7: TcxLabel
+              object cxLabel2: TcxLabel
                 Left = 8
-                Top = 36
-                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+                Top = 9
+                Caption = #1048#1089#1090#1086#1095#1085#1080#1082
               end
-              object ShortcutKeywordTypeComboBox: TcxComboBox
-                Left = 112
-                Top = 35
-                TabOrder = 3
-                OnEditing = onControlEditing
-                Width = 169
-              end
-              object cxLabel8: TcxLabel
-                Left = 8
-                Top = 63
-                Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
-              end
-              object ShortcutPredicateValueEdit: TcxTextEdit
-                Left = 112
-                Top = 62
-                TabOrder = 5
-                OnEditing = onControlEditing
-                Width = 337
-              end
-              object cxLabel10: TcxLabel
-                Left = 8
-                Top = 126
-                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
-              end
-              object ShortcutDetailsKeywordTypeComboBox: TcxComboBox
-                Left = 112
-                Top = 125
-                TabOrder = 7
-                OnEditing = onControlEditing
-                Width = 169
-              end
-              object cxLabel9: TcxLabel
-                Left = 8
-                Top = 153
-                Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-              end
-              object ShortcutDetailsPredicateValueEdit: TcxTextEdit
-                Left = 112
-                Top = 152
-                TabOrder = 9
-                OnEditing = onControlEditing
-                Width = 337
-              end
-              object cxButton4: TcxButton
-                Left = 376
-                Top = 374
-                Width = 75
-                Height = 25
-                Caption = #1054#1095#1080#1089#1090#1080#1090#1100
-                TabOrder = 10
-              end
-              object cxButton3: TcxButton
-                Left = 280
-                Top = 374
-                Width = 75
-                Height = 25
-                Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-                TabOrder = 11
-              end
-              object cxLabel13: TcxLabel
+              object cxLabel1: TcxLabel
                 Left = 8
                 Top = 103
                 Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
               end
-              object shortcutsPreviewPanel: TPanel
-                Left = 0
-                Top = 224
-                Width = 481
-                Height = 75
-                Align = alBottom
-                BevelOuter = bvNone
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = []
-                ParentFont = False
-                TabOrder = 13
-                object Button2: TButton
-                  Left = 374
-                  Top = 16
-                  Width = 75
-                  Height = 25
-                  Action = actionPreviewShortcut
-                  TabOrder = 0
-                end
-              end
-            end
-          end
-          object TabSheet2: TTabSheet
-            Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1080
-            ImageIndex = 1
-            object Panel4: TPanel
-              Left = 0
-              Top = 0
-              Width = 481
-              Height = 299
-              Align = alClient
-              BevelOuter = bvNone
-              TabOrder = 0
-              object Panel7: TPanel
-                Left = 0
-                Top = 0
-                Width = 481
-                Height = 224
-                Align = alClient
-                BevelOuter = bvNone
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = []
-                ParentFont = False
-                TabOrder = 0
-                ExplicitHeight = 193
-                object cxComboBoxHintDetailsKeywordType: TcxComboBox
-                  Left = 112
-                  Top = 125
-                  TabOrder = 0
-                  OnEditing = onControlEditing
-                  Width = 169
-                end
-                object cxLabel12: TcxLabel
-                  Left = 8
-                  Top = 126
-                  Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
-                end
-                object cxTextEditHintDetailsPredicateValue: TcxTextEdit
-                  Left = 112
-                  Top = 152
-                  TabOrder = 2
-                  OnEditing = onControlEditing
-                  Width = 337
-                end
-                object cxLabel11: TcxLabel
-                  Left = 8
-                  Top = 153
-                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-                end
-                object cxTextEditHintPredicateValue: TcxTextEdit
-                  Left = 112
-                  Top = 62
-                  TabOrder = 4
-                  OnEditing = onControlEditing
-                  Width = 337
-                end
-                object cxLabel4: TcxLabel
-                  Left = 8
-                  Top = 63
-                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
-                end
-                object cxComboBoxHintKeywordType: TcxComboBox
-                  Left = 112
-                  Top = 35
-                  TabOrder = 6
-                  OnEditing = onControlEditing
-                  Width = 169
-                end
-                object cxLabel3: TcxLabel
-                  Left = 8
-                  Top = 36
-                  Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
-                end
-                object cxEditHintPredicateFilename: TcxButtonEdit
-                  Left = 112
-                  Top = 8
-                  Properties.Buttons = <
-                    item
-                      Default = True
-                      Kind = bkEllipsis
-                    end>
-                  Properties.ReadOnly = True
-                  Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
-                  TabOrder = 8
-                  OnEditing = onControlEditing
-                  Width = 337
-                end
-                object cxLabel2: TcxLabel
-                  Left = 8
-                  Top = 9
-                  Caption = #1048#1089#1090#1086#1095#1085#1080#1082
-                end
-                object cxLabel1: TcxLabel
-                  Left = 8
-                  Top = 103
-                  Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
-                end
-              end
-              object hintsPreviewPanel: TPanel
-                Left = 0
-                Top = 224
-                Width = 481
-                Height = 75
-                Align = alBottom
-                BevelOuter = bvNone
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = []
-                ParentFont = False
-                TabOrder = 1
-                OnResize = hintsPreviewPanelResize
-                ExplicitTop = 240
-                object previewHintButton: TcxButton
-                  Left = 376
-                  Top = 24
-                  Width = 75
-                  Height = 25
-                  Action = actionPreviewHint
-                  ParentShowHint = False
-                  ShowHint = True
-                  TabOrder = 0
-                  Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -11
-                  Font.Name = 'Tahoma'
-                  Font.Style = []
-                  ParentFont = False
-                end
-              end
             end
           end
         end
-        object Panel8: TPanel
-          Left = 0
-          Top = 0
-          Width = 495
-          Height = 73
-          Align = alTop
-          BevelOuter = bvNone
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
+      end
+      object Panel8: TPanel
+        Left = 0
+        Top = 28
+        Width = 495
+        Height = 73
+        Align = alTop
+        BevelOuter = bvNone
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        object cxLabel5: TcxLabel
+          Left = 16
+          Top = 16
+          Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
+        end
+        object cxEditIdentifierName: TcxTextEdit
+          Left = 16
+          Top = 40
           TabOrder = 1
-          object cxLabel5: TcxLabel
-            Left = 16
-            Top = 16
-            Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
-          end
-          object cxEditIdentifierName: TcxTextEdit
-            Left = 16
-            Top = 40
-            TabOrder = 1
-            OnEditing = onControlEditing
-            Width = 441
-          end
+          OnEditing = onControlEditing
+          Width = 441
         end
-        object Panel9: TPanel
-          Left = 0
-          Top = 409
-          Width = 495
-          Height = 41
-          Align = alBottom
-          BevelOuter = bvNone
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 2
-          object cxButton1: TcxButton
-            Left = 382
-            Top = 3
-            Width = 75
-            Height = 25
-            Action = actionSave
-            TabOrder = 0
-          end
-        end
+      end
+      object dxBarDockControl2: TdxBarDockControl
+        Left = 0
+        Top = 0
+        Width = 495
+        Height = 28
+        Align = dalTop
+        BarManager = dxBarManager1
       end
     end
   end
@@ -580,29 +352,29 @@ object SampleForm: TSampleForm
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
     UseHintControlLookAndFeel = True
-    Left = 112
-    Top = 200
+    Left = 32
+    Top = 144
   end
   object tipsRepo: TdxScreenTipRepository
-    Left = 88
-    Top = 128
+    Left = 32
+    Top = 216
     PixelsPerInch = 96
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
-    Left = 169
-    Top = 96
+    Left = 105
+    Top = 32
   end
   object MainMenu1: TMainMenu
-    Left = 40
-    Top = 32
+    Left = 24
+    Top = 88
     object N1: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1086#1088
       object N2: TMenuItem
         Caption = '-'
       end
       object N3: TMenuItem
-        Caption = #1047#1072#1082#1088#1099#1090#1100
+        Action = actionExit
       end
     end
     object N4: TMenuItem
@@ -647,14 +419,14 @@ object SampleForm: TSampleForm
       AllowReset = False
       Caption = 'main'
       CaptionButtons = <>
-      DockControl = dxBarDockControl1
-      DockedDockControl = dxBarDockControl1
+      DockControl = dxBarDockControl3
+      DockedDockControl = dxBarDockControl3
       DockedLeft = 0
       DockedTop = 0
-      FloatLeft = 478
-      FloatTop = 205
-      FloatClientWidth = 51
-      FloatClientHeight = 48
+      FloatLeft = 0
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
       ItemLinks = <
         item
           Visible = True
@@ -675,7 +447,44 @@ object SampleForm: TSampleForm
       SizeGrip = False
       UseOwnFont = False
       UseRecentItems = False
-      UseRestSpace = True
+      Visible = True
+      WholeRow = True
+    end
+    object dxBarManager1Bar2: TdxBar
+      AllowClose = False
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
+      AllowReset = False
+      Caption = 'details'
+      CaptionButtons = <>
+      DockControl = dxBarDockControl2
+      DockedDockControl = dxBarDockControl2
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 0
+      FloatTop = 8
+      FloatClientWidth = 51
+      FloatClientHeight = 48
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end>
+      OneOnRow = True
+      RotateWhenVertical = False
+      Row = 0
+      ShowMark = False
+      SizeGrip = False
+      UseOwnFont = False
+      UseRecentItems = False
       Visible = True
       WholeRow = True
     end
@@ -768,10 +577,75 @@ object SampleForm: TSampleForm
         85DD366B5A60BBC93A7B2E67C3AD6DF90981823369E83C28690000000049454E
         44AE426082}
     end
+    object dxBarButton1: TdxBarButton
+      Action = actionSave
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        6100000012744558745469746C6500536176652041733B536176659559E8FB00
+        0001F649444154785E75533D6B1451143D3399F1A3B7D0C242B00958086A2BE9
+        440B2BC1468BFC0105B58B85462B0BADC4266821D8D8A8A045248DA295691404
+        3B0B216CCC2E86FDC8CEDC8FE7BDEF31332EAC07CEBB0FE69E733F1E53841030
+        0F5996E5771EAD4B5085E76824ECAE50BB04E383958B6581FF235755DCBD710E
+        F370EBDE2B0F0B45660090D8C1EFA588C0B13B2104A44E43487473D7147E2CDF
+        7CB8616169F87B1B1A042A0A666A92A02E4E42378A9193415EF8618E4B674E9D
+        C0FBB7EB587BB21A679E4C2678FCEC53AAAB2E6C0C9076229D41A62A606248AC
+        1AD01B4C301E8D21A2293955F57B6B346B20026236125814350BA6CC10D594EC
+        C29001DD081091CE40446307CC1C3B205610892725B176428747D130DB41ED15
+        8D57AE5E83041FA9C291A38BB8BCFC1D685B4F26870E1F47484BD468E04222C6
+        E2C9D3EDCCA3411FBDDE16F69765AAAA80DAD1EFEFE0CD8BD563FEBAC6713460
+        EFA0226C6FFDC2CBA7F7310F172E5D47511EC0426C1A3B566804431A81194C14
+        19BFEE4E3DB44B7310D5C84DDC2CCF88D6C085E4AC6B00DD7335474006AA6AEB
+        E060F37C5967D0ED2026DD7EFD03AC015E2845A319524DC8A77B5095C6BA35E0
+        E19FC187AF9B5FCEEE2B0B7CDBFC09960CB509AA291BF710C104190E41547D74
+        CDBF06D5E78DE7E70194B1B5776BDD0F358BA632B90609F80B8A878F212AE2B9
+        010000000049454E44AE426082}
+    end
+    object dxBarButton5: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object dxBarButton6: TdxBarButton
+      Category = 0
+      Enabled = False
+      Visible = ivAlways
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actionPreview
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        6100000013744558745469746C6500507265766965773B5072696E749891A1F3
+        0000028649444154785E6D915D48D45918C67FE73FA3A649F481F6A1F831D137
+        A34562D85E440EA8A0D48D15425DB4D2D645D04D52BB4B73951521E145484448
+        A44412151951BB62178991659F1F7AA146C85C2CACB84BECEC7CFCCF396FC330
+        CC20CE73F13EE7C0737E3C2FC72B220074F58E0F23520F200822A0002BC98988
+        02B1080A30CF7E3DBE3B00E025256B6C7DC7B15A001052926C573A7B5ED4032C
+        0068B1E9802099736A480687D19645001337E9C791A8414430364511050EE4E7
+        7900D0C66401680308D60A7FCF7FE7CED30F4CCDCE6145F095ACE4606335656B
+        57E02887989BA5816B6C321CFAEB5F823D43F8FC1BD9DBBA030798FA3243F0EA
+        1382C70394971663B4CEDE4044E87F344EA57F03B575DBD8BE3A87E97943D4BF
+        152596BEC1D79C39D6905C61F8FC1EAC910C20EE1A8CB1BC9D0CD1FA4B1DFE62
+        2F112DE4E740382ED4D46CA2FBD218AE4EE6926E139E5921D5C0755D1C84AFFF
+        180A721413733A0151E42A857135565BB4B1C45DBDB0813106506CA928E2F3F8
+        04E19DDB89C42D4B721D5617787833F68192C2309158145FD972DC2F6631C051
+        8AB6961ACE5E19C4EB51EC4CD4CE4DF8FBB149869E3CE7544D88A9A11B94AF69
+        A2F5C4B8D3FF73954D03B405E538097A315D1DFBB93E3042F7D00B442CABD43C
+        ED953334057E62E2E53B66DFDD06283CDCFBF1BF85BF00388E97D275459C3BB9
+        0FAD355A1B62B138A3372FF3FCC19F045A7661A39FB8D0BCBEF3B7C73367D200
+        ABCD1FED1DF71BAD80A34044B0024A099B7D455456B531F2B80773EF190DCDD5
+        BC1A7E7F12389706DCEA3ED04446F41DAD6274641A0166510467FE778065872A
+        965E7C78F7ED8998C7B906B85EB20B3766D0A270E306048E94E6D9BE50ECFBC0
+        B7F069E077200E447F00A25E564DD5AF61520000000049454E44AE426082}
+    end
   end
   object ActionList1: TActionList
-    Left = 72
-    Top = 280
+    Left = 24
+    Top = 32
     object actionNewRecord: TAction
       Caption = #1057#1086#1079#1076#1072#1090#1100
       ShortCut = 16462
@@ -796,6 +670,16 @@ object SampleForm: TSampleForm
     object actionPreviewShortcut: TAction
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088
       OnExecute = actionPreviewShortcutExecute
+    end
+    object actionPreview: TAction
+      Caption = 'actionPreview'
+      OnExecute = actionPreviewExecute
+    end
+    object actionExit: TFileExit
+      Category = 'File'
+      Caption = 'E&xit'
+      Hint = 'Exit|Quits the application'
+      ImageIndex = 43
     end
   end
 end

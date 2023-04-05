@@ -37,7 +37,7 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxContainer, Vcl.Menus, cxButtons,
   cxMemo, cxMaskEdit, cxDropDownEdit, cxTextEdit, cxLabel, cxButtonEdit, Vcl.ExtDlgs, Vcl.Buttons, cxListView,
-  System.Actions, Vcl.ActnList;
+  System.Actions, Vcl.ActnList, Vcl.StdActns;
 
 type
 
@@ -71,9 +71,29 @@ type
     N11: TMenuItem;
     N21: TMenuItem;
     N31: TMenuItem;
-    Panel1: TPanel;
+    panelList: TPanel;
     Splitter1: TSplitter;
-    panelAddContaner: TPanel;
+    cxListView1: TcxListView;
+    dxBarManager1: TdxBarManager;
+    dxBarManager1Bar1: TdxBar;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    ActionList1: TActionList;
+    actionNewRecord: TAction;
+    actionSave: TAction;
+    actionDeleteRecord: TAction;
+    actionReload: TAction;
+    actionPreviewHint: TAction;
+    actionPreviewShortcut: TAction;
+    dxBarManager1Bar2: TdxBar;
+    dxBarButton1: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    actionPreview: TAction;
+    actionExit: TFileExit;
+    dxBarDockControl3: TdxBarDockControl;
     panelAddBorder: TPanel;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -88,13 +108,9 @@ type
     ShortcutDetailsKeywordTypeComboBox: TcxComboBox;
     cxLabel9: TcxLabel;
     ShortcutDetailsPredicateValueEdit: TcxTextEdit;
-    cxButton4: TcxButton;
-    cxButton3: TcxButton;
+    cxLabel13: TcxLabel;
     TabSheet2: TTabSheet;
     Panel4: TPanel;
-    Panel3: TPanel;
-    SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
     Panel7: TPanel;
     cxComboBoxHintDetailsKeywordType: TcxComboBox;
     cxLabel12: TcxLabel;
@@ -106,32 +122,11 @@ type
     cxLabel3: TcxLabel;
     cxEditHintPredicateFilename: TcxButtonEdit;
     cxLabel2: TcxLabel;
+    cxLabel1: TcxLabel;
     Panel8: TPanel;
     cxLabel5: TcxLabel;
     cxEditIdentifierName: TcxTextEdit;
-    cxListView1: TcxListView;
-    SpeedButton3: TSpeedButton;
-    cxLabel1: TcxLabel;
-    cxLabel13: TcxLabel;
-    Panel9: TPanel;
-    cxButton1: TcxButton;
-    hintsPreviewPanel: TPanel;
-    shortcutsPreviewPanel: TPanel;
-    Button2: TButton;
-    dxBarManager1: TdxBarManager;
-    dxBarManager1Bar1: TdxBar;
-    dxBarDockControl1: TdxBarDockControl;
-    dxBarButton2: TdxBarButton;
-    dxBarButton3: TdxBarButton;
-    dxBarButton4: TdxBarButton;
-    previewHintButton: TcxButton;
-    ActionList1: TActionList;
-    actionNewRecord: TAction;
-    actionSave: TAction;
-    actionDeleteRecord: TAction;
-    actionReload: TAction;
-    actionPreviewHint: TAction;
-    actionPreviewShortcut: TAction;
+    dxBarDockControl2: TdxBarDockControl;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -144,13 +139,14 @@ type
     procedure onControlEditing(Sender: TObject; var CanEdit: Boolean);
     procedure previewHintButtonClick(Sender: TObject);
     procedure hintsPreviewPanelResize(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
     procedure actionPreviewShortcutExecute(Sender: TObject);
+    procedure actionPreviewExecute(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     fSelectedItem: String;
     fSelectedHintMap: TOPPHelpMap;
@@ -268,6 +264,7 @@ begin
   cxListView1.Enabled := not fIsModified;
   actionNewRecord.Enabled := not fIsModified;
   actionReload.Enabled := not fIsModified;
+  actionPreview.Enabled := not fIsModified;
 end;
 
 procedure TSampleForm.onControlEditing(Sender: TObject; var CanEdit: Boolean);
@@ -434,6 +431,20 @@ begin
   end;
 end;
 
+procedure TSampleForm.actionPreviewExecute(Sender: TObject);
+begin
+  case PageControl1.TabIndex of
+    0:
+      begin
+        actionPreviewShortcut.Execute;
+      end;
+    1:
+      begin
+        actionPreviewHint.Execute;
+      end;
+  end;
+end;
+
 procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
 begin
   TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
@@ -566,8 +577,8 @@ begin
   begin
     ShortcutKeywordTypeComboBox.Properties.Items.Add(dropdownItem);
     ShortcutDetailsKeywordTypeComboBox.Properties.Items.Add(dropdownItem);
+    cxComboBoxHintKeywordType.Properties.Items.Add(dropdownItem);
     cxComboBoxHintDetailsKeywordType.Properties.Items.Add(dropdownItem);
-    cxComboBoxShortcutDetailsKeywordType.Properties.Items.Add(dropdownItem);
   end;
 
   fCanChangeModificationFlag := false;
@@ -583,15 +594,28 @@ begin
     end);
 end;
 
-procedure TSampleForm.FormResize(Sender: TObject);
-begin
-  shortcutsPreviewPanel.Height := 75;
-  hintsPreviewPanel.Height := 75;
-end;
-
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   helpShortcutServer.killExternalViewer;
+end;
+
+procedure TSampleForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+var
+  msgResult: Integer;
+begin
+  if not fIsModified then
+  begin
+    CanClose := true;
+    exit;
+  end;
+
+  msgResult := MessageDlg('Сохнанить изменения?', mtwarning, [mbYes, mbNo, mbCancel], 0);
+  canClose := (msgResult <> mrCancel);
+
+  if msgResult = mrYes then begin
+    actionSave.Execute;
+  end;
+
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
