@@ -17,8 +17,14 @@ uses
 
 type
 
+  TOPPHelpViewFullScreenStatus = record
+    zoomMode: TdxPreviewZoomMode;
+    zoomFactor: Integer;
+  end;
+
   TOPPHelpViewSearchInstanciator = (siDocumentLoad, siPredicate);
   TOPPHelpViewPredicateExecutionCompletion = reference to procedure(AResult: Integer);
+  TOPPHelpViewOnStatusChanged = reference to procedure(AStatus: TOPPHelpViewFullScreenStatus);
 
   TOPPHelpViewFullScreen = class(TPanel)
   private
@@ -29,6 +35,10 @@ type
     fSearchIsInProgress: Boolean;
     fSearchTimer: TTimer;
     fEventListeners: TList<IOPPHelpViewEventListener>;
+    fOnStatusChanged: TOPPHelpViewOnStatusChanged;
+    function GetZoomFactor: Integer;
+    procedure SetZoomFactor(AValue: Integer);
+    function GetStatus: TOPPHelpViewFullScreenStatus;
     function getPDFDocument(): TdxPDFDocument;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
     procedure onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
@@ -38,6 +48,7 @@ type
     procedure setHasLoadedDocument(AHasLoadedDocument: Boolean);
     property HasLoadedDocument: Boolean read fHasLoadedDocument write setHasLoadedDocument;
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
+    property Status: TOPPHelpViewFullScreenStatus read GetStatus;
   public
 
     constructor Create(AOwner: TComponent); override;
@@ -55,6 +66,13 @@ type
     procedure searchWorkEnded(AResult: Integer);
     procedure searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
     procedure execute(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
+
+    procedure FitPageWidth;
+    procedure FitPageHeight;
+    procedure OnZoomFactorChanged(Sender: TObject);
+
+    property OnStatusChanged: TOPPHelpViewOnStatusChanged read fOnStatusChanged write fOnStatusChanged;
+    property ZoomFactor: Integer read GetZoomFactor write SetZoomFactor;
   end;
 
 implementation
@@ -69,8 +87,9 @@ begin
   fPDFViewer := TdxPDFViewer.Create(self);
   fPDFViewer.parent := self;
   fPDFViewer.Align := alClient;
-  fPDFViewer.OptionsZoom.ZoomMode := pzmPageWidth;
+  fPDFViewer.OptionsZoom.zoomMode := pzmPageWidth;
   fPDFViewer.OnDocumentLoaded := onPDFViewer1DocumentLoaded;
+  fPDFViewer.OnZoomFactorChanged := OnZoomFactorChanged;
 
   fHasLoadedDocument := false;
   fSearchIsInProgress := false;
@@ -292,6 +311,41 @@ begin
 
   if assigned(completion) then
     completion(0);
+
+end;
+
+procedure TOPPHelpViewFullScreen.FitPageWidth;
+begin
+  fPDFViewer.OptionsZoom.zoomMode := pzmPageWidth;
+end;
+
+procedure TOPPHelpViewFullScreen.FitPageHeight;
+begin
+  fPDFViewer.OptionsZoom.zoomMode := pzmPages;
+end;
+
+procedure TOPPHelpViewFullScreen.OnZoomFactorChanged(Sender: TObject);
+begin
+  if assigned(fOnStatusChanged) then
+    fOnStatusChanged(Status);
+end;
+
+function TOPPHelpViewFullScreen.GetStatus: TOPPHelpViewFullScreenStatus;
+begin
+  result.zoomMode := fPDFViewer.OptionsZoom.zoomMode;
+  result.zoomFactor := fPDFViewer.OptionsZoom.zoomFactor;
+end;
+
+function TOPPHelpViewFullScreen.GetZoomFactor: Integer;
+begin
+  result := fPDFViewer.OptionsZoom.zoomFactor;
+end;
+
+procedure TOPPHelpViewFullScreen.SetZoomFactor(AValue: Integer);
+begin
+  fPDFViewer.OptionsZoom.zoomFactor := Integer(AValue);
+  if assigned(fOnStatusChanged) then
+    fOnStatusChanged(Status);
 
 end;
 

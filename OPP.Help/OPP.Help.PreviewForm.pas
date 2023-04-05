@@ -21,7 +21,8 @@ uses
   dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
   dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
-  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtonEdit, cxSpinEdit,
+  Vcl.ActnList, System.Actions, Vcl.StdActns;
 
 type
 
@@ -45,6 +46,15 @@ type
     dxBarSubItem1: TdxBarSubItem;
     TrayIcon1: TTrayIcon;
     ApplicationEvents1: TApplicationEvents;
+    ActionList1: TActionList;
+    FileExit1: TFileExit;
+    dxBarManager1Bar2: TdxBar;
+    fitActualSizeButton: TdxBarButton;
+    actionFitPageWidth: TAction;
+    actionFitPageHeight: TAction;
+    fitPageWidthButton: TdxBarButton;
+    cxBarEditItem1: TcxBarEditItem;
+    zoomValueEdit: TcxBarEditItem;
     procedure ApplicationEvents1Activate(Sender: TObject);
     procedure ApplicationEvents1Minimize(Sender: TObject);
     procedure ApplicationEvents1Restore(Sender: TObject);
@@ -53,6 +63,9 @@ type
     procedure dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
     procedure dxBarButtonExitClick(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
+    procedure actionFitPageWidthExecute(Sender: TObject);
+    procedure zoomValueEditChange(Sender: TObject);
+    procedure actionFitPageHeightExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -87,13 +100,23 @@ implementation
 {$R *.dfm}
 
 uses
-
+  dxCustomPreview,
   OPP.Help.Shortcut.Server,
   OPP.Help.System.Stream;
 
+procedure TOPPHelpPreviewForm.actionFitPageHeightExecute(Sender: TObject);
+begin
+  oppHelpView.FitPageHeight();
+end;
+
+procedure TOPPHelpPreviewForm.actionFitPageWidthExecute(Sender: TObject);
+begin
+  oppHelpView.FitPageWidth();
+end;
+
 procedure TOPPHelpPreviewForm.ApplicationEvents1Activate(Sender: TObject);
 begin
-//
+  //
 end;
 
 procedure TOPPHelpPreviewForm.ApplicationEvents1Minimize(Sender: TObject);
@@ -109,10 +132,10 @@ end;
 
 function TOPPHelpPreviewForm.GetContainerClassName: String;
 begin
-  result := self.className;
+  Result := self.className;
 end;
 
-procedure TOPPHelpPreviewForm.PresentModal;
+procedure TOPPHelpPreviewForm.presentModal;
 begin
   ShowModal;
 end;
@@ -159,6 +182,11 @@ begin
   oppHelpView := TOPPHelpViewFullScreen.Create(self);
   oppHelpView.Parent := self;
   oppHelpView.Align := alClient;
+  oppHelpView.OnStatusChanged := procedure(AStatus: TOPPHelpViewFullScreenStatus)
+  begin
+    fitActualSizeButton.Down := (AStatus.zoomMode = TdxPreviewZoomMode.pzmPageWidth);
+    zoomValueEdit.EditValue := AStatus.zoomFactor;
+  end;
 
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
@@ -185,6 +213,11 @@ begin
   end;
 
   Msg.Result := 10000;
+end;
+
+procedure TOPPHelpPreviewForm.zoomValueEditChange(Sender: TObject);
+begin
+  oppHelpView.zoomFactor := Integer(zoomValueEdit.EditValue);
 end;
 
 { --------- }
