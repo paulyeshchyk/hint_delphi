@@ -253,7 +253,7 @@ begin
   cxButton1.Enabled := fIsModified;
   cxListView1.Enabled := not fIsModified;
   dxBarButton2.Enabled := not fIsModified;
-  dxBarButton3.Enabled := not fIsModified;
+//  dxBarButton3.Enabled := not fIsModified;
   dxBarButton4.Enabled := not fIsModified;
 
 end;
@@ -311,7 +311,11 @@ begin
     helpShortcutServer.FindMap(oldIdentifier,
       procedure(AMap: TOPPHelpMap)
       begin
-
+        if not Assigned(AMap) then
+        begin
+          eventLogger.Error('FindMap returns nil map');
+          exit;
+        end;
         updateMap(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
         helpShortcutServer.SaveMaps('');
 
@@ -507,10 +511,6 @@ begin
 end;
 
 procedure TSampleForm.ReloadListView(completion: TOPPHelpCompletion);
-var
-  fListHints, fListShortcuts: TList<TOPPHelpMetaIdentifierType>;
-  fId: TOPPHelpMetaIdentifierType;
-  pmap: POPPHelpMap;
 begin
   cxListView1.Items.Clear;
 
@@ -526,8 +526,8 @@ begin
 
       for Map in AList do
       begin
-        pmap := POPPHelpMap(@Map);
-        cxListView1.AddItem(Map.identifier, pmap);
+        // pmap := POPPHelpMap(@Map);
+        cxListView1.AddItem(Map.identifier, nil);
       end;
 
       if assigned(completion) then
@@ -625,7 +625,7 @@ begin
   TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
     procedure()
     begin
-    //
+      //
     end);
 
 end;
