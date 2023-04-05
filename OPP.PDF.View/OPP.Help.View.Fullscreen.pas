@@ -25,29 +25,36 @@ type
   TOPPHelpViewSearchInstanciator = (siDocumentLoad, siPredicate);
   TOPPHelpViewPredicateExecutionCompletion = reference to procedure(AResult: Integer);
   TOPPHelpViewOnStatusChanged = reference to procedure(AStatus: TOPPHelpViewFullScreenStatus);
+  TOPPHelpViewOnFindPanelVisibilityChange = reference to procedure(AIsVisible: Boolean);
 
   TOPPHelpViewFullScreen = class(TPanel)
   private
-    fStream: TMemoryStream;
+    fEventListeners: TList<IOPPHelpViewEventListener>;
+    fHasLoadedDocument: Boolean;
+    fIsFindPanelVisible: Boolean;
+    fOnFindPanelVisiblityChange: TOPPHelpViewOnFindPanelVisibilityChange;
+    fOnStatusChanged: TOPPHelpViewOnStatusChanged;
     fPDFViewer: TdxPDFViewer;
     fPredicate: TOPPHelpPredicate;
-    fHasLoadedDocument: Boolean;
     fSearchIsInProgress: Boolean;
     fSearchTimer: TTimer;
-    fEventListeners: TList<IOPPHelpViewEventListener>;
-    fOnStatusChanged: TOPPHelpViewOnStatusChanged;
-    function GetZoomFactor: Integer;
-    procedure SetZoomFactor(AValue: Integer);
-    function GetStatus: TOPPHelpViewFullScreenStatus;
-    function getPDFDocument(): TdxPDFDocument;
-    property pdfDocument: TdxPDFDocument read getPDFDocument;
-    procedure onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
-    procedure doSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
-    procedure onTimerTick(Sender: TObject);
+    fStream: TMemoryStream;
     function GetEventListeners(): TList<IOPPHelpViewEventListener>;
-    procedure setHasLoadedDocument(AHasLoadedDocument: Boolean);
-    property HasLoadedDocument: Boolean read fHasLoadedDocument write setHasLoadedDocument;
+    function GetIsFindPanelVisible(): Boolean;
+    function getPDFDocument(): TdxPDFDocument;
+    function GetStatus: TOPPHelpViewFullScreenStatus;
+    function GetZoomFactor: Integer;
+    procedure DoSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
+    procedure OnHideFindPanelEvent(Sender: TObject);
+    procedure OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
+    procedure OnShowFindPanelEvent(Sender: TObject);
+    procedure onTimerTick(Sender: TObject);
+    procedure SetHasLoadedDocument(AHasLoadedDocument: Boolean);
+    procedure SetIsFindPanelVisible(AValue: Boolean);
+    procedure SetZoomFactor(AValue: Integer);
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
+    property HasLoadedDocument: Boolean read fHasLoadedDocument write SetHasLoadedDocument;
+    property pdfDocument: TdxPDFDocument read getPDFDocument;
     property Status: TOPPHelpViewFullScreenStatus read GetStatus;
   public
 
@@ -59,8 +66,8 @@ type
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
 
-    procedure loadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
-    procedure loadWorkEnded(AResult: Integer);
+    procedure LoadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
+    procedure LoadWorkEnded(AResult: Integer);
 
     procedure searchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
     procedure searchWorkEnded(AResult: Integer);
@@ -71,8 +78,10 @@ type
     procedure FitPageHeight;
     procedure OnZoomFactorChanged(Sender: TObject);
 
+    property IsFindPanelVisible: Boolean read GetIsFindPanelVisible write SetIsFindPanelVisible;
     property OnStatusChanged: TOPPHelpViewOnStatusChanged read fOnStatusChanged write fOnStatusChanged;
     property ZoomFactor: Integer read GetZoomFactor write SetZoomFactor;
+    property OnFindPanelVisibilityChange: TOPPHelpViewOnFindPanelVisibilityChange read fOnFindPanelVisiblityChange write fOnFindPanelVisiblityChange;
   end;
 
 implementation
@@ -88,8 +97,10 @@ begin
   fPDFViewer.parent := self;
   fPDFViewer.Align := alClient;
   fPDFViewer.OptionsZoom.zoomMode := pzmPageWidth;
-  fPDFViewer.OnDocumentLoaded := onPDFViewer1DocumentLoaded;
+  fPDFViewer.OnDocumentLoaded := OnPDFViewer1DocumentLoaded;
   fPDFViewer.OnZoomFactorChanged := OnZoomFactorChanged;
+  fPDFViewer.OnHideFindPanel := OnHideFindPanelEvent;
+  fPDFViewer.OnShowFindPanel := OnShowFindPanelEvent;
 
   fHasLoadedDocument := false;
   fSearchIsInProgress := false;
@@ -120,10 +131,10 @@ end;
 procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
   fPredicate := APredicate.copy();
-  doSearchIfPossible(siPredicate);
+  DoSearchIfPossible(siPredicate);
 end;
 
-procedure TOPPHelpViewFullScreen.setHasLoadedDocument(AHasLoadedDocument: Boolean);
+procedure TOPPHelpViewFullScreen.SetHasLoadedDocument(AHasLoadedDocument: Boolean);
 begin
   fHasLoadedDocument := AHasLoadedDocument;
 end;
@@ -136,7 +147,7 @@ begin
   TThread.Synchronize(nil,
     procedure()
     begin
-      loadWorkStarted(loadWorkEnded);
+      LoadWorkStarted(LoadWorkEnded);
     end);
 end;
 
@@ -158,10 +169,10 @@ begin
   EventListeners.Remove(AListener);
 end;
 
-procedure TOPPHelpViewFullScreen.onPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
+procedure TOPPHelpViewFullScreen.OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
 begin
   HasLoadedDocument := true;
-  doSearchIfPossible(siDocumentLoad);
+  DoSearchIfPossible(siDocumentLoad);
 end;
 
 function TOPPHelpViewFullScreen.getPDFDocument(): TdxPDFDocument;
@@ -169,7 +180,7 @@ begin
   result := fPDFViewer.Document
 end;
 
-procedure TOPPHelpViewFullScreen.doSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
+procedure TOPPHelpViewFullScreen.DoSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
 begin
 
   if fSearchIsInProgress then
@@ -244,7 +255,7 @@ begin
     end);
 end;
 
-procedure TOPPHelpViewFullScreen.loadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
+procedure TOPPHelpViewFullScreen.LoadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
 var
   fListener: IOPPHelpViewEventListener;
 begin
@@ -263,7 +274,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpViewFullScreen.loadWorkEnded(AResult: Integer);
+procedure TOPPHelpViewFullScreen.LoadWorkEnded(AResult: Integer);
 var
   fListener: IOPPHelpViewEventListener;
 begin
@@ -346,6 +357,32 @@ begin
   fPDFViewer.OptionsZoom.zoomFactor := Integer(AValue);
   if assigned(fOnStatusChanged) then
     fOnStatusChanged(Status);
+end;
+
+procedure TOPPHelpViewFullScreen.SetIsFindPanelVisible(AValue: Boolean);
+begin
+  if AValue then
+    fPDFViewer.ShowFindPanel
+  else
+    fPDFViewer.HideFindPanel;
+end;
+
+function TOPPHelpViewFullScreen.GetIsFindPanelVisible(): Boolean;
+begin
+  result := fPDFViewer.isFindPanelVisible;
+end;
+
+procedure TOPPHelpViewFullScreen.OnHideFindPanelEvent(Sender: TObject);
+begin
+  if assigned(fOnFindPanelVisiblityChange) then
+    fOnFindPanelVisiblityChange(false);
+
+end;
+
+procedure TOPPHelpViewFullScreen.OnShowFindPanelEvent(Sender: TObject);
+begin
+  if assigned(fOnFindPanelVisiblityChange) then
+    fOnFindPanelVisiblityChange(true);
 
 end;
 

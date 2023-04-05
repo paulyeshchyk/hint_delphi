@@ -22,7 +22,7 @@ uses
   dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtonEdit, cxSpinEdit,
-  Vcl.ActnList, System.Actions, Vcl.StdActns;
+  Vcl.ActnList, System.Actions, Vcl.StdActns, dxDBSparkline, dxNumericWheelPicker, cxTrackBar;
 
 type
 
@@ -55,6 +55,16 @@ type
     fitPageWidthButton: TdxBarButton;
     cxBarEditItem1: TcxBarEditItem;
     zoomValueEdit: TcxBarEditItem;
+    dxBarButton1: TdxBarButton;
+    dxBarSubItem2: TdxBarSubItem;
+    cxBarEditItem2: TcxBarEditItem;
+    cxBarEditItem3: TcxBarEditItem;
+    cxBarEditItem4: TcxBarEditItem;
+    dxBarSubItem3: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    findPaneTogglerButton: TdxBarButton;
+    actionToggleFindPanel: TAction;
+    dxBarButton2: TdxBarButton;
     procedure ApplicationEvents1Activate(Sender: TObject);
     procedure ApplicationEvents1Minimize(Sender: TObject);
     procedure ApplicationEvents1Restore(Sender: TObject);
@@ -66,6 +76,9 @@ type
     procedure actionFitPageWidthExecute(Sender: TObject);
     procedure zoomValueEditChange(Sender: TObject);
     procedure actionFitPageHeightExecute(Sender: TObject);
+    procedure cxBarEditItem4Change(Sender: TObject);
+    procedure actionToggleFindPanelExecute(Sender: TObject);
+    procedure dxBarButton2Click(Sender: TObject);
   private
     { Private declarations }
 
@@ -102,7 +115,8 @@ implementation
 uses
   dxCustomPreview,
   OPP.Help.Shortcut.Server,
-  OPP.Help.System.Stream;
+  OPP.Help.System.Stream,
+  OPP.Help.Preview.Zoom;
 
 procedure TOPPHelpPreviewForm.actionFitPageHeightExecute(Sender: TObject);
 begin
@@ -112,6 +126,12 @@ end;
 procedure TOPPHelpPreviewForm.actionFitPageWidthExecute(Sender: TObject);
 begin
   oppHelpView.FitPageWidth();
+end;
+
+procedure TOPPHelpPreviewForm.actionToggleFindPanelExecute(Sender: TObject);
+begin
+  oppHelpView.IsFindPanelVisible := not oppHelpView.IsFindPanelVisible;
+  // refreshFindPanelToggler;
 end;
 
 procedure TOPPHelpPreviewForm.ApplicationEvents1Activate(Sender: TObject);
@@ -128,6 +148,11 @@ end;
 procedure TOPPHelpPreviewForm.ApplicationEvents1Restore(Sender: TObject);
 begin
   TrayIcon1.Visible := false;
+end;
+
+procedure TOPPHelpPreviewForm.cxBarEditItem4Change(Sender: TObject);
+begin
+  oppHelpView.ZoomFactor := Integer(cxBarEditItem4.EditValue);
 end;
 
 function TOPPHelpPreviewForm.GetContainerClassName: String;
@@ -161,6 +186,13 @@ begin
   end;
 end;
 
+procedure TOPPHelpPreviewForm.dxBarButton2Click(Sender: TObject);
+var zoom: TOPPHelpPreviewZoomForm;
+begin
+  zoom := TOPPHelpPreviewZoomForm.Create(self);
+  zoom.show;
+end;
+
 procedure TOPPHelpPreviewForm.dxBarButtonExitClick(Sender: TObject);
 begin
   self.close();
@@ -183,10 +215,15 @@ begin
   oppHelpView.Parent := self;
   oppHelpView.Align := alClient;
   oppHelpView.OnStatusChanged := procedure(AStatus: TOPPHelpViewFullScreenStatus)
-  begin
-    fitActualSizeButton.Down := (AStatus.zoomMode = TdxPreviewZoomMode.pzmPageWidth);
-    zoomValueEdit.EditValue := AStatus.zoomFactor;
-  end;
+    begin
+      fitActualSizeButton.Down := (AStatus.zoomMode = TdxPreviewZoomMode.pzmPageWidth);
+      zoomValueEdit.EditValue := AStatus.zoomFactor;
+    end;
+
+  oppHelpView.OnFindPanelVisibilityChange := procedure(AValue: Boolean)
+    begin
+      findPaneTogglerButton.Down := AValue;
+    end;
 
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
@@ -217,7 +254,7 @@ end;
 
 procedure TOPPHelpPreviewForm.zoomValueEditChange(Sender: TObject);
 begin
-  oppHelpView.zoomFactor := Integer(zoomValueEdit.EditValue);
+  oppHelpView.ZoomFactor := Integer(zoomValueEdit.EditValue);
 end;
 
 { --------- }
