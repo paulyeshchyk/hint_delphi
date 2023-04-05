@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = 'SampleForm'
-  ClientHeight = 470
+  ClientHeight = 450
   ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,13 +18,14 @@ object SampleForm: TSampleForm
   Visible = True
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 27
   object Panel2: TPanel
     Left = 0
     Top = 0
     Width = 763
-    Height = 470
+    Height = 450
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -35,7 +36,7 @@ object SampleForm: TSampleForm
     object Splitter1: TSplitter
       Left = 265
       Top = 0
-      Height = 470
+      Height = 450
       ExplicitLeft = 384
       ExplicitTop = 208
       ExplicitHeight = 100
@@ -44,7 +45,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 265
-      Height = 470
+      Height = 450
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'Panel1'
@@ -210,7 +211,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 24
         Width = 265
-        Height = 446
+        Height = 426
         Align = alClient
         ColumnClick = False
         Columns = <
@@ -229,7 +230,7 @@ object SampleForm: TSampleForm
       Left = 268
       Top = 0
       Width = 495
-      Height = 470
+      Height = 450
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -237,7 +238,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 495
-        Height = 470
+        Height = 450
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -246,7 +247,7 @@ object SampleForm: TSampleForm
           Left = 3
           Top = 76
           Width = 489
-          Height = 350
+          Height = 330
           ActivePage = TabSheet2
           Align = alClient
           Font.Charset = DEFAULT_CHARSET
@@ -263,7 +264,7 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 0
               Width = 481
-              Height = 319
+              Height = 299
               Align = alClient
               BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
@@ -300,14 +301,9 @@ object SampleForm: TSampleForm
               object ShortcutKeywordTypeComboBox: TcxComboBox
                 Left = 112
                 Top = 35
-                Properties.Items.Strings = (
-                  'ktSearch'
-                  'ktPage'
-                  'ktBookmark')
                 TabOrder = 3
-                Text = 'ktSearch'
                 OnEditing = onControlEditing
-                Width = 97
+                Width = 169
               end
               object cxLabel8: TcxLabel
                 Left = 8
@@ -329,14 +325,9 @@ object SampleForm: TSampleForm
               object ShortcutDetailsKeywordTypeComboBox: TcxComboBox
                 Left = 112
                 Top = 125
-                Properties.Items.Strings = (
-                  'ktSearch'
-                  'ktPage'
-                  'ktBookmark')
                 TabOrder = 7
-                Text = 'ktSearch'
                 OnEditing = onControlEditing
-                Width = 97
+                Width = 169
               end
               object cxLabel9: TcxLabel
                 Left = 8
@@ -371,11 +362,11 @@ object SampleForm: TSampleForm
                 Top = 103
                 Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
               end
-              object Panel10: TPanel
+              object shortcutsPreviewPanel: TPanel
                 Left = 0
-                Top = 182
+                Top = 224
                 Width = 481
-                Height = 137
+                Height = 75
                 Align = alBottom
                 BevelOuter = bvNone
                 Font.Charset = DEFAULT_CHARSET
@@ -387,12 +378,11 @@ object SampleForm: TSampleForm
                 TabOrder = 13
                 object Button2: TButton
                   Left = 374
-                  Top = 88
+                  Top = 16
                   Width = 75
                   Height = 25
-                  Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+                  Action = actionPreviewShortcut
                   TabOrder = 0
-                  OnClick = Button2Click
                 end
               end
             end
@@ -404,7 +394,7 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 0
               Width = 481
-              Height = 319
+              Height = 299
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
@@ -412,7 +402,7 @@ object SampleForm: TSampleForm
                 Left = 0
                 Top = 0
                 Width = 481
-                Height = 182
+                Height = 224
                 Align = alClient
                 BevelOuter = bvNone
                 Font.Charset = DEFAULT_CHARSET
@@ -422,17 +412,13 @@ object SampleForm: TSampleForm
                 Font.Style = []
                 ParentFont = False
                 TabOrder = 0
+                ExplicitHeight = 193
                 object cxComboBoxHintDetailsKeywordType: TcxComboBox
                   Left = 112
                   Top = 125
-                  Properties.Items.Strings = (
-                    'ktSearch'
-                    'ktPage'
-                    'ktBookmark')
                   TabOrder = 0
-                  Text = 'ktSearch'
                   OnEditing = onControlEditing
-                  Width = 97
+                  Width = 169
                 end
                 object cxLabel12: TcxLabel
                   Left = 8
@@ -466,14 +452,9 @@ object SampleForm: TSampleForm
                 object cxComboBoxHintKeywordType: TcxComboBox
                   Left = 112
                   Top = 35
-                  Properties.Items.Strings = (
-                    'ktSearch'
-                    'ktPage'
-                    'ktBookmark')
                   TabOrder = 6
-                  Text = 'ktSearch'
                   OnEditing = onControlEditing
-                  Width = 97
+                  Width = 169
                 end
                 object cxLabel3: TcxLabel
                   Left = 8
@@ -505,11 +486,11 @@ object SampleForm: TSampleForm
                   Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
                 end
               end
-              object Panel6: TPanel
+              object hintsPreviewPanel: TPanel
                 Left = 0
-                Top = 182
+                Top = 224
                 Width = 481
-                Height = 137
+                Height = 75
                 Align = alBottom
                 BevelOuter = bvNone
                 Font.Charset = DEFAULT_CHARSET
@@ -519,12 +500,14 @@ object SampleForm: TSampleForm
                 Font.Style = []
                 ParentFont = False
                 TabOrder = 1
+                OnResize = hintsPreviewPanelResize
+                ExplicitTop = 240
                 object previewHintButton: TcxButton
                   Left = 376
-                  Top = 88
+                  Top = 24
                   Width = 75
                   Height = 25
-                  Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+                  Action = actionPreviewHint
                   ParentShowHint = False
                   ShowHint = True
                   TabOrder = 0
@@ -534,7 +517,6 @@ object SampleForm: TSampleForm
                   Font.Name = 'Tahoma'
                   Font.Style = []
                   ParentFont = False
-                  OnClick = previewHintButtonClick
                 end
               end
             end
@@ -569,7 +551,7 @@ object SampleForm: TSampleForm
         end
         object Panel9: TPanel
           Left = 0
-          Top = 429
+          Top = 409
           Width = 495
           Height = 41
           Align = alBottom
@@ -586,9 +568,8 @@ object SampleForm: TSampleForm
             Top = 3
             Width = 75
             Height = 25
-            Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+            Action = actionSave
             TabOrder = 0
-            OnClick = cxButton1Click
           end
         end
       end
@@ -699,10 +680,8 @@ object SampleForm: TSampleForm
       WholeRow = True
     end
     object dxBarButton2: TdxBarButton
-      Caption = 'New Button'
+      Action = actionNewRecord
       Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
       Glyph.SourceDPI = 96
       Glyph.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -726,13 +705,10 @@ object SampleForm: TSampleForm
         75EDB16FCCC03901808101C3D70E71E3FE0C6F16BE117C7829E836331C9000D9
         EACF84686B8F030478A024C900FE02076661D4056BDB3A0000000049454E44AE
         426082}
-      OnClick = dxBarButton2Click
     end
     object dxBarButton3: TdxBarButton
-      Caption = 'New Button'
+      Action = actionDeleteRecord
       Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
       Glyph.SourceDPI = 96
       Glyph.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -758,13 +734,10 @@ object SampleForm: TSampleForm
         E77D78FB514EC2E5806BA91B23A391F500146604DA8AFD67C2CE486BCC7157B8
         1DCE962F7F463B9BA3A133FEACD98D19407950D36A2E8E851FFE054F9B57CA49
         D993700000000049454E44AE426082}
-      OnClick = dxBarButton3Click
     end
     object dxBarButton4: TdxBarButton
-      Caption = 'New Button'
+      Action = actionReload
       Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
       Glyph.SourceDPI = 96
       Glyph.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -794,7 +767,35 @@ object SampleForm: TSampleForm
         7E7002B5CE37624F21B16B98D8F681583BE41BB9A7C03DC8713FE792B5B90037
         85DD366B5A60BBC93A7B2E67C3AD6DF90981823369E83C28690000000049454E
         44AE426082}
-      OnClick = dxBarButton4Click
+    end
+  end
+  object ActionList1: TActionList
+    Left = 72
+    Top = 280
+    object actionNewRecord: TAction
+      Caption = #1057#1086#1079#1076#1072#1090#1100
+      ShortCut = 16462
+      OnExecute = actionNewRecordExecute
+    end
+    object actionSave: TAction
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      OnExecute = actionSaveExecute
+    end
+    object actionDeleteRecord: TAction
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      OnExecute = actionDeleteRecordExecute
+    end
+    object actionReload: TAction
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+      OnExecute = actionReloadExecute
+    end
+    object actionPreviewHint: TAction
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      OnExecute = actionPreviewHintExecute
+    end
+    object actionPreviewShortcut: TAction
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      OnExecute = actionPreviewShortcutExecute
     end
   end
 end

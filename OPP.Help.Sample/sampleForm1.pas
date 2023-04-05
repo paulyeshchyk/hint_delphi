@@ -36,7 +36,8 @@ uses
   dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxContainer, Vcl.Menus, cxButtons,
-  cxMemo, cxMaskEdit, cxDropDownEdit, cxTextEdit, cxLabel, cxButtonEdit, Vcl.ExtDlgs, Vcl.Buttons, cxListView;
+  cxMemo, cxMaskEdit, cxDropDownEdit, cxTextEdit, cxLabel, cxButtonEdit, Vcl.ExtDlgs, Vcl.Buttons, cxListView,
+  System.Actions, Vcl.ActnList;
 
 type
 
@@ -114,8 +115,8 @@ type
     cxLabel13: TcxLabel;
     Panel9: TPanel;
     cxButton1: TcxButton;
-    Panel6: TPanel;
-    Panel10: TPanel;
+    hintsPreviewPanel: TPanel;
+    shortcutsPreviewPanel: TPanel;
     Button2: TButton;
     dxBarManager1: TdxBarManager;
     dxBarManager1Bar1: TdxBar;
@@ -124,22 +125,32 @@ type
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
     previewHintButton: TcxButton;
+    ActionList1: TActionList;
+    actionNewRecord: TAction;
+    actionSave: TAction;
+    actionDeleteRecord: TAction;
+    actionReload: TAction;
+    actionPreviewHint: TAction;
+    actionPreviewShortcut: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure cxButton1Click(Sender: TObject);
     procedure cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure N11Click(Sender: TObject);
     procedure N21Click(Sender: TObject);
     procedure N31Click(Sender: TObject);
     procedure ListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
-    procedure dxBarButton2Click(Sender: TObject);
-    procedure dxBarButton3Click(Sender: TObject);
-    procedure dxBarButton4Click(Sender: TObject);
     procedure onControlEditing(Sender: TObject; var CanEdit: Boolean);
-    procedure Button2Click(Sender: TObject);
     procedure previewHintButtonClick(Sender: TObject);
+    procedure hintsPreviewPanelResize(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure actionNewRecordExecute(Sender: TObject);
+    procedure actionSaveExecute(Sender: TObject);
+    procedure actionDeleteRecordExecute(Sender: TObject);
+    procedure actionReloadExecute(Sender: TObject);
+    procedure actionPreviewHintExecute(Sender: TObject);
+    procedure actionPreviewShortcutExecute(Sender: TObject);
   private
     fSelectedItem: String;
     fSelectedHintMap: TOPPHelpMap;
@@ -184,6 +195,9 @@ type
 
 var
   SampleForm: TSampleForm;
+
+const
+  dropdownItemsArray: array [1 .. 3] of string = ('Поиск', 'Переход на страницу', 'Переход на закладку');
 
 implementation
 
@@ -250,12 +264,10 @@ end;
 procedure TSampleForm.setIsModified(AValue: Boolean);
 begin
   fIsModified := AValue;
-  cxButton1.Enabled := fIsModified;
+  actionSave.Enabled := fIsModified;
   cxListView1.Enabled := not fIsModified;
-  dxBarButton2.Enabled := not fIsModified;
-//  dxBarButton3.Enabled := not fIsModified;
-  dxBarButton4.Enabled := not fIsModified;
-
+  actionNewRecord.Enabled := not fIsModified;
+  actionReload.Enabled := not fIsModified;
 end;
 
 procedure TSampleForm.onControlEditing(Sender: TObject; var CanEdit: Boolean);
@@ -311,7 +323,7 @@ begin
     helpShortcutServer.FindMap(oldIdentifier,
       procedure(AMap: TOPPHelpMap)
       begin
-        if not Assigned(AMap) then
+        if not assigned(AMap) then
         begin
           eventLogger.Error('FindMap returns nil map');
           exit;
@@ -326,16 +338,6 @@ begin
   finally
     fState.Free;
   end;
-end;
-
-procedure TSampleForm.cxButton1Click(Sender: TObject);
-begin
-  SaveChanges(fSelectedItem,
-    procedure(ANewIdentifier: String)
-    begin
-      self.isModified := false;
-      cxListView1.Selected.Caption := ANewIdentifier;
-    end);
 end;
 
 procedure TSampleForm.cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -365,7 +367,83 @@ begin
 
 end;
 
-procedure TSampleForm.Button2Click(Sender: TObject);
+procedure TSampleForm.actionDeleteRecordExecute(Sender: TObject);
+begin
+
+  self.isModified := false;
+
+  if not assigned(cxListView1.Selected) then
+  begin
+    eventLogger.Warning('going to delete nil item');
+    exit;
+  end;
+  helpHintServer.removeHint(cxListView1.Selected.Caption);
+  helpShortcutServer.removeShortcut(cxListView1.Selected.Caption);
+  ReloadListView(
+    procedure
+    begin
+      if cxListView1.Items.Count > 0 then
+        cxListView1.ItemIndex := 0;
+    end);
+
+end;
+
+procedure TSampleForm.actionNewRecordExecute(Sender: TObject);
+var
+  newGUID: TGUID;
+  fState: TSampleFormSaveState;
+begin
+
+  // self.isModified := true;
+
+  fState := TSampleFormSaveState.Create;
+  try
+    fState.shortcutWasUpdated := false;
+    fState.hintWasUpdated := false;
+    fState.completion := procedure(ANewIdentifier: String)
+      var
+        Item: TListItem;
+      begin
+        Item := cxListView1.Items.Add;
+        Item.Caption := ANewIdentifier;
+
+        cxListView1.ItemIndex := (cxListView1.Items.Count - 1);
+        cxEditIdentifierName.SetFocus;
+        cxEditIdentifierName.SelectAll;
+
+      end;
+
+    CreateGUID(newGUID);
+
+    helpHintServer.NewMap(newGUID,
+      procedure(AHintMap: TOPPHelpMap)
+      begin
+        fState.hintWasUpdated := true;
+        fState.checkAndRun(GUIDToString(newGUID));
+      end);
+
+    helpShortcutServer.NewMap(newGUID,
+      procedure(AShortcutMap: TOPPHelpMap)
+      begin
+        fState.shortcutWasUpdated := true;
+        fState.checkAndRun(GUIDToString(newGUID));
+      end);
+
+  finally
+    fState.Free;
+  end;
+end;
+
+procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
+begin
+  TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
+    procedure()
+    begin
+      //
+    end);
+end;
+
+procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);
 var
   Predicate: TOPPHelpPredicate;
 begin
@@ -377,6 +455,28 @@ begin
         begin
           //
         end);
+    end);
+end;
+
+procedure TSampleForm.actionReloadExecute(Sender: TObject);
+begin
+  self.isModified := false;
+
+  ReloadListView(
+    procedure
+    begin
+      if cxListView1.Items.Count > 0 then
+        cxListView1.ItemIndex := 0;
+    end);
+end;
+
+procedure TSampleForm.actionSaveExecute(Sender: TObject);
+begin
+  SaveChanges(fSelectedItem,
+    procedure(ANewIdentifier: String)
+    begin
+      self.isModified := false;
+      cxListView1.Selected.Caption := ANewIdentifier;
     end);
 end;
 
@@ -432,84 +532,6 @@ begin
   doModificationCheck(Item, self.doSaveIfNeed);
 end;
 
-procedure TSampleForm.dxBarButton2Click(Sender: TObject);
-var
-  newGUID: TGUID;
-  fState: TSampleFormSaveState;
-begin
-
-  // self.isModified := true;
-
-  fState := TSampleFormSaveState.Create;
-  try
-    fState.shortcutWasUpdated := false;
-    fState.hintWasUpdated := false;
-    fState.completion := procedure(ANewIdentifier: String)
-      var
-        Item: TListItem;
-      begin
-        Item := cxListView1.Items.Add;
-        Item.Caption := ANewIdentifier;
-
-        cxListView1.ItemIndex := (cxListView1.Items.Count - 1);
-        cxEditIdentifierName.SetFocus;
-        cxEditIdentifierName.SelectAll;
-
-      end;
-
-    CreateGUID(newGUID);
-
-    helpHintServer.NewMap(newGUID,
-      procedure(AHintMap: TOPPHelpMap)
-      begin
-        fState.hintWasUpdated := true;
-        fState.checkAndRun(GUIDToString(newGUID));
-      end);
-
-    helpShortcutServer.NewMap(newGUID,
-      procedure(AShortcutMap: TOPPHelpMap)
-      begin
-        fState.shortcutWasUpdated := true;
-        fState.checkAndRun(GUIDToString(newGUID));
-      end);
-
-  finally
-    fState.Free;
-  end;
-end;
-
-procedure TSampleForm.dxBarButton3Click(Sender: TObject);
-begin
-
-  self.isModified := false;
-
-  if not assigned(cxListView1.Selected) then
-  begin
-    eventLogger.Warning('going to delete nil item');
-    exit;
-  end;
-  helpHintServer.removeHint(cxListView1.Selected.Caption);
-  helpShortcutServer.removeShortcut(cxListView1.Selected.Caption);
-  ReloadListView(
-    procedure
-    begin
-      if cxListView1.Items.Count > 0 then
-        cxListView1.ItemIndex := 0;
-    end);
-end;
-
-procedure TSampleForm.dxBarButton4Click(Sender: TObject);
-begin
-  self.isModified := false;
-
-  ReloadListView(
-    procedure
-    begin
-      if cxListView1.Items.Count > 0 then
-        cxListView1.ItemIndex := 0;
-    end);
-end;
-
 procedure TSampleForm.ReloadListView(completion: TOPPHelpCompletion);
 begin
   cxListView1.Items.Clear;
@@ -537,7 +559,17 @@ begin
 end;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
+var
+  dropdownItem: String;
 begin
+  for dropdownItem in dropdownItemsArray do
+  begin
+    ShortcutKeywordTypeComboBox.Properties.Items.Add(dropdownItem);
+    ShortcutDetailsKeywordTypeComboBox.Properties.Items.Add(dropdownItem);
+    cxComboBoxHintDetailsKeywordType.Properties.Items.Add(dropdownItem);
+    cxComboBoxShortcutDetailsKeywordType.Properties.Items.Add(dropdownItem);
+  end;
+
   fCanChangeModificationFlag := false;
   self.isModified := false;
 
@@ -549,6 +581,12 @@ begin
       if cxListView1.Items.Count > 0 then
         cxListView1.ItemIndex := 0;
     end);
+end;
+
+procedure TSampleForm.FormResize(Sender: TObject);
+begin
+  shortcutsPreviewPanel.Height := 75;
+  hintsPreviewPanel.Height := 75;
 end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -619,14 +657,13 @@ begin
     ShowMessage('Nothing to show');
 end;
 
+procedure TSampleForm.hintsPreviewPanelResize(Sender: TObject);
+begin
+  //
+end;
+
 procedure TSampleForm.previewHintButtonClick(Sender: TObject);
 begin
-
-  TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
-    procedure()
-    begin
-      //
-    end);
 
 end;
 
