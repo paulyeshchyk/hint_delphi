@@ -5,18 +5,18 @@ interface
 uses
   system.classes,
   WinAPI.Messages,
+  Vcl.Forms,
   Vcl.Controls, Vcl.Dialogs;
 
 type
   TOPPClientHelpShortcutHelper = class
   public
-    class procedure showHelp(AMessage: TWMHelp);
+    class procedure showHelp(AControl: TControl; AMessage: TWMHelp);
   end;
 
 implementation
 
 uses
-  Vcl.Forms,
   {OppObjControl,}
   cxTreeView,
 
@@ -31,11 +31,11 @@ uses
   OPP.Help.Log,
   OPPClientChild;
 
-class procedure TOPPClientHelpShortcutHelper.showHelp(AMessage: TWMHelp);
+class procedure TOPPClientHelpShortcutHelper.showHelp(AControl: TControl; AMessage: TWMHelp);
 var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
-  fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, AMessage);
+  fShortcutRequest := TOPPHelpShortcutRequest.Create(AControl, AMessage);
   helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
     procedure(completionResult: TOPPHelpShortcutPresentingResult)
     begin
