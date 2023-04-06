@@ -278,14 +278,6 @@ begin
   if fCanChangeModificationFlag then
   begin
     self.isModified := true;
-    TcxTextEdit(Sender).Hint := 'Test hint';
-    TcxTextEdit(Sender).ShowHint := true;
-
-    fPoint.X := (TcxTextEdit(Sender).Left + TcxTextEdit(Sender).Width) div 2;
-    fPoint.Y := (TcxTextEdit(Sender).Top  + TcxTextEdit(Sender).height ) div 2;
-    pos := ClientToScreen(fPoint);
-
-    Application.ActivateHint(pos);
   end;
 end;
 

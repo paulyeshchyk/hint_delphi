@@ -318,7 +318,6 @@ end;
 
 procedure TOPPHelpPreviewForm.runPredicate(APredicate: TOPPHelpPredicate);
 begin
-
   helpShortcutServer.loadPDF(APredicate.fileName,
     procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus)
     begin

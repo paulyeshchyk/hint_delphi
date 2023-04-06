@@ -6,10 +6,7 @@
         <Projects Include="OPP.Help.Package\OPPHelp.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="OPP.Help.Preview\OPPHelpPreview.dproj">
-            <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
-        </Projects>
-        <Projects Include="OPP.Help.Sample\OPPHintSample.dproj">
+        <Projects Include="OPP.Help.Sample\OPPHintTunning.dproj">
             <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
     </ItemGroup>
@@ -29,32 +26,23 @@
     <Target Name="OPPHelp:Make">
         <MSBuild Projects="OPP.Help.Package\OPPHelp.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPHelpPreview" DependsOnTargets="OPPHelp">
-        <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj"/>
+    <Target Name="OPPHintTunning" DependsOnTargets="OPPHelp">
+        <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj"/>
     </Target>
-    <Target Name="OPPHelpPreview:Clean" DependsOnTargets="OPPHelp:Clean">
-        <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Clean"/>
+    <Target Name="OPPHintTunning:Clean" DependsOnTargets="OPPHelp:Clean">
+        <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHelpPreview:Make" DependsOnTargets="OPPHelp:Make">
-        <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="OPPHintSample" DependsOnTargets="OPPHelp">
-        <MSBuild Projects="OPP.Help.Sample\OPPHintSample.dproj"/>
-    </Target>
-    <Target Name="OPPHintSample:Clean" DependsOnTargets="OPPHelp:Clean">
-        <MSBuild Projects="OPP.Help.Sample\OPPHintSample.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="OPPHintSample:Make" DependsOnTargets="OPPHelp:Make">
-        <MSBuild Projects="OPP.Help.Sample\OPPHintSample.dproj" Targets="Make"/>
+    <Target Name="OPPHintTunning:Make" DependsOnTargets="OPPHelp:Make">
+        <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPHelp;OPPHelpPreview;OPPHintSample"/>
+        <CallTarget Targets="OPPHelp;OPPHintTunning"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPHelp:Clean;OPPHelpPreview:Clean;OPPHintSample:Clean"/>
+        <CallTarget Targets="OPPHelp:Clean;OPPHintTunning:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPHelp:Make;OPPHelpPreview:Make;OPPHintSample:Make"/>
+        <CallTarget Targets="OPPHelp:Make;OPPHintTunning:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

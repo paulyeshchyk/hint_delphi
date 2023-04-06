@@ -240,7 +240,7 @@ begin
     exit;
   end;
 
-  fHelpMap := TOPPHelpMap.Create(newGUID);
+  fHelpMap := TOPPHelpMap.Create(GUIDToString(newGUID));
   try
     fShortcutDataset.AddMap(fHelpMap);
     completion(fHelpMap);

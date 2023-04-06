@@ -10,21 +10,20 @@ uses
 type
 
   POPPHelpMap = ^TOPPHelpMap;
+
   TOPPHelpMap = class(TObject)
   private
     fPredicate: TOPPHelpPredicate;
     fIdentifier: TOPPHelpHintMapIdentifier;
     function GetIsValid: Boolean;
   public
-    constructor Create(AGUID: TGUID);overload;
-    constructor Create(AIdentifier: String);overload;
+    constructor Create(AIdentifier: String); overload;
     property identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
     property Predicate: TOPPHelpPredicate read fPredicate write fPredicate;
     property isValid: Boolean read GetIsValid;
   end;
 
   TOPPHelpMapCompletion = reference to procedure(const AMap: TOPPHelpMap);
-
 
   TOPPHelpMapSet = class(TObject)
   private
@@ -41,16 +40,6 @@ type
   end;
 
 implementation
-uses
-  System.SysUtils;
-
-constructor TOPPHelpMap.Create(AGUID: TGUID);
-begin
-  inherited Create;
-
-  fIdentifier := GUIDToString(AGUID);
-  fPredicate := TOPPHelpPredicate.Create;
-end;
 
 constructor TOPPHelpMap.Create(AIdentifier: String);
 begin
@@ -98,7 +87,8 @@ end;
 
 procedure TOPPHelpMapSet.AddMap(AMap: TOPPHelpMap);
 begin
-  if not assigned(AMap) then begin
+  if not assigned(AMap) then
+  begin
     exit;
   end;
 

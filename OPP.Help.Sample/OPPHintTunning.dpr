@@ -1,4 +1,4 @@
-program OPPHintSample;
+program OPPHintTunning;
 
 uses
   Vcl.Forms,
@@ -16,6 +16,7 @@ uses
 {$R *.res}
 
 begin
+  Application.Title := 'Настройка индексов системы помощи';
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TSampleForm, SampleForm);
