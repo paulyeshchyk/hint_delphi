@@ -82,7 +82,7 @@ type
 
     function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
     function removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
-    procedure AvailableMaps(completion:TOPPHelpMapsCompletion);
+    procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
 
   end;
 
@@ -105,7 +105,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure NewMap(newGUID: TGUID;completion: TOPPHelpMapCompletion);
+    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 
     function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
     function removeHint(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
@@ -129,7 +129,7 @@ type
     function addHintMap(AMap: TOPPHelpMap): Boolean;
 
     property loaded: Boolean read fLoaded;
-    procedure AvailableMaps(completion:TOPPHelpMapsCompletion);
+    procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -188,37 +188,31 @@ begin
   inherited Destroy;
 end;
 
-procedure TOPPHelpHintServer.AvailableMaps(completion:TOPPHelpMapsCompletion);
+procedure TOPPHelpHintServer.AvailableMaps(completion: TOPPHelpMapsCompletion);
 begin
-  if not assigned(completion) then exit;
+  if not Assigned(completion) then
+    exit;
   completion(fHintMapSet.list);
 end;
 
 procedure TOPPHelpHintServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 var
   fHelpMap: TOPPHelpMap;
-  fPredicate: TOPPHelpPredicate;
 begin
-  if not assigned(completion) then begin
+  if not Assigned(completion) then
+  begin
     eventLogger.Error('NewMap completion was not defined');
     exit;
   end;
 
-  fHelpMap := TOPPHelpMap.Create;
+  fHelpMap := TOPPHelpMap.Create(newGUID);
 
   try
-    fHelpMap.identifier := GUIDToString(newGUID);
 
-    fPredicate := TOPPHelpPredicate.Create;
-    try
-      fHintMapSet.AddMap(fHelpMap);
-      completion(fHelpMap);
-
-    finally
-      //fPredicate.Free;
-    end;
+    fHintMapSet.AddMap(fHelpMap);
+    completion(fHelpMap);
   finally
-    //fHelpMap.Free;
+    // fHelpMap.Free;
   end;
 end;
 
@@ -352,7 +346,7 @@ begin
   fMap := fHintMapSet.GetMap(AMetaIdentifier);
   if not Assigned(fMap) then
   begin
-    //eventLogger.Debug(Format('map was not found for identifier [%s]', [AMetaIdentifier]));
+    // eventLogger.Debug(Format('map was not found for identifier [%s]', [AMetaIdentifier]));
     exit;
   end;
 
@@ -537,8 +531,7 @@ begin
           continue;
         fListOfUniques.Add(fMeta.identifier);
 
-        fMap := TOPPHelpMap.Create();
-        fMap.identifier := fMeta.identifier;
+        fMap := TOPPHelpMap.Create(fMeta.identifier);
 
         if Length(ARequest.DefaultPredicateFileName) > 0 then
           fMap.Predicate.filename := ARequest.DefaultPredicateFileName;

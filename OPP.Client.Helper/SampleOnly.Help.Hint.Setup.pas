@@ -98,6 +98,12 @@ var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
+  if not assigned(hints) then
+  begin
+    eventLogger.Warning('hints are not defined');
+    exit;
+  end;
+
   eventLogger.Debug(Format('will create screentips [%d]', [hints.Count]));
 
   for fHint in hints do
@@ -125,7 +131,7 @@ begin
   end;
 end;
 
-class procedure TOPPClientHintHelper.AvailableMaps(completion:TOPPHelpMapsCompletion);
+class procedure TOPPClientHintHelper.AvailableMaps(completion: TOPPHelpMapsCompletion);
 begin
   helpHintServer.AvailableMaps(completion);
 end;

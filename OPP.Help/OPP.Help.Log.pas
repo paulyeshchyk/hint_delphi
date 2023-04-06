@@ -62,13 +62,11 @@ begin
       outresult := Format('[Warning]: %s', [AString]);
     lmFlow:
       begin
-        {
         if length(postfix) = 0 then
           completeString := 'Flow'
         else
           completeString := postfix;
         outresult := Format('[%s]: %s', [completeString, AString]);
-        }
       end;
   end;
 

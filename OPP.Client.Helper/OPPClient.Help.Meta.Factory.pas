@@ -36,6 +36,7 @@ begin
   fComponentPropertyMapping.Add('TOppObjControl', ['TypeObject']);
   fComponentPropertyMapping.Add('TOppAttrControl', ['Attribute']);
   fComponentPropertyMapping.Add('TdxDockPanel', ['Caption']);
+  fComponentPropertyMapping.Add('TcxGroupBox', ['Caption']);
 end;
 
 destructor TOPPHelpMetaHintFactory.Destroy;

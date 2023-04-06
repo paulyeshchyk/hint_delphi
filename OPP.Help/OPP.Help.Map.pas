@@ -16,13 +16,14 @@ type
     fIdentifier: TOPPHelpHintMapIdentifier;
     function GetIsValid: Boolean;
   public
-    constructor Create;
+    constructor Create(AGUID: TGUID);overload;
+    constructor Create(AIdentifier: String);overload;
     property identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
     property Predicate: TOPPHelpPredicate read fPredicate write fPredicate;
     property isValid: Boolean read GetIsValid;
   end;
 
-  TOPPHelpMapCompletion = reference to procedure(AMap: TOPPHelpMap);
+  TOPPHelpMapCompletion = reference to procedure(const AMap: TOPPHelpMap);
 
 
   TOPPHelpMapSet = class(TObject)
@@ -40,11 +41,22 @@ type
   end;
 
 implementation
+uses
+  System.SysUtils;
 
-constructor TOPPHelpMap.Create;
+constructor TOPPHelpMap.Create(AGUID: TGUID);
 begin
   inherited Create;
 
+  fIdentifier := GUIDToString(AGUID);
+  fPredicate := TOPPHelpPredicate.Create;
+end;
+
+constructor TOPPHelpMap.Create(AIdentifier: String);
+begin
+  inherited Create;
+
+  fIdentifier := AIdentifier;
   fPredicate := TOPPHelpPredicate.Create;
 end;
 

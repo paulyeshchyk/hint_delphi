@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = 'SampleForm'
-  ClientHeight = 610
+  ClientHeight = 570
   ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,7 +25,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 763
-    Height = 610
+    Height = 570
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -33,11 +33,10 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 450
     object Splitter1: TSplitter
       Left = 265
       Top = 0
-      Height = 610
+      Height = 570
       ExplicitLeft = 384
       ExplicitTop = 208
       ExplicitHeight = 100
@@ -46,7 +45,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 265
-      Height = 610
+      Height = 570
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'panelList'
@@ -57,13 +56,12 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitHeight = 450
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 3
         Top = 31
         Width = 259
-        Height = 576
+        Height = 536
         Align = alClient
         ColumnClick = False
         Columns = <
@@ -76,10 +74,6 @@ object SampleForm: TSampleForm
         TabOrder = 0
         ViewStyle = vsReport
         OnSelectItem = cxListView1SelectItem
-        ExplicitLeft = 0
-        ExplicitTop = 24
-        ExplicitWidth = 265
-        ExplicitHeight = 426
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
@@ -94,19 +88,16 @@ object SampleForm: TSampleForm
       Left = 268
       Top = 0
       Width = 495
-      Height = 610
+      Height = 570
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 3
-      ExplicitTop = 48
-      ExplicitHeight = 450
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 3
         Top = 104
         Width = 489
-        Height = 503
+        Height = 463
         ActivePage = TabSheet1
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
@@ -117,15 +108,13 @@ object SampleForm: TSampleForm
         ParentFont = False
         Style = tsFlatButtons
         TabOrder = 0
-        ExplicitTop = 76
-        ExplicitHeight = 330
         object TabSheet1: TTabSheet
           Caption = #1055#1086#1084#1086#1097#1100
           object Panel5: TPanel
             Left = 0
             Top = 0
             Width = 481
-            Height = 472
+            Height = 432
             Align = alClient
             BevelOuter = bvNone
             Font.Charset = DEFAULT_CHARSET
@@ -216,7 +205,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 481
-            Height = 472
+            Height = 432
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
@@ -224,7 +213,7 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 0
               Width = 481
-              Height = 472
+              Height = 432
               Align = alClient
               BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
@@ -472,6 +461,10 @@ object SampleForm: TSampleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton6'
         end
         item
@@ -642,6 +635,34 @@ object SampleForm: TSampleForm
         965E7C78F7ED8998C7B906B85EB20B3766D0A270E306048E94E6D9BE50ECFBC0
         B7F069E077200E447F00A25E564DD5AF61520000000049454E44AE426082}
     end
+    object dxBarButton8: TdxBarButton
+      Action = actionUndo
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        6100000016744558745469746C6500556E646F3B4172726F773B456469743BCB
+        5CF1270000025C49444154785EB5936F48535F18C7BF77D7692BB1561626134D
+        63B319230D86FDF951146868BEB0041B2EFB372367D01FEA45FBC1828CD4CA32
+        FF65D60BC3B48282B0863175B6B5325A83A814B360D82B11493252B776EFD3BD
+        372FAC17BD920E7C38700E9F2F0FCF730E4344F8574B21C00A307F15E4CBB3F7
+        FC20020840A569BD28B0275A7A8A793EBA36F0DEADCDD8B0638A40206204688E
+        8814DB1D1FBEF03C44F1E0F9CE55A76E3D7FDCDA3F4296DA5E02B04840295733
+        323B0399A3D75FFC5189D2DAE0B4DA3B7C537D81090A703C992A9F5045B367F4
+        485D6FCFFEEAAEE359397B97018892832C75EEDF7269E57DBDB5D1EDBDE11AA1
+        E199107D0C71F46186A3518EA3B7933FC8F9699CEA9F0E51D9D5FEB1DD673A4A
+        01C4889EB9BA4FEA015B56F76CACB8401F9F90A8C66C9891BA1726603AC44B84
+        391E6A9560D14F74BB3EE3B56FD8EEB85C720940500C5064159DD3A996689A75
+        86B4ADD9DB32A18C66C18BD982480078024004250B68E315E8720C62C0EBDFE7
+        B9597E9789189932A3B0C6A25E9150BD29D7189BA2D3C0D1E1C1F4F76F58BC34
+        0E49698948D5A740C13058AD2634B478C7075D6D99929D5E784D6E649426DBA2
+        D3EEACE9CEB33DA2ED27BB2839BBD4B826DF5E6228AAEDDC7CF876F058E73B6A
+        F47F255BFB1B5A676AF85F0A48CDBB288F46AE46A5D972FAD0C6F287130016CE
+        755E956434AFCDD875C579A0E9253579026430B7BD92029273AB2459461EABC0
+        020136E29C15884B2FA86AB3B60E50FA9EF609460AC8A99294C8474102B1CB93
+        C10427E557279D0D3DA8508857DAFC0BF59C6AE57FCC3CFE498CB8CFFB372A30
+        CFF50B153D09AADDB2FD980000000049454E44AE426082}
+    end
   end
   object ActionList1: TActionList
     Left = 24
@@ -680,6 +701,10 @@ object SampleForm: TSampleForm
       Caption = 'E&xit'
       Hint = 'Exit|Quits the application'
       ImageIndex = 43
+    end
+    object actionUndo: TAction
+      Caption = 'actionUndo'
+      OnExecute = actionUndoExecute
     end
   end
 end

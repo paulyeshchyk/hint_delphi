@@ -36,6 +36,8 @@ type
 
 implementation
 
+uses OPP.Help.Log;
+
 constructor TOPPHelpRichtextHintReader.Create;
 begin
   fRichEditControl := TdxRichEditControl.Create(nil);
@@ -78,6 +80,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
+        if result.isEmpty then begin
+          eventLogger.Error(Format('hint is empty for search: %s in %s',[APredicate.value, APredicate.fileName]));
+        end;
       end;
     ktPage:
       begin
@@ -85,6 +90,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
+        if result.isEmpty then begin
+          eventLogger.Error(Format('hint is empty for page: %s in %s',[APredicate.value, APredicate.fileName]));
+        end;
       end;
     ktBookmark:
       begin
@@ -92,6 +100,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
+        if result.isEmpty then begin
+          eventLogger.Error(Format('hint is empty for bookmark: %s in %s',[APredicate.value, APredicate.fileName]));
+        end;
       end;
     ktAny:
       begin
@@ -99,6 +110,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
+        if result.isEmpty then begin
+          eventLogger.Error(Format('hint is empty for any: %s in %s',[APredicate.value, APredicate.fileName]));
+        end;
       end;
   end;
 

@@ -1,4 +1,4 @@
-unit OPP.Help.PreviewForm;
+﻿unit OPP.Help.PreviewForm;
 
 interface
 
@@ -41,7 +41,6 @@ type
     cxProgressBar1: TcxProgressBar;
     dxDockingManager1: TdxDockingManager;
     dxBarManager1: TdxBarManager;
-    dxBarManager1Bar1: TdxBar;
     dxBarButtonExit: TdxBarButton;
     dxBarSubItem1: TdxBarSubItem;
     TrayIcon1: TTrayIcon;
@@ -65,7 +64,22 @@ type
     findPaneTogglerButton: TdxBarButton;
     actionToggleFindPanel: TAction;
     dxBarButton2: TdxBarButton;
-    procedure ApplicationEvents1Activate(Sender: TObject);
+    zoomMenuButton: TdxBarSubItem;
+    dxBarSeparator2: TdxBarSeparator;
+    findPaneTogglerButton1: TdxBarLargeButton;
+    dxBarLargeButton1: TdxBarLargeButton;
+    dxBarLargeButton2: TdxBarLargeButton;
+    dxBarSubItem4: TdxBarSubItem;
+    dxBarLargeButton3: TdxBarLargeButton;
+    dxBarLargeButton4: TdxBarLargeButton;
+    dxBarLargeButton5: TdxBarLargeButton;
+    dxBarSeparator3: TdxBarSeparator;
+    dxBarLargeButton6: TdxBarLargeButton;
+    dxBarButton3: TdxBarButton;
+    cxBarEditItem5: TcxBarEditItem;
+    dxBarSeparator4: TdxBarSeparator;
+    dxBarButton4: TdxBarButton;
+    actionHide: TAction;
     procedure ApplicationEvents1Minimize(Sender: TObject);
     procedure ApplicationEvents1Restore(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -78,7 +92,9 @@ type
     procedure actionFitPageHeightExecute(Sender: TObject);
     procedure cxBarEditItem4Change(Sender: TObject);
     procedure actionToggleFindPanelExecute(Sender: TObject);
-    procedure dxBarButton2Click(Sender: TObject);
+    procedure dxBarLargeButton6Click(Sender: TObject);
+    procedure OnWMZoomMessage(var Msg: TMessage); message WM_USER + 3;
+    procedure actionHideExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -98,6 +114,7 @@ type
     procedure setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     property currentState: TOPPHelpPreviewFormState read fCurrentState write setCurrentState;
 
+    procedure OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
   public
     { Public declarations }
     function GetContainerClassName: String;
@@ -116,7 +133,13 @@ uses
   dxCustomPreview,
   OPP.Help.Shortcut.Server,
   OPP.Help.System.Stream,
-  OPP.Help.Preview.Zoom;
+  OPP.Help.Preview.Zoom,
+  OPP.Help.Log;
+
+procedure TOPPHelpPreviewForm.OnWMZoomMessage(var Msg: TMessage);
+begin
+  oppHelpView.ZoomFactor := Msg.WParam;
+end;
 
 procedure TOPPHelpPreviewForm.actionFitPageHeightExecute(Sender: TObject);
 begin
@@ -128,15 +151,15 @@ begin
   oppHelpView.FitPageWidth();
 end;
 
+procedure TOPPHelpPreviewForm.actionHideExecute(Sender: TObject);
+begin
+  Close;
+  // Application.Minimize;
+end;
+
 procedure TOPPHelpPreviewForm.actionToggleFindPanelExecute(Sender: TObject);
 begin
   oppHelpView.IsFindPanelVisible := not oppHelpView.IsFindPanelVisible;
-  // refreshFindPanelToggler;
-end;
-
-procedure TOPPHelpPreviewForm.ApplicationEvents1Activate(Sender: TObject);
-begin
-  //
 end;
 
 procedure TOPPHelpPreviewForm.ApplicationEvents1Minimize(Sender: TObject);
@@ -186,16 +209,18 @@ begin
   end;
 end;
 
-procedure TOPPHelpPreviewForm.dxBarButton2Click(Sender: TObject);
-var zoom: TOPPHelpPreviewZoomForm;
-begin
-  zoom := TOPPHelpPreviewZoomForm.Create(self);
-  zoom.show;
-end;
-
 procedure TOPPHelpPreviewForm.dxBarButtonExitClick(Sender: TObject);
 begin
-  self.close();
+  self.Close();
+end;
+
+procedure TOPPHelpPreviewForm.dxBarLargeButton6Click(Sender: TObject);
+var
+  specialZoom: TOPPHelpPreviewZoomForm;
+begin
+  specialZoom := TOPPHelpPreviewZoomForm.Create(self);
+  specialZoom.zoomValue := oppHelpView.ZoomFactor;
+  specialZoom.ShowModal;
 end;
 
 procedure TOPPHelpPreviewForm.dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
@@ -208,17 +233,21 @@ begin
   oppHelpView.removeStateChangeListener(self);
 end;
 
+procedure TOPPHelpPreviewForm.OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
+begin
+  fitActualSizeButton.Down := (AStatus.zoomMode = TdxPreviewZoomMode.pzmPageWidth);
+  zoomValueEdit.EditValue := AStatus.ZoomFactor;
+  zoomMenuButton.Caption := Format('Масштаб %d %%', [AStatus.ZoomFactor]);
+end;
+
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
 
   oppHelpView := TOPPHelpViewFullScreen.Create(self);
   oppHelpView.Parent := self;
   oppHelpView.Align := alClient;
-  oppHelpView.OnStatusChanged := procedure(AStatus: TOPPHelpViewFullScreenStatus)
-    begin
-      fitActualSizeButton.Down := (AStatus.zoomMode = TdxPreviewZoomMode.pzmPageWidth);
-      zoomValueEdit.EditValue := AStatus.zoomFactor;
-    end;
+  oppHelpView.OnStatusChanged := self.OnViewStatusChanged;
+  self.OnViewStatusChanged(oppHelpView.Status);
 
   oppHelpView.OnFindPanelVisibilityChange := procedure(AValue: Boolean)
     begin
@@ -234,6 +263,8 @@ var
   fPredicate: TOPPHelpPredicate;
   fNotificationStream: TReadOnlyMemoryStream;
 begin
+  eventLogger.Flow('Received Message', OPP.Help.View.Fullscreen.kEventFlowName);
+
   currentState := fsHandlingMessage;
 
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
@@ -287,10 +318,17 @@ end;
 
 procedure TOPPHelpPreviewForm.runPredicate(APredicate: TOPPHelpPredicate);
 begin
+
   helpShortcutServer.loadPDF(APredicate.fileName,
     procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus)
     begin
+      if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssError then
+        exit;
+
+      eventLogger.Flow(Format('started running predicate: %s', [APredicate.value]), OPP.Help.View.Fullscreen.kEventFlowName);
+
       try
+        eventLogger.Flow(Format('loaded pdf from: %s', [APredicate.fileName]), OPP.Help.View.Fullscreen.kEventFlowName);
         if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssCreated then
           oppHelpView.loadContent(AStream);
       finally
@@ -315,7 +353,7 @@ procedure TOPPHelpPreviewForm.RestoreFromBackground;
 begin
   Application.Restore;
   Application.BringToFront();
-  self.Show();
+  self.show();
   self.WindowState := TWindowState.wsNormal;
 end;
 

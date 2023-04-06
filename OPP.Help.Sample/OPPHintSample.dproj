@@ -85,20 +85,20 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
-        <DCC_DcuOutput>D:\Compiled\Units\OPPHelp</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\Help</DCC_DcuOutput>
         <DCC_UNSAFE_CAST>true</DCC_UNSAFE_CAST>
-        <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
-        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <DCC_BpiOutput>.\$(Platform)\$(Config)\bpi</DCC_BpiOutput>
         <DCC_HppOutput>.\$(Platform)\$(Config)\hpp</DCC_HppOutput>
         <DCC_ObjOutput>.\$(Platform)\$(Config)\obj</DCC_ObjOutput>
         <DCC_UnitSearchPath>..\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <BRCC_Verbose>true</BRCC_Verbose>
         <BRCC_IncludePath>..\OPP.Help;$(BRCC_IncludePath)</BRCC_IncludePath>
-        <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
+        <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\22.0\bin;D:\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBase2020\IDE_spoof;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Users\Paul\AppData\Local\Microsoft\WindowsApps;D:\Embarcadero\Studio\22.0;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
+        <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_DebugDCUs>false</DCC_DebugDCUs>
+        <DCC_UsePackage>OPPHelp</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -160,8 +160,11 @@
                     <Source Name="MainSource">OPPHintSample.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

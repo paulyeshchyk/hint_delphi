@@ -27,7 +27,7 @@ type
   TOPPHelpShortcutPresentingResult = (prSuccess, prFail);
   TOPPHelpShortcutPresentingCompletion = reference to procedure(APresentingResult: TOPPHelpShortcutPresentingResult);
   TOPPHelpShortcutOnGetIdentifier = reference to function(AControl: TControl): String;
-  TOPPHelpShortcutServerLoadStreamStatus = (ssCreated, ssReused);
+  TOPPHelpShortcutServerLoadStreamStatus = (ssCreated, ssReused, ssError);
   TOPPHelpShortcutServerLoadStreamCompletion = reference to procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus);
 
   IOPPHelpShortcutServer = interface
@@ -202,6 +202,15 @@ var
   fFileNameHash: String;
   fStream: TMemoryStream;
 begin
+  if not FileExists(AFileName) then
+  begin
+    eventLogger.Error(Format('File not found: "%s"', [AFileName]));
+    if Assigned(completion) then
+      completion(nil, ssError);
+    exit;
+  end;
+
+  eventLogger.Debug(Format('Load data from file: "%s"', [AFileName]));
   fFileNameHash := AFileName.hashString;
   fPDFMemoryStream.TryGetValue(fFileNameHash, fStream);
   if Assigned(fStream) then
@@ -224,28 +233,19 @@ end;
 procedure TOPPHelpShortcutServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 var
   fHelpMap: TOPPHelpMap;
-  fPredicate: TOPPHelpPredicate;
 begin
-  if not assigned(completion) then begin
+  if not Assigned(completion) then
+  begin
     eventLogger.Error('TOPPHelpShortcutServer.NewMap completion was not defined');
     exit;
   end;
 
-  fHelpMap := TOPPHelpMap.Create;
-
+  fHelpMap := TOPPHelpMap.Create(newGUID);
   try
-    fHelpMap.identifier := GUIDToString(newGUID);
-
-    fPredicate := TOPPHelpPredicate.Create;
-    try
-      fShortcutDataset.AddMap(fHelpMap);
-      completion(fHelpMap);
-
-    finally
-      //fPredicate.Free;
-    end;
+    fShortcutDataset.AddMap(fHelpMap);
+    completion(fHelpMap);
   finally
-    //fHelpMap.Free;
+    // fHelpMap.Free;
   end;
 end;
 
@@ -273,6 +273,8 @@ begin
     eventLogger.Error('shortcutserver - onGetIdentifier is not defined in global');
     exit;
   end;
+
+  eventLogger.Flow(Format('Will show help for %s::%s', [ARequest.ActiveControl.classname, ARequest.ActiveControl.name]), 'Shortcut');
 
   fShortcutIdentifier := fOnGetIdentifier(ARequest.ActiveControl);
 

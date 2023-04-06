@@ -55,7 +55,6 @@ type
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
     property HasLoadedDocument: Boolean read fHasLoadedDocument write SetHasLoadedDocument;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
-    property Status: TOPPHelpViewFullScreenStatus read GetStatus;
   public
 
     constructor Create(AOwner: TComponent); override;
@@ -80,9 +79,12 @@ type
 
     property IsFindPanelVisible: Boolean read GetIsFindPanelVisible write SetIsFindPanelVisible;
     property OnStatusChanged: TOPPHelpViewOnStatusChanged read fOnStatusChanged write fOnStatusChanged;
-    property ZoomFactor: Integer read GetZoomFactor write SetZoomFactor;
+    property zoomFactor: Integer read GetZoomFactor write SetZoomFactor;
     property OnFindPanelVisibilityChange: TOPPHelpViewOnFindPanelVisibilityChange read fOnFindPanelVisiblityChange write fOnFindPanelVisiblityChange;
+    property Status: TOPPHelpViewFullScreenStatus read GetStatus;
   end;
+const kEventFlowName: String = 'PDFViewer';
+
 
 implementation
 
@@ -96,7 +98,7 @@ begin
   fPDFViewer := TdxPDFViewer.Create(self);
   fPDFViewer.parent := self;
   fPDFViewer.Align := alClient;
-  fPDFViewer.OptionsZoom.zoomMode := pzmPageWidth;
+  fPDFViewer.OptionsZoom.zoomMode := pzmPages;
   fPDFViewer.OnDocumentLoaded := OnPDFViewer1DocumentLoaded;
   fPDFViewer.OnZoomFactorChanged := OnZoomFactorChanged;
   fPDFViewer.OnHideFindPanel := OnHideFindPanelEvent;
@@ -131,6 +133,10 @@ end;
 procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
   fPredicate := APredicate.copy();
+
+  //TODO: Force update
+  //fPDFViewer.CurrentPageIndex := 1;
+
   DoSearchIfPossible(siPredicate);
 end;
 
@@ -234,6 +240,7 @@ end;
 
 procedure TOPPHelpViewFullScreen.searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
 begin
+  eventLogger.Flow('started searchWord', kEventFlowName);
 
   if not assigned(onFinish) then
   begin
@@ -248,6 +255,7 @@ begin
     exit;
   end;
 
+  //fPDFViewer.TextSearch.Clear;
   execute(fPredicate,
     procedure(AResult: Integer)
     begin
@@ -294,6 +302,7 @@ begin
   case APredicate.keywordType of
     ktSearch:
       begin
+        eventLogger.Flow(Format('executed ktSearch:%s', [APredicate.value]), kEventFlowName);
         fCurrentPageIndex := fPDFViewer.CurrentPageIndex;
         fSearchResult := pdfDocument.FindText(APredicate.value, TdxPDFDocumentTextSearchOptions.Default, fCurrentPageIndex);
         fPDFViewer.CurrentPageIndex := fSearchResult.range.pageIndex;
@@ -304,6 +313,7 @@ begin
       end;
     ktPage:
       begin
+        eventLogger.Flow(Format('executed ktPage:%s', [APredicate.value]), kEventFlowName);
         fPDFViewer.CurrentPageIndex := StrToInt(APredicate.value);
       end;
     ktAny:
@@ -369,21 +379,19 @@ end;
 
 function TOPPHelpViewFullScreen.GetIsFindPanelVisible(): Boolean;
 begin
-  result := fPDFViewer.isFindPanelVisible;
+  result := fPDFViewer.IsFindPanelVisible;
 end;
 
 procedure TOPPHelpViewFullScreen.OnHideFindPanelEvent(Sender: TObject);
 begin
   if assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(false);
-
 end;
 
 procedure TOPPHelpViewFullScreen.OnShowFindPanelEvent(Sender: TObject);
 begin
   if assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(true);
-
 end;
 
 end.

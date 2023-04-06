@@ -8,7 +8,7 @@ type
 
   ErrorHelper = class helper for Exception
   public
-    procedure Log();
+    procedure Log(ADetails: String = '');
   end;
 
   IOPPSystemError = interface
@@ -32,9 +32,9 @@ uses
   OPP.Help.Log,
   OPP.Help.System.Str;
 
-procedure ErrorHelper.Log;
+procedure ErrorHelper.Log(ADetails: String);
 begin
-  eventLogger.Error(Format('Error: %s (%s)', [self.ClassName, self.message]));
+  eventLogger.Error(Format('Error: %s (%s) - %s', [self.ClassName, self.message, ADetails]));
 end;
 
 constructor TOPPHelpShortcutDatasetError.Create(errorCode: Integer; errorMessage: String; errorClass: String);
