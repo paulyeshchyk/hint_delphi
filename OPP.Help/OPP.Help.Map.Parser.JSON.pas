@@ -1,32 +1,33 @@
-﻿unit OPP.Help.Shortcut.Mapping.Filereader;
+﻿unit OPP.Help.Map.Parser.JSON;
 
 interface
 
 uses
   System.Generics.Collections,
   System.SysUtils,
-  System.JSON, System.IOUtils,
-  OPP.Help.Log,
-  OPP.Help.Map, OPP.Help.System.Error, OPP.Help.System.Files;
+  System.JSON,
+  OPP.Help.nonatomic,
+  OPP.Help.Map;
 
 type
-  TOPPHelpShortcutMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpMap>; Error: Exception);
+  TOPPHelpMapParserJSONCallback = reference to procedure(AList: TList<TOPPHelpMap>; Error: Exception);
 
-  TOPPHelpShortcutMapFileReader = class helper for TOPPHelpMap
+  TOPPHelpMapParserJSON = class helper for TOPPHelpMap
   private
-    class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpShortcutMapJSONReadCallback = nil);
-    class procedure deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpShortcutMapJSONReadCallback);
+    class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpMapParserJSONCallback = nil);
+    class procedure deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
   public
-    class procedure readJSON(AFileName: String; callback: TOPPHelpShortcutMapJSONReadCallback);
-    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+    class procedure readJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
+    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
 implementation
 
 uses
-  DBXJSONReflect, REST.JSON;
+  OPP.Help.Log, OPP.Help.System.Error, OPP.Help.System.Files,
+  DBXJSONReflect, REST.JSON, System.IOUtils;
 
-class procedure TOPPHelpShortcutMapFileReader.deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpShortcutMapJSONReadCallback);
+class procedure TOPPHelpMapParserJSON.deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
 var
   mapList: TOPPHelpMapSet;
   deSerializer: TJSONUnMarshal;
@@ -43,22 +44,21 @@ begin
     mapList := deSerializer.unmarshal(AJSON) as TOPPHelpMapSet;
     if assigned(callback) then
     begin
-      callback(mapList.list,nil);
+      callback(mapList.list, nil);
     end;
     FreeAndNil(deSerializer);
   except
     on E: Exception do
     begin
-      E.Log();
       if assigned(callback) then
-      begin
-        callback(nil, e);
-      end;
+        callback(nil, E)
+      else
+        E.Log();
     end;
   end;
 end;
 
-class procedure TOPPHelpShortcutMapFileReader.parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPHelpShortcutMapJSONReadCallback);
+class procedure TOPPHelpMapParserJSON.parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPHelpMapParserJSONCallback);
 var
   jsonObject: TJSONObject;
 begin
@@ -72,20 +72,20 @@ begin
       E.Log();
       if assigned(callback) then
       begin
-        callback(nil, e);
+        callback(nil, E);
       end;
     end;
   end;
 end;
 
-class procedure TOPPHelpShortcutMapFileReader.readJSON(AFileName: String; callback: TOPPHelpShortcutMapJSONReadCallback);
+class procedure TOPPHelpMapParserJSON.readJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
 var
   bytes: System.TArray<System.Byte>;
 begin
   if not FileExists(AFileName) then
   begin
     if assigned(callback) then
-      callback(nil, Exception.Create(Format('File not found: %s',[AFileName])));
+      callback(nil, Exception.Create(Format('File not found: %s', [AFileName])));
     exit;
   end;
 
@@ -100,7 +100,7 @@ begin
   end;
 end;
 
-class function TOPPHelpShortcutMapFileReader.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+class function TOPPHelpMapParserJSON.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -111,17 +111,21 @@ begin
 
   jsonObj := serializer.marshal(TOPPHelpMapSet.Create(AList)) as TJSONObject;
   try
-    jsonString := TJson.Format(jsonObj);
+    jsonString := TJson.JsonEncode(jsonObj);
     try
       TFile.WriteAllText(AFileName, jsonString);
+      if assigned(callback) then
+        callback(nil);
     except
       on Error: Exception do
       begin
         Error.Log();
+        if assigned(callback) then
+          callback(Error);
       end;
     end;
   finally
-    jsonObj.free;
+    jsonObj.Free;
     FreeAndNil(serializer);
   end;
 

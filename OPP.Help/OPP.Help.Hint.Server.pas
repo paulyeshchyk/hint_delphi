@@ -54,38 +54,22 @@ type
 
   IOPPHelpHintServer = interface
 
-    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
-
-    /// <summary>
-    /// Возвращает список подсказок, применимых для компонента, указанного в параметре Control.
-    ///
-    /// </summary>
-    /// <remarks> </remarks>
-    ///
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
-
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
-    procedure MergeMaps(AList: TList<TOPPHelpMap>);
-    procedure SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion);
-    procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);
+    procedure RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
+
+
+    { --- maps --- }
+    procedure CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+    function AddHelpMap(AMap: TOPPHelpMap): Boolean;
+    procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+    procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
+    procedure MergeHelpMaps(AList: TList<TOPPHelpMap>);
+    procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion);overload;
+    procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);overload;
+    procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
-
-    procedure makeRecordsDataset(AClientDataSet: TClientDataset);
-    procedure loadRecordsDataset(AClientDataSet: TClientDataset);
-
-    procedure makePredicatesDataset(AClientDataSet: TClientDataset);
-    procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
-
-    function addHintMap(AMap: TOPPHelpMap): Boolean;
-    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
-
-    function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
-    procedure removeHint(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
-    procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
-
-    procedure validate(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
-
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -107,32 +91,22 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
-
-    function availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
-    procedure removeHint(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
-    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
-
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
-
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
-    procedure MergeMaps(AList: TList<TOPPHelpMap>);
-    procedure SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion);
-    procedure SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);
+
+    procedure CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+    function AddHelpMap(AMap: TOPPHelpMap): Boolean;
+    procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
+    procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+    procedure MergeHelpMaps(AList: TList<TOPPHelpMap>);
+    procedure RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
+    procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion);overload;
+    procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);overload;
+    procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
 
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
 
-    procedure makeRecordsDataset(AClientDataSet: TClientDataset);
-    procedure loadRecordsDataset(AClientDataSet: TClientDataset);
-
-    procedure makePredicatesDataset(AClientDataSet: TClientDataset);
-    procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
-
-    function addHintMap(AMap: TOPPHelpMap): Boolean;
-    procedure validate(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
-
     property loaded: Boolean read fLoaded;
-    procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
   end;
 
 function helpHintServer: IOPPHelpHintServer;
@@ -140,8 +114,8 @@ function helpHintServer: IOPPHelpHintServer;
 implementation
 
 uses
+  OPP.Help.Map.Parser.JSON,
   OPP.Help.System.Files,
-  OPP.Help.Map.Filereader,
   OPP.Help.System.Error,
   OPP.Help.Log;
 
@@ -191,14 +165,15 @@ begin
   inherited Destroy;
 end;
 
-procedure TOPPHelpHintServer.validate(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
+procedure TOPPHelpHintServer.ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
 var
   result: Boolean;
 begin
   if not Assigned(completion) then
     exit;
 
-  if length(ANewIdentifier) = 0 then begin
+  if Length(ANewIdentifier) = 0 then
+  begin
     completion(false);
     exit;
   end;
@@ -209,7 +184,7 @@ begin
     exit;
   end;
 
-  self.FindMap(ANewIdentifier,
+  self.FindHelpMap(ANewIdentifier,
     procedure(const AMap: TOPPHelpMap)
     begin
       completion(AMap = nil);
@@ -224,7 +199,7 @@ begin
   completion(fHintMapSet.list);
 end;
 
-procedure TOPPHelpHintServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+procedure TOPPHelpHintServer.CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 var
   fHelpMap: TOPPHelpMap;
   fID: String;
@@ -246,7 +221,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpHintServer.removeHint(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
+procedure TOPPHelpHintServer.RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
 var
   itemsToRemove: TList<TOPPHelpMap>;
   fMap: TOPPHelpMap;
@@ -272,12 +247,12 @@ begin
 
   finally
     itemsToRemove.Free;
-    self.SaveMaps('', callback);
+    self.SaveHelpMaps('', callback);
   end;
 
 end;
 
-procedure TOPPHelpHintServer.FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+procedure TOPPHelpHintServer.FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 var
   result, fMap: TOPPHelpMap;
 begin
@@ -304,25 +279,11 @@ begin
   completion(result);
 end;
 
-function TOPPHelpHintServer.availableIdentifiers: TList<TOPPHelpMetaIdentifierType>;
-var
-  fMeta: TOPPHelpMap;
-begin
-  reloadConfigurationIfNeed(kHintsMappingDefaultFileName);
-
-  result := TList<TOPPHelpMetaIdentifierType>.Create;
-  for fMeta in fHintMapSet.list do
-  begin
-    if fMeta <> nil then
-      result.Add(fMeta.ComponentIdentifier);
-  end;
-end;
-
 { private }
 
 procedure TOPPHelpHintServer.reloadConfigurationIfNeed(filename: String);
 var
-  fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
+  fOPPHelpHintMapJSONReadCallback: TOPPHelpMapParserJSONCallback;
 begin
 
   if fLoaded then
@@ -567,8 +528,8 @@ begin
 
       if useGlobal then
       begin
-        helpHintServer.MergeMaps(fMapList);
-        helpHintServer.SaveMaps(ARequest.MappingFileName,
+        helpHintServer.MergeHelpMaps(fMapList);
+        helpHintServer.SaveHelpMaps(ARequest.MappingFileName,
           procedure(AError: Exception)
           begin
             if Assigned(completion) then
@@ -577,7 +538,7 @@ begin
             end;
           end);
       end else begin
-        helpHintServer.SaveCustomList(fMapList, ARequest.MappingFileName,
+        helpHintServer.SaveHelpMaps(fMapList, ARequest.MappingFileName,
           procedure(AError: Exception)
           begin
             if Assigned(completion) then
@@ -596,7 +557,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpHintServer.SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion);
+procedure TOPPHelpHintServer.SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion);
 var
   fFileName: String;
   fFileNameFullPath: String;
@@ -610,97 +571,20 @@ begin
 
   fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
 
-  SaveCustomList(fHintMapSet.list, fFileNameFullPath, callback);
+  SaveHelpMaps(fHintMapSet.list, fFileNameFullPath, callback);
 end;
 
-procedure TOPPHelpHintServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);
+procedure TOPPHelpHintServer.SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);
 begin
   TOPPHelpMap.saveJSON(AList, AFileName, callback);
 end;
 
-procedure TOPPHelpHintServer.MergeMaps(AList: TList<TOPPHelpMap>);
+procedure TOPPHelpHintServer.MergeHelpMaps(AList: TList<TOPPHelpMap>);
 begin
   fHintMapSet.MergeMaps(AList);
 end;
 
-procedure TOPPHelpHintServer.makeRecordsDataset(AClientDataSet: TClientDataset);
-begin
-  if not Assigned(AClientDataSet) then
-  begin
-    eventLogger.Error('Dataset is not assigned');
-    exit;
-  end;
-
-  AClientDataSet.Close;
-  AClientDataSet.FieldDefs.Add('Identifier', ftString, 255, true);
-  AClientDataSet.CreateDataSet;
-end;
-
-procedure TOPPHelpHintServer.loadRecordsDataset(AClientDataSet: TClientDataset);
-var
-  Hint: TOPPHelpMap;
-begin
-  if not Assigned(AClientDataSet) then
-  begin
-    eventLogger.Error('Dataset is not assigned');
-    exit;
-  end;
-  if not AClientDataSet.Active then
-  begin
-    eventLogger.Error('Dataset is not Active');
-    exit;
-  end;
-
-  for Hint in fHintMapSet.list do
-  begin
-    AClientDataSet.Insert;
-    AClientDataSet.Fields.FieldByName('identifier').asString := Hint.ComponentIdentifier;
-    AClientDataSet.Post;
-  end;
-end;
-
-procedure TOPPHelpHintServer.makePredicatesDataset(AClientDataSet: TClientDataset);
-begin
-  if not Assigned(AClientDataSet) then
-  begin
-    eventLogger.Error('Dataset is not assigned');
-    exit;
-  end;
-
-  AClientDataSet.Close;
-  AClientDataSet.FieldDefs.Add('Identifier', ftString, 255, true);
-  AClientDataSet.FieldDefs.Add('Predicate', ftString, 255, false);
-  AClientDataSet.FieldDefs.Add('KeywordType', ftInteger, 0, false);
-  AClientDataSet.CreateDataSet;
-end;
-
-procedure TOPPHelpHintServer.loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
-var
-  fMap: TOPPHelpMap;
-begin
-  if not Assigned(AClientDataSet) then
-  begin
-    eventLogger.Error('Dataset is not assigned');
-    exit;
-  end;
-  if not AClientDataSet.Active then
-  begin
-    eventLogger.Error('Dataset is not Active');
-    exit;
-  end;
-  fMap := fHintMapSet.GetMap(ARecordId);
-  if not Assigned(fMap) then
-    exit;
-
-  AClientDataSet.EmptyDataSet;
-  AClientDataSet.Insert;
-  AClientDataSet.Fields[0].asString := fMap.ComponentIdentifier;
-  AClientDataSet.Fields[1].asString := fMap.Predicate.value;
-  AClientDataSet.Fields[2].AsInteger := Integer(fMap.Predicate.keywordType);
-  AClientDataSet.Post;
-end;
-
-function TOPPHelpHintServer.addHintMap(AMap: TOPPHelpMap): Boolean;
+function TOPPHelpHintServer.AddHelpMap(AMap: TOPPHelpMap): Boolean;
 var
   fIndex: Integer;
 begin

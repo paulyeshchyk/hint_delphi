@@ -38,9 +38,8 @@ type
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
     function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
-    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
-
-    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
+    procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+    function RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
@@ -66,9 +65,9 @@ type
 
     procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
-    procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+    procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 
-    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
+    function RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
@@ -92,8 +91,8 @@ uses
   OPP.Help.System.Str,
   OPP.Help.Log,
   OPP.Help.System.Files,
-  System.TypInfo,
-  OPP.Help.Map.Filereader;
+  OPP.Help.Map.Parser.JSON,
+  System.TypInfo;
 
 const
   OPPViewerProcessName: String = 'OPPHelpPreview.exe';
@@ -138,7 +137,7 @@ begin
   inherited Destroy;
 end;
 
-function TOPPHelpShortcutServer.removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
+function TOPPHelpShortcutServer.RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 var
   itemsToRemove: TList<TOPPHelpMap>;
   fMap: TOPPHelpMap;
@@ -171,7 +170,7 @@ begin
 
 end;
 
-procedure TOPPHelpShortcutServer.FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
+procedure TOPPHelpShortcutServer.FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 var
   result, fMap: TOPPHelpMap;
 begin

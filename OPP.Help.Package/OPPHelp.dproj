@@ -105,7 +105,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\Help</DCC_DcuOutput>
+        <DCC_DcuOutput>C:\Temp\OPPHelpSample</DCC_DcuOutput>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <Debugger_HostApplication>D:\projects\ascon\gulfstream\Compiled\Executable\OPPHintSample.exe</Debugger_HostApplication>
@@ -144,7 +144,6 @@
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="dsnap.dcp"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Map.Filereader.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Map.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
@@ -152,7 +151,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Nonatomic.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Dataset.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Mapping.Filereader.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Map.Parser.JSON.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Request.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Server.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Error.pas"/>
@@ -224,6 +223,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHelp.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win32">
+                        <RemoteName>OPPHelp.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

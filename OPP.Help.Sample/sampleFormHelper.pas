@@ -17,12 +17,6 @@ type
     class procedure savePredicateToStream;
     class procedure readPredicateFromFile;
     class procedure savePredicateToFile;
-    { --- }
-    class procedure makeRecordsDataset(ADataset: TClientDataSet);
-    class procedure makePredicatesDataset(ADataset: TClientDataSet);
-
-    class procedure loadPredicatesDataset(ADataset: TClientDataSet; ARecordID: String);
-
   end;
 
 implementation
@@ -37,9 +31,9 @@ uses
   OPP.Help.Shortcut.Server,
   OPP.Help.Nonatomic,
   OPP.Help.Predicate,
-  OPP.Help.Map, OPP.Help.Map.Filereader,
-
-  OPP.Help.Hint.Server;
+  OPP.Help.Map,
+  OPP.Help.Hint.Server,
+  OPP.Help.Map.Parser.JSON;
 
 class procedure TSampleFormHelper.openInternalHelp;
 // var
@@ -198,38 +192,6 @@ begin
     fList.Free;
   end;
   //
-end;
-
-class procedure TSampleFormHelper.makePredicatesDataset(ADataset: TClientDataSet);
-begin
-  if not assigned(ADataset) then
-  begin
-    eventLogger.error('Dataset is not assigned');
-  end;
-
-  helpHintServer.makePredicatesDataset(ADataset);
-
-end;
-
-class procedure TSampleFormHelper.makeRecordsDataset(ADataset: TClientDataSet);
-begin
-  if not assigned(ADataset) then
-  begin
-    eventLogger.error('Dataset is not assigned');
-  end;
-
-  helpHintServer.makeRecordsDataset(ADataset);
-  helpHintServer.loadRecordsDataset(ADataset);
-end;
-
-class procedure TSampleFormHelper.loadPredicatesDataset(ADataset: TClientDataSet; ARecordID: String);
-begin
-  if not assigned(ADataset) then
-  begin
-    eventLogger.error('Dataset is not assigned');
-  end;
-
-  helpHintServer.loadPredicatesDataset(ADataset, ARecordID);
 end;
 
 end.

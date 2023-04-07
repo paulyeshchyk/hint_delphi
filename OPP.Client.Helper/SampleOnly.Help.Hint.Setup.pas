@@ -19,6 +19,7 @@ type
     class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
     class procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
+    class procedure CreateHintView(AHint: TOPPHelpHint; AControl: TControl; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
   private
     class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
     class function OnGetHintFactory(): IOPPHelpMetaFactory;
@@ -85,16 +86,39 @@ begin
   end;
 end;
 
+class procedure TOPPClientHintHelper.CreateHintView(AHint: TOPPHelpHint; AControl: TControl; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
+var
+  fScreenTip: TdxScreenTip;
+  fScreenTipLink: TdxScreenTipLink;
+
+begin
+  if not assigned(AControl) then
+    exit;
+
+  AControl.ShowHint := true;
+
+  fScreenTip := ARepository.Items.Add;
+  fScreenTip.Width := 789;
+
+  fScreenTip.Header.PlainText := true;
+  fScreenTip.Header.Text := ''; // Заголовок
+
+  fScreenTip.Description.PlainText := false;
+  fScreenTip.Description.Text := AHint.Data.rtf;
+
+  fScreenTipLink := TdxScreenTipStyle(AHintController.HintStyle).ScreenTipLinks.Add;
+  fScreenTipLink.ScreenTip := fScreenTip;
+  fScreenTipLink.control := AControl;
+end;
+
 class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
 var
   fHint: TOPPHelpHint;
   fControl: TComponent;
-  fScreenTip: TdxScreenTip;
-  fScreenTipLink: TdxScreenTipLink;
 begin
   if not assigned(hints) or (hints.Count = 0) then
   begin
-    eventLogger.Warning(Format('hints are not defined for %s',[AForm.classname]));
+    eventLogger.Warning(Format('hints are not defined for %s', [AForm.classname]));
     if assigned(completion) then
       completion();
     exit;
@@ -102,25 +126,8 @@ begin
 
   for fHint in hints do
   begin
-
     fControl := AForm.FindSubControl(fHint.Meta);
-    if not assigned(fControl) then
-      exit;
-
-    TControl(fControl).ShowHint := true;
-
-    fScreenTip := repo.Items.Add;
-    fScreenTip.Width := 789;
-
-    fScreenTip.Header.PlainText := true;
-    fScreenTip.Header.Text := ''; // Заголовок
-
-    fScreenTip.Description.PlainText := false;
-    fScreenTip.Description.Text := fHint.Data.rtf;
-
-    fScreenTipLink := TdxScreenTipStyle(hintController.HintStyle).ScreenTipLinks.Add;
-    fScreenTipLink.ScreenTip := fScreenTip;
-    fScreenTipLink.control := TControl(fControl);
+    CreateHintView(fHint, TControl(fControl), hintController, repo);
   end;
 
   if assigned(completion) then

@@ -85,7 +85,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\Help</DCC_DcuOutput>
+        <DCC_DcuOutput>C:\Temp\OPPHelpSample</DCC_DcuOutput>
         <DCC_UNSAFE_CAST>true</DCC_UNSAFE_CAST>
         <DCC_BpiOutput>.\$(Platform)\$(Config)\bpi</DCC_BpiOutput>
         <DCC_HppOutput>.\$(Platform)\$(Config)\hpp</DCC_HppOutput>
@@ -138,10 +138,6 @@
             <Form>FormTest3</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Tests\FormTest04.pas">
-            <Form>FormTest4</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -179,15 +175,15 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHintTunning.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>OPPHintTunning.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="sources\docs\readme.txt" Configuration="Debug" Class="File">
                     <Platform Name="Win32">
                         <RemoteName>readme.txt</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHintTunning.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>OPPHintTunning.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

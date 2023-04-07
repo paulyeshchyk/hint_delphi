@@ -31,7 +31,7 @@ type
   TOPPHelpMapSet = class(TObject)
   private
     fList: TList<TOPPHelpMap>;
-//    function GetList(): TList<TOPPHelpMap>;
+    function GetList(): TList<TOPPHelpMap>;
   public
     constructor Create(AList: TList<TOPPHelpMap> = nil);
     function GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpMap;
@@ -39,7 +39,7 @@ type
     procedure AddMap(AMap: TOPPHelpMap);
     procedure AddMaps(AList: TList<TOPPHelpMap>);
     procedure MergeMaps(AList: TList<TOPPHelpMap>);
-    function list(): TList<TOPPHelpMap>;
+    property list: TList<TOPPHelpMap> read GetList;
   end;
 
 implementation
@@ -85,7 +85,7 @@ begin
   end;
 end;
 
-function TOPPHelpMapSet.List: TList<TOPPHelpMap>;
+function TOPPHelpMapSet.GetList: TList<TOPPHelpMap>;
 begin
   result := fList;
 end;

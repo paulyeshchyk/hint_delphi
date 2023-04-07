@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 490
+  ClientHeight = 450
   ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,7 +25,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 763
-    Height = 490
+    Height = 450
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -36,7 +36,7 @@ object SampleForm: TSampleForm
     object Splitter1: TSplitter
       Left = 265
       Top = 0
-      Height = 490
+      Height = 450
       ExplicitLeft = 384
       ExplicitTop = 208
       ExplicitHeight = 100
@@ -45,7 +45,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 265
-      Height = 490
+      Height = 450
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'panelList'
@@ -61,7 +61,7 @@ object SampleForm: TSampleForm
         Left = 3
         Top = 31
         Width = 259
-        Height = 456
+        Height = 416
         Align = alClient
         ColumnClick = False
         Columns = <
@@ -88,7 +88,7 @@ object SampleForm: TSampleForm
       Left = 268
       Top = 0
       Width = 495
-      Height = 490
+      Height = 450
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -97,8 +97,8 @@ object SampleForm: TSampleForm
         Left = 3
         Top = 104
         Width = 489
-        Height = 383
-        ActivePage = TabSheet1
+        Height = 343
+        ActivePage = TabSheet2
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -110,11 +110,12 @@ object SampleForm: TSampleForm
         TabOrder = 0
         object TabSheet1: TTabSheet
           Caption = #1055#1086#1084#1086#1097#1100
+          ExplicitHeight = 332
           object Panel5: TPanel
             Left = 0
             Top = 0
             Width = 481
-            Height = 352
+            Height = 332
             Align = alClient
             BevelOuter = bvNone
             Font.Charset = DEFAULT_CHARSET
@@ -205,7 +206,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 481
-            Height = 352
+            Height = 312
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
@@ -213,7 +214,7 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 0
               Width = 481
-              Height = 352
+              Height = 312
               Align = alClient
               BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
@@ -337,6 +338,21 @@ object SampleForm: TSampleForm
         Align = dalTop
         BarManager = dxBarManager1
       end
+    end
+    object Panel1: TPanel
+      Left = 284
+      Top = 344
+      Width = 441
+      Height = 113
+      BevelInner = bvRaised
+      BevelOuter = bvLowered
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
     end
   end
   object cxHintController: TcxHintStyleController
@@ -728,7 +744,6 @@ object SampleForm: TSampleForm
         Directory = 'D:\projects\ascon\gulfstream\Compiled\Executable\help\mapping'
         Actions = [caChangeFileName]
       end>
-    OnChangeNotify = JvChangeNotify1ChangeNotify
     Left = 152
     Top = 360
   end

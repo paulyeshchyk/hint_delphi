@@ -15,6 +15,7 @@ uses
   OPP.Help.Hint,
   OPP.Help.Meta,
   OPP.Help.Map,
+  OPP.Help.System.Error,
   OPP.Help.nonatomic,
 
   Vcl.Graphics,
@@ -132,6 +133,7 @@ type
     dxBarButton9: TdxBarButton;
     JvChangeNotify1: TJvChangeNotify;
     dxBarButton10: TdxBarButton;
+    Panel1: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -139,11 +141,9 @@ type
     procedure N11Click(Sender: TObject);
     procedure N21Click(Sender: TObject);
     procedure N31Click(Sender: TObject);
-    procedure ListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure onControlEditing(Sender: TObject; var CanEdit: Boolean);
     procedure previewHintButtonClick(Sender: TObject);
-    procedure hintsPreviewPanelResize(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
     procedure actionDeleteRecordExecute(Sender: TObject);
@@ -153,7 +153,6 @@ type
     procedure actionPreviewExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actionUndoExecute(Sender: TObject);
-    procedure JvChangeNotify1ChangeNotify(Sender: TObject; Dir: string; Actions: TJvChangeActions);
     procedure cxEditIdentifierNamePropertiesChange(Sender: TObject);
   private
     fSelectedItem: String;
@@ -162,7 +161,6 @@ type
     fIsModified: Boolean;
     fCanChangeModificationFlag: Boolean;
     procedure setIsModified(AValue: Boolean);
-    function GetIsDuplicatedIdentifier: Boolean;
 
     procedure changeSelection(ItemCaption: String);
     procedure DiscardChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -175,13 +173,9 @@ type
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure WMHOOK(var Msg: TMessage); message WM_User + 3;
     { -- events -- }
-    function onGetShortcutIdentifier(AControl: TControl): String;
-    procedure OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
-    { -- events -- }
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
 
     procedure wipeFields(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
-    procedure saveSample(oldIdentifier: String; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit; completion: THelpMapSaveCompletion);
     procedure ReloadListView(completion: TOPPHelpCompletion);
     procedure updateMap(AMap: TOPPHelpMap; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
     procedure updateForm(AMap: TOPPHelpMap; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
@@ -194,7 +188,6 @@ type
     procedure setSelectedShortcutMap(const AMap: TOPPHelpMap);
     property SelectedShortcutMap: TOPPHelpMap read fSelectedShortcutMap write setSelectedShortcutMap;
     property isModified: Boolean read fIsModified write setIsModified;
-    property isDuplicatedIdentifier: Boolean read GetIsDuplicatedIdentifier;
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
   public
     { Public declarations }
@@ -223,7 +216,6 @@ uses
   OPP.Help.Hint.Server,
   OPP.Help.Interfaces,
   OPP.Help.Log,
-  OPP.Help.Map.Filereader,
   OPP.Help.Shortcut.Request,
   OPP.Help.System.AppExecutor,
   OPP.Help.System.Files,
@@ -261,11 +253,6 @@ begin
 
   result := MessageDlg('Сохранить изменения?', mtwarning, [mbYes, mbNo], 0);
   completion(ItemToSelect, (result = mrYes));
-end;
-
-function TSampleForm.GetIsDuplicatedIdentifier: Boolean;
-begin
-  result := false;
 end;
 
 procedure TSampleForm.setIsModified(AValue: Boolean);
@@ -318,7 +305,7 @@ begin
     fState.shortcutWasUpdated := false;
     fState.hintWasUpdated := false;
 
-    helpHintServer.FindMap(oldIdentifier,
+    helpHintServer.FindHelpMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
         updateForm(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
@@ -327,7 +314,7 @@ begin
         fState.checkAndRun(AMap.ComponentIdentifier);
       end);
 
-    helpShortcutServer.FindMap(oldIdentifier,
+    helpShortcutServer.FindHelpMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
         if not assigned(AMap) then
@@ -370,7 +357,7 @@ begin
     fState.shortcutWasUpdated := false;
     fState.hintWasUpdated := false;
 
-    helpHintServer.FindMap(oldIdentifier,
+    helpHintServer.FindHelpMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
         fState.hintWasUpdated := true;
@@ -381,7 +368,7 @@ begin
         end;
 
         updateMap(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
-        helpHintServer.SaveMaps('',
+        helpHintServer.SaveHelpMaps('',
           procedure(AError: Exception)
           begin
             eventLogger.Flow('Did saved hint', 'SampleForm');
@@ -389,7 +376,7 @@ begin
           end);
       end);
 
-    helpShortcutServer.FindMap(oldIdentifier,
+    helpShortcutServer.FindHelpMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
         fState.shortcutWasUpdated := true;
@@ -429,7 +416,7 @@ procedure TSampleForm.cxEditIdentifierNamePropertiesChange(Sender: TObject);
 begin
   if fCanChangeModificationFlag then
   begin
-    helpHintServer.validate(fSelectedItem, cxEditIdentifierName.Text,
+    helpHintServer.ValidateHelpMapIdentifier(fSelectedItem, cxEditIdentifierName.Text,
       procedure(isValid: Boolean)
       begin
         if not isValid then
@@ -482,14 +469,14 @@ begin
     fState.shortcutWasUpdated := false;
     fState.hintWasUpdated := false;
 
-    helpHintServer.removeHint(cxListView1.Selected.Caption,
+    helpHintServer.RemoveHelpMap(cxListView1.Selected.Caption,
       procedure(AError: Exception)
       begin
         eventLogger.Flow('Did removed hint', 'SampleForm');
         fState.hintWasUpdated := true;
         fState.checkAndRun('')
       end);
-    helpShortcutServer.removeShortcut(cxListView1.Selected.Caption,
+    helpShortcutServer.RemoveHelpMap(cxListView1.Selected.Caption,
       procedure(AError: Exception)
       begin
         eventLogger.Flow('Did removed shortcut', 'SampleForm');
@@ -534,7 +521,7 @@ begin
 
     CreateGUID(newGUID);
 
-    helpHintServer.NewMap(newGUID,
+    helpHintServer.CreateHelpMap(newGUID,
       procedure(const AHintMap: TOPPHelpMap)
       begin
         fState.hintWasUpdated := true;
@@ -568,19 +555,26 @@ begin
 end;
 
 procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
+var p:TPoint;
+  fHint: TOPPHelpHint;
 begin
-  TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
-    procedure()
-    begin
-      //
-    end);
+  Panel1.ShowHint := true;
+  Panel1.Hint := 'Test';
+  p:= Panel1.ClientOrigin;
+
+  TOPPClientHintHelper.CreateHintView(fHint, Panel1, cxHintController, tipsRepo);
+//  TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
+//    procedure()
+//    begin
+//      cxHintController.ShowHint(p.x, p.Y, 'AAA', 'ZZZZZZZ');
+//    end);
 end;
 
 procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);
 var
   Predicate: TOPPHelpPredicate;
 begin
-  helpShortcutServer.FindMap(fSelectedItem,
+  helpShortcutServer.FindHelpMap(fSelectedItem,
     procedure(const AMap: TOPPHelpMap)
     begin
       helpShortcutServer.showHelp(AMap.Predicate, vmExternal,
@@ -625,13 +619,13 @@ end;
 
 procedure TSampleForm.changeSelection(ItemCaption: String);
 begin
-  helpHintServer.FindMap(ItemCaption,
+  helpHintServer.FindHelpMap(ItemCaption,
     procedure(const AMap: TOPPHelpMap)
     begin
       self.SelectedHintMap := AMap;
     end);
 
-  helpShortcutServer.FindMap(ItemCaption,
+  helpShortcutServer.FindHelpMap(ItemCaption,
     procedure(const AMap: TOPPHelpMap)
     begin
       self.SelectedShortcutMap := AMap;
@@ -798,37 +792,8 @@ begin
   result := GetWinControlHelpKeyword(AControl.Parent);
 end;
 
-procedure TSampleForm.ListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
-begin
-end;
-
-{ -- events -- }
-
-function TSampleForm.onGetShortcutIdentifier(AControl: TControl): String;
-
-begin
-  result := GetWinControlHelpKeyword(AControl);
-end;
-
-procedure TSampleForm.OnShowShortcutHelpResult(completionResult: TOPPHelpShortcutPresentingResult);
-begin
-  if completionResult = prFail then
-    ShowMessage('Nothing to show');
-end;
-
-procedure TSampleForm.hintsPreviewPanelResize(Sender: TObject);
-begin
-  //
-end;
-
-procedure TSampleForm.JvChangeNotify1ChangeNotify(Sender: TObject; Dir: string; Actions: TJvChangeActions);
-begin
-  //
-end;
-
 procedure TSampleForm.previewHintButtonClick(Sender: TObject);
 begin
-
 end;
 
 { -- events -- }
@@ -841,55 +806,6 @@ begin
   value.Text := '';
   detailskeyword.ItemIndex := -1;
   detailsvalue.Text := '';
-end;
-
-procedure TSampleForm.saveSample(oldIdentifier: String; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit; completion: THelpMapSaveCompletion);
-var
-  fHelpMap, fOldHelpMap: TOPPHelpMap;
-  fPredicate, fDetailsPredicate: TOPPHelpPredicate;
-
-  fState: TSampleFormSaveState;
-begin
-
-  if Length(oldIdentifier) = 0 then
-  begin
-    completion('');
-    exit;
-  end;
-
-  fState := TSampleFormSaveState.Create;
-  try
-    fState.completion := completion;
-    fState.shortcutWasUpdated := false;
-    fState.hintWasUpdated := false;
-
-    helpHintServer.FindMap(oldIdentifier,
-      procedure(const AMap: TOPPHelpMap)
-      begin
-        updateMap(AMap, newIdentifier, filename, keyword, value, detailskeyword, detailsvalue);
-        helpHintServer.SaveMaps('',
-          procedure(AError: Exception)
-          begin
-            fState.hintWasUpdated := true;
-            fState.checkAndRun(AMap.ComponentIdentifier);
-          end);
-      end);
-
-    helpShortcutServer.FindMap(oldIdentifier,
-      procedure(const AMap: TOPPHelpMap)
-      begin
-        updateMap(AMap, newIdentifier, filename, keyword, value, detailskeyword, detailsvalue);
-        helpShortcutServer.SaveMaps('',
-          procedure(AError: Exception)
-          begin
-            fState.shortcutWasUpdated := true;
-            fState.checkAndRun(AMap.ComponentIdentifier);
-          end);
-      end);
-
-  finally
-    fState.Free;
-  end;
 end;
 
 procedure TSampleForm.updateForm(AMap: TOPPHelpMap; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);

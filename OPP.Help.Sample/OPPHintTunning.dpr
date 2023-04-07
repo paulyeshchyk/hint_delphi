@@ -10,8 +10,7 @@ uses
   sampleFormHelper in 'sampleFormHelper.pas',
   FormTest01 in 'Tests\FormTest01.pas' {FormTest1},
   FormTest02 in 'Tests\FormTest02.pas' {FormTest2},
-  FormTest03 in 'Tests\FormTest03.pas' {FormTest3},
-  FormTest04 in 'Tests\FormTest04.pas' {FormTest4};
+  FormTest03 in 'Tests\FormTest03.pas' {FormTest3};
 
 {$R *.res}
 

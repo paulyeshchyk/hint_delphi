@@ -32,7 +32,7 @@ uses
   Winapi.Windows,
   OPP.Help.Log,
   OPP.Help.System.Error,
-  OPP.Help.Shortcut.Mapping.Filereader;
+  OPP.Help.Map.Parser.JSON;
 
 constructor TOPPHelpShortcutDataset.Create;
 begin
