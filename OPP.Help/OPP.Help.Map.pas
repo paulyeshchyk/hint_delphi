@@ -14,11 +14,14 @@ type
   TOPPHelpMap = class(TObject)
   private
     fPredicate: TOPPHelpPredicate;
+    fComponentIdentifier: TOPPHelpHintMapIdentifier;
     fIdentifier: TOPPHelpHintMapIdentifier;
     function GetIsValid: Boolean;
   public
     constructor Create(AIdentifier: String); overload;
-    property identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
+
+    property Identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
+    property ComponentIdentifier: TOPPHelpHintMapIdentifier read fComponentIdentifier write fComponentIdentifier;
     property Predicate: TOPPHelpPredicate read fPredicate write fPredicate;
     property isValid: Boolean read GetIsValid;
   end;
@@ -46,12 +49,14 @@ begin
   inherited Create;
 
   fIdentifier := AIdentifier;
+
+  fComponentIdentifier := AIdentifier;
   fPredicate := TOPPHelpPredicate.Create;
 end;
 
 function TOPPHelpMap.GetIsValid: Boolean;
 begin
-  result := Length(fIdentifier) <> 0;
+  result := Length(fComponentIdentifier) <> 0;
 end;
 
 constructor TOPPHelpMapSet.Create(AList: TList<OPP.Help.Map.TOPPHelpMap> = nil);
@@ -72,7 +77,7 @@ begin
   begin
     if fHintMap = nil then
       continue;
-    if fHintMap.identifier = AHintIdentifier then
+    if fHintMap.ComponentIdentifier = AHintIdentifier then
     begin
       result := fHintMap;
       break;
@@ -120,15 +125,15 @@ begin
   fDictionary := TDictionary<String, TOPPHelpMap>.Create;
   for fItem in fList do
   begin
-    if not fDictionary.ContainsKey(fItem.identifier) then
-      fDictionary.Add(fItem.identifier, fItem);
+    if not fDictionary.ContainsKey(fItem.ComponentIdentifier) then
+      fDictionary.Add(fItem.ComponentIdentifier, fItem);
   end;
 
   for fItem in AList do
   begin
     if fItem.isValid then
     begin
-      if not fDictionary.ContainsKey(fItem.identifier) then
+      if not fDictionary.ContainsKey(fItem.ComponentIdentifier) then
         fList.Add(fItem);
     end;
   end;

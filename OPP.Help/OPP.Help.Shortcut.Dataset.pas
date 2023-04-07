@@ -91,13 +91,13 @@ begin
     exit;
   end;
 
-  if fShortcutHelpMatrix.ContainsKey(AMap.identifier) then
+  if fShortcutHelpMatrix.ContainsKey(AMap.ComponentIdentifier) then
   begin
-    eventLogger.Error(Format('TOPPHelpShortcutDataset is trying to insert duplicated id: %s', [AMap.identifier]));
+    eventLogger.Error(Format('TOPPHelpShortcutDataset is trying to insert duplicated id: %s', [AMap.ComponentIdentifier]));
     exit;
   end;
 
-  fShortcutHelpMatrix.Add(AMap.identifier, AMap);
+  fShortcutHelpMatrix.Add(AMap.ComponentIdentifier, AMap);
 end;
 
 function TOPPHelpShortcutDataset.GetMapping(const key: string): TOPPHelpMap;

@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 550
+  ClientHeight = 530
   ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,7 +25,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 763
-    Height = 550
+    Height = 530
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -36,7 +36,7 @@ object SampleForm: TSampleForm
     object Splitter1: TSplitter
       Left = 265
       Top = 0
-      Height = 550
+      Height = 530
       ExplicitLeft = 384
       ExplicitTop = 208
       ExplicitHeight = 100
@@ -45,7 +45,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 265
-      Height = 550
+      Height = 530
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'panelList'
@@ -61,7 +61,7 @@ object SampleForm: TSampleForm
         Left = 3
         Top = 31
         Width = 259
-        Height = 516
+        Height = 496
         Align = alClient
         ColumnClick = False
         Columns = <
@@ -88,7 +88,7 @@ object SampleForm: TSampleForm
       Left = 268
       Top = 0
       Width = 495
-      Height = 550
+      Height = 530
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -97,7 +97,7 @@ object SampleForm: TSampleForm
         Left = 3
         Top = 104
         Width = 489
-        Height = 443
+        Height = 423
         ActivePage = TabSheet1
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
@@ -114,7 +114,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 481
-            Height = 412
+            Height = 392
             Align = alClient
             BevelOuter = bvNone
             Font.Charset = DEFAULT_CHARSET
@@ -205,7 +205,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 481
-            Height = 412
+            Height = 392
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
@@ -213,7 +213,7 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 0
               Width = 481
-              Height = 412
+              Height = 392
               Align = alClient
               BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
@@ -662,6 +662,12 @@ object SampleForm: TSampleForm
         020136E29C15884B2FA86AB3B60E50FA9EF609460AC8A99294C8474102B1CB93
         C10427E557279D0D3DA8508857DAFC0BF59C6AE57FCC3CFE498CB8CFFB372A30
         CFF50B153D09AADDB2FD980000000049454E44AE426082}
+    end
+    object dxBarButton9: TdxBarButton
+      Caption = 'GUID'
+      Category = 0
+      Hint = 'GUID'
+      Visible = ivAlways
     end
   end
   object ActionList1: TActionList

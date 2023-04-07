@@ -198,6 +198,7 @@ end;
 procedure TOPPHelpHintServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 var
   fHelpMap: TOPPHelpMap;
+  fID:String;
 begin
   if not Assigned(completion) then
   begin
@@ -205,10 +206,10 @@ begin
     exit;
   end;
 
-  fHelpMap := TOPPHelpMap.Create(GUIDToString(newGUID));
-
+  fID := GUIDToString(newGUID);
+  eventLogger.Flow(Format('Created hint map: %s',[fID]));
+  fHelpMap := TOPPHelpMap.Create(fID);
   try
-
     fHintMapSet.AddMap(fHelpMap);
     completion(fHelpMap);
   finally
@@ -230,7 +231,7 @@ begin
     begin
       if fMap = nil then
         continue;
-      if fMap.identifier = AIdentifier then
+      if fMap.ComponentIdentifier = AIdentifier then
         itemsToRemove.Add(fMap);
     end;
 
@@ -265,7 +266,7 @@ begin
       continue;
     if not Assigned(fMap) then
       continue;
-    if fMap.identifier = AIdentifier then
+    if fMap.ComponentIdentifier = AIdentifier then
     begin
       result := fMap;
       break;
@@ -285,7 +286,7 @@ begin
   for fMeta in fHintMapSet.list do
   begin
     if fMeta <> nil then
-      result.Add(fMeta.identifier);
+      result.Add(fMeta.ComponentIdentifier);
   end;
 end;
 
@@ -616,7 +617,7 @@ begin
   for Hint in fHintMapSet.list do
   begin
     AClientDataSet.Insert;
-    AClientDataSet.Fields.FieldByName('identifier').asString := Hint.identifier;
+    AClientDataSet.Fields.FieldByName('identifier').asString := Hint.ComponentIdentifier;
     AClientDataSet.Post;
   end;
 end;
@@ -656,7 +657,7 @@ begin
 
   AClientDataSet.EmptyDataSet;
   AClientDataSet.Insert;
-  AClientDataSet.Fields[0].asString := fMap.identifier;
+  AClientDataSet.Fields[0].asString := fMap.ComponentIdentifier;
   AClientDataSet.Fields[1].asString := fMap.Predicate.value;
   AClientDataSet.Fields[2].AsInteger := Integer(fMap.Predicate.keywordType);
   AClientDataSet.Post;

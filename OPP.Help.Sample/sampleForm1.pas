@@ -129,6 +129,7 @@ type
     dxBarDockControl2: TdxBarDockControl;
     dxBarButton8: TdxBarButton;
     actionUndo: TAction;
+    dxBarButton9: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -157,6 +158,7 @@ type
     fIsModified: Boolean;
     fCanChangeModificationFlag: Boolean;
     procedure setIsModified(AValue: Boolean);
+    function GetIsDuplicatedIdentifier: Boolean;
 
     procedure changeSelection(ItemCaption: String);
     procedure DiscardChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -188,6 +190,7 @@ type
     procedure setSelectedShortcutMap(const AMap: TOPPHelpMap);
     property SelectedShortcutMap: TOPPHelpMap read fSelectedShortcutMap write setSelectedShortcutMap;
     property isModified: Boolean read fIsModified write setIsModified;
+    property isDuplicatedIdentifier: Boolean read GetIsDuplicatedIdentifier;
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
   public
     { Public declarations }
@@ -261,6 +264,11 @@ begin
   completion(ItemToSelect, (result = mrYes));
 end;
 
+function TSampleForm.GetIsDuplicatedIdentifier: Boolean;
+begin
+  result := false;
+end;
+
 procedure TSampleForm.setIsModified(AValue: Boolean);
 begin
   fIsModified := AValue;
@@ -273,12 +281,14 @@ begin
 end;
 
 procedure TSampleForm.onControlEditing(Sender: TObject; var CanEdit: Boolean);
-var pos, fPoint: TPoint;
+var
+  pos, fPoint: TPoint;
 begin
   if fCanChangeModificationFlag then
   begin
     self.isModified := true;
   end;
+  actionSave.Enabled := self.isModified and (not self.isDuplicatedIdentifier);
 end;
 
 procedure TSampleForm.setSelectedShortcutMap(const AMap: TOPPHelpMap);
@@ -318,7 +328,7 @@ begin
         updateForm(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
 
         fState.hintWasUpdated := true;
-        fState.checkAndRun(AMap.identifier);
+        fState.checkAndRun(AMap.ComponentIdentifier);
       end);
 
     helpShortcutServer.FindMap(oldIdentifier,
@@ -332,14 +342,13 @@ begin
         updateForm(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
 
         fState.shortcutWasUpdated := true;
-        fState.checkAndRun(AMap.identifier);
+        fState.checkAndRun(AMap.ComponentIdentifier);
       end);
 
   finally
     fState.Free;
   end;
 end;
-
 
 procedure TSampleForm.SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
 var
@@ -370,7 +379,7 @@ begin
         helpHintServer.SaveMaps('');
 
         fState.hintWasUpdated := true;
-        fState.checkAndRun(AMap.identifier);
+        fState.checkAndRun(AMap.ComponentIdentifier);
       end);
 
     helpShortcutServer.FindMap(oldIdentifier,
@@ -385,7 +394,7 @@ begin
         helpShortcutServer.SaveMaps('');
 
         fState.shortcutWasUpdated := true;
-        fState.checkAndRun(AMap.identifier);
+        fState.checkAndRun(AMap.ComponentIdentifier);
       end);
 
   finally
@@ -446,9 +455,6 @@ var
   newGUID: TGUID;
   fState: TSampleFormSaveState;
 begin
-
-  // self.isModified := true;
-
   fState := TSampleFormSaveState.Create;
   try
     fState.shortcutWasUpdated := false;
@@ -457,6 +463,7 @@ begin
       var
         Item: TListItem;
       begin
+
         Item := cxListView1.Items.Add;
         Item.Caption := ANewIdentifier;
 
@@ -464,6 +471,12 @@ begin
         cxEditIdentifierName.SetFocus;
         cxEditIdentifierName.SelectAll;
 
+        SaveChanges(fSelectedItem,
+          procedure(ANewIdentifier: String)
+          begin
+            self.isModified := false;
+            cxListView1.Selected.Caption := ANewIdentifier;
+          end);
       end;
 
     CreateGUID(newGUID);
@@ -626,7 +639,7 @@ begin
       for Map in AList do
       begin
         // pmap := POPPHelpMap(@Map);
-        cxListView1.AddItem(Map.identifier, nil);
+        cxListView1.AddItem(Map.ComponentIdentifier, nil);
       end;
 
       if assigned(completion) then
@@ -798,7 +811,7 @@ begin
         helpHintServer.SaveMaps('');
 
         fState.hintWasUpdated := true;
-        fState.checkAndRun(AMap.identifier);
+        fState.checkAndRun(AMap.ComponentIdentifier);
       end);
 
     helpShortcutServer.FindMap(oldIdentifier,
@@ -809,7 +822,7 @@ begin
         helpShortcutServer.SaveMaps('');
 
         fState.shortcutWasUpdated := true;
-        fState.checkAndRun(AMap.identifier);
+        fState.checkAndRun(AMap.ComponentIdentifier);
       end);
 
   finally
@@ -829,7 +842,7 @@ begin
   end;
 
   try
-    newIdentifier.Text := AMap.identifier;
+    newIdentifier.Text := AMap.ComponentIdentifier;
     fPredicate := AMap.Predicate;
     if not assigned(fPredicate) then
     begin
@@ -865,7 +878,7 @@ begin
   if not assigned(AMap) then
     exit;
 
-  AMap.identifier := newIdentifier.Text;
+  AMap.ComponentIdentifier := newIdentifier.Text;
   fPredicate := AMap.Predicate;
   if assigned(fPredicate) then
   begin

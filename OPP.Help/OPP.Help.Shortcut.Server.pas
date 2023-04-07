@@ -152,7 +152,7 @@ begin
     begin
       if fMap = nil then
         continue;
-      if fMap.identifier = AIdentifier then
+      if fMap.ComponentIdentifier = AIdentifier then
         itemsToRemove.Add(fMap);
     end;
 
@@ -187,7 +187,7 @@ begin
       continue;
     if not Assigned(fMap) then
       continue;
-    if fMap.identifier = AIdentifier then
+    if fMap.ComponentIdentifier = AIdentifier then
     begin
       result := fMap;
       break;
@@ -233,6 +233,7 @@ end;
 procedure TOPPHelpShortcutServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 var
   fHelpMap: TOPPHelpMap;
+  fID: String;
 begin
   if not Assigned(completion) then
   begin
@@ -240,7 +241,9 @@ begin
     exit;
   end;
 
-  fHelpMap := TOPPHelpMap.Create(GUIDToString(newGUID));
+  fID := GUIDToString(newGUID);
+  eventLogger.Flow(Format('Created shortcut map: %s',[fID]));
+  fHelpMap := TOPPHelpMap.Create(fID);
   try
     fShortcutDataset.AddMap(fHelpMap);
     completion(fHelpMap);
