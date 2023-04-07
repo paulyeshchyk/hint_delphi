@@ -243,7 +243,7 @@ begin
   end;
 
   fID := GUIDToString(newGUID);
-  eventLogger.Flow(Format('Created shortcut map: %s', [fID]),'OPPHelpShortcutServer');
+  eventLogger.Flow(Format('Created shortcut map: %s', [fID]), 'OPPHelpShortcutServer');
   fHelpMap := TOPPHelpMap.Create(fID);
   try
     fShortcutDataset.AddMap(fHelpMap);

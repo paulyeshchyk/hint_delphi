@@ -22,7 +22,7 @@ type
 implementation
 
 uses
-  OPP.Help.System.error,
+  OPP.Help.System.error, OPP.Help.Log,
 
   System.JSON, System.IOUtils,
   DBXJSONReflect, REST.JSON;
@@ -73,7 +73,24 @@ end;
 class procedure TOPPHelpHintMapFileReader.readJSON(AFileName: String; callback: TOPPHelpHintMapJSONReadCallback);
 var
   bytes: System.TArray<System.Byte>;
+  error: Exception;
 begin
+
+  if not FileExists(AFileName) then
+  begin
+    error := Exception.Create(Format('File not found: %s', [AFileName]));
+    try
+      if assigned(callback) then
+        callback(nil, error)
+      else
+        error.Log();
+    finally
+      error.Free;
+    end;
+
+    exit;
+  end;
+
   try
     try
       bytes := TFile.ReadAllBytes(AFileName);
@@ -111,12 +128,12 @@ begin
       begin
         result := -1;
         if assigned(callback) then
-          callback(e);
+          callback(E);
         E.Log;
       end;
     end;
   finally
-    jsonObj.free;
+    jsonObj.Free;
     FreeAndNil(serializer);
   end;
 end;

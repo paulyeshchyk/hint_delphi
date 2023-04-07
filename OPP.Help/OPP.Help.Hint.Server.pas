@@ -84,6 +84,8 @@ type
     procedure removeHint(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
 
+    procedure validate(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
+
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -127,6 +129,7 @@ type
     procedure loadPredicatesDataset(AClientDataSet: TClientDataset; ARecordId: String);
 
     function addHintMap(AMap: TOPPHelpMap): Boolean;
+    procedure validate(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
 
     property loaded: Boolean read fLoaded;
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
@@ -186,6 +189,32 @@ destructor TOPPHelpHintServer.Destroy;
 begin
   fHintDataReaders := nil;
   inherited Destroy;
+end;
+
+procedure TOPPHelpHintServer.validate(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
+var
+  result: Boolean;
+begin
+  if not Assigned(completion) then
+    exit;
+
+  if length(ANewIdentifier) = 0 then begin
+    completion(false);
+    exit;
+  end;
+
+  if AIdentificator = ANewIdentifier then
+  begin
+    completion(true);
+    exit;
+  end;
+
+  self.FindMap(ANewIdentifier,
+    procedure(const AMap: TOPPHelpMap)
+    begin
+      completion(AMap = nil);
+    end);
+
 end;
 
 procedure TOPPHelpHintServer.AvailableMaps(completion: TOPPHelpMapsCompletion);
@@ -296,13 +325,6 @@ var
   fOPPHelpHintMapJSONReadCallback: TOPPHelpHintMapJSONReadCallback;
 begin
 
-  if not FileExists(filename) then
-  begin
-    eventLogger.Error('configs filename is not defined');
-    exit;
-  end;
-
-  eventLogger.Debug(Format('start load config from %s', [filename]));
   if fLoaded then
   begin
     exit;
@@ -311,14 +333,15 @@ begin
   fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpMap>; Error: Exception)
     begin
 
-      self.fLoaded := true;
-
       if Assigned(Error) then
       begin
         Error.Log();
         exit;
       end;
-      eventLogger.Debug(Format('finish load config; added [%d] maps', [AList.Count]));
+
+      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [AList.Count]), 'OPPHelpHint');
+
+      self.fLoaded := true;
       fHintMapSet.AddMaps(AList);
     end;
 
@@ -471,7 +494,7 @@ var
   fFactory: IOPPHelpMetaFactory;
 begin
 
-  eventLogger.Debug(Format('Loading hints for [%s]', [ARequest.Control.ClassName]));
+  eventLogger.Flow(Format('Load hints started for [%s]', [ARequest.Control.ClassName]), 'OPPHelpHint');
 
   self.reloadConfigurationIfNeed(ARequest.MappingFileName);
   if not fLoaded then
@@ -484,6 +507,8 @@ begin
   if not Assigned(ARequest.OnGetHintFactory) then
   begin
     eventLogger.Error('GetHints - OnGetHintFactory is not defined');
+    if Assigned(completion) then
+      completion(nil);
     exit;
   end;
 
@@ -500,6 +525,8 @@ begin
     fMetaIdentifier := fChildHelpMeta.Identifier;
     self.findOrCreateReader(fMetaIdentifier);
   end;
+
+  eventLogger.Flow(Format('Will create hints for [%s]', [ARequest.Control.ClassName]), 'OPPHelpHint');
 
   self.GetHints(ARequest, fChildrenHelpMetaList, completion);
 end;

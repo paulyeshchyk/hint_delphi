@@ -4,6 +4,7 @@ interface
 
 uses
   System.Generics.Collections,
+  System.SysUtils,
   OPP.Help.Map;
 
 type
@@ -14,7 +15,7 @@ type
     fShortcutHelpMatrix: TOPPHelpShortcutDatasetType;
     function GetList: TList<TOPPHelpMap>;
     procedure Merge(AList: TList<TOPPHelpMap>);
-    procedure SetNewList(AList: TList<TOPPHelpMap>);
+    procedure SetNewList(AList: TList<TOPPHelpMap>; error: Exception);
   public
     constructor Create;
     destructor Destroy; override;
@@ -28,7 +29,7 @@ type
 implementation
 
 uses
-  System.SysUtils, Winapi.Windows,
+  Winapi.Windows,
   OPP.Help.Log,
   OPP.Help.System.Error,
   OPP.Help.Shortcut.Mapping.Filereader;
@@ -50,8 +51,11 @@ begin
   result := 0;
 end;
 
-procedure TOPPHelpShortcutDataset.SetNewList(AList: TList<TOPPHelpMap>);
+procedure TOPPHelpShortcutDataset.SetNewList(AList: TList<TOPPHelpMap>; Error: Exception);
 begin
+  if assigned(error) then
+    error.Log();
+
   fShortcutHelpMatrix.Clear;
   self.Merge(AList);
 end;

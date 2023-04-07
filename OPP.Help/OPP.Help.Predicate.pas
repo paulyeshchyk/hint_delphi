@@ -8,6 +8,7 @@ uses
   OPP.Help.Nonatomic;
 
 type
+
   TOPPHelpPredicate = class(TObject)
   private
     fValue: String;
@@ -18,10 +19,11 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+
     function copy(): TOPPHelpPredicate;
     property value: String read fValue write SetValue;
     property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
-    property fileName: String read fFileName write fFileName;
+    property filename: String read fFileName write fFileName;
     property predicates: TList<TOPPHelpPredicate> read fPredicates;
   end;
 
@@ -31,6 +33,7 @@ type
   end;
 
 implementation
+
 uses
   System.SysUtils;
 
@@ -45,7 +48,7 @@ begin
 
   AStream.WriteString(self.value);
   AStream.WriteInteger(Integer(self.keywordType));
-  AStream.WriteString(self.fileName);
+  AStream.WriteString(self.filename);
   cnt := self.predicates.Count;
   AStream.WriteInteger(cnt);
 
@@ -74,7 +77,7 @@ begin
 
   self.value := AStream.ReadString;
   self.keywordType := TOPPKeywordType(AStream.ReadInteger);
-  self.fileName := AStream.ReadString;
+  self.filename := AStream.ReadString;
   cnt := AStream.ReadInteger;
   for i := 0 to cnt - 1 do
   begin
@@ -106,7 +109,7 @@ begin
 
   result.value := self.value;
   result.keywordType := self.keywordType;
-  result.fileName := self.fileName;
+  result.filename := self.filename;
   for fChild in self.predicates do
   begin
     fNewChild := fChild.copy();

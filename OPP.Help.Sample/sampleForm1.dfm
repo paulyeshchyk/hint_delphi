@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 530
+  ClientHeight = 490
   ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,7 +25,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 763
-    Height = 530
+    Height = 490
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -36,7 +36,7 @@ object SampleForm: TSampleForm
     object Splitter1: TSplitter
       Left = 265
       Top = 0
-      Height = 530
+      Height = 490
       ExplicitLeft = 384
       ExplicitTop = 208
       ExplicitHeight = 100
@@ -45,7 +45,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 265
-      Height = 530
+      Height = 490
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'panelList'
@@ -61,7 +61,7 @@ object SampleForm: TSampleForm
         Left = 3
         Top = 31
         Width = 259
-        Height = 496
+        Height = 456
         Align = alClient
         ColumnClick = False
         Columns = <
@@ -88,7 +88,7 @@ object SampleForm: TSampleForm
       Left = 268
       Top = 0
       Width = 495
-      Height = 530
+      Height = 490
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -97,7 +97,7 @@ object SampleForm: TSampleForm
         Left = 3
         Top = 104
         Width = 489
-        Height = 423
+        Height = 383
         ActivePage = TabSheet1
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
@@ -114,7 +114,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 481
-            Height = 392
+            Height = 352
             Align = alClient
             BevelOuter = bvNone
             Font.Charset = DEFAULT_CHARSET
@@ -205,7 +205,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 481
-            Height = 392
+            Height = 352
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
@@ -213,7 +213,7 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 0
               Width = 481
-              Height = 392
+              Height = 352
               Align = alClient
               BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
@@ -321,6 +321,9 @@ object SampleForm: TSampleForm
         object cxEditIdentifierName: TcxTextEdit
           Left = 16
           Top = 40
+          ParentShowHint = False
+          Properties.OnChange = cxEditIdentifierNamePropertiesChange
+          ShowHint = True
           TabOrder = 1
           OnEditing = onControlEditing
           Width = 441
@@ -396,10 +399,9 @@ object SampleForm: TSampleForm
       True)
     MenusShowRecentItemsFirst = False
     PopupMenuLinks = <>
-    ShowHint = False
     UseSystemFont = True
-    Left = 299
-    Top = 313
+    Left = 195
+    Top = 41
     PixelsPerInch = 96
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
@@ -669,6 +671,12 @@ object SampleForm: TSampleForm
       Hint = 'GUID'
       Visible = ivAlways
     end
+    object dxBarButton10: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
   end
   object ActionList1: TActionList
     Left = 24
@@ -712,5 +720,16 @@ object SampleForm: TSampleForm
       Caption = 'actionUndo'
       OnExecute = actionUndoExecute
     end
+  end
+  object JvChangeNotify1: TJvChangeNotify
+    Active = True
+    Notifications = <
+      item
+        Directory = 'D:\projects\ascon\gulfstream\Compiled\Executable\help\mapping'
+        Actions = [caChangeFileName]
+      end>
+    OnChangeNotify = JvChangeNotify1ChangeNotify
+    Left = 152
+    Top = 360
   end
 end

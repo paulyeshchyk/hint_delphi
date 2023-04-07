@@ -37,7 +37,7 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxContainer, Vcl.Menus, cxButtons,
   cxMemo, cxMaskEdit, cxDropDownEdit, cxTextEdit, cxLabel, cxButtonEdit, Vcl.ExtDlgs, Vcl.Buttons, cxListView,
-  System.Actions, Vcl.ActnList, Vcl.StdActns;
+  System.Actions, Vcl.ActnList, Vcl.StdActns, JvComponentBase, JvChangeNotify;
 
 type
 
@@ -130,6 +130,8 @@ type
     dxBarButton8: TdxBarButton;
     actionUndo: TAction;
     dxBarButton9: TdxBarButton;
+    JvChangeNotify1: TJvChangeNotify;
+    dxBarButton10: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -151,6 +153,8 @@ type
     procedure actionPreviewExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actionUndoExecute(Sender: TObject);
+    procedure JvChangeNotify1ChangeNotify(Sender: TObject; Dir: string; Actions: TJvChangeActions);
+    procedure cxEditIdentifierNamePropertiesChange(Sender: TObject);
   private
     fSelectedItem: String;
     fSelectedHintMap: TOPPHelpMap;
@@ -213,27 +217,22 @@ uses
   FormTest01,
   FormTest02,
   FormTest03,
-  sampleFormHelper,
-  OPP.Help.Log,
-  OPP.Help.Controls.Styler,
-  OPP.Help.Hint.Server,
-
-  OPP.Help.System.Str,
-  OPP.Help.Shortcut.Request,
-  // OPP.Help.View.FullScreen,
   OPP.Help.Component.Enumerator,
-  SampleOnly.Help.Meta.Factory,
+  OPP.Help.Controls.Styler,
   OPP.Help.Hint.Reader,
+  OPP.Help.Hint.Server,
   OPP.Help.Interfaces,
-  OPP.Help.System.AppExecutor,
-
-  SampleOnly.Help.Hint.Setup,
-  SampleOnly.Help.Shortcut.Setup,
-
+  OPP.Help.Log,
   OPP.Help.Map.Filereader,
+  OPP.Help.Shortcut.Request,
+  OPP.Help.System.AppExecutor,
   OPP.Help.System.Files,
-
-  OPP.Help.System.Hook.Keyboard;
+  OPP.Help.System.Hook.Keyboard,
+  OPP.Help.System.Str,
+  sampleFormHelper,
+  SampleOnly.Help.Hint.Setup,
+  SampleOnly.Help.Meta.Factory,
+  SampleOnly.Help.Shortcut.Setup;
 
 procedure TSampleFormSaveState.checkAndRun(AIdentifier: String);
 begin
@@ -281,14 +280,11 @@ begin
 end;
 
 procedure TSampleForm.onControlEditing(Sender: TObject; var CanEdit: Boolean);
-var
-  pos, fPoint: TPoint;
 begin
   if fCanChangeModificationFlag then
   begin
     self.isModified := true;
   end;
-  actionSave.Enabled := self.isModified and (not self.isDuplicatedIdentifier);
 end;
 
 procedure TSampleForm.setSelectedShortcutMap(const AMap: TOPPHelpMap);
@@ -426,6 +422,22 @@ begin
     begin
       cxEditHintPredicateFilename.Text := TOPPHelpSystemFilesHelper.RelativePath(OpenTextFileDialog1.filename);
     end;
+  end;
+end;
+
+procedure TSampleForm.cxEditIdentifierNamePropertiesChange(Sender: TObject);
+begin
+  if fCanChangeModificationFlag then
+  begin
+    helpHintServer.validate(fSelectedItem, cxEditIdentifierName.Text,
+      procedure(isValid: Boolean)
+      begin
+        if not isValid then
+        begin
+          actionSave.Enabled := false;
+          exit;
+        end;
+      end);
   end;
 end;
 
@@ -704,12 +716,15 @@ begin
   self.isModified := false;
 
   cxListView1.Columns[0].Width := cxListView1.Width - 10;
-  TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo, nil);
-  ReloadListView(
-    procedure
+  TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo,
+    procedure()
     begin
-      if cxListView1.Items.Count > 0 then
-        cxListView1.ItemIndex := 0;
+      ReloadListView(
+        procedure
+        begin
+          if cxListView1.Items.Count > 0 then
+            cxListView1.ItemIndex := 0;
+        end);
     end);
 end;
 
@@ -802,6 +817,11 @@ begin
 end;
 
 procedure TSampleForm.hintsPreviewPanelResize(Sender: TObject);
+begin
+  //
+end;
+
+procedure TSampleForm.JvChangeNotify1ChangeNotify(Sender: TObject; Dir: string; Actions: TJvChangeActions);
 begin
   //
 end;
@@ -946,7 +966,6 @@ var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
-  eventLogger.Debug(Format('will create screentips [%d]', [hints.Count]));
 
   for fHint in hints do
   begin

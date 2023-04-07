@@ -6,10 +6,11 @@ uses
   System.Generics.Collections,
   System.SysUtils,
   System.JSON, System.IOUtils,
+  OPP.Help.Log,
   OPP.Help.Map, OPP.Help.System.Error, OPP.Help.System.Files;
 
 type
-  TOPPHelpShortcutMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpMap>);
+  TOPPHelpShortcutMapJSONReadCallback = reference to procedure(AList: TList<TOPPHelpMap>; Error: Exception);
 
   TOPPHelpShortcutMapFileReader = class helper for TOPPHelpMap
   private
@@ -33,7 +34,7 @@ begin
   if not assigned(AJSON) then
   begin
     if assigned(callback) then
-      callback(nil);
+      callback(nil, Exception.Create('JSON is not assigned'));
     exit;
   end;
 
@@ -42,7 +43,7 @@ begin
     mapList := deSerializer.unmarshal(AJSON) as TOPPHelpMapSet;
     if assigned(callback) then
     begin
-      callback(mapList.list);
+      callback(mapList.list,nil);
     end;
     FreeAndNil(deSerializer);
   except
@@ -51,7 +52,7 @@ begin
       E.Log();
       if assigned(callback) then
       begin
-        callback(nil);
+        callback(nil, e);
       end;
     end;
   end;
@@ -71,7 +72,7 @@ begin
       E.Log();
       if assigned(callback) then
       begin
-        callback(nil);
+        callback(nil, e);
       end;
     end;
   end;
@@ -81,6 +82,13 @@ class procedure TOPPHelpShortcutMapFileReader.readJSON(AFileName: String; callba
 var
   bytes: System.TArray<System.Byte>;
 begin
+  if not FileExists(AFileName) then
+  begin
+    if assigned(callback) then
+      callback(nil, Exception.Create(Format('File not found: %s',[AFileName])));
+    exit;
+  end;
+
   try
     bytes := TFile.ReadAllBytes(AFileName);
     parseJSONBytes(bytes, true, callback);

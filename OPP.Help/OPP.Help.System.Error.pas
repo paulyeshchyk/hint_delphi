@@ -34,7 +34,7 @@ uses
 
 procedure ErrorHelper.Log(ADetails: String);
 begin
-  eventLogger.Error(Format('Error: %s (%s) - %s', [self.ClassName, self.message, ADetails]));
+  eventLogger.Error(Format('%s - %s', [self.message, ADetails]));
 end;
 
 constructor TOPPHelpShortcutDatasetError.Create(errorCode: Integer; errorMessage: String; errorClass: String);

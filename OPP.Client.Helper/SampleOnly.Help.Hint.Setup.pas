@@ -20,7 +20,7 @@ type
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
     class procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
   private
-    class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
+    class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
     class function OnGetHintFactory(): IOPPHelpMetaFactory;
   end;
 
@@ -45,17 +45,11 @@ begin
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
 
     try
-      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
-        begin
-          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
-        end;
-
+      fRequest.OnGetHintFactory := fMetaFactory.GetChildrenHelpMeta;
       helpHintServer.LoadHints(fRequest,
         procedure(hints: TList<TOPPHelpHint>)
         begin
-          TOPPClientHintHelper.CreateHintViews(AForm, hints, hintController, repo);
-          if assigned(completion) then
-            completion();
+          TOPPClientHintHelper.CreateHintViews(AForm, hints, hintController, repo, completion);
         end);
     finally
       fRequest.Free;
@@ -91,20 +85,20 @@ begin
   end;
 end;
 
-class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository);
+class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
 var
   fHint: TOPPHelpHint;
   fControl: TComponent;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
-  if not assigned(hints) then
+  if not assigned(hints) or (hints.Count = 0) then
   begin
-    eventLogger.Warning('hints are not defined');
+    eventLogger.Warning(Format('hints are not defined for %s',[AForm.classname]));
+    if assigned(completion) then
+      completion();
     exit;
   end;
-
-  eventLogger.Debug(Format('will create screentips [%d]', [hints.Count]));
 
   for fHint in hints do
   begin
@@ -127,8 +121,10 @@ begin
     fScreenTipLink := TdxScreenTipStyle(hintController.HintStyle).ScreenTipLinks.Add;
     fScreenTipLink.ScreenTip := fScreenTip;
     fScreenTipLink.control := TControl(fControl);
-
   end;
+
+  if assigned(completion) then
+    completion();
 end;
 
 class procedure TOPPClientHintHelper.AvailableMaps(completion: TOPPHelpMapsCompletion);
