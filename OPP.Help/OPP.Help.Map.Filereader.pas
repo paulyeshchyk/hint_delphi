@@ -5,7 +5,7 @@ interface
 uses
   System.Generics.Collections,
   System.SysUtils,
-
+  OPP.Help.Nonatomic,
   OPP.Help.Map;
 
 type
@@ -16,7 +16,7 @@ type
     class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpHintMapJSONReadCallback = nil);
   public
     class procedure readJSON(AFileName: String; callback: TOPPHelpHintMapJSONReadCallback);
-    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
 implementation
@@ -89,7 +89,7 @@ begin
   end;
 end;
 
-class function TOPPHelpHintMapFileReader.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+class function TOPPHelpHintMapFileReader.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -97,7 +97,6 @@ var
 begin
   result := 0;
 
-  //
   serializer := TJSONMarshal.Create;
 
   jsonObj := serializer.marshal(TOPPHelpMapSet.Create(AList)) as TJSONObject;
@@ -105,10 +104,14 @@ begin
     jsonString := TJson.JsonEncode(jsonObj);
     try
       TFile.WriteAllText(AFileName, jsonString);
+      if assigned(callback) then
+        callback(nil);
     except
       on E: Exception do
       begin
         result := -1;
+        if assigned(callback) then
+          callback(e);
         E.Log;
       end;
     end;

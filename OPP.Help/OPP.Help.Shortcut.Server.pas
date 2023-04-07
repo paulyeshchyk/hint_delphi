@@ -37,13 +37,13 @@ type
     procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
-    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
     procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 
-    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
+    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
-    function SaveMaps(AFileName: String): Integer;
+    function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
     procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
   end;
 
@@ -68,11 +68,11 @@ type
     procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure FindMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 
-    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
+    function removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
-    function SaveMaps(AFileName: String = ''): Integer;
-    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+    function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 
     procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
 
@@ -138,7 +138,7 @@ begin
   inherited Destroy;
 end;
 
-function TOPPHelpShortcutServer.removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType): Integer;
+function TOPPHelpShortcutServer.removeShortcut(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 var
   itemsToRemove: TList<TOPPHelpMap>;
   fMap: TOPPHelpMap;
@@ -160,12 +160,13 @@ begin
     begin
       if fMap = nil then
         continue;
+      eventLogger.Flow(Format('Removed record: [%s]', [fMap.Identifier]), 'OPPHelpShortcutServer');
       fShortcutDataset.list.Remove(fMap);
     end;
 
   finally
     itemsToRemove.Free;
-    result := self.SaveMaps();
+    result := self.SaveMaps('', callback);
   end;
 
 end;
@@ -242,7 +243,7 @@ begin
   end;
 
   fID := GUIDToString(newGUID);
-  eventLogger.Flow(Format('Created shortcut map: %s',[fID]));
+  eventLogger.Flow(Format('Created shortcut map: %s', [fID]),'OPPHelpShortcutServer');
   fHelpMap := TOPPHelpMap.Create(fID);
   try
     fShortcutDataset.AddMap(fHelpMap);
@@ -277,7 +278,7 @@ begin
     exit;
   end;
 
-  eventLogger.Flow(Format('Will show help for %s::%s', [ARequest.ActiveControl.classname, ARequest.ActiveControl.name]), 'Shortcut');
+  eventLogger.Flow(Format('Will show help for %s::%s', [ARequest.ActiveControl.classname, ARequest.ActiveControl.name]), 'OPPHelpShortcutServer');
 
   fShortcutIdentifier := fOnGetIdentifier(ARequest.ActiveControl);
 
@@ -395,12 +396,12 @@ begin
   end;
 end;
 
-function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String): Integer;
+function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 begin
-  result := TOPPHelpMap.saveJSON(AList, AFileName);
+  result := TOPPHelpMap.saveJSON(AList, AFileName, callback);
 end;
 
-function TOPPHelpShortcutServer.SaveMaps(AFileName: String = ''): Integer;
+function TOPPHelpShortcutServer.SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   fFileName: String;
   fFileNameFullPath: String;
@@ -410,9 +411,11 @@ begin
   else
     fFileName := AFileName;
 
+  eventLogger.Flow(Format('Did saved maps in %s', [fFileName]), 'OPPHelpShortcutServer');
+
   fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
 
-  result := SaveCustomList(fShortcutDataset.list, fFileNameFullPath);
+  result := SaveCustomList(fShortcutDataset.list, fFileNameFullPath, callback);
 end;
 
 procedure TOPPHelpShortcutServer.setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);

@@ -5,12 +5,14 @@ interface
 uses
   system.classes,
   WinAPI.Messages,
+  OPP.Help.Nonatomic,
   Vcl.Controls, Vcl.Dialogs;
+
 type
   TOPPClientHelpShortcutHelper = class
   public
     class procedure showHelp(AMessage: TWMHelp);
-    class function SaveMaps(AFileName: String = ''): Integer;
+    class function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
 implementation
@@ -30,23 +32,22 @@ uses
 
   OPP.Help.Log;
 
-
 class procedure TOPPClientHelpShortcutHelper.showHelp(AMessage: TWMHelp);
 var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, AMessage);
-  helpShortcutServer.showHelp(fShortcutRequest, vmExternal, procedure(completionResult: TOPPHelpShortcutPresentingResult)
+  helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
+    procedure(completionResult: TOPPHelpShortcutPresentingResult)
     begin
       if completionResult = prFail then
         ShowMessage('Nothing to show');
-    end
-  );
+    end);
 end;
 
-class function TOPPClientHelpShortcutHelper.SaveMaps(AFileName: String = ''): Integer;
+class function TOPPClientHelpShortcutHelper.SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 begin
-  result := helpShortcutServer.SaveMaps(AFileName);
+  result := helpShortcutServer.SaveMaps(AFileName, callback);
 end;
 
 function GetWinControlHelpKeyword(AControl: TControl): String;

@@ -39,8 +39,7 @@ uses
   OPP.Help.Predicate,
   OPP.Help.Map, OPP.Help.Map.Filereader,
 
-  OPP.Help.Hint.Server
-  ;
+  OPP.Help.Hint.Server;
 
 class procedure TSampleFormHelper.openInternalHelp;
 // var
@@ -177,14 +176,18 @@ begin
     fPredicate.value := 'Lorem ipsum';
     fChild := TOPPHelpPredicate.Create;
     fChild.value := 'Lorem ipsum dolor sit';
-    fPredicate.predicates.add(fChild);
+    fPredicate.predicates.Add(fChild);
     try
 
       fMap := TOPPHelpMap.Create;
       try
         fMap.Predicate := fPredicate;
-        fList.add(fMap);
-        TOPPHelpMap.saveJSON(fList, '.\help\tests\predicates.json');
+        fList.Add(fMap);
+        TOPPHelpMap.saveJSON(fList, '.\help\tests\predicates.json',
+          procedure(AError: Exception)
+          begin
+          //
+          end);
       finally
         fMap.Free;
       end;
@@ -199,8 +202,9 @@ end;
 
 class procedure TSampleFormHelper.makePredicatesDataset(ADataset: TClientDataSet);
 begin
-  if not assigned(ADataset) then begin
-    eventLogger.Error('Dataset is not assigned');
+  if not assigned(ADataset) then
+  begin
+    eventLogger.error('Dataset is not assigned');
   end;
 
   helpHintServer.makePredicatesDataset(ADataset);
@@ -209,8 +213,9 @@ end;
 
 class procedure TSampleFormHelper.makeRecordsDataset(ADataset: TClientDataSet);
 begin
-  if not assigned(ADataset) then begin
-    eventLogger.Error('Dataset is not assigned');
+  if not assigned(ADataset) then
+  begin
+    eventLogger.error('Dataset is not assigned');
   end;
 
   helpHintServer.makeRecordsDataset(ADataset);
@@ -219,8 +224,9 @@ end;
 
 class procedure TSampleFormHelper.loadPredicatesDataset(ADataset: TClientDataSet; ARecordID: String);
 begin
-  if not assigned(ADataset) then begin
-    eventLogger.Error('Dataset is not assigned');
+  if not assigned(ADataset) then
+  begin
+    eventLogger.error('Dataset is not assigned');
   end;
 
   helpHintServer.loadPredicatesDataset(ADataset, ARecordID);

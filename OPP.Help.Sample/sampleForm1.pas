@@ -362,8 +362,11 @@ begin
 
   if Length(oldIdentifier) = 0 then
   begin
+    eventLogger.Error('[SampleForm] Cant save map, id is empty');
     exit;
   end;
+
+  eventLogger.Flow('Will save map', 'SampleForm');
 
   fState := TSampleFormSaveState.Create;
   try
@@ -374,27 +377,38 @@ begin
     helpHintServer.FindMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
+        fState.hintWasUpdated := true;
+        if not assigned(AMap) then
+        begin
+          eventLogger.Error('[SampleForm]: FindMap for hint returns nil map');
+          exit;
+        end;
 
         updateMap(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
-        helpHintServer.SaveMaps('');
-
-        fState.hintWasUpdated := true;
-        fState.checkAndRun(AMap.ComponentIdentifier);
+        helpHintServer.SaveMaps('',
+          procedure(AError: Exception)
+          begin
+            eventLogger.Flow('Did saved hint', 'SampleForm');
+            fState.checkAndRun(AMap.ComponentIdentifier);
+          end);
       end);
 
     helpShortcutServer.FindMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
+        fState.shortcutWasUpdated := true;
         if not assigned(AMap) then
         begin
-          eventLogger.Error('FindMap returns nil map');
+          eventLogger.Error('[SampleForm]: FindMap for shortcut returns nil map');
           exit;
         end;
         updateMap(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
-        helpShortcutServer.SaveMaps('');
-
-        fState.shortcutWasUpdated := true;
-        fState.checkAndRun(AMap.ComponentIdentifier);
+        helpShortcutServer.SaveMaps('',
+          procedure(AError: Exception)
+          begin
+            eventLogger.Flow('Did saved shortcut', 'SampleForm');
+            fState.checkAndRun(AMap.ComponentIdentifier);
+          end);
       end);
 
   finally
@@ -430,23 +444,50 @@ begin
 end;
 
 procedure TSampleForm.actionDeleteRecordExecute(Sender: TObject);
+var
+  fState: TSampleFormSaveState;
 begin
 
   self.isModified := false;
-
   if not assigned(cxListView1.Selected) then
   begin
-    eventLogger.Warning('going to delete nil item');
+    eventLogger.Warning('Will not delete anything, because  listview has no selected item');
     exit;
   end;
-  helpHintServer.removeHint(cxListView1.Selected.Caption);
-  helpShortcutServer.removeShortcut(cxListView1.Selected.Caption);
-  ReloadListView(
-    procedure
-    begin
-      if cxListView1.Items.Count > 0 then
-        cxListView1.ItemIndex := 0;
-    end);
+
+  fState := TSampleFormSaveState.Create;
+  try
+    fState.completion := procedure(AIdentifier: String)
+      begin
+        eventLogger.Flow('Did removed record', 'SampleForm');
+        ReloadListView(
+          procedure
+          begin
+            if cxListView1.Items.Count > 0 then
+              cxListView1.ItemIndex := 0;
+          end);
+      end;
+    fState.shortcutWasUpdated := false;
+    fState.hintWasUpdated := false;
+
+    helpHintServer.removeHint(cxListView1.Selected.Caption,
+      procedure(AError: Exception)
+      begin
+        eventLogger.Flow('Did removed hint', 'SampleForm');
+        fState.hintWasUpdated := true;
+        fState.checkAndRun('')
+      end);
+    helpShortcutServer.removeShortcut(cxListView1.Selected.Caption,
+      procedure(AError: Exception)
+      begin
+        eventLogger.Flow('Did removed shortcut', 'SampleForm');
+        fState.shortcutWasUpdated := true;
+        fState.checkAndRun('')
+      end);
+
+  finally
+    fState.Free;
+  end;
 
 end;
 
@@ -471,11 +512,11 @@ begin
         cxEditIdentifierName.SetFocus;
         cxEditIdentifierName.SelectAll;
 
-        SaveChanges(fSelectedItem,
+        self.SaveChanges(self.fSelectedItem,
           procedure(ANewIdentifier: String)
           begin
             self.isModified := false;
-            cxListView1.Selected.Caption := ANewIdentifier;
+            self.changeSelection(ANewIdentifier);
           end);
       end;
 
@@ -638,7 +679,6 @@ begin
 
       for Map in AList do
       begin
-        // pmap := POPPHelpMap(@Map);
         cxListView1.AddItem(Map.ComponentIdentifier, nil);
       end;
 
@@ -806,23 +846,25 @@ begin
     helpHintServer.FindMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
-
         updateMap(AMap, newIdentifier, filename, keyword, value, detailskeyword, detailsvalue);
-        helpHintServer.SaveMaps('');
-
-        fState.hintWasUpdated := true;
-        fState.checkAndRun(AMap.ComponentIdentifier);
+        helpHintServer.SaveMaps('',
+          procedure(AError: Exception)
+          begin
+            fState.hintWasUpdated := true;
+            fState.checkAndRun(AMap.ComponentIdentifier);
+          end);
       end);
 
     helpShortcutServer.FindMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
-
         updateMap(AMap, newIdentifier, filename, keyword, value, detailskeyword, detailsvalue);
-        helpShortcutServer.SaveMaps('');
-
-        fState.shortcutWasUpdated := true;
-        fState.checkAndRun(AMap.ComponentIdentifier);
+        helpShortcutServer.SaveMaps('',
+          procedure(AError: Exception)
+          begin
+            fState.shortcutWasUpdated := true;
+            fState.checkAndRun(AMap.ComponentIdentifier);
+          end);
       end);
 
   finally

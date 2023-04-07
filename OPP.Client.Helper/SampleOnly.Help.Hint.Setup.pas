@@ -13,6 +13,7 @@ uses
 
 type
   TOPPClientHintHelperLoadCompletion = reference to procedure();
+
   TOPPClientHintHelper = class
   public
     class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
@@ -28,7 +29,6 @@ implementation
 uses
   OPP.Help.Log,
   OPP.Help.Component.Enumerator,
-
 
   SampleOnly.Help.Meta.Factory;
 

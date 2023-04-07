@@ -36,14 +36,14 @@ begin
   begin
     fChild := self.Components[i];
 
-    //eventLogger.Debug(Format('Enumerator: enumerating [%s]', [fChild.ClassName]));
+    // eventLogger.Debug(Format('Enumerator: enumerating [%s]', [fChild.ClassName]));
 
     if assigned(AComparator) then
     begin
       fComparatorResult := AComparator(fChild);
       if fComparatorResult = true then
       begin
-        //eventLogger.Debug(Format('Enumerator: adding [%s]', [fChild.ClassName]));
+        // eventLogger.Debug(Format('Enumerator: adding [%s]', [fChild.ClassName]));
         result.Add(fChild);
         if assigned(ACompletion) then
           ACompletion(fChild);
@@ -53,7 +53,7 @@ begin
       result.AddRange(fChild.GetChildrenRecursive(AComparator, ACompletion));
 
     end else begin
-      //eventLogger.Debug(Format('Enumerator: adding [%s]', [fChild.ClassName]));
+      // eventLogger.Debug(Format('Enumerator: adding [%s]', [fChild.ClassName]));
       result.Add(fChild);
       if assigned(ACompletion) then
         ACompletion(fChild);
@@ -111,7 +111,7 @@ begin
 
   for child in fChildren do
   begin
-    //eventLogger.Debug(Format('Enumerator: Form [%s] Iterating over component [%s]', [self.ClassName, child.ClassName]));
+    // eventLogger.Debug(Format('Enumerator: Form [%s] Iterating over component [%s]', [self.ClassName, child.ClassName]));
 
     if child.isSupportingMeta(Meta) then
     begin
