@@ -38,7 +38,7 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxContainer, Vcl.Menus, cxButtons,
   cxMemo, cxMaskEdit, cxDropDownEdit, cxTextEdit, cxLabel, cxButtonEdit, Vcl.ExtDlgs, Vcl.Buttons, cxListView,
-  System.Actions, Vcl.ActnList, Vcl.StdActns, JvComponentBase, JvChangeNotify;
+  System.Actions, Vcl.ActnList, Vcl.StdActns;
 
 type
 
@@ -131,7 +131,6 @@ type
     dxBarButton8: TdxBarButton;
     actionUndo: TAction;
     dxBarButton9: TdxBarButton;
-    JvChangeNotify1: TJvChangeNotify;
     dxBarButton10: TdxBarButton;
     Panel1: TPanel;
     procedure FormCreate(Sender: TObject);

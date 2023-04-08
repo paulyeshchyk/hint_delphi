@@ -3,69 +3,78 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 450
-  ClientWidth = 763
+  ClientHeight = 900
+  ClientWidth = 1554
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -42
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
-  OldCreateOrder = True
   Position = poScreenCenter
-  Scaled = False
   Visible = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  PixelsPerInch = 96
-  TextHeight = 27
+  PixelsPerInch = 192
+  TextHeight = 51
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 763
-    Height = 450
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Width = 1554
+    Height = 900
+    Margins.Left = 12
+    Margins.Top = 12
+    Margins.Right = 12
+    Margins.Bottom = 12
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object Splitter1: TSplitter
-      Left = 265
+      Left = 530
       Top = 0
-      Height = 450
-      ExplicitLeft = 384
-      ExplicitTop = 208
-      ExplicitHeight = 100
+      Width = 6
+      Height = 900
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
     end
     object panelList: TPanel
       Left = 0
       Top = 0
-      Width = 265
-      Height = 450
+      Width = 530
+      Height = 900
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'panelList'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
+      Font.Height = -22
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 0
       object cxListView1: TcxListView
         AlignWithMargins = True
-        Left = 3
-        Top = 31
-        Width = 259
-        Height = 416
+        Left = 6
+        Top = 50
+        Width = 518
+        Height = 844
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         Align = alClient
         ColumnClick = False
         Columns = <
           item
+            Width = 100
           end>
         HideSelection = False
         ReadOnly = True
@@ -78,61 +87,92 @@ object SampleForm: TSampleForm
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
         Top = 0
-        Width = 265
-        Height = 28
+        Width = 530
+        Height = 44
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         Align = dalTop
         BarManager = dxBarManager1
       end
     end
     object panelAddBorder: TPanel
-      Left = 268
+      Left = 536
       Top = 0
-      Width = 495
-      Height = 450
+      Width = 1018
+      Height = 900
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       object PageControl1: TPageControl
         AlignWithMargins = True
-        Left = 3
-        Top = 104
-        Width = 489
-        Height = 343
+        Left = 6
+        Top = 200
+        Width = 1006
+        Height = 694
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         ActivePage = TabSheet2
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -22
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         Style = tsFlatButtons
         TabOrder = 0
+        ExplicitTop = 180
+        ExplicitWidth = 992
+        ExplicitHeight = 713
         object TabSheet1: TTabSheet
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
           Caption = #1055#1086#1084#1086#1097#1100
-          ExplicitHeight = 332
           object Panel5: TPanel
             Left = 0
             Top = 0
-            Width = 481
-            Height = 332
+            Width = 998
+            Height = 649
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
             Align = alClient
             BevelOuter = bvNone
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -11
+            Font.Height = -22
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
             TabOrder = 0
+            ExplicitHeight = 669
             object cxLabel6: TcxLabel
-              Left = 8
-              Top = 9
+              Left = 16
+              Top = 18
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Caption = #1048#1089#1090#1086#1095#1085#1080#1082
             end
             object ShortcutPredicateFilenameEdit: TcxButtonEdit
-              Left = 112
-              Top = 8
+              Left = 224
+              Top = 16
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Properties.Buttons = <
                 item
                   Default = True
@@ -142,139 +182,225 @@ object SampleForm: TSampleForm
               Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
               TabOrder = 1
               OnEditing = onControlEditing
-              Width = 337
+              Width = 674
             end
             object cxLabel7: TcxLabel
-              Left = 8
-              Top = 36
+              Left = 16
+              Top = 72
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
             end
             object ShortcutKeywordTypeComboBox: TcxComboBox
-              Left = 112
-              Top = 35
+              Left = 224
+              Top = 70
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               TabOrder = 3
               OnEditing = onControlEditing
-              Width = 169
+              Width = 338
             end
             object cxLabel8: TcxLabel
-              Left = 8
-              Top = 63
+              Left = 16
+              Top = 126
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
             end
             object ShortcutPredicateValueEdit: TcxTextEdit
-              Left = 112
-              Top = 62
+              Left = 224
+              Top = 124
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               TabOrder = 5
               OnEditing = onControlEditing
-              Width = 337
+              Width = 674
             end
             object cxLabel10: TcxLabel
-              Left = 8
-              Top = 126
+              Left = 16
+              Top = 252
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
             end
             object ShortcutDetailsKeywordTypeComboBox: TcxComboBox
-              Left = 112
-              Top = 125
+              Left = 224
+              Top = 250
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               TabOrder = 7
               OnEditing = onControlEditing
-              Width = 169
+              Width = 338
             end
             object cxLabel9: TcxLabel
-              Left = 8
-              Top = 153
+              Left = 16
+              Top = 306
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Caption = #1047#1085#1072#1095#1077#1085#1080#1077
             end
             object ShortcutDetailsPredicateValueEdit: TcxTextEdit
-              Left = 112
-              Top = 152
+              Left = 224
+              Top = 304
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               TabOrder = 9
               OnEditing = onControlEditing
-              Width = 337
+              Width = 674
             end
             object cxLabel13: TcxLabel
-              Left = 8
-              Top = 103
+              Left = 16
+              Top = 206
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
             end
           end
         end
         object TabSheet2: TTabSheet
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
           Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1080
           ImageIndex = 1
           object Panel4: TPanel
             Left = 0
             Top = 0
-            Width = 481
-            Height = 312
+            Width = 998
+            Height = 649
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitHeight = 669
             object Panel7: TPanel
               Left = 0
               Top = 0
-              Width = 481
-              Height = 312
+              Width = 998
+              Height = 649
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               Align = alClient
               BevelOuter = bvNone
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
-              Font.Height = -11
+              Font.Height = -22
               Font.Name = 'Tahoma'
               Font.Style = []
               ParentFont = False
               TabOrder = 0
+              ExplicitHeight = 669
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
-                Left = 112
-                Top = 125
+                Left = 224
+                Top = 250
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 TabOrder = 0
                 OnEditing = onControlEditing
-                Width = 169
+                Width = 338
               end
               object cxLabel12: TcxLabel
-                Left = 8
-                Top = 126
+                Left = 16
+                Top = 252
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
               end
               object cxTextEditHintDetailsPredicateValue: TcxTextEdit
-                Left = 112
-                Top = 152
+                Left = 224
+                Top = 304
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 TabOrder = 2
                 OnEditing = onControlEditing
-                Width = 337
+                Width = 674
               end
               object cxLabel11: TcxLabel
-                Left = 8
-                Top = 153
+                Left = 16
+                Top = 306
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 Caption = #1047#1085#1072#1095#1077#1085#1080#1077
               end
               object cxTextEditHintPredicateValue: TcxTextEdit
-                Left = 112
-                Top = 62
+                Left = 224
+                Top = 124
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 TabOrder = 4
                 OnEditing = onControlEditing
-                Width = 337
+                Width = 674
               end
               object cxLabel4: TcxLabel
-                Left = 8
-                Top = 63
+                Left = 16
+                Top = 126
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
               end
               object cxComboBoxHintKeywordType: TcxComboBox
-                Left = 112
-                Top = 35
+                Left = 224
+                Top = 70
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 TabOrder = 6
                 OnEditing = onControlEditing
-                Width = 169
+                Width = 338
               end
               object cxLabel3: TcxLabel
-                Left = 8
-                Top = 36
+                Left = 16
+                Top = 72
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
               end
               object cxEditHintPredicateFilename: TcxButtonEdit
-                Left = 112
-                Top = 8
+                Left = 224
+                Top = 16
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 Properties.Buttons = <
                   item
                     Default = True
@@ -284,16 +410,24 @@ object SampleForm: TSampleForm
                 Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
                 TabOrder = 8
                 OnEditing = onControlEditing
-                Width = 337
+                Width = 674
               end
               object cxLabel2: TcxLabel
-                Left = 8
-                Top = 9
+                Left = 16
+                Top = 18
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 Caption = #1048#1089#1090#1086#1095#1085#1080#1082
               end
               object cxLabel1: TcxLabel
-                Left = 8
-                Top = 103
+                Left = 16
+                Top = 206
+                Margins.Left = 6
+                Margins.Top = 6
+                Margins.Right = 6
+                Margins.Bottom = 6
                 Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
               end
             end
@@ -302,53 +436,74 @@ object SampleForm: TSampleForm
       end
       object Panel8: TPanel
         Left = 0
-        Top = 28
-        Width = 495
-        Height = 73
+        Top = 48
+        Width = 1018
+        Height = 146
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         Align = alTop
         BevelOuter = bvNone
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -22
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         TabOrder = 1
+        ExplicitTop = 28
         object cxLabel5: TcxLabel
-          Left = 16
-          Top = 16
+          Left = 32
+          Top = 32
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
           Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
         end
         object cxEditIdentifierName: TcxTextEdit
-          Left = 16
-          Top = 40
+          Left = 32
+          Top = 80
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
           ParentShowHint = False
           Properties.OnChange = cxEditIdentifierNamePropertiesChange
           ShowHint = True
           TabOrder = 1
           OnEditing = onControlEditing
-          Width = 441
+          Width = 882
         end
       end
       object dxBarDockControl2: TdxBarDockControl
         Left = 0
         Top = 0
-        Width = 495
-        Height = 28
+        Width = 1018
+        Height = 48
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         Align = dalTop
         BarManager = dxBarManager1
       end
     end
     object Panel1: TPanel
-      Left = 284
-      Top = 344
-      Width = 441
-      Height = 113
+      Left = 568
+      Top = 688
+      Width = 882
+      Height = 226
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
+      Font.Height = -22
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
@@ -366,7 +521,7 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 32
     Top = 216
-    PixelsPerInch = 96
+    PixelsPerInch = 192
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
@@ -404,7 +559,7 @@ object SampleForm: TSampleForm
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -24
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -418,7 +573,7 @@ object SampleForm: TSampleForm
     UseSystemFont = True
     Left = 195
     Top = 41
-    PixelsPerInch = 96
+    PixelsPerInch = 192
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
       AllowCustomizing = False
@@ -736,15 +891,5 @@ object SampleForm: TSampleForm
       Caption = 'actionUndo'
       OnExecute = actionUndoExecute
     end
-  end
-  object JvChangeNotify1: TJvChangeNotify
-    Active = True
-    Notifications = <
-      item
-        Directory = 'D:\projects\ascon\gulfstream\Compiled\Executable\help\mapping'
-        Actions = [caChangeFileName]
-      end>
-    Left = 152
-    Top = 360
   end
 end
