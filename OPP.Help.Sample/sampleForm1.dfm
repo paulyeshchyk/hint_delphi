@@ -83,6 +83,7 @@ object SampleForm: TSampleForm
         TabOrder = 0
         ViewStyle = vsReport
         OnSelectItem = cxListView1SelectItem
+        ExplicitHeight = 843
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
@@ -112,9 +113,9 @@ object SampleForm: TSampleForm
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
-        Top = 200
+        Top = 196
         Width = 1006
-        Height = 694
+        Height = 698
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -129,9 +130,8 @@ object SampleForm: TSampleForm
         ParentFont = False
         Style = tsFlatButtons
         TabOrder = 0
-        ExplicitTop = 180
         ExplicitWidth = 992
-        ExplicitHeight = 713
+        ExplicitHeight = 697
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -142,7 +142,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 998
-            Height = 649
+            Height = 653
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -156,7 +156,6 @@ object SampleForm: TSampleForm
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            ExplicitHeight = 669
             object cxLabel6: TcxLabel
               Left = 16
               Top = 18
@@ -180,8 +179,8 @@ object SampleForm: TSampleForm
                 end>
               Properties.ReadOnly = True
               Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 1
-              OnEditing = onControlEditing
               Width = 674
             end
             object cxLabel7: TcxLabel
@@ -200,8 +199,8 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 3
-              OnEditing = onControlEditing
               Width = 338
             end
             object cxLabel8: TcxLabel
@@ -220,8 +219,8 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 5
-              OnEditing = onControlEditing
               Width = 674
             end
             object cxLabel10: TcxLabel
@@ -240,8 +239,8 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 7
-              OnEditing = onControlEditing
               Width = 338
             end
             object cxLabel9: TcxLabel
@@ -260,8 +259,8 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 9
-              OnEditing = onControlEditing
               Width = 674
             end
             object cxLabel13: TcxLabel
@@ -286,7 +285,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 998
-            Height = 649
+            Height = 653
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -294,12 +293,13 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitHeight = 669
+            ExplicitWidth = 984
+            ExplicitHeight = 652
             object Panel7: TPanel
               Left = 0
               Top = 0
               Width = 998
-              Height = 649
+              Height = 653
               Margins.Left = 6
               Margins.Top = 6
               Margins.Right = 6
@@ -313,7 +313,8 @@ object SampleForm: TSampleForm
               Font.Style = []
               ParentFont = False
               TabOrder = 0
-              ExplicitHeight = 669
+              ExplicitWidth = 984
+              ExplicitHeight = 652
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 224
                 Top = 250
@@ -321,8 +322,8 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 0
-                OnEditing = onControlEditing
                 Width = 338
               end
               object cxLabel12: TcxLabel
@@ -341,8 +342,8 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 2
-                OnEditing = onControlEditing
                 Width = 674
               end
               object cxLabel11: TcxLabel
@@ -361,8 +362,8 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 4
-                OnEditing = onControlEditing
                 Width = 674
               end
               object cxLabel4: TcxLabel
@@ -381,8 +382,8 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 6
-                OnEditing = onControlEditing
                 Width = 338
               end
               object cxLabel3: TcxLabel
@@ -408,8 +409,8 @@ object SampleForm: TSampleForm
                   end>
                 Properties.ReadOnly = True
                 Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 8
-                OnEditing = onControlEditing
                 Width = 674
               end
               object cxLabel2: TcxLabel
@@ -436,7 +437,7 @@ object SampleForm: TSampleForm
       end
       object Panel8: TPanel
         Left = 0
-        Top = 48
+        Top = 44
         Width = 1018
         Height = 146
         Margins.Left = 6
@@ -452,7 +453,7 @@ object SampleForm: TSampleForm
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitTop = 28
+        ExplicitWidth = 1004
         object cxLabel5: TcxLabel
           Left = 32
           Top = 32
@@ -464,16 +465,15 @@ object SampleForm: TSampleForm
         end
         object cxEditIdentifierName: TcxTextEdit
           Left = 32
-          Top = 80
+          Top = 75
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
           ParentShowHint = False
-          Properties.OnChange = cxEditIdentifierNamePropertiesChange
+          Properties.OnChange = OnIdentificatorChanged
           ShowHint = True
           TabOrder = 1
-          OnEditing = onControlEditing
           Width = 882
         end
       end
@@ -481,7 +481,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 1018
-        Height = 48
+        Height = 44
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -515,22 +515,22 @@ object SampleForm: TSampleForm
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
     UseHintControlLookAndFeel = True
-    Left = 32
-    Top = 144
+    Left = 384
+    Top = 416
   end
   object tipsRepo: TdxScreenTipRepository
-    Left = 32
-    Top = 216
+    Left = 384
+    Top = 200
     PixelsPerInch = 192
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
-    Left = 105
-    Top = 32
+    Left = 73
+    Top = 336
   end
   object MainMenu1: TMainMenu
-    Left = 24
-    Top = 88
+    Left = 72
+    Top = 56
     object N1: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1086#1088
       object N2: TMenuItem
@@ -559,7 +559,7 @@ object SampleForm: TSampleForm
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -571,8 +571,8 @@ object SampleForm: TSampleForm
     MenusShowRecentItemsFirst = False
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 195
-    Top = 41
+    Left = 387
+    Top = 121
     PixelsPerInch = 192
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
@@ -850,8 +850,8 @@ object SampleForm: TSampleForm
     end
   end
   object ActionList1: TActionList
-    Left = 24
-    Top = 32
+    Left = 216
+    Top = 96
     object actionNewRecord: TAction
       Caption = #1057#1086#1079#1076#1072#1090#1100
       ShortCut = 16462

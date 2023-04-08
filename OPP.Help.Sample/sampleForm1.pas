@@ -141,7 +141,6 @@ type
     procedure N21Click(Sender: TObject);
     procedure N31Click(Sender: TObject);
     procedure cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
-    procedure onControlEditing(Sender: TObject; var CanEdit: Boolean);
     procedure previewHintButtonClick(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
@@ -152,14 +151,17 @@ type
     procedure actionPreviewExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actionUndoExecute(Sender: TObject);
-    procedure cxEditIdentifierNamePropertiesChange(Sender: TObject);
+    procedure OnEditValueChanged(Sender: TObject);
+    procedure OnIdentificatorChanged(Sender: TObject);
   private
     fSelectedItem: String;
     fSelectedHintMap: TOPPHelpMap;
     fSelectedShortcutMap: TOPPHelpMap;
     fIsModified: Boolean;
+    fIsIdentifierValid: Boolean;
     fCanChangeModificationFlag: Boolean;
     procedure setIsModified(AValue: Boolean);
+    procedure setIsIdentifierValid(AValue: Boolean);
 
     procedure changeSelection(ItemCaption: String);
     procedure DiscardChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -187,7 +189,9 @@ type
     procedure setSelectedShortcutMap(const AMap: TOPPHelpMap);
     property SelectedShortcutMap: TOPPHelpMap read fSelectedShortcutMap write setSelectedShortcutMap;
     property isModified: Boolean read fIsModified write setIsModified;
+    property isIdentifierValid: Boolean read fIsIdentifierValid write SetIsIdentifierValid;
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
+
   public
     { Public declarations }
   end;
@@ -254,23 +258,25 @@ begin
   completion(ItemToSelect, (result = mrYes));
 end;
 
+procedure TSampleForm.setIsIdentifierValid(AValue: Boolean);
+begin
+  fIsIdentifierValid := AValue;
+  actionSave.Enabled := fIsIdentifierValid;
+  if fIsIdentifierValid then
+    cxEditIdentifierName.Style.Color := clWindow
+  else
+    cxEditIdentifierName.Style.Color := clInfoBK;
+end;
+
 procedure TSampleForm.setIsModified(AValue: Boolean);
 begin
   fIsModified := AValue;
-  actionSave.Enabled := fIsModified;
+  actionSave.Enabled := fIsModified and fIsIdentifierValid;
   cxListView1.Enabled := not fIsModified;
   actionNewRecord.Enabled := not fIsModified;
   actionReload.Enabled := not fIsModified;
   actionPreview.Enabled := not fIsModified;
   actionUndo.Enabled := fIsModified;
-end;
-
-procedure TSampleForm.onControlEditing(Sender: TObject; var CanEdit: Boolean);
-begin
-  if fCanChangeModificationFlag then
-  begin
-    self.isModified := true;
-  end;
 end;
 
 procedure TSampleForm.setSelectedShortcutMap(const AMap: TOPPHelpMap);
@@ -411,22 +417,6 @@ begin
   end;
 end;
 
-procedure TSampleForm.cxEditIdentifierNamePropertiesChange(Sender: TObject);
-begin
-  if fCanChangeModificationFlag then
-  begin
-    helpHintServer.ValidateHelpMapIdentifier(fSelectedItem, cxEditIdentifierName.Text,
-      procedure(isValid: Boolean)
-      begin
-        if not isValid then
-        begin
-          actionSave.Enabled := false;
-          exit;
-        end;
-      end);
-  end;
-end;
-
 procedure TSampleForm.cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   OpenTextFileDialog1.InitialDir := ExtractFileDir(Application.ExeName);
@@ -554,19 +544,20 @@ begin
 end;
 
 procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
-var p:TPoint;
+var
+  p: TPoint;
   fHint: TOPPHelpHint;
 begin
   Panel1.ShowHint := true;
   Panel1.Hint := 'Test';
-  p:= Panel1.ClientOrigin;
+  p := Panel1.ClientOrigin;
 
   TOPPClientHintHelper.CreateHintView(fHint, Panel1, cxHintController, tipsRepo);
-//  TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
-//    procedure()
-//    begin
-//      cxHintController.ShowHint(p.x, p.Y, 'AAA', 'ZZZZZZZ');
-//    end);
+  // TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
+  // procedure()
+  // begin
+  // cxHintController.ShowHint(p.x, p.Y, 'AAA', 'ZZZZZZZ');
+  // end);
 end;
 
 procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);
@@ -744,7 +735,7 @@ begin
     exit;
   end;
 
-  msgResult := MessageDlg('Сохнанить изменения?', mtwarning, [mbYes, mbNo, mbCancel], 0);
+  msgResult := MessageDlg('Сохранить изменения?', mtwarning, [mbYes, mbNo, mbCancel], 0);
   CanClose := (msgResult <> mrCancel);
 
   if msgResult = mrYes then
@@ -912,6 +903,27 @@ begin
     fScreenTipLink.ScreenTip := fScreenTip;
     fScreenTipLink.control := TControl(fControl);
 
+  end;
+end;
+
+procedure TSampleForm.OnIdentificatorChanged(Sender: TObject);
+begin
+  if fCanChangeModificationFlag then
+  begin
+    helpHintServer.ValidateHelpMapIdentifier(fSelectedItem, cxEditIdentifierName.Text,
+      procedure(isValid: Boolean)
+      begin
+        self.isIdentifierValid := isValid;
+        self.isModified := true;
+      end);
+  end;
+end;
+
+procedure TSampleForm.OnEditValueChanged(Sender: TObject);
+begin
+  if fCanChangeModificationFlag then
+  begin
+    self.isModified := true;
   end;
 end;
 
