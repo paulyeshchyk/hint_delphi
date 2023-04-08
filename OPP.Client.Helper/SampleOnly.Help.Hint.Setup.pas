@@ -15,14 +15,13 @@ type
   TOPPClientHintHelperLoadCompletion = reference to procedure();
 
   TOPPClientHintHelper = class
+  private
+    class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
   public
     class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
     class procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
     class procedure CreateHintView(AHint: TOPPHelpHint; AControl: TControl; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
-  private
-    class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
-    class function OnGetHintFactory(): IOPPHelpMetaFactory;
   end;
 
 implementation
@@ -137,11 +136,6 @@ end;
 class procedure TOPPClientHintHelper.AvailableMaps(completion: TOPPHelpMapsCompletion);
 begin
   helpHintServer.AvailableMaps(completion);
-end;
-
-class function TOPPClientHintHelper.OnGetHintFactory(): IOPPHelpMetaFactory;
-begin
-  result := fMetaFactory;
 end;
 
 end.

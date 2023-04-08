@@ -82,6 +82,7 @@ const
 var
   i: Integer;
 begin
+  result := false;
   for i := 0 to Length(fListOfClasses) - 1 do
   begin
     result := self.ClassName = fListOfClasses[i];
@@ -93,7 +94,6 @@ end;
 function TOPPHelpComponentEnumerator.FindSubControl(Meta: TOPPHelpMeta): TComponent;
 var
   child: TComponent;
-  found: Boolean;
   fChildren: TList<TComponent>;
 begin
 

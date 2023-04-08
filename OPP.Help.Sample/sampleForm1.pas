@@ -207,7 +207,8 @@ var
   SampleForm: TSampleForm;
 
 const
-  dropdownItemsArray: array [1 .. 3] of string = ('Поиск', 'Переход на страницу', 'Переход на закладку');
+  kShortcutDropdownItemsArray: array [1 .. 2] of string = ('Поиск', 'Переход на страницу');
+  kHintDropdownItemsArray: array [1 .. 3] of string = ('Поиск', 'Переход на страницу', 'Переход на закладку');
 
 implementation
 
@@ -217,6 +218,7 @@ implementation
 {$ENDIF}
 
 uses
+  System.UITypes,
   FormTest01,
   FormTest02,
   FormTest03,
@@ -304,8 +306,8 @@ begin
   actionReload.Enabled := Self.HasRecords and (not Self.IsModified);
   actionPreview.Enabled := not Self.IsModified;
   actionUndo.Enabled := Self.IsModified;
-  actionPreviewHint.Enabled := Assigned(self.fSelectedHintMap);
-  actionPreviewShortcut.Enabled := Assigned(self.fSelectedShortcutMap);
+  actionPreviewHint.Enabled := Assigned(self.fSelectedHintMap) and (not Self.IsModified);
+  actionPreviewShortcut.Enabled := Assigned(self.fSelectedShortcutMap) and (not Self.IsModified);
 end;
 
 procedure TSampleForm.SetSelectedHintMap(const AMap: TOPPHelpMap);
@@ -318,9 +320,6 @@ end;
 procedure TSampleForm.DiscardChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
 var
   oldIdentifier: String;
-  fHelpMap, fOldHelpMap: TOPPHelpMap;
-  fPredicate, fDetailsPredicate: TOPPHelpPredicate;
-
   fState: TSampleFormSaveState;
 begin
   oldIdentifier := ItemCaption;
@@ -367,9 +366,6 @@ end;
 procedure TSampleForm.SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
 var
   oldIdentifier: String;
-  fHelpMap, fOldHelpMap: TOPPHelpMap;
-  fPredicate, fDetailsPredicate: TOPPHelpPredicate;
-
   fState: TSampleFormSaveState;
 begin
   oldIdentifier := ItemCaption;
@@ -395,6 +391,7 @@ begin
         if not assigned(AMap) then
         begin
           eventLogger.Error('[SampleForm]: FindMap for hint returns nil map');
+          fState.checkAndRunMap(AMap);
           exit;
         end;
 
@@ -414,6 +411,7 @@ begin
         if not assigned(AMap) then
         begin
           eventLogger.Error('[SampleForm]: FindMap for shortcut returns nil map');
+          fState.checkAndRunMap(AMap);
           exit;
         end;
         updateMap(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
@@ -585,16 +583,9 @@ begin
   p := Panel1.ClientOrigin;
 
   TOPPClientHintHelper.CreateHintView(fHint, Panel1, cxHintController, tipsRepo);
-  // TOPPClientHintHelper.LoadHints(self, '', cxHintController, tipsRepo,
-  // procedure()
-  // begin
-  // cxHintController.ShowHint(p.x, p.Y, 'AAA', 'ZZZZZZZ');
-  // end);
 end;
 
 procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);
-var
-  Predicate: TOPPHelpPredicate;
 begin
   helpShortcutServer.FindHelpMap(fSelectedItem,
     procedure(const AMap: TOPPHelpMap)
@@ -688,6 +679,7 @@ end;
 
 procedure TSampleForm.cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
 begin
+  fIsIdentifierValid := false;
   fCanChangeModificationFlag := false;
   if (not assigned(Item)) or (Item = nil) then
   begin
@@ -696,6 +688,7 @@ begin
     exit;
   end;
 
+  fIsIdentifierValid := true;
   if not isModified then
   begin
     fSelectedItem := Item.Caption;
@@ -757,10 +750,14 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
-  for dropdownItem in dropdownItemsArray do
+  for dropdownItem in kShortcutDropdownItemsArray do
   begin
     ShortcutKeywordTypeComboBox.Properties.Items.Add(dropdownItem);
     ShortcutDetailsKeywordTypeComboBox.Properties.Items.Add(dropdownItem);
+  end;
+
+  for dropdownItem in kHintDropdownItemsArray do
+  begin
     cxComboBoxHintKeywordType.Properties.Items.Add(dropdownItem);
     cxComboBoxHintDetailsKeywordType.Properties.Items.Add(dropdownItem);
   end;

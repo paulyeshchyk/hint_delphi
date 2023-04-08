@@ -143,8 +143,6 @@ var
   fMap: TOPPHelpMap;
 begin
 
-  result := -1;
-
   itemsToRemove := TList<TOPPHelpMap>.Create();
   try
     for fMap in self.fShortcutDataset.list do

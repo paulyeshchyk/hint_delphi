@@ -26,8 +26,6 @@ implementation
 uses OPP.Help.Log;
 
 constructor TOPPHelpShortcutRequest.Create(AActiveControl: TControl; msg: TWMHelp);
-var
-  activecontrolclassname: String;
 begin
   inherited Create;
   fMsg := msg;

@@ -15,8 +15,8 @@ type
 
   TOPPSystemMessageHelper = class
   private
-    class function GetProcessList(): TDictionary<THandle, String>;
   public
+    class function GetProcessList(): TDictionary<THandle, String>;
     class function GetHWndByPID(const hPID: THandle): THandle;
     class function GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
     class function GetProcessHandleList(AProcessName: String): TList<THandle>;
@@ -104,7 +104,6 @@ var
   FProcessEntry32: TProcessEntry32; // Structural information of the process entry
   ContinueLoop: Boolean;
   fSearchValue: String;
-  ffHandle: THandle;
 begin
 
   result := TList<THandle>.Create;

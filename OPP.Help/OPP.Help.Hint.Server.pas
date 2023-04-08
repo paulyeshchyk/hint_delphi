@@ -166,8 +166,6 @@ begin
 end;
 
 procedure TOPPHelpHintServer.ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
-var
-  result: Boolean;
 begin
   if not Assigned(completion) then
     exit;
@@ -452,7 +450,6 @@ var
   fChildrenHelpMetaList: TList<TOPPHelpMeta>;
   fChildHelpMeta: TOPPHelpMeta;
   fMetaIdentifier: TOPPHelpHintMapIdentifier;
-  fFactory: IOPPHelpMetaFactory;
 begin
 
   eventLogger.Flow(Format('Load hints started for [%s]', [ARequest.Control.ClassName]), 'OPPHelpHint');

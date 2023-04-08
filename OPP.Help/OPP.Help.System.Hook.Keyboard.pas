@@ -31,12 +31,9 @@ type
   TKeyboardLowLevelHookStruct = TKBDLLHOOKSTRUCT;
 
 var
-  fKeyboardHook: PKeyboardLowLevelHookStruct;
   isLCtrlDown: boolean;
   isLShiftDown: boolean;
   isF12Down: boolean;
-  isAltDown: boolean;
-  selfHandle: cardinal;
 const
   LLKHF_ALTDOWN = $20;
 begin

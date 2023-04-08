@@ -17,7 +17,6 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -41,11 +40,6 @@ end;
 procedure TFormTest3.Button2Click(Sender: TObject);
 begin
   TSampleFormHelper.savePredicateToFile;
-end;
-
-procedure TFormTest3.Button4Click(Sender: TObject);
-begin
-  TSampleFormHelper.copyPredicate;
 end;
 
 procedure TFormTest3.Button5Click(Sender: TObject);

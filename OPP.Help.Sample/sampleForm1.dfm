@@ -296,6 +296,7 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitWidth = 1012
             object Panel7: TPanel
               Left = 0
               Top = 0
@@ -314,6 +315,7 @@ object SampleForm: TSampleForm
               Font.Style = []
               ParentFont = False
               TabOrder = 0
+              ExplicitWidth = 1012
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 224
                 Top = 250

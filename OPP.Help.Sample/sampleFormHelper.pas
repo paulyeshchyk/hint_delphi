@@ -13,7 +13,6 @@ type
     { --- }
     class procedure generateHintMapping;
     { --- }
-    class procedure copyPredicate;
     class procedure savePredicateToStream;
     class procedure readPredicateFromFile;
     class procedure savePredicateToFile;
@@ -83,22 +82,6 @@ end;
 class procedure TSampleFormHelper.generateHintMapping;
 begin
   TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\help\mapping\hints_matrix__.json', '.\help\hints\gulfstream_manual_rtf.rtf');
-end;
-
-class procedure TSampleFormHelper.copyPredicate;
-var
-  fPredicate, fCopy: TOPPHelpPredicate;
-begin
-
-  fPredicate := TOPPHelpPredicate.Create;
-  try
-    fPredicate.value := 'Lorem ipsum';
-    fPredicate.keywordType := ktSearch;
-    fCopy := fPredicate.copy();
-  finally
-    fCopy.Free;
-    fPredicate.Free;
-  end;
 end;
 
 class procedure TSampleFormHelper.savePredicateToStream;
