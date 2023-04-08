@@ -684,7 +684,15 @@ begin
 
       for Map in AList do
       begin
-        cxListView1.AddItem(Map.ComponentIdentifier, nil);
+        if assigned(Map) then
+        begin
+          if map.isValid then
+          begin
+            cxListView1.AddItem(Map.ComponentIdentifier, nil);
+          end else begin
+            eventLogger.Error(Format('invalid map detected: %s', [map.Identifier]));
+          end;
+        end;
       end;
 
       if assigned(completion) then

@@ -41,20 +41,24 @@ begin
 
   deSerializer := TJSONUnMarshal.Create;
   try
-    mapList := deSerializer.unmarshal(AJSON) as TOPPHelpMapSet;
-    if assigned(callback) then
-    begin
-      callback(mapList.list, nil);
-    end;
-    FreeAndNil(deSerializer);
-  except
-    on E: Exception do
-    begin
+    try
+      mapList := deSerializer.unmarshal(AJSON) as TOPPHelpMapSet;
       if assigned(callback) then
-        callback(nil, E)
-      else
-        E.Log();
+      begin
+        callback(mapList.list, nil);
+      end;
+      FreeAndNil(deSerializer);
+    except
+      on E: Exception do
+      begin
+        if assigned(callback) then
+          callback(nil, E)
+        else
+          E.Log();
+      end;
     end;
+  finally
+    deSerializer.Free;
   end;
 end;
 
