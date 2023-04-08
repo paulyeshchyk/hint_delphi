@@ -28,16 +28,16 @@ implementation
 
 {$R *.dfm}
 
-uses SampleFormHelper;
+uses SampleFormStubsHelper;
 
 procedure TFormTest1.externalHelpViewerButtonClick(Sender: TObject);
 begin
-  TSampleFormHelper.openExternalHelp;
+  TSampleFormStubsHelper.openExternalHelp;
 end;
 
 procedure TFormTest1.internalHelpViewerButtonClick(Sender: TObject);
 begin
-  TSampleFormHelper.openInternalHelp;
+  TSampleFormStubsHelper.openInternalHelp;
 end;
 
 end.

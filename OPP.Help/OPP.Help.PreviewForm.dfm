@@ -1,25 +1,25 @@
 object OPPHelpPreviewForm: TOPPHelpPreviewForm
-  Left = 0
+  Left = 283
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1082#1072' '#1043#1054#1051#1068#1060#1057#1058#1056#1048#1052
-  ClientHeight = 985
+  ClientHeight = 715
   ClientWidth = 860
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -21
+  Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
-  Position = poScreenCenter
+  Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 25
+  TextHeight = 27
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 966
+    Top = 683
     Width = 860
-    Height = 19
+    Height = 32
     Margins.Left = 7
     Margins.Top = 7
     Margins.Right = 7
@@ -43,13 +43,13 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 965
+    ExplicitTop = 952
     ExplicitWidth = 846
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4
       Width = 280
-      Height = 13
+      Height = 26
       Margins.Left = 7
       Margins.Top = 7
       Margins.Right = 7
@@ -64,13 +64,20 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         Align = alClient
         AutoSize = False
         ParentColor = False
+        ParentFont = False
         Properties.PeakSize = 5
         Properties.PeakValue = 42.000000000000000000
         Style.BorderStyle = ebsNone
         Style.Color = clBtnFace
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -21
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
         StyleHot.Color = clBtnFace
         TabOrder = 0
-        Height = 13
+        Height = 26
         Width = 280
       end
     end

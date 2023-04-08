@@ -27,11 +27,11 @@ implementation
 
 {$R *.dfm}
 
-uses SampleFormHelper;
+uses SampleFormStubsHelper;
 
 procedure TFormTest2.generateHintMappingButtonClick(Sender: TObject);
 begin
-  TSampleFormHelper.generateHintMapping;
+  TSampleFormStubsHelper.generateHintMapping;
 end;
 
 end.

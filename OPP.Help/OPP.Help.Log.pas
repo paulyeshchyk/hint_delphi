@@ -9,7 +9,7 @@ type
   private
     procedure Log(AString: String; postfix: String = ''; messageType: TOPPLogMessageType = lmInfo);
   public
-    procedure Error(AString: String);
+    procedure Error(AString: String; AFlowName: String = '');
     procedure Warning(AString: String);
     procedure Debug(AString: String);
     procedure Flow(AString: String; AFlowName: String = '');
@@ -25,9 +25,19 @@ uses
   WinAPI.Windows,
   OPP.Help.System.Str;
 
+resourcestring
+  SFlow = 'Flow';
+  SFlowTemplate = '[%s]: %s';
+  SWarningNoFlowTemplate = '[Warning]: %s';
+  SInfoNoFlowTemplate = '[Info]: %s';
+  SDebugNoFlowTemplate = '[Debug]: %s';
+  SErrorNoFlowTemplate = '[Error]: %s';
+  SErrorNoFlowPrefix = '%s';
+  SErrorAndFlowPrefix = '[%s] - %s';
+
 procedure TOPPHelpLog.Debug(AString: string);
 begin
-   self.Log(AString, '', lmDebug);
+  self.Log(AString, '', lmDebug);
 end;
 
 procedure TOPPHelpLog.Flow(AString: string; AFlowName: String);
@@ -35,9 +45,12 @@ begin
   self.Log(AString, AFlowName, lmFlow);
 end;
 
-procedure TOPPHelpLog.Error(AString: string);
+procedure TOPPHelpLog.Error(AString: string; AFlowName: String = '');
 begin
-  self.Log(AString, '', lmError);
+  if Length(AFlowName) > 0 then
+    self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmError)
+  else
+    self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmError);
 end;
 
 procedure TOPPHelpLog.Warning(AString: string);
@@ -53,20 +66,20 @@ begin
 
   case messageType of
     lmDebug:
-      outresult := Format('[Debug]: %s', [AString]);
+      outresult := Format(SDebugNoFlowTemplate, [AString]);
     lmInfo:
-      outresult := Format('[Info]: %s', [AString]);
+      outresult := Format(SInfoNoFlowTemplate, [AString]);
     lmError:
-      outresult := Format('[Error]: %s', [AString]);
+      outresult := Format(SErrorNoFlowTemplate, [AString]);
     lmWarning:
-      outresult := Format('[Warning]: %s', [AString]);
+      outresult := Format(SWarningNoFlowTemplate, [AString]);
     lmFlow:
       begin
         if length(postfix) = 0 then
-          completeString := 'Flow'
+          completeString := SFlow
         else
           completeString := postfix;
-        outresult := Format('[%s]: %s', [completeString, AString]);
+        outresult := Format(SFlowTemplate, [completeString, AString]);
       end;
   end;
 

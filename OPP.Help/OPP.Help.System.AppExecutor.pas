@@ -5,8 +5,8 @@ interface
 uses
   System.Generics.Collections,
   System.TypInfo,
-  WinAPI.Windows, Vcl.Forms,
-
+  Winapi.Windows,
+  Vcl.Forms,
   OPP.Help.System.Messaging,
   OPP.Help.Nonatomic;
 
@@ -24,7 +24,8 @@ type
 
 implementation
 
-uses System.RTTI,
+uses
+  System.Rtti,
   System.StrUtils,
   System.Classes;
 

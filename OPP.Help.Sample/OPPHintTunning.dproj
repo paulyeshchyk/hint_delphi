@@ -59,6 +59,7 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <SanitizedProjectName>OPPHintTunning</SanitizedProjectName>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -125,7 +126,6 @@
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas"/>
-        <DCCReference Include="sampleFormHelper.pas"/>
         <DCCReference Include="Tests\FormTest01.pas">
             <Form>FormTest1</Form>
             <FormType>dfm</FormType>
@@ -138,15 +138,17 @@
             <Form>FormTest3</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
+        <DCCReference Include="Helpers\SampleFormSaveState.pas"/>
+        <DCCReference Include="Helpers\SampleFormStubsHelper.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>

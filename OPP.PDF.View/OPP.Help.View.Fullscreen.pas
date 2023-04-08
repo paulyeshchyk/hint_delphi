@@ -52,9 +52,11 @@ type
     procedure SetHasLoadedDocument(AHasLoadedDocument: Boolean);
     procedure SetIsFindPanelVisible(AValue: Boolean);
     procedure SetZoomFactor(AValue: Integer);
+    procedure SetSearchIsInProgress(const Value: Boolean);
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
     property HasLoadedDocument: Boolean read fHasLoadedDocument write SetHasLoadedDocument;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
+    property SearchIsInProgress: Boolean read fSearchIsInProgress write SetSearchIsInProgress;
   public
 
     constructor Create(AOwner: TComponent); override;
@@ -68,8 +70,8 @@ type
     procedure LoadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
     procedure LoadWorkEnded(AResult: Integer);
 
-    procedure searchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
-    procedure searchWorkEnded(AResult: Integer);
+    procedure threadSearchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
+    procedure threadSearchWorkEnded(AResult: Integer);
     procedure searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
     procedure execute(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
 
@@ -83,12 +85,13 @@ type
     property OnFindPanelVisibilityChange: TOPPHelpViewOnFindPanelVisibilityChange read fOnFindPanelVisiblityChange write fOnFindPanelVisiblityChange;
     property Status: TOPPHelpViewFullScreenStatus read GetStatus;
   end;
-const kEventFlowName: String = 'PDFViewer';
 
+const
+  kEventFlowName: String = 'PDFViewer';
 
 implementation
 
-uses System.SysUtils, OPP.Help.Log;
+uses System.SysUtils, OPP.Help.Log, Vcl.Forms;
 
 constructor TOPPHelpViewFullScreen.Create(AOwner: TComponent);
 begin
@@ -108,6 +111,7 @@ begin
   fSearchIsInProgress := false;
 
   fSearchTimer := TTimer.Create(self);
+  fSearchTimer.Interval := 100;
   fSearchTimer.Enabled := false;
   fSearchTimer.OnTimer := onTimerTick;
 
@@ -134,8 +138,8 @@ procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicat
 begin
   fPredicate := APredicate.copy();
 
-  //TODO: Force update
-  //fPDFViewer.CurrentPageIndex := 1;
+  // TODO: Force update
+  // fPDFViewer.CurrentPageIndex := 1;
 
   DoSearchIfPossible(siPredicate);
 end;
@@ -150,11 +154,15 @@ begin
 
   fStream := AStream;
 
+  LoadWorkStarted(LoadWorkEnded);
+
+  {
   TThread.Synchronize(nil,
     procedure()
     begin
       LoadWorkStarted(LoadWorkEnded);
     end);
+  }
 end;
 
 procedure TOPPHelpViewFullScreen.onTimerTick(Sender: TObject);
@@ -201,41 +209,21 @@ begin
   TThread.Synchronize(nil,
     procedure()
     begin
-      searchWorkStarted(searchWorkEnded);
+      threadSearchWorkStarted(threadSearchWorkEnded);
     end);
 
 end;
 
 // threads
-procedure TOPPHelpViewFullScreen.searchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
-var
-  fListener: IOPPHelpViewEventListener;
+procedure TOPPHelpViewFullScreen.threadSearchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
 begin
-
-  fSearchIsInProgress := true;
-  fSearchTimer.Enabled := true;
-
-  for fListener in EventListeners do
-  begin
-    if assigned(fListener) then
-      fListener.SearchStarted;
-  end;
-
+  self.SearchIsInProgress := true;
   searchWork(fPredicate, onFinish);
 end;
 
-procedure TOPPHelpViewFullScreen.searchWorkEnded(AResult: Integer);
-var
-  fListener: IOPPHelpViewEventListener;
+procedure TOPPHelpViewFullScreen.threadSearchWorkEnded(AResult: Integer);
 begin
-  for fListener in EventListeners do
-  begin
-    if assigned(fListener) then
-      fListener.SearchEnded;
-  end;
-
-  fSearchTimer.Enabled := false;
-  fSearchIsInProgress := false;
+  self.SearchIsInProgress := false;
 end;
 
 procedure TOPPHelpViewFullScreen.searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
@@ -255,7 +243,7 @@ begin
     exit;
   end;
 
-  //fPDFViewer.TextSearch.Clear;
+  // fPDFViewer.TextSearch.Clear;
   execute(fPredicate,
     procedure(AResult: Integer)
     begin
@@ -360,6 +348,27 @@ end;
 function TOPPHelpViewFullScreen.GetZoomFactor: Integer;
 begin
   result := fPDFViewer.OptionsZoom.zoomFactor;
+end;
+
+procedure TOPPHelpViewFullScreen.SetSearchIsInProgress(const Value: Boolean);
+var
+  fListener: IOPPHelpViewEventListener;
+begin
+
+  fSearchIsInProgress := Value;
+  fSearchTimer.Enabled := fSearchIsInProgress;
+
+  for fListener in EventListeners do
+  begin
+    if assigned(fListener) then
+    begin
+      if fSearchIsInProgress then
+        fListener.SearchStarted
+      else
+        fListener.SearchEnded;
+    end;
+  end;
+
 end;
 
 procedure TOPPHelpViewFullScreen.SetZoomFactor(AValue: Integer);

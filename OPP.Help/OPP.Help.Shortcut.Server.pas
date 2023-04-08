@@ -139,8 +139,8 @@ end;
 
 function TOPPHelpShortcutServer.RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 var
-  itemsToRemove: TList<TOPPHelpMap>;
   fMap: TOPPHelpMap;
+  itemsToRemove: TList<TOPPHelpMap>;
 begin
 
   itemsToRemove := TList<TOPPHelpMap>.Create();
@@ -170,7 +170,8 @@ end;
 
 procedure TOPPHelpShortcutServer.FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 var
-  result, fMap: TOPPHelpMap;
+  fMap: TOPPHelpMap;
+  result: TOPPHelpMap;
 begin
   result := nil;
   if not Assigned(completion) then
@@ -263,8 +264,8 @@ end;
 procedure TOPPHelpShortcutServer.showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
 var
   fMapping: TOPPHelpMap;
-  fShortcutIdentifier: String;
   fOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier;
+  fShortcutIdentifier: String;
 begin
 
   fOnGetIdentifier := fDefaultOnGetIdentifier;
@@ -297,9 +298,9 @@ end;
 
 procedure TOPPHelpShortcutServer.openInternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
 var
-  result: Boolean;
-  fViewer: TForm;
   clazzType: TClass;
+  fViewer: TForm;
+  result: Boolean;
 begin
   result := Assigned(APredicate);
   if not result then

@@ -1,4 +1,4 @@
-﻿unit sampleFormHelper;
+﻿unit SampleFormStubsHelper;
 
 interface
 
@@ -6,7 +6,7 @@ uses
   Datasnap.DBClient, Data.DB;
 
 type
-  TSampleFormHelper = class
+  TSampleFormStubsHelper = class
   public
     class procedure openInternalHelp;
     class procedure openExternalHelp;
@@ -34,7 +34,7 @@ uses
   OPP.Help.Hint.Server,
   OPP.Help.Map.Parser.JSON;
 
-class procedure TSampleFormHelper.openInternalHelp;
+class procedure TSampleFormStubsHelper.openInternalHelp;
 // var
 // fPredicate: TOPPHelpPredicate;
 // fClassInfo: Pointer;
@@ -46,7 +46,7 @@ begin
   // helpShortcutServer.showHelp(fPredicate, vmInternal, OnShowHelpResult);
 end;
 
-class procedure TSampleFormHelper.openExternalHelp;
+class procedure TSampleFormStubsHelper.openExternalHelp;
 var
   fPredicate: TOPPHelpPredicate;
   fChild: TOPPHelpPredicate;
@@ -79,12 +79,12 @@ begin
   end;
 end;
 
-class procedure TSampleFormHelper.generateHintMapping;
+class procedure TSampleFormStubsHelper.generateHintMapping;
 begin
   TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\help\mapping\hints_matrix__.json', '.\help\hints\gulfstream_manual_rtf.rtf');
 end;
 
-class procedure TSampleFormHelper.savePredicateToStream;
+class procedure TSampleFormStubsHelper.savePredicateToStream;
 var
   fPredicate, fPredicate2: TOPPHelpPredicate;
   fStream, fStream2: TMemoryStream;
@@ -123,7 +123,7 @@ begin
   end;
 end;
 
-class procedure TSampleFormHelper.readPredicateFromFile;
+class procedure TSampleFormStubsHelper.readPredicateFromFile;
 var
   fList: TList<TOPPHelpMap>;
 begin
@@ -139,7 +139,7 @@ begin
   end;
 end;
 
-class procedure TSampleFormHelper.savePredicateToFile;
+class procedure TSampleFormStubsHelper.savePredicateToFile;
 var
   fMap: TOPPHelpMap;
   fPredicate, fChild: TOPPHelpPredicate;

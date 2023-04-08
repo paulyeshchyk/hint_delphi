@@ -2,8 +2,8 @@ object FormTest3: TFormTest3
   Left = 0
   Top = 0
   Caption = 'FormTest3'
-  ClientHeight = 933
-  ClientWidth = 2008
+  ClientHeight = 932
+  ClientWidth = 1994
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object FormTest3: TFormTest3
     AlignWithMargins = True
     Left = 12
     Top = 12
-    Width = 1984
-    Height = 909
+    Width = 1970
+    Height = 908
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -25,8 +25,6 @@ object FormTest3: TFormTest3
     Align = alClient
     Caption = 'TOPPHelpPredicate'
     TabOrder = 0
-    ExplicitWidth = 1998
-    ExplicitHeight = 910
     object Button1: TButton
       Left = 64
       Top = 96

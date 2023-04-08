@@ -30,21 +30,21 @@ implementation
 
 {$R *.dfm}
 
-uses SampleFormHelper;
+uses SampleFormStubsHelper;
 
 procedure TFormTest3.Button1Click(Sender: TObject);
 begin
-  TSampleFormHelper.savePredicateToStream;
+  TSampleFormStubsHelper.savePredicateToStream;
 end;
 
 procedure TFormTest3.Button2Click(Sender: TObject);
 begin
-  TSampleFormHelper.savePredicateToFile;
+  TSampleFormStubsHelper.savePredicateToFile;
 end;
 
 procedure TFormTest3.Button5Click(Sender: TObject);
 begin
-  TSampleFormHelper.readPredicateFromFile;
+  TSampleFormStubsHelper.readPredicateFromFile;
 end;
 
 end.
