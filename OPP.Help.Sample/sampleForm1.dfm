@@ -120,7 +120,7 @@ object SampleForm: TSampleForm
         Margins.Top = 6
         Margins.Right = 6
         Margins.Bottom = 6
-        ActivePage = TabSheet2
+        ActivePage = TabSheet1
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -130,6 +130,7 @@ object SampleForm: TSampleForm
         ParentFont = False
         Style = tsFlatButtons
         TabOrder = 0
+        OnChange = PageControl1Change
         ExplicitWidth = 992
         ExplicitHeight = 697
         object TabSheet1: TTabSheet
@@ -156,6 +157,8 @@ object SampleForm: TSampleForm
             Font.Style = []
             ParentFont = False
             TabOrder = 0
+            ExplicitWidth = 984
+            ExplicitHeight = 652
             object cxLabel6: TcxLabel
               Left = 16
               Top = 18
@@ -293,8 +296,6 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 984
-            ExplicitHeight = 652
             object Panel7: TPanel
               Left = 0
               Top = 0
@@ -313,8 +314,6 @@ object SampleForm: TSampleForm
               Font.Style = []
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 984
-              ExplicitHeight = 652
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 224
                 Top = 250
@@ -357,7 +356,7 @@ object SampleForm: TSampleForm
               end
               object cxTextEditHintPredicateValue: TcxTextEdit
                 Left = 224
-                Top = 124
+                Top = 117
                 Margins.Left = 6
                 Margins.Top = 6
                 Margins.Right = 6
@@ -397,7 +396,7 @@ object SampleForm: TSampleForm
               end
               object cxEditHintPredicateFilename: TcxButtonEdit
                 Left = 224
-                Top = 16
+                Top = 23
                 Margins.Left = 6
                 Margins.Top = 6
                 Margins.Right = 6
@@ -471,7 +470,7 @@ object SampleForm: TSampleForm
           Margins.Right = 6
           Margins.Bottom = 6
           ParentShowHint = False
-          Properties.OnChange = OnIdentificatorChanged
+          Properties.OnEditValueChanged = OnIdentificatorChanged
           ShowHint = True
           TabOrder = 1
           Width = 882
@@ -879,7 +878,6 @@ object SampleForm: TSampleForm
     end
     object actionPreview: TAction
       Caption = 'actionPreview'
-      OnExecute = actionPreviewExecute
     end
     object actionExit: TFileExit
       Category = 'File'
