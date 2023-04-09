@@ -116,7 +116,6 @@ type
     procedure LoadContentStarted();
     procedure LoadContentFinished();
     procedure OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
-    procedure ProgressIncrement;
     procedure RestoreFromBackground();
     procedure SearchEnded();
     procedure SearchProgress();
@@ -124,13 +123,13 @@ type
     { --- }
 
     procedure SendToBackground();
-    procedure setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
+    procedure SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     property currentState: TOPPHelpPreviewFormState read fCurrentState write setCurrentState;
     property InfoPanel: TdxStatusBarPanel read GetInfoPanel;
   public
     { Public declarations }
     function GetContainerClassName: String;
-    procedure presentModal();
+    procedure PresentModal();
     procedure runPredicate(const APredicate: TOPPHelpPredicate);
   end;
 
@@ -151,6 +150,7 @@ uses
   AsyncCalls;
 
 resourcestring
+  SEventStateTemplate = 'State: %s';
   SEventParsedPredicateTemplate = 'Parsed predicate: %s';
   SEventFinishedPDFLoadTemplate = 'Finished PDF load: %s';
   SEventStartedPDFLoadTemplate = 'Started PDF load: %s';
@@ -283,6 +283,7 @@ begin
 end;
 
 { --------- }
+
 procedure TOPPHelpPreviewForm.LoadContentFinished;
 begin
   currentState := fsLoadContentFinished;
@@ -347,17 +348,9 @@ begin
   zoomMenuButton.Caption := Format(SScalingTemplate, [AStatus.ZoomFactor]);
 end;
 
-procedure TOPPHelpPreviewForm.presentModal;
+procedure TOPPHelpPreviewForm.PresentModal;
 begin
   ShowModal;
-end;
-
-procedure TOPPHelpPreviewForm.ProgressIncrement;
-begin
-  if cxProgressBar1.Position = cxProgressBar1.Properties.Max then
-    cxProgressBar1.Position := cxProgressBar1.Properties.Min
-  else
-    cxProgressBar1.Position := 1 + cxProgressBar1.Position;
 end;
 
 procedure TOPPHelpPreviewForm.RestoreFromBackground;
@@ -390,44 +383,32 @@ end;
 procedure TOPPHelpPreviewForm.SearchEnded();
 begin
   currentState := fsSearchFinished;
-
-  cxProgressBar1.Position := 0;
 end;
 
 procedure TOPPHelpPreviewForm.SearchProgress();
 begin
-  currentState := fsSearchProgressing;
-
-  if cxProgressBar1.Position = cxProgressBar1.Properties.Max then
-    cxProgressBar1.Position := cxProgressBar1.Properties.Min
-  else
-    cxProgressBar1.Position := cxProgressBar1.Position + 1;
 end;
 
 procedure TOPPHelpPreviewForm.SearchStarted();
 begin
   currentState := fsSearchStarted;
-  cxProgressBar1.Position := 0;
 end;
 
 procedure TOPPHelpPreviewForm.SendToBackground;
 begin
   self.Hide();
   self.WindowState := TWindowState.wsMinimized;
-
 end;
 
-procedure TOPPHelpPreviewForm.setCurrentState(ACurrentState: TOPPHelpPreviewFormState);
+procedure TOPPHelpPreviewForm.SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
 var
   fStateStr: String;
 begin
   fCurrentState := ACurrentState;
 
-  fStateStr := ACurrentState.asString;
-
+  fStateStr := fCurrentState.asString;
   InfoPanel.Text := fStateStr;
-
-  eventLogger.Flow(Format('State: %s', [fStateStr]), 'PDFViewer');
+  eventLogger.Flow(Format(SEventStateTemplate, [fStateStr]), kEventFlowName);
 end;
 
 procedure TOPPHelpPreviewForm.TrayIcon1Click(Sender: TObject);

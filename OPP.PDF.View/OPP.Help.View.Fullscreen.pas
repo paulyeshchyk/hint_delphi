@@ -36,7 +36,6 @@ type
     fPDFViewer: TdxPDFViewer;
     fPredicate: TOPPHelpPredicate;
     fSearchIsInProgress: Boolean;
-    fSearchTimer: TTimer;
     function GetEventListeners(): TList<IOPPHelpViewEventListener>;
     function GetIsFindPanelVisible(): Boolean;
     function getPDFDocument(): TdxPDFDocument;
@@ -46,7 +45,6 @@ type
     procedure OnHideFindPanelEvent(Sender: TObject);
     procedure OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
     procedure OnShowFindPanelEvent(Sender: TObject);
-    procedure onTimerTick(Sender: TObject);
     procedure SetHasLoadedDocument(AHasLoadedDocument: Boolean);
     procedure SetIsFindPanelVisible(AValue: Boolean);
     procedure SetZoomFactor(AValue: Integer);
@@ -87,8 +85,7 @@ implementation
 
 uses System.SysUtils,
   OPP.Help.Log, OPP.Help.System.Types,
-  OPP.Help.View.Helper,
-  Vcl.Forms, AsyncCalls;
+  OPP.Help.View.Helper;
 
 resourcestring
   SWarningPredicateIsNotDefined = 'Predicate is not defined';
@@ -113,18 +110,12 @@ begin
   fHasLoadedDocument := false;
   fSearchIsInProgress := false;
 
-  fSearchTimer := TTimer.Create(self);
-  fSearchTimer.Interval := 100;
-  fSearchTimer.Enabled := false;
-  fSearchTimer.OnTimer := onTimerTick;
-
   fEventListeners := TList<IOPPHelpViewEventListener>.Create();
 end;
 
 destructor TOPPHelpViewFullScreen.Destroy;
 begin
   fEventListeners.Free;
-  fSearchTimer.Free;
   fPDFViewer.Free;
 
   inherited;
@@ -173,14 +164,6 @@ begin
   end;
 end;
 
-procedure TOPPHelpViewFullScreen.onTimerTick(Sender: TObject);
-var
-  fListener: IOPPHelpViewEventListener;
-begin
-  for fListener in EventListeners do
-    fListener.SearchProgress();
-end;
-
 procedure TOPPHelpViewFullScreen.addStateChangeListener(AListener: IOPPHelpViewEventListener);
 begin
   EventListeners.add(AListener);
@@ -204,7 +187,6 @@ end;
 
 procedure TOPPHelpViewFullScreen.DoSearchIfPossible(AInstanciator: TOPPHelpViewSearchInstanciator);
 begin
-
   if fSearchIsInProgress then
   begin
     eventLogger.Warning(SWarningSearchIsStillInProgress, kEventFlowName);
@@ -230,13 +212,11 @@ end;
 procedure TOPPHelpViewFullScreen.searchWork();
 begin
   self.SearchIsInProgress := true;
-
-  fPDFViewer.RunPredicate(fPredicate,0,
-    procedure(AResult: TOPPHelpViewPredicateExecutionResult; ALevel:Integer)
+  fPDFViewer.RunPredicate(fPredicate, 0,
+    procedure(AResult: TOPPHelpViewPredicateExecutionResult; ALevel: Integer)
     begin
       self.SearchIsInProgress := false;
     end);
-
 end;
 
 procedure TOPPHelpViewFullScreen.FitPageWidth;
@@ -272,7 +252,6 @@ var
 begin
 
   fSearchIsInProgress := Value;
-  fSearchTimer.Enabled := fSearchIsInProgress;
 
   for fListener in EventListeners do
   begin
