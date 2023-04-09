@@ -68,7 +68,6 @@ type
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
 
     function searchWork(Arg: Integer): Integer;
-    procedure RunPredicate(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
 
     procedure FitPageWidth;
     procedure FitPageHeight;
@@ -87,12 +86,11 @@ const
 implementation
 
 uses System.SysUtils,
-OPP.Help.Log, OPP.Help.System.Types,
-Vcl.Forms, AsyncCalls;
+  OPP.Help.Log, OPP.Help.System.Types,
+  OPP.Help.View.Helper,
+  Vcl.Forms, AsyncCalls;
 
 resourcestring
-  SDebugFinishedPredicateExecutionTemplate = 'Finished predicate execution: %s';
-  SDebugStartedPredicateExecutionTemplate = 'Started predicate execution: %s';
   SWarningPredicateIsNotDefined = 'Predicate is not defined';
   SWarningDocumentIsNotLoaded = 'Document is not loaded';
   SWarningSearchIsStillInProgress = 'Search is still in progress';
@@ -226,64 +224,20 @@ begin
   end;
 
   searchWork(0);
-   //AsyncCalls.AsyncCall(searchWork, 0).Sync;
+  // AsyncCalls.AsyncCall(searchWork, 0).Sync;
 end;
 
 function TOPPHelpViewFullScreen.searchWork(Arg: Integer): Integer;
 begin
   self.SearchIsInProgress := true;
 
-  RunPredicate(fPredicate,
+  fPDFViewer.RunPredicate(fPredicate,
     procedure(AResult: Integer)
     begin
       self.SearchIsInProgress := false;
     end);
 
   result := 0;
-end;
-
-procedure TOPPHelpViewFullScreen.RunPredicate(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
-var
-  fSearchResult: TdxPDFDocumentTextSearchResult;
-  nested: TOPPHelpPredicate;
-  fCurrentPageIndex: Integer;
-begin
-
-  eventLogger.Flow(Format(SDebugStartedPredicateExecutionTemplate, [APredicate.asString]), kEventFlowName);
-
-  case APredicate.keywordType of
-    ktSearch:
-      begin
-        fCurrentPageIndex := fPDFViewer.CurrentPageIndex;
-        fSearchResult := pdfDocument.FindText(APredicate.value, TdxPDFDocumentTextSearchOptions.Default, fCurrentPageIndex);
-        fPDFViewer.CurrentPageIndex := fSearchResult.range.pageIndex;
-      end;
-    ktBookmark:
-      begin
-        //
-      end;
-    ktPage:
-      begin
-        fPDFViewer.CurrentPageIndex := StrToInt(APredicate.value);
-      end;
-    ktAny:
-      begin
-        //
-      end;
-  end;
-
-  for nested in APredicate.predicates do
-  begin
-    self.RunPredicate(nested,
-      procedure(AResult: Integer)
-      begin
-      end);
-  end;
-
-  eventLogger.Flow(Format(SDebugFinishedPredicateExecutionTemplate, [APredicate.asString]), kEventFlowName);
-
-  if assigned(completion) then
-    completion(0);
 end;
 
 procedure TOPPHelpViewFullScreen.FitPageWidth;

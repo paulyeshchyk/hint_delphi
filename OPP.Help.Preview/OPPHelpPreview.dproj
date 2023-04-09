@@ -114,6 +114,7 @@
             <Form>OPPHelpPreviewZoomForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.Helper.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
