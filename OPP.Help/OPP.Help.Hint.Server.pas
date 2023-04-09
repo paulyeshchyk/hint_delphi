@@ -10,8 +10,8 @@ uses
   //
   OPP.Help.Hint, OPP.Help.Component.Enumerator,
   //
-  OPP.Help.Nonatomic,
   OPP.Help.System.Str,
+  OPP.Help.System.References,
   OPP.Help.Predicate,
   OPP.Help.Map,
   OPP.Help.Interfaces,
@@ -56,12 +56,13 @@ type
     procedure RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
     procedure CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
     function AddHelpMap(AMap: TOPPHelpMap): Boolean;
+    function GetAvailableMaps(): TList<TOPPHelpMap>;
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
     procedure MergeHelpMaps(AList: TList<TOPPHelpMap>);
     procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion);overload;
     procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);overload;
-    procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
+    procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpBooleanCompletion);
   end;
 
   IOPPHelpHintServer = interface (IOPPHelpMapContainer)
@@ -90,6 +91,7 @@ type
     destructor Destroy; override;
     function AddHelpMap(AMap: TOPPHelpMap): Boolean;
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
+    function GetAvailableMaps: TList<TOPPHelpMap>;
     procedure CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
@@ -99,7 +101,7 @@ type
     procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);overload;
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
-    procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
+    procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpBooleanCompletion);
     property IsLoaded: Boolean read fLoaded;
   end;
 
@@ -285,6 +287,11 @@ begin
   end;
 
   fHintDataReaders.Add(fMap.Predicate.filename, result);
+end;
+
+function TOPPHelpHintServer.GetAvailableMaps: TList<TOPPHelpMap>;
+begin
+  result := fHintMapSet.list;
 end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
@@ -566,7 +573,7 @@ begin
   fDefaultOnHintReaderCreator := ACreator;
 end;
 
-procedure TOPPHelpHintServer.ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpValidation);
+procedure TOPPHelpHintServer.ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpBooleanCompletion);
 begin
   if not Assigned(completion) then
     exit;

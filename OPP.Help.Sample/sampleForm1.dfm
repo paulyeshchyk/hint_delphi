@@ -3,8 +3,8 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 900
-  ClientWidth = 1554
+  ClientHeight = 899
+  ClientWidth = 1540
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,8 +22,8 @@ object SampleForm: TSampleForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1554
-    Height = 900
+    Width = 1540
+    Height = 899
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -35,17 +35,18 @@ object SampleForm: TSampleForm
       Left = 530
       Top = 0
       Width = 6
-      Height = 900
+      Height = 899
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
+      ExplicitHeight = 900
     end
     object panelList: TPanel
       Left = 0
       Top = 0
       Width = 530
-      Height = 900
+      Height = 899
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -65,7 +66,7 @@ object SampleForm: TSampleForm
         Left = 6
         Top = 50
         Width = 518
-        Height = 844
+        Height = 843
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -83,7 +84,7 @@ object SampleForm: TSampleForm
         TabOrder = 0
         ViewStyle = vsReport
         OnSelectItem = cxListView1SelectItem
-        ExplicitHeight = 843
+        ExplicitHeight = 842
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
@@ -101,8 +102,8 @@ object SampleForm: TSampleForm
     object panelAddBorder: TPanel
       Left = 536
       Top = 0
-      Width = 1018
-      Height = 900
+      Width = 1004
+      Height = 899
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -114,8 +115,8 @@ object SampleForm: TSampleForm
         AlignWithMargins = True
         Left = 6
         Top = 196
-        Width = 1006
-        Height = 698
+        Width = 992
+        Height = 697
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -131,8 +132,8 @@ object SampleForm: TSampleForm
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
-        ExplicitWidth = 992
-        ExplicitHeight = 697
+        ExplicitWidth = 978
+        ExplicitHeight = 696
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -142,8 +143,8 @@ object SampleForm: TSampleForm
           object Panel5: TPanel
             Left = 0
             Top = 0
-            Width = 998
-            Height = 653
+            Width = 984
+            Height = 652
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -157,8 +158,8 @@ object SampleForm: TSampleForm
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            ExplicitWidth = 984
-            ExplicitHeight = 652
+            ExplicitWidth = 970
+            ExplicitHeight = 651
             object cxLabel6: TcxLabel
               Left = 16
               Top = 18
@@ -287,8 +288,8 @@ object SampleForm: TSampleForm
           object Panel4: TPanel
             Left = 0
             Top = 0
-            Width = 998
-            Height = 653
+            Width = 984
+            Height = 652
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -296,12 +297,11 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 1012
             object Panel7: TPanel
               Left = 0
               Top = 0
-              Width = 998
-              Height = 653
+              Width = 984
+              Height = 652
               Margins.Left = 6
               Margins.Top = 6
               Margins.Right = 6
@@ -315,7 +315,6 @@ object SampleForm: TSampleForm
               Font.Style = []
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 1012
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 224
                 Top = 250
@@ -439,7 +438,7 @@ object SampleForm: TSampleForm
       object Panel8: TPanel
         Left = 0
         Top = 44
-        Width = 1018
+        Width = 1004
         Height = 146
         Margins.Left = 6
         Margins.Top = 6
@@ -454,7 +453,7 @@ object SampleForm: TSampleForm
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitWidth = 1004
+        ExplicitWidth = 990
         object cxLabel5: TcxLabel
           Left = 32
           Top = 32
@@ -481,7 +480,7 @@ object SampleForm: TSampleForm
       object dxBarDockControl2: TdxBarDockControl
         Left = 0
         Top = 0
-        Width = 1018
+        Width = 1004
         Height = 44
         Margins.Left = 6
         Margins.Top = 6

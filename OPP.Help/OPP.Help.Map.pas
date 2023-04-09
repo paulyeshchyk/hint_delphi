@@ -3,8 +3,10 @@ unit OPP.Help.Map;
 interface
 
 uses
+  System.SysUtils,
   System.Generics.Collections,
-  OPP.Help.Nonatomic,
+
+  OPP.Help.System.References,
   OPP.Help.Predicate;
 
 type
@@ -26,6 +28,7 @@ type
   end;
 
   TOPPHelpMapCompletion = reference to procedure(const AMap: TOPPHelpMap);
+  TOPPHelpMapParserJSONCallback = reference to procedure(AList: TList<TOPPHelpMap>; Error: Exception);
 
   TOPPHelpMapSet = class(TObject)
   private

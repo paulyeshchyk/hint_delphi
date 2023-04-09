@@ -2,14 +2,13 @@ unit OPP.Help.System.Hook.Keyboard;
 
 interface
 
-
 implementation
 
 uses
-  OPP.Help.System.Constants,
-  WinAPI.Windows,
   System.SysUtils,
-  vcl.forms;
+  WinAPI.Windows,
+  vcl.forms,
+  OPP.Help.System.Messaging;
 
 var
   hhk: HHOOK;
@@ -46,7 +45,7 @@ begin
         if (isLCtrlDown and isLShiftDown and isF12Down) then
         begin
           OutputDebugString('Hooked');
-          PostMessage(GetForegroundWindow, OPP_KEYBOARD_HOOK_MESSAGE, 0, 0);
+          PostMessage(GetForegroundWindow, WM_OPPHook, 0, 0);
         end;
       end;
   end;

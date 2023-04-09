@@ -7,8 +7,8 @@ uses
   System.TypInfo,
   Winapi.Windows,
   Vcl.Forms,
-  OPP.Help.System.Messaging,
-  OPP.Help.Nonatomic;
+
+  OPP.Help.System.Messaging;
 
 type
   TOPPHelpSystemAppExecutionResultType = (rtFailedDueUnableToRunProcess, rtNewInstance, rtExistingInstance);

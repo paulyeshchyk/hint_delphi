@@ -16,9 +16,14 @@ uses
   Vcl.ExtCtrls, Vcl.ExtDlgs, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.StdActns,
   Vcl.StdCtrls, Vcl.Themes,
   Winapi.CommCtrl, Winapi.Messages, Winapi.Windows,
-  OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta, OPP.Help.Nonatomic,
+
+  OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
+  OPP.Help.System.Messaging,
+  OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
-  SampleFormSaveState, dxSkinsCore, dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  SampleFormSaveState,
+
+  dxSkinsCore, dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans,
   dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin,
   dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
@@ -32,7 +37,6 @@ uses
 
 type
 
-  TOPPHelpBooleanCompletion = reference to procedure(AValue: Boolean);
   TOPPHelpSaveReactionCompletion = reference to procedure(ItemToSelect: TListItem; AShouldSave: Boolean);
 
   TSampleForm = class(TForm)
@@ -128,6 +132,9 @@ type
     procedure OnEditValueChanged(Sender: TObject);
     procedure OnIdentificatorChanged(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
+  protected
+    procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
+    procedure WMHOOK(var Msg: TMessage); message WM_OPPHook;
   private
     fCanChangeModificationFlag: Boolean;
     fIsIdentifierValid: Boolean;
@@ -145,6 +152,8 @@ type
     function GetWinControlHelpKeyword(AControl: TControl): String;
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
+    procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
+
     function preferableIndexToJump(from: Integer): Integer;
     procedure RefreshPreviewButtonAction;
     procedure ReloadListView(completion: TOPPHelpCompletion);
@@ -157,8 +166,6 @@ type
     procedure updateForm(AMap: TOPPHelpMap; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
     procedure updateMap(AMap: TOPPHelpMap; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
     procedure wipeFields(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
-    procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
-    procedure WMHOOK(var Msg: TMessage); message WM_User + 3;
     property HasRecords: Boolean read GetHasRecords;
     property isIdentifierValid: Boolean read fIsIdentifierValid write SetIsIdentifierValid;
     property isModified: Boolean read fIsModified write SetIsModified;
@@ -181,6 +188,7 @@ uses
   FormTest01,
   FormTest02,
   FormTest03,
+  OPP.Help.System.Types,
   OPP.Help.Component.Enumerator,
   OPP.Help.Controls.Styler,
   OPP.Help.Hint.Reader,
@@ -198,6 +206,8 @@ uses
   SampleOnly.Help.Shortcut.Setup;
 
 resourcestring
+  SWarningListItemsIsNotSelectedNotAbleToS = 'List items is not selected. not able to set caption';
+  SErrorPassedNotTControl = 'passed not TControl';
   SEmpty = '';
   SErrorCantSaveMapIdIsEmpty = 'Cant save map, id is empty';
   SErrorFindMapForHintReturnsNilMap = 'FindMap for hint returns nil map';
@@ -216,12 +226,12 @@ resourcestring
   SktBookmark = 'Переход на закладку';
   SktPage = 'Переход на страницу';
   SktSearch = 'Поиск';
-  SSampleForm = 'SampleForm';
   SSaveChanges = 'Сохранить изменения?';
   SWarningSelectedNilItem = 'selected nil item';
   SWarningWillNotDeleteAnythingBecauseList = 'Will not delete anything, because  listview has no selected item';
 
 const
+  kEventFlowName = 'SampleForm';
   kShortcutDropdownItemsArray: array [1 .. 2] of string = (SktSearch, SktPage);
   kHintDropdownItemsArray: array [1 .. 3] of string = (SktSearch, SktPage, SktBookmark);
 
@@ -247,7 +257,7 @@ begin
   try
     fState.completion := procedure(AIdentifier: String)
       begin
-        eventLogger.Flow(SEventDidRemovedRecord, SSampleForm);
+        eventLogger.Flow(SEventDidRemovedRecord, kEventFlowName);
         ReloadListView(
           procedure
           begin
@@ -260,14 +270,14 @@ begin
     helpHintServer.RemoveHelpMap(cxListView1.Selected.Caption,
       procedure(AError: Exception)
       begin
-        eventLogger.Flow(SEventDidRemovedHint, SSampleForm);
+        eventLogger.Flow(SEventDidRemovedHint, kEventFlowName);
         fState.hintWasUpdated := true;
         fState.checkAndRunMapId(SEmpty)
       end);
     helpShortcutServer.RemoveHelpMap(cxListView1.Selected.Caption,
       procedure(AError: Exception)
       begin
-        eventLogger.Flow(SEventDidRemovedShortcut, SSampleForm);
+        eventLogger.Flow(SEventDidRemovedShortcut, kEventFlowName);
         fState.shortcutWasUpdated := true;
         fState.checkAndRunMapId(SEmpty)
       end);
@@ -369,9 +379,15 @@ procedure TSampleForm.actionSaveExecute(Sender: TObject);
 begin
   SaveChanges(fSelectedItem,
     procedure(ANewIdentifier: String)
+    var
+      listItem: TListItem;
     begin
       self.isModified := false;
-      cxListView1.Selected.Caption := ANewIdentifier;
+      listItem := cxListView1.Selected;
+      if assigned(listItem) then
+        cxListView1.Selected.Caption := ANewIdentifier
+      else
+        eventLogger.Warning(SWarningListItemsIsNotSelectedNotAbleToS, kEventFlowName);
     end);
 end;
 
@@ -404,10 +420,10 @@ procedure TSampleForm.CreateScreenTip(fHint: TOPPHelpHint; AComponent: TComponen
 var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
-  s: String;
 begin
-  if not(AComponent is TControl) then begin
-    eventLogger.Error('passed not TControl');
+  if not(AComponent is TControl) then
+  begin
+    eventLogger.Error(SErrorPassedNotTControl, kEventFlowName);
     exit;
   end;
   TControl(AComponent).ShowHint := true;
@@ -696,10 +712,7 @@ end;
 procedure TSampleForm.onHintViewsCreate(hints: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
-  fScreenTip: TdxScreenTip;
-  fScreenTipLink: TdxScreenTipLink;
   fControl: TComponent;
-  s: String;
 begin
   for fHint in hints do
   begin
@@ -721,6 +734,33 @@ begin
         self.isModified := true;
       end);
   end;
+end;
+
+procedure TSampleForm.onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
+var
+  Map: TOPPHelpMap;
+begin
+  if (not assigned(AList)) or (AList.Count = 0) then
+  begin
+    exit;
+  end;
+
+  for Map in AList do
+  begin
+    if assigned(Map) then
+    begin
+      if map.IsValid then
+      begin
+        cxListView1.AddItem(Map.ComponentIdentifier, nil);
+      end else begin
+        eventLogger.Error(Format(SErrorInvalidMapDetected, [map.Identifier]));
+      end;
+    end;
+  end;
+
+  if assigned(completion) then
+    completion();
+
 end;
 
 procedure TSampleForm.PageControl1Change(Sender: TObject);
@@ -758,36 +798,15 @@ begin
 end;
 
 procedure TSampleForm.ReloadListView(completion: TOPPHelpCompletion);
+var
+  maps: TList<TOPPHelpMap>;
 begin
   cxListView1.Items.Clear;
 
-  TOPPClientHintHelper.AvailableMaps(
-    procedure(AList: TList<TOPPHelpMap>)
-    var
-      Map: TOPPHelpMap;
-    begin
-      if (not assigned(AList)) or (AList.Count = 0) then
-      begin
-        exit;
-      end;
+  maps := helpHintServer.GetAvailableMaps;
+  onMapsLoaded(maps, completion);
 
-      for Map in AList do
-      begin
-        if assigned(Map) then
-        begin
-          if map.IsValid then
-          begin
-            cxListView1.AddItem(Map.ComponentIdentifier, nil);
-          end else begin
-            eventLogger.Error(Format(SErrorInvalidMapDetected, [map.Identifier]));
-          end;
-        end;
-      end;
-
-      if assigned(completion) then
-        completion();
-
-    end);
+  // TOPPClientHintHelper.AvailableMaps(onMapsLoaded, completion);
 end;
 
 procedure TSampleForm.SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -799,11 +818,11 @@ begin
 
   if Length(oldIdentifier) = 0 then
   begin
-    eventLogger.Error('[SampleForm]' + SErrorCantSaveMapIdIsEmpty);
+    eventLogger.Error(SErrorCantSaveMapIdIsEmpty, kEventFlowName);
     exit;
   end;
 
-  eventLogger.Flow(SEventWillSaveMap, SSampleForm);
+  eventLogger.Flow(SEventWillSaveMap, kEventFlowName);
 
   fState := TSampleFormSaveState.Create;
   try
@@ -817,7 +836,7 @@ begin
         fState.hintWasUpdated := true;
         if not assigned(AMap) then
         begin
-          eventLogger.Error('[SampleForm]: ' + SErrorFindMapForHintReturnsNilMap);
+          eventLogger.Error(SErrorFindMapForHintReturnsNilMap, kEventFlowName);
           fState.checkAndRunMap(AMap);
           exit;
         end;
@@ -826,7 +845,7 @@ begin
         helpHintServer.SaveHelpMaps('',
           procedure(AError: Exception)
           begin
-            eventLogger.Flow(SEventDidSavedHint, SSampleForm);
+            eventLogger.Flow(SEventDidSavedHint, kEventFlowName);
             fState.checkAndRunMap(AMap);
           end);
       end);
@@ -837,7 +856,7 @@ begin
         fState.shortcutWasUpdated := true;
         if not assigned(AMap) then
         begin
-          eventLogger.Error('[SampleForm]: ' + SErrorFindMapForShortcutReturnsNilMap);
+          eventLogger.Error(SErrorFindMapForShortcutReturnsNilMap, kEventFlowName);
           fState.checkAndRunMap(AMap);
           exit;
         end;
@@ -845,7 +864,7 @@ begin
         helpShortcutServer.SaveMaps('',
           procedure(AError: Exception)
           begin
-            eventLogger.Flow(SEventDidSavedShortcut, SSampleForm);
+            eventLogger.Flow(SEventDidSavedShortcut, kEventFlowName);
             fState.checkAndRunMap(AMap);
           end);
       end);

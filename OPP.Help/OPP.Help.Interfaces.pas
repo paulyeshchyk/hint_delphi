@@ -1,4 +1,4 @@
-unit OPP.Help.Interfaces;
+﻿unit OPP.Help.Interfaces;
 
 interface
 
@@ -22,12 +22,13 @@ type
 
   IOPPHelpShortcutViewer = interface
     ['{097D4F69-916A-4CB4-AB5F-E88D9BA1BB76}']
-    procedure runPredicate(APredicate: TOPPHelpPredicate);
+    procedure runPredicate(const APredicate: TOPPHelpPredicate);
     procedure PresentModal;
   end;
 
   IOPPHelpViewEventListener = interface
-    procedure LoadStarted();
+    procedure LoadContentStarted();
+    procedure LoadContentFinished();
     procedure SearchStarted();
     procedure SearchProgress();
     procedure SearchEnded();

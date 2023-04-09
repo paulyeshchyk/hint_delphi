@@ -15,7 +15,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine,
   dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxSpinEdit, cxLabel, cxTrackBar, System.Actions, Vcl.ActnList,
-  Vcl.StdActns;
+  Vcl.StdActns, dxSkinBasic, dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray,
+  dxSkinOffice2019White, dxSkinTheBezier;
 
 type
   TOPPHelpPreviewZoomForm = class(TForm)
@@ -46,7 +47,9 @@ implementation
 
 {$R *.dfm}
 
-uses OPP.Help.System.Str;
+uses
+OPP.Help.System.Str,
+OPP.Help.System.Messaging;
 
 procedure TOPPHelpPreviewZoomForm.setZoomValue(AValue: Integer);
 begin
@@ -81,7 +84,7 @@ const
 begin
   fZoomValue := AValue;
   fHandle := FindWindow(fClassName.toWideChar(), nil);
-  SendMessage(fHandle, WM_USER + 3, fZoomValue, 0);
+  SendMessage(fHandle, WM_OPPZoom, fZoomValue, 0);
 end;
 
 end.

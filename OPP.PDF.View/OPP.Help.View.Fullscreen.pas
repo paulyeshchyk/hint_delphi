@@ -10,9 +10,10 @@ uses
   Vcl.Controls,
   Vcl.StdCtrls,
   dxPDFViewer, dxPDFDocument, dxCustomPreview,
+
   OPP.Help.Interfaces,
   OPP.Help.Predicate,
-  OPP.Help.Nonatomic,
+  OPP.Help.System.References,
   OPP.Help.System.Thread;
 
 type
@@ -23,28 +24,25 @@ type
   end;
 
   TOPPHelpViewSearchInstanciator = (siDocumentLoad, siPredicate);
-  TOPPHelpViewPredicateExecutionCompletion = reference to procedure(AResult: Integer);
   TOPPHelpViewOnStatusChanged = reference to procedure(AStatus: TOPPHelpViewFullScreenStatus);
-  TOPPHelpViewOnFindPanelVisibilityChange = reference to procedure(AIsVisible: Boolean);
 
   TOPPHelpViewFullScreen = class(TPanel)
   private
     fEventListeners: TList<IOPPHelpViewEventListener>;
     fHasLoadedDocument: Boolean;
     fIsFindPanelVisible: Boolean;
-    fOnFindPanelVisiblityChange: TOPPHelpViewOnFindPanelVisibilityChange;
+    fOnFindPanelVisiblityChange: TOPPHelpBooleanCompletion;
     fOnStatusChanged: TOPPHelpViewOnStatusChanged;
     fPDFViewer: TdxPDFViewer;
     fPredicate: TOPPHelpPredicate;
     fSearchIsInProgress: Boolean;
     fSearchTimer: TTimer;
-    fStream: TMemoryStream;
     function GetEventListeners(): TList<IOPPHelpViewEventListener>;
     function GetIsFindPanelVisible(): Boolean;
     function getPDFDocument(): TdxPDFDocument;
     function GetStatus: TOPPHelpViewFullScreenStatus;
     function GetZoomFactor: Integer;
-    procedure DoSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
+    procedure DoSearchIfPossible(AInstanciator: TOPPHelpViewSearchInstanciator);
     procedure OnHideFindPanelEvent(Sender: TObject);
     procedure OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
     procedure OnShowFindPanelEvent(Sender: TObject);
@@ -53,27 +51,24 @@ type
     procedure SetIsFindPanelVisible(AValue: Boolean);
     procedure SetZoomFactor(AValue: Integer);
     procedure SetSearchIsInProgress(const Value: Boolean);
+
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
     property HasLoadedDocument: Boolean read fHasLoadedDocument write SetHasLoadedDocument;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
     property SearchIsInProgress: Boolean read fSearchIsInProgress write SetSearchIsInProgress;
+
   public
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    procedure loadContent(AStream: TMemoryStream);
+    procedure LoadContent(AStream: TMemoryStream);
     procedure setPredicate(const APredicate: TOPPHelpPredicate);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
 
-    procedure LoadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
-    procedure LoadWorkEnded(AResult: Integer);
-
-    procedure threadSearchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
-    procedure threadSearchWorkEnded(AResult: Integer);
-    procedure searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
-    procedure execute(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
+    function searchWork(Arg: Integer): Integer;
+    procedure RunPredicate(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
 
     procedure FitPageWidth;
     procedure FitPageHeight;
@@ -82,7 +77,7 @@ type
     property IsFindPanelVisible: Boolean read GetIsFindPanelVisible write SetIsFindPanelVisible;
     property OnStatusChanged: TOPPHelpViewOnStatusChanged read fOnStatusChanged write fOnStatusChanged;
     property zoomFactor: Integer read GetZoomFactor write SetZoomFactor;
-    property OnFindPanelVisibilityChange: TOPPHelpViewOnFindPanelVisibilityChange read fOnFindPanelVisiblityChange write fOnFindPanelVisiblityChange;
+    property OnFindPanelVisibilityChange: TOPPHelpBooleanCompletion read fOnFindPanelVisiblityChange write fOnFindPanelVisiblityChange;
     property Status: TOPPHelpViewFullScreenStatus read GetStatus;
   end;
 
@@ -91,7 +86,17 @@ const
 
 implementation
 
-uses System.SysUtils, OPP.Help.Log, Vcl.Forms;
+uses System.SysUtils,
+OPP.Help.Log, OPP.Help.System.Types,
+Vcl.Forms, AsyncCalls;
+
+resourcestring
+  SDebugFinishedPredicateExecutionTemplate = 'Finished predicate execution: %s';
+  SDebugStartedPredicateExecutionTemplate = 'Started predicate execution: %s';
+  SWarningPredicateIsNotDefined = 'Predicate is not defined';
+  SWarningDocumentIsNotLoaded = 'Document is not loaded';
+  SWarningSearchIsStillInProgress = 'Search is still in progress';
+  SWarningStreamWasNotDefined = 'Stream was not defined';
 
 constructor TOPPHelpViewFullScreen.Create(AOwner: TComponent);
 begin
@@ -137,10 +142,6 @@ end;
 procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
   fPredicate := APredicate.copy();
-
-  // TODO: Force update
-  // fPDFViewer.CurrentPageIndex := 1;
-
   DoSearchIfPossible(siPredicate);
 end;
 
@@ -149,20 +150,29 @@ begin
   fHasLoadedDocument := AHasLoadedDocument;
 end;
 
-procedure TOPPHelpViewFullScreen.loadContent(AStream: TMemoryStream);
+procedure TOPPHelpViewFullScreen.LoadContent(AStream: TMemoryStream);
+var
+  fListener: IOPPHelpViewEventListener;
 begin
 
-  fStream := AStream;
+  for fListener in EventListeners do
+  begin
+    if assigned(fListener) then
+      fListener.LoadContentStarted;
+  end;
 
-  LoadWorkStarted(LoadWorkEnded);
+  if assigned(AStream) then
+  begin
+    fPDFViewer.LoadFromStream(AStream);
+  end else begin
+    eventLogger.Warning(SWarningStreamWasNotDefined, kEventFlowName);
+  end;
 
-  {
-  TThread.Synchronize(nil,
-    procedure()
-    begin
-      LoadWorkStarted(LoadWorkEnded);
-    end);
-  }
+  for fListener in EventListeners do
+  begin
+    if assigned(fListener) then
+      fListener.LoadContentFinished;
+  end;
 end;
 
 procedure TOPPHelpViewFullScreen.onTimerTick(Sender: TObject);
@@ -194,103 +204,56 @@ begin
   result := fPDFViewer.Document
 end;
 
-procedure TOPPHelpViewFullScreen.DoSearchIfPossible(instanciator: TOPPHelpViewSearchInstanciator);
+procedure TOPPHelpViewFullScreen.DoSearchIfPossible(AInstanciator: TOPPHelpViewSearchInstanciator);
 begin
 
   if fSearchIsInProgress then
+  begin
+    eventLogger.Warning(SWarningSearchIsStillInProgress, kEventFlowName);
     exit;
+  end;
 
   if not HasLoadedDocument then
+  begin
+    eventLogger.Warning(SWarningDocumentIsNotLoaded, kEventFlowName);
     exit;
+  end;
 
   if not assigned(fPredicate) then
+  begin
+    eventLogger.Warning(SWarningPredicateIsNotDefined, kEventFlowName);
     exit;
+  end;
 
-  TThread.Synchronize(nil,
-    procedure()
-    begin
-      threadSearchWorkStarted(threadSearchWorkEnded);
-    end);
-
+  searchWork(0);
+   //AsyncCalls.AsyncCall(searchWork, 0).Sync;
 end;
 
-// threads
-procedure TOPPHelpViewFullScreen.threadSearchWorkStarted(onFinish: TOPPHelpThreadOnFinish);
+function TOPPHelpViewFullScreen.searchWork(Arg: Integer): Integer;
 begin
   self.SearchIsInProgress := true;
-  searchWork(fPredicate, onFinish);
-end;
 
-procedure TOPPHelpViewFullScreen.threadSearchWorkEnded(AResult: Integer);
-begin
-  self.SearchIsInProgress := false;
-end;
-
-procedure TOPPHelpViewFullScreen.searchWork(APredicate: TOPPHelpPredicate; onFinish: TOPPHelpThreadOnFinish);
-begin
-  eventLogger.Flow('started searchWord', kEventFlowName);
-
-  if not assigned(onFinish) then
-  begin
-    eventLogger.Error('onFinish is not defined');
-    exit;
-  end;
-
-  if not assigned(APredicate) then
-  begin
-    eventLogger.Error('predicate is not defined');
-    onFinish(-1);
-    exit;
-  end;
-
-  // fPDFViewer.TextSearch.Clear;
-  execute(fPredicate,
+  RunPredicate(fPredicate,
     procedure(AResult: Integer)
     begin
-      onFinish(AResult);
+      self.SearchIsInProgress := false;
     end);
+
+  result := 0;
 end;
 
-procedure TOPPHelpViewFullScreen.LoadWorkStarted(onFinish: TOPPHelpThreadOnFinish);
-var
-  fListener: IOPPHelpViewEventListener;
-begin
-  for fListener in EventListeners do
-  begin
-    if assigned(fListener) then
-      fListener.LoadStarted;
-  end;
-
-  if not assigned(fStream) then
-  begin
-    if assigned(onFinish) then
-      onFinish(0);
-  end else begin
-    fPDFViewer.LoadFromStream(fStream);
-  end;
-end;
-
-procedure TOPPHelpViewFullScreen.LoadWorkEnded(AResult: Integer);
-var
-  fListener: IOPPHelpViewEventListener;
-begin
-  for fListener in EventListeners do
-  begin
-    if assigned(fListener) then
-      fListener.SearchEnded;
-  end;
-end;
-
-procedure TOPPHelpViewFullScreen.execute(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
+procedure TOPPHelpViewFullScreen.RunPredicate(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
 var
   fSearchResult: TdxPDFDocumentTextSearchResult;
   nested: TOPPHelpPredicate;
   fCurrentPageIndex: Integer;
 begin
+
+  eventLogger.Flow(Format(SDebugStartedPredicateExecutionTemplate, [APredicate.asString]), kEventFlowName);
+
   case APredicate.keywordType of
     ktSearch:
       begin
-        eventLogger.Flow(Format('executed ktSearch:%s', [APredicate.value]), kEventFlowName);
         fCurrentPageIndex := fPDFViewer.CurrentPageIndex;
         fSearchResult := pdfDocument.FindText(APredicate.value, TdxPDFDocumentTextSearchOptions.Default, fCurrentPageIndex);
         fPDFViewer.CurrentPageIndex := fSearchResult.range.pageIndex;
@@ -301,7 +264,6 @@ begin
       end;
     ktPage:
       begin
-        eventLogger.Flow(Format('executed ktPage:%s', [APredicate.value]), kEventFlowName);
         fPDFViewer.CurrentPageIndex := StrToInt(APredicate.value);
       end;
     ktAny:
@@ -312,15 +274,16 @@ begin
 
   for nested in APredicate.predicates do
   begin
-    self.execute(nested,
+    self.RunPredicate(nested,
       procedure(AResult: Integer)
       begin
       end);
   end;
 
+  eventLogger.Flow(Format(SDebugFinishedPredicateExecutionTemplate, [APredicate.asString]), kEventFlowName);
+
   if assigned(completion) then
     completion(0);
-
 end;
 
 procedure TOPPHelpViewFullScreen.FitPageWidth;
@@ -368,7 +331,6 @@ begin
         fListener.SearchEnded;
     end;
   end;
-
 end;
 
 procedure TOPPHelpViewFullScreen.SetZoomFactor(AValue: Integer);

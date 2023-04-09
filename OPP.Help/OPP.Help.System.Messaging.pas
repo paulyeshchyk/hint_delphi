@@ -4,11 +4,24 @@ interface
 
 uses
   System.Types, System.Classes, System.Generics.Collections,
-  WinAPI.Windows,
+  WinAPI.Windows, WinAPI.Messages,
   Vcl.Controls, Vcl.StdCtrls,
   Vcl.Forms;
 
+const
+  WM_OPPHook = WM_USER + 800;
+  WM_OPPZoom = WM_USER + 801;
+  WM_OPPPredicate = WM_USER + 802;
+
 type
+
+  TWMCopyData = packed record
+    Msg: Cardinal;
+    From: HWND;
+    CopyDataStruct: PCopyDataStruct;
+    Result: Longint;
+  end;
+
 
   TOPPSystemMessageRunResultType = (rrtSuccess, rrtFail);
   TOPPSystemMessageRunCompletion = reference to procedure(ARunResultType: TOPPSystemMessageRunResultType);

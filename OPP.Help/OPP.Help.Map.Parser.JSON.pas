@@ -6,11 +6,11 @@ uses
   System.Generics.Collections,
   System.SysUtils,
   System.JSON,
-  OPP.Help.nonatomic,
+
+  OPP.Help.System.References,
   OPP.Help.Map;
 
 type
-  TOPPHelpMapParserJSONCallback = reference to procedure(AList: TList<TOPPHelpMap>; Error: Exception);
 
   TOPPHelpMapParserJSON = class helper for TOPPHelpMap
   private

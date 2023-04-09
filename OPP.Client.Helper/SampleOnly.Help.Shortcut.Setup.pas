@@ -3,10 +3,11 @@ unit SampleOnly.Help.Shortcut.Setup;
 interface
 
 uses
-  system.classes,
+  System.Classes,
   WinAPI.Messages,
-  OPP.Help.Nonatomic,
-  Vcl.Controls, Vcl.Dialogs;
+  Vcl.Controls, Vcl.Dialogs,
+
+  OPP.Help.System.References;
 
 type
   TOPPClientHelpShortcutHelper = class

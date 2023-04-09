@@ -2,8 +2,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Left = 283
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1082#1072' '#1043#1054#1051#1068#1060#1057#1058#1056#1048#1052
-  ClientHeight = 715
-  ClientWidth = 860
+  ClientHeight = 713
+  ClientWidth = 832
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   TextHeight = 27
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 683
-    Width = 860
+    Top = 681
+    Width = 832
     Height = 32
     Margins.Left = 7
     Margins.Top = 7
@@ -43,8 +43,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 952
-    ExplicitWidth = 846
+    ExplicitTop = 680
+    ExplicitWidth = 818
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4

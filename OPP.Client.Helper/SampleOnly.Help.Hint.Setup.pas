@@ -6,21 +6,20 @@ uses
   System.Classes,
   Vcl.Controls, System.Generics.Collections, System.SysUtils,
   dxScreenTip, cxHint,
-  OPP.Help.Hint, OPP.Help.Meta, OPP.Help.Map,
-  OPP.Help.Nonatomic,
 
+  OPP.Help.System.References,
+  OPP.Help.Hint, OPP.Help.Meta, OPP.Help.Map,
   OPP.Help.Hint.Server;
 
 type
-  TOPPClientHintHelperLoadCompletion = reference to procedure();
+  TOPPOnMapsLoadedEvent = reference to procedure (AList: TList<TOPPHelpMap>; completion: TOPPHelpMapsCompletion);
 
   TOPPClientHintHelper = class
   private
-    class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
+    class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
   public
-    class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
+    class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
-    class procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
     class procedure CreateHintView(AHint: TOPPHelpHint; AControl: TControl; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
   end;
 
@@ -35,7 +34,7 @@ uses
 var
   fMetaFactory: TOPPHelpMetaHintFactory;
 
-class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
+class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
 var
   fRequest: TOPPHelpHintMappingLoadRequest;
 begin
@@ -110,7 +109,7 @@ begin
   fScreenTipLink.control := AControl;
 end;
 
-class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPClientHintHelperLoadCompletion);
+class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
 var
   fHint: TOPPHelpHint;
   fControl: TComponent;
@@ -131,11 +130,6 @@ begin
 
   if assigned(completion) then
     completion();
-end;
-
-class procedure TOPPClientHintHelper.AvailableMaps(completion: TOPPHelpMapsCompletion);
-begin
-  helpHintServer.AvailableMaps(completion);
 end;
 
 end.

@@ -7,10 +7,10 @@
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Help.Preview\OPPHelpPreview.dproj">
-            <Dependencies/>
+            <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
         <Projects Include="OPP.Help.Sample\OPPHintTunning.dproj">
-            <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
+            <Dependencies>OPP.Help.Package\OPPHelp.dproj;OPP.Help.Preview\OPPHelpPreview.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -29,22 +29,22 @@
     <Target Name="OPPHelp:Make">
         <MSBuild Projects="OPP.Help.Package\OPPHelp.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPHelpPreview">
+    <Target Name="OPPHelpPreview" DependsOnTargets="OPPHelp">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj"/>
     </Target>
-    <Target Name="OPPHelpPreview:Clean">
+    <Target Name="OPPHelpPreview:Clean" DependsOnTargets="OPPHelp:Clean">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHelpPreview:Make">
+    <Target Name="OPPHelpPreview:Make" DependsOnTargets="OPPHelp:Make">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPHintTunning" DependsOnTargets="OPPHelp">
+    <Target Name="OPPHintTunning" DependsOnTargets="OPPHelp;OPPHelpPreview">
         <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj"/>
     </Target>
-    <Target Name="OPPHintTunning:Clean" DependsOnTargets="OPPHelp:Clean">
+    <Target Name="OPPHintTunning:Clean" DependsOnTargets="OPPHelp:Clean;OPPHelpPreview:Clean">
         <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHintTunning:Make" DependsOnTargets="OPPHelp:Make">
+    <Target Name="OPPHintTunning:Make" DependsOnTargets="OPPHelp:Make;OPPHelpPreview:Make">
         <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">

@@ -55,10 +55,10 @@
         <DCC_K>false</DCC_K>
         <DCC_UsePackage>RESTBackendComponents;CloudService;soaprtl;soapmidas;RESTComponents;emsclientfiredac;FireDACIBDriver;emsclient;FireDACCommon;soapserver;FireDACCommonDriver;inet;FireDAC;FireDACSqliteDriver;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+        <UWP_DelphiLogo44>..\OPP.Help\icons\dev-help.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>..\OPP.Help\icons\dev-help.png</UWP_DelphiLogo150>
         <SanitizedProjectName>OPPHelpPreview</SanitizedProjectName>
+        <Icon_MainIcon>..\OPP.Help\icons\dev-help.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -88,11 +88,11 @@
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units</DCC_DcuOutput>
-        <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
+        <AppDPIAwarenessMode>system</AppDPIAwarenessMode>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\22.0\bin;C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBase2020\IDE_spoof;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Users\Paul\AppData\Local\Microsoft\WindowsApps;D:\Embarcadero\Studio\22.0;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
-        <Icon_MainIcon>OPPHelpPreview_Icon.ico</Icon_MainIcon>
         <DCC_UsePackage>OPPHelp</DCC_UsePackage>
+        <AppEnableRuntimeThemes>false</AppEnableRuntimeThemes>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -114,15 +114,15 @@
             <Form>OPPHelpPreviewZoomForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -135,11 +135,8 @@
                     <Source Name="MainSource">OPPHelpPreview.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

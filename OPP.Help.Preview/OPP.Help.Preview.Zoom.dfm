@@ -3,8 +3,8 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1084#1072#1089#1096#1090#1072#1073#1072
-  ClientHeight = 234
-  ClientWidth = 800
+  ClientHeight = 233
+  ClientWidth = 786
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

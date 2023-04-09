@@ -8,7 +8,8 @@ uses
   dxRichEdit.Control, dxRichEdit.NativeAPI,
 
   OPP.Help.Interfaces,
-  OPP.Help.Nonatomic,
+  OPP.Help.System.Types,
+  OPP.Help.System.References,
   OPP.Help.Predicate,
   OPP.Help.Hint;
 

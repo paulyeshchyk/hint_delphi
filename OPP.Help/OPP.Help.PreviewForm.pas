@@ -11,6 +11,8 @@ uses
 
   OPP.Help.Interfaces, OPP.Help.Predicate,
   OPP.Help.View.Fullscreen,
+  OPP.Help.System.Stream,
+  OPP.Help.System.Messaging,
 
   System.Classes, System.SysUtils, System.Variants,
   Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls, Vcl.AppEvnts,
@@ -30,14 +32,7 @@ uses
 
 type
 
-  TWMCopyData = packed record
-    Msg: Cardinal;
-    From: HWND;
-    CopyDataStruct: PCopyDataStruct;
-    Result: Longint;
-  end;
-
-  TOPPHelpPreviewFormState = (fsCreated, fsLoading, fsHandlingMessage, fsSearching, fsSearchProgressing, fsSearchFinishing, fsIdle);
+  TOPPHelpPreviewFormState = (fsFormCreated, fsLoadContentStarted, fsLoadContentFinished, fsHandlingMessage, fsSearchStarted, fsSearchProgressing, fsSearchFinished, fsIdle);
 
   TOPPHelpPreviewFormStateHelper = record helper for TOPPHelpPreviewFormState
   public
@@ -103,16 +98,23 @@ type
     procedure FormCreate(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure zoomValueEditChange(Sender: TObject);
+  protected
+    procedure OnMessageWMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
+    procedure OnMessageWMUserZoom(var Msg: TMessage); message WM_OPPZoom;
+    procedure OnMessageWMOPPPredicate(var Msg: TMessage); message WM_OPPPredicate;
   private
     fCurrentState: TOPPHelpPreviewFormState;
-    { Private declarations }
+    fCurrentPredicate: TOPPHelpPredicate;
 
     oppHelpView: TOPPHelpViewFullScreen;
+
+    procedure HandleWMCOPYMessage(APtr: Pointer; ASize: NativeInt);
+
     function GetInfoPanel: TdxStatusBarPanel;
+    procedure ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
     { --- }
-    procedure LoadStarted();
-    procedure OnMessageWMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
-    procedure OnMessageWMUserZoom(var Msg: TMessage); message WM_USER + 3;
+    procedure LoadContentStarted();
+    procedure LoadContentFinished();
     procedure OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
     procedure ProgressIncrement;
     procedure RestoreFromBackground();
@@ -129,7 +131,7 @@ type
     { Public declarations }
     function GetContainerClassName: String;
     procedure presentModal();
-    procedure runPredicate(APredicate: TOPPHelpPredicate);
+    procedure runPredicate(const APredicate: TOPPHelpPredicate);
   end;
 
 var
@@ -142,23 +144,26 @@ implementation
 uses
   dxCustomPreview,
   OPP.Help.Shortcut.Server,
-  OPP.Help.System.Stream,
   OPP.Help.Preview.Zoom,
-  OPP.Help.Log;
+  OPP.Help.Log, OPP.Help.System.Error,
+  OPP.Help.System.Messaging.Pipe,
+
+  AsyncCalls;
 
 resourcestring
+  SEventParsedPredicateTemplate = 'Parsed predicate: %s';
+  SEventFinishedPDFLoadTemplate = 'Finished PDF load: %s';
+  SEventStartedPDFLoadTemplate = 'Started PDF load: %s';
   SFlowReceivedMessage = 'Received Message';
   SScalingTemplate = 'Масштаб %d %%';
-  SStatusIdle = '';
-  SStatusFinishing = 'Finishing';
-  SStatusProgressing = 'Progressing';
-  SStatusSearching = 'Searching';
+  SStatusIdle = 'Idle';
+  SStatusSearchFinished = 'Search finished';
+  SStatusSearchProgressing = 'Search is progressing';
+  SStatusSearchStarted = 'Search started';
   SStatusHandling = 'Handling';
-  SStatusLoading = 'Loading';
-  SStatusCreated = 'Created';
-
-const
-  SMessageResultSuccess = 10000;
+  SStatusLoadContentStarted = 'Load content started';
+  SStatusLoadContentFinished = 'Load content finished';
+  SStatusFormCreated = 'Form created';
 
 procedure TOPPHelpPreviewForm.actionFitPageHeightExecute(Sender: TObject);
 begin
@@ -228,7 +233,7 @@ end;
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
 
-  self.currentState := fsCreated;
+  self.currentState := fsFormCreated;
 
   oppHelpView := TOPPHelpViewFullScreen.Create(self);
   oppHelpView.Parent := self;
@@ -255,13 +260,7 @@ begin
   Result := dxStatusBar1.Panels[1];
 end;
 
-{ --------- }
-procedure TOPPHelpPreviewForm.LoadStarted();
-begin
-  currentState := fsLoading;
-end;
-
-procedure TOPPHelpPreviewForm.OnMessageWMCopyData(var Msg: TWMCopyData);
+procedure TOPPHelpPreviewForm.HandleWMCOPYMessage(APtr: Pointer; ASize: NativeInt);
 var
   fPredicate: TOPPHelpPredicate;
   fNotificationStream: TReadOnlyMemoryStream;
@@ -270,11 +269,10 @@ begin
 
   currentState := fsHandlingMessage;
 
-  fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
+  fNotificationStream := TReadOnlyMemoryStream.Create(APtr, ASize);
   try
-    fPredicate := TOPPHelpPredicate.Create();
+    ParsePredicate(fNotificationStream, fPredicate);
     try
-      fPredicate.readFromStream(fNotificationStream, true);
       runPredicate(fPredicate);
     finally
       fPredicate.Free;
@@ -282,8 +280,59 @@ begin
   finally
     fNotificationStream.Free;
   end;
+end;
+
+{ --------- }
+procedure TOPPHelpPreviewForm.LoadContentFinished;
+begin
+  currentState := fsLoadContentFinished;
+end;
+
+procedure TOPPHelpPreviewForm.LoadContentStarted();
+begin
+  currentState := fsLoadContentStarted;
+end;
+
+procedure TOPPHelpPreviewForm.ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
+begin
+  resultPredicate := TOPPHelpPredicate.Create();
+  resultPredicate.readFromStream(AStream, true);
+  eventLogger.Flow(Format(SEventParsedPredicateTemplate, [resultPredicate.asString]), OPP.Help.View.Fullscreen.kEventFlowName)
+end;
+
+procedure TOPPHelpPreviewForm.OnMessageWMCopyData(var Msg: TWMCopyData);
+var
+  fNotificationStream: TReadOnlyMemoryStream;
+begin
+
+  fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
+  try
+    try
+      ParsePredicate(fNotificationStream, fCurrentPredicate);
+    except
+      on e: Exception do
+      begin
+        e.log();
+      end;
+    end;
+  finally
+    fNotificationStream.Free;
+  end;
+
+  PostMessage(self.Handle, WM_OPPPredicate, 0, 0);
+
+  eventLogger.Flow('Posted success result', kEventFlowName);
 
   Msg.Result := SMessageResultSuccess;
+
+end;
+
+procedure TOPPHelpPreviewForm.OnMessageWMOPPPredicate(var Msg: TMessage);
+begin
+  Msg.Result := SMessageResultSuccess;
+
+  runPredicate(fCurrentPredicate);
+
 end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMUserZoom(var Msg: TMessage);
@@ -319,20 +368,19 @@ begin
   self.WindowState := TWindowState.wsNormal;
 end;
 
-procedure TOPPHelpPreviewForm.runPredicate(APredicate: TOPPHelpPredicate);
+procedure TOPPHelpPreviewForm.runPredicate(const APredicate: TOPPHelpPredicate);
 begin
+  eventLogger.Flow(Format(SEventStartedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kEventFlowName);
   helpShortcutServer.loadPDF(APredicate.fileName,
     procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus)
     begin
+      eventLogger.Flow(Format(SEventFinishedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kEventFlowName);
       if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssError then
         exit;
 
-      eventLogger.Flow(Format('started running predicate: %s', [APredicate.value]), OPP.Help.View.Fullscreen.kEventFlowName);
-
       try
-        eventLogger.Flow(Format('loaded pdf from: %s', [APredicate.fileName]), OPP.Help.View.Fullscreen.kEventFlowName);
         if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssCreated then
-          oppHelpView.loadContent(AStream);
+          oppHelpView.LoadContent(AStream);
       finally
         oppHelpView.setPredicate(APredicate);
       end;
@@ -341,7 +389,7 @@ end;
 
 procedure TOPPHelpPreviewForm.SearchEnded();
 begin
-  currentState := fsSearchFinishing;
+  currentState := fsSearchFinished;
 
   cxProgressBar1.Position := 0;
 end;
@@ -358,7 +406,7 @@ end;
 
 procedure TOPPHelpPreviewForm.SearchStarted();
 begin
-  currentState := fsSearching;
+  currentState := fsSearchStarted;
   cxProgressBar1.Position := 0;
 end;
 
@@ -398,18 +446,20 @@ function TOPPHelpPreviewFormStateHelper.asString: String;
 begin
   result := '';
   case self of
-    fsCreated:
-      result := SStatusCreated;
-    fsLoading:
-      result := SStatusLoading;
+    fsFormCreated:
+      result := SStatusFormCreated;
+    fsLoadContentStarted:
+      result := SStatusLoadContentStarted;
+    fsLoadContentFinished:
+      result := SStatusLoadContentFinished;
     fsHandlingMessage:
       result := SStatusHandling;
-    fsSearching:
-      result := SStatusSearching;
+    fsSearchStarted:
+      result := SStatusSearchStarted;
     fsSearchProgressing:
-      result := SStatusProgressing;
-    fsSearchFinishing:
-      result := SStatusIdle;
+      result := SStatusSearchProgressing;
+    fsSearchFinished:
+      result := SStatusSearchFinished;
     fsIdle:
       result := SStatusIdle;
   end;

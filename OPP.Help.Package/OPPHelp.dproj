@@ -149,7 +149,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Component.Enumerator.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Nonatomic.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Dataset.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Map.Parser.JSON.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Request.pas"/>
@@ -168,9 +167,10 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Interfaces.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Hook.Keyboard.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Constants.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Serializer.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
+        <DCCReference Include="..\OPP.Help\AsyncCalls.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.References.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Types.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -189,11 +189,8 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">OPPHelp.dpk</Source>

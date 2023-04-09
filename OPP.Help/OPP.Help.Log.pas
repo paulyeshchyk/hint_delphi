@@ -10,8 +10,8 @@ type
     procedure Log(AString: String; postfix: String = ''; messageType: TOPPLogMessageType = lmInfo);
   public
     procedure Error(AString: String; AFlowName: String = '');
-    procedure Warning(AString: String);
-    procedure Debug(AString: String);
+    procedure Warning(AString: String; AFlowName: String = '');
+    procedure Debug(AString: String; AFlowName: String = '');
     procedure Flow(AString: String; AFlowName: String = '');
   end;
 
@@ -35,9 +35,12 @@ resourcestring
   SErrorNoFlowPrefix = '%s';
   SErrorAndFlowPrefix = '[%s] - %s';
 
-procedure TOPPHelpLog.Debug(AString: string);
+procedure TOPPHelpLog.Debug(AString: string; AFlowName: String = '');
 begin
-  self.Log(AString, '', lmDebug);
+  if Length(AFlowName) > 0 then
+    self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmDebug)
+  else
+    self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmDebug);
 end;
 
 procedure TOPPHelpLog.Flow(AString: string; AFlowName: String);
@@ -53,9 +56,12 @@ begin
     self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmError);
 end;
 
-procedure TOPPHelpLog.Warning(AString: string);
+procedure TOPPHelpLog.Warning(AString: string; AFlowName: String = '');
 begin
-  self.Log(AString, '', lmWarning);
+  if Length(AFlowName) > 0 then
+    self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmWarning)
+  else
+    self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmWarning);
 end;
 
 procedure TOPPHelpLog.Log(AString: string; postfix: String; messageType: TOPPLogMessageType);

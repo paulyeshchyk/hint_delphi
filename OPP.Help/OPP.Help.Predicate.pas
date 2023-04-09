@@ -5,7 +5,7 @@ interface
 uses
   System.Classes, System.Generics.Collections,
   OPP.Help.System.Stream,
-  OPP.Help.Nonatomic;
+  OPP.Help.System.Types;
 
 type
 
@@ -28,6 +28,7 @@ type
   end;
 
   TOPPHelpPredicateStreamHelper = class helper for TOPPHelpPredicate
+    function asString(): String;
     function writeToStream(AStream: TStream): Boolean;
     function readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
   end;
@@ -61,6 +62,11 @@ begin
   end;
 
   result := true;
+end;
+
+function TOPPHelpPredicateStreamHelper.asString: String;
+begin
+  result := Format('Filename: %s; Value: %s, Type:%s',[self.filename, self.value, self.KeywordType.asString]);
 end;
 
 function TOPPHelpPredicateStreamHelper.readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
