@@ -11,7 +11,7 @@ type
   TOPPHelpViewHelper = class helper for TdxPDFViewer
   public
     procedure RunPredicate(APredicate: TOPPHelpPredicate); overload;
-    procedure RunPredicate(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion); overload;
+    procedure RunPredicate(APredicate: TOPPHelpPredicate; ALevel: Integer; completion: TOPPHelpViewPredicateExecutionCompletion); overload;
   end;
 
 implementation
@@ -33,6 +33,7 @@ var
   fCurrentPageIndex: Integer;
   fSearchResult: TdxPDFDocumentTextSearchResult;
 begin
+
   case APredicate.keywordType of
     ktSearch:
       begin
@@ -56,19 +57,19 @@ begin
 
 end;
 
-procedure TOPPHelpViewHelper.RunPredicate(APredicate: TOPPHelpPredicate; completion: TOPPHelpViewPredicateExecutionCompletion);
+procedure TOPPHelpViewHelper.RunPredicate(APredicate: TOPPHelpPredicate; ALevel: Integer; completion: TOPPHelpViewPredicateExecutionCompletion);
 var
-  nested: TOPPHelpPredicate;
+  nestedPredicate: TOPPHelpPredicate;
 begin
 
   eventLogger.Flow(Format(SDebugStartedPredicateExecutionTemplate, [APredicate.asString]), kEventFlowName);
 
   self.RunPredicate(APredicate);
 
-  for nested in APredicate.predicates do
+  for nestedPredicate in APredicate.predicates do
   begin
-    self.RunPredicate(nested,
-      procedure(AResult: Integer)
+    self.RunPredicate(nestedPredicate, 1 + ALevel,
+      procedure(AResult: TOPPHelpViewPredicateExecutionResult; ALevel: Integer)
       begin
       end);
   end;
@@ -76,7 +77,7 @@ begin
   eventLogger.Flow(Format(SDebugFinishedPredicateExecutionTemplate, [APredicate.asString]), kEventFlowName);
 
   if assigned(completion) then
-    completion(0);
+    completion(perSuccess, ALevel);
 end;
 
 end.

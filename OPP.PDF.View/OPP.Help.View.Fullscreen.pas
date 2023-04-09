@@ -67,7 +67,7 @@ type
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
 
-    function searchWork(Arg: Integer): Integer;
+    procedure searchWork();
 
     procedure FitPageWidth;
     procedure FitPageHeight;
@@ -223,21 +223,20 @@ begin
     exit;
   end;
 
-  searchWork(0);
-  // AsyncCalls.AsyncCall(searchWork, 0).Sync;
+  searchWork();
+
 end;
 
-function TOPPHelpViewFullScreen.searchWork(Arg: Integer): Integer;
+procedure TOPPHelpViewFullScreen.searchWork();
 begin
   self.SearchIsInProgress := true;
 
-  fPDFViewer.RunPredicate(fPredicate,
-    procedure(AResult: Integer)
+  fPDFViewer.RunPredicate(fPredicate,0,
+    procedure(AResult: TOPPHelpViewPredicateExecutionResult; ALevel:Integer)
     begin
       self.SearchIsInProgress := false;
     end);
 
-  result := 0;
 end;
 
 procedure TOPPHelpViewFullScreen.FitPageWidth;
