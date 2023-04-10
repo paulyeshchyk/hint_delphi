@@ -23,16 +23,15 @@ uses
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
   SampleFormSaveState,
 
-  dxSkinsCore, dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans,
   dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin,
   dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
   dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray, dxSkinOffice2013White,
-  dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinOffice2019Black, dxSkinOffice2019Colorful,
-  dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
+  dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
   dxSkinSharpPlus, dxSkinSilver, dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinTheBezier, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
@@ -96,12 +95,12 @@ type
     N4: TMenuItem;
     OpenTextFileDialog1: TOpenTextFileDialog;
     PageControl1: TPageControl;
-    Panel1: TPanel;
+    PanelPreview: TPanel;
     Panel2: TPanel;
     Panel4: TPanel;
     Panel5: TPanel;
     Panel7: TPanel;
-    Panel8: TPanel;
+    PanelIDContainer: TPanel;
     panelAddBorder: TPanel;
     panelList: TPanel;
     ShortcutDetailsKeywordTypeComboBox: TcxComboBox;
@@ -343,11 +342,11 @@ var
   p: TPoint;
   fHint: TOPPHelpHint;
 begin
-  Panel1.ShowHint := true;
-  Panel1.Hint := 'Test';
-  p := Panel1.ClientOrigin;
+  PanelPreview.ShowHint := true;
+  PanelPreview.Hint := 'Test';
+  p := PanelPreview.ClientOrigin;
 
-  TOPPClientHintHelper.CreateHintView(fHint, Panel1, cxHintController, tipsRepo);
+  TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
 end;
 
 procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);

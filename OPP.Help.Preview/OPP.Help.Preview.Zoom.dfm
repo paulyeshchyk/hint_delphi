@@ -11,6 +11,7 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 192
   TextHeight = 27

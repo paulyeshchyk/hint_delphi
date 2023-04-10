@@ -10,7 +10,7 @@
             <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
         <Projects Include="OPP.Help.Sample\OPPHintTunning.dproj">
-            <Dependencies>OPP.Help.Package\OPPHelp.dproj;OPP.Help.Preview\OPPHelpPreview.dproj</Dependencies>
+            <Dependencies>OPP.Help.Preview\OPPHelpPreview.dproj;OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
