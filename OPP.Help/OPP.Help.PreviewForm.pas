@@ -103,9 +103,9 @@ type
     dxBarLargeButton8: TdxBarLargeButton;
     dxBarLargeButton9: TdxBarLargeButton;
     dxBarManager1: TdxBarManager;
-    dxBarManager1Bar1: TdxBar;
+    barNavigator: TdxBar;
     dxBarManager1Bar5: TdxBar;
-    dxBarManager1Bar6: TdxBar;
+    barJump: TdxBar;
     dxBarSeparator1: TdxBarSeparator;
     dxBarSeparator2: TdxBarSeparator;
     dxBarSeparator3: TdxBarSeparator;
@@ -136,9 +136,9 @@ type
     zoomValueEdit: TcxBarEditItem;
     dxBarButton19: TdxBarButton;
     dxBarSeparator9: TdxBarSeparator;
-    dxBarManager1Bar2: TdxBar;
-    dxBarManager1Bar3: TdxBar;
-    dxBarManager1Bar4: TdxBar;
+    barPrint: TdxBar;
+    barExit: TdxBar;
+    barZoom: TdxBar;
     dxBarSubItem9: TdxBarSubItem;
     dxBarLargeButton10: TdxBarLargeButton;
     actionZoomIncrease: TAction;

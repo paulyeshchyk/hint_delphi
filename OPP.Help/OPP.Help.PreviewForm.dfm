@@ -149,7 +149,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       0
       83
       0)
-    object dxBarManager1Bar1: TdxBar
+    object barNavigator: TdxBar
       Caption = #1055#1077#1088#1077#1093#1086#1076#1099' '#1087#1086' '#1089#1090#1088#1072#1085#1080#1094#1072#1084
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -231,7 +231,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Visible = True
       WholeRow = True
     end
-    object dxBarManager1Bar6: TdxBar
+    object barJump: TdxBar
       Caption = #1055#1086#1080#1089#1082
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -258,7 +258,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Visible = True
       WholeRow = False
     end
-    object dxBarManager1Bar2: TdxBar
+    object barPrint: TdxBar
       Caption = #1055#1077#1095#1072#1090#1100
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -280,7 +280,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Visible = True
       WholeRow = False
     end
-    object dxBarManager1Bar3: TdxBar
+    object barExit: TdxBar
       Caption = #1047#1072#1082#1088#1099#1090#1100
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -302,7 +302,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Visible = True
       WholeRow = False
     end
-    object dxBarManager1Bar4: TdxBar
+    object barZoom: TdxBar
       Caption = #1052#1072#1089#1096#1090#1072#1073
       CaptionButtons = <>
       DockedDockingStyle = dsTop
