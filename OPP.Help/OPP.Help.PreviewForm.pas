@@ -142,7 +142,7 @@ implementation
 uses
   dxCustomPreview,
   OPP.Help.Shortcut.Server,
-  OPP.Help.Preview.Zoom,
+  OPP.Help.View.ZoomSettings,
   OPP.Help.Log, OPP.Help.System.Error,
   OPP.Help.System.Messaging.Pipe,
 

@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, dxScreenTip, dxCustomHint, cxHint, cxClasses;
 
 type
   TFormTest1 = class(TForm)
@@ -13,8 +13,11 @@ type
     Kod_MKC: TEdit;
     internalHelpViewerButton: TButton;
     externalHelpViewerButton: TButton;
+    tipsRepo: TdxScreenTipRepository;
+    cxHintStyleController1: TcxHintStyleController;
     procedure externalHelpViewerButtonClick(Sender: TObject);
     procedure internalHelpViewerButtonClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -28,11 +31,19 @@ implementation
 
 {$R *.dfm}
 
-uses SampleFormStubsHelper;
+uses SampleFormStubsHelper, SampleOnly.Help.Hint.Setup;
 
 procedure TFormTest1.externalHelpViewerButtonClick(Sender: TObject);
 begin
   TSampleFormStubsHelper.openExternalHelp;
+end;
+
+procedure TFormTest1.FormCreate(Sender: TObject);
+begin
+  TOPPClientHintHelper.LoadHints(self, '', self.cxHintStyleController1, self.tipsRepo,
+    procedure()
+    begin
+    end);
 end;
 
 procedure TFormTest1.internalHelpViewerButtonClick(Sender: TObject);

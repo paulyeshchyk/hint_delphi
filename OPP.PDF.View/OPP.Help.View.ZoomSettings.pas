@@ -1,4 +1,4 @@
-unit OPP.Help.Preview.Zoom;
+unit OPP.Help.View.ZoomSettings;
 
 interface
 

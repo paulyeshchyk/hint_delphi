@@ -13,6 +13,7 @@ object FormTest1: TFormTest1
   Font.Style = []
   OldCreateOrder = True
   Position = poScreenCenter
+  OnCreate = FormCreate
   PixelsPerInch = 192
   TextHeight = 13
   object GroupBox11: TGroupBox
@@ -33,12 +34,10 @@ object FormTest1: TFormTest1
     ParentShowHint = False
     ShowHint = True
     TabOrder = 0
-    ExplicitWidth = 917
-    ExplicitHeight = 573
     object Kod_OKWED: TCheckBox
       Left = 32
       Top = 32
-      Width = 388
+      Width = 153
       Height = 17
       HelpType = htKeyword
       HelpKeyword = 'Kod_OKWED'
@@ -97,5 +96,17 @@ object FormTest1: TFormTest1
       TabOrder = 2
       OnClick = externalHelpViewerButtonClick
     end
+  end
+  object tipsRepo: TdxScreenTipRepository
+    Left = 128
+    Top = 136
+    PixelsPerInch = 96
+  end
+  object cxHintStyleController1: TcxHintStyleController
+    HintStyleClassName = 'TdxScreenTipStyle'
+    HintStyle.ScreenTipLinks = <>
+    HintStyle.ScreenTipActionLinks = <>
+    Left = 40
+    Top = 136
   end
 end

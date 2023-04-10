@@ -4,20 +4,20 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1084#1072#1089#1096#1090#1072#1073#1072
   ClientHeight = 233
-  ClientWidth = 786
+  ClientWidth = 420
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 13
   object cxLabel1: TcxLabel
     Left = 16
-    Top = 48
+    Top = 12
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -25,8 +25,8 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Caption = #1058#1086#1095#1085#1086
   end
   object cxSpinEdit1: TcxSpinEdit
-    Left = 192
-    Top = 46
+    Left = 112
+    Top = 11
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -41,12 +41,12 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Properties.OnEditValueChanged = cxSpinEdit1PropertiesEditValueChanged
     TabOrder = 1
     Value = 10
-    Height = 35
-    Width = 242
+    Height = 22
+    Width = 121
   end
   object cxTrackBar1: TcxTrackBar
-    Left = 174
-    Top = 128
+    Left = 112
+    Top = 56
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -62,11 +62,11 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Properties.OnChange = cxTrackBar1PropertiesChange
     TabOrder = 2
     Height = 50
-    Width = 516
+    Width = 257
   end
   object cxLabel2: TcxLabel
-    Left = 16
-    Top = 128
+    Left = 11
+    Top = 71
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -74,8 +74,8 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Caption = #1055#1088#1080#1073#1083#1080#1078#1105#1085#1085#1086
   end
   object ActionList1: TActionList
-    Left = 528
-    Top = 8
+    Left = 8
+    Top = 160
     object Action1: TAction
       Caption = 'Action1'
       ShortCut = 27

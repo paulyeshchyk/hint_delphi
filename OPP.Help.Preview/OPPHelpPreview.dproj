@@ -109,11 +109,11 @@
         </DelphiCompile>
         <DCCReference Include="..\OPP.Help\OPP.Help.PreviewForm.pas"/>
         <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.Fullscreen.pas"/>
-        <DCCReference Include="OPP.Help.Preview.Zoom.pas">
+        <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.Helper.pas"/>
+        <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas">
             <Form>OPPHelpPreviewZoomForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.Helper.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -143,7 +143,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="Win32\Debug\OPPHelpPreview.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHelpPreview.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHelpPreview.exe</RemoteName>
                         <Overwrite>true</Overwrite>
