@@ -27,7 +27,10 @@ uses
   dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
   dxSkinSharpPlus, dxSkinSilver, dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
-  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxPrnDev, dxPrnDlg, dxPSGlbl,
+  dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore,
+  dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer,
+  dxPScxEditorProducers, dxPScxExtEditorProducers, dxPSCore, cxTextEdit, cxPropertiesStore;
 
 type
 
@@ -39,39 +42,87 @@ type
   end;
 
   TOPPHelpPreviewForm = class(TForm, IOPPHelpViewEventListener, IOPPHelpShortcutViewer)
+    actionFitPageCustom: TAction;
     actionFitPageHeight: TAction;
     actionFitPageWidth: TAction;
+    actionFitTwoPages: TAction;
+    actionGotoContents: TAction;
+    actionGotoFirstPage: TAction;
+    actionGotoLastPage: TAction;
+    actionGotoNextPage: TAction;
+    actionGotoPreviousPage: TAction;
+    actionGotoTerms: TAction;
     actionHide: TAction;
     ActionList1: TActionList;
+    actionPrint: TAction;
+    actionPrintDialog: TAction;
     actionToggleFindPanel: TAction;
     ApplicationEvents1: TApplicationEvents;
+    buttonFirstPage: TdxBarLargeButton;
+    buttonLastPage: TdxBarLargeButton;
+    buttonNextPage: TdxBarLargeButton;
+    buttonPreviousPage: TdxBarLargeButton;
+    buttonQuickNavigation: TdxBarSubItem;
     cxBarEditItem1: TcxBarEditItem;
     cxBarEditItem2: TcxBarEditItem;
     cxBarEditItem3: TcxBarEditItem;
     cxBarEditItem4: TcxBarEditItem;
     cxBarEditItem5: TcxBarEditItem;
+    cxEditGotoCustomPage: TcxBarEditItem;
     cxProgressBar1: TcxProgressBar;
+    dropdownPageSelectionEdit: TcxBarEditItem;
     dxBarButton1: TdxBarButton;
+    dxBarButton10: TdxBarButton;
+    dxBarButton11: TdxBarButton;
+    dxBarButton12: TdxBarButton;
+    dxBarButton13: TdxBarButton;
+    dxBarButton14: TdxBarButton;
+    dxBarButton15: TdxBarButton;
+    dxBarButton16: TdxBarButton;
+    dxBarButton17: TdxBarButton;
+    dxBarButton18: TdxBarButton;
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
     dxBarButtonExit: TdxBarButton;
+    dxBarDockControl1: TdxBarDockControl;
+    dxBarDockControl2: TdxBarDockControl;
+    dxBarDockControl3: TdxBarDockControl;
     dxBarLargeButton1: TdxBarLargeButton;
     dxBarLargeButton2: TdxBarLargeButton;
     dxBarLargeButton3: TdxBarLargeButton;
     dxBarLargeButton4: TdxBarLargeButton;
     dxBarLargeButton5: TdxBarLargeButton;
     dxBarLargeButton6: TdxBarLargeButton;
+    dxBarLargeButton7: TdxBarLargeButton;
+    dxBarLargeButton8: TdxBarLargeButton;
+    dxBarLargeButton9: TdxBarLargeButton;
     dxBarManager1: TdxBarManager;
-    dxBarManager1Bar2: TdxBar;
+    dxBarManager1Bar1: TdxBar;
+    dxBarManager1Bar5: TdxBar;
+    dxBarManager1Bar6: TdxBar;
     dxBarSeparator1: TdxBarSeparator;
     dxBarSeparator2: TdxBarSeparator;
     dxBarSeparator3: TdxBarSeparator;
     dxBarSeparator4: TdxBarSeparator;
+    dxBarSeparator5: TdxBarSeparator;
+    dxBarSeparator6: TdxBarSeparator;
+    dxBarSeparator7: TdxBarSeparator;
+    dxBarSeparator8: TdxBarSeparator;
     dxBarSubItem1: TdxBarSubItem;
     dxBarSubItem2: TdxBarSubItem;
     dxBarSubItem3: TdxBarSubItem;
     dxBarSubItem4: TdxBarSubItem;
+    dxBarSubItem5: TdxBarSubItem;
+    dxBarSubItem6: TdxBarSubItem;
+    dxBarSubItem7: TdxBarSubItem;
+    dxBarSubItem8: TdxBarSubItem;
+    dxComponentPrinter1: TdxComponentPrinter;
     dxDockingManager1: TdxDockingManager;
     dxStatusBar1: TdxStatusBar;
     dxStatusBar1Container0: TdxStatusBarContainerControl;
@@ -83,63 +134,59 @@ type
     TrayIcon1: TTrayIcon;
     zoomMenuButton: TdxBarSubItem;
     zoomValueEdit: TcxBarEditItem;
-    dxBarManager1Bar1: TdxBar;
-    buttonFirstPage: TdxBarLargeButton;
-    buttonPreviousPage: TdxBarLargeButton;
-    buttonNextPage: TdxBarLargeButton;
-    buttonLastPage: TdxBarLargeButton;
-    actionGotoFirstPage: TAction;
-    actionGotoPreviousPage: TAction;
-    actionGotoNextPage: TAction;
-    actionGotoLastPage: TAction;
-    dxBarLargeButton7: TdxBarLargeButton;
-    cxEditGotoCustomPage: TcxBarEditItem;
-
-    procedure FormDestroy(Sender: TObject);
+    dxBarButton19: TdxBarButton;
+    dxBarSeparator9: TdxBarSeparator;
+    dxBarManager1Bar2: TdxBar;
+    dxBarManager1Bar3: TdxBar;
+    dxBarManager1Bar4: TdxBar;
+    dxBarSubItem9: TdxBarSubItem;
+    dxBarLargeButton10: TdxBarLargeButton;
+    actionZoomIncrease: TAction;
+    actionZoomDecrease: TAction;
+    dxBarLargeButton11: TdxBarLargeButton;
+    dxBarLargeButton12: TdxBarLargeButton;
+    procedure actionFitPageCustomExecute(Sender: TObject);
     procedure actionFitPageHeightExecute(Sender: TObject);
     procedure actionFitPageWidthExecute(Sender: TObject);
+    procedure actionFitTwoPagesExecute(Sender: TObject);
+    procedure actionGotoContentsExecute(Sender: TObject);
     procedure actionGotoFirstPageExecute(Sender: TObject);
     procedure actionGotoLastPageExecute(Sender: TObject);
     procedure actionGotoNextPageExecute(Sender: TObject);
     procedure actionGotoPreviousPageExecute(Sender: TObject);
+    procedure actionGotoTermsExecute(Sender: TObject);
     procedure actionHideExecute(Sender: TObject);
+    procedure actionPrintDialogExecute(Sender: TObject);
+    procedure actionPrintExecute(Sender: TObject);
     procedure actionToggleFindPanelExecute(Sender: TObject);
+    procedure actionZoomDecreaseExecute(Sender: TObject);
+    procedure actionZoomIncreaseExecute(Sender: TObject);
     procedure ApplicationEvents1Minimize(Sender: TObject);
     procedure ApplicationEvents1Restore(Sender: TObject);
     procedure cxBarEditItem4Change(Sender: TObject);
     procedure cxEditGotoCustomPageChange(Sender: TObject);
+    procedure cxEditGotoCustomPagePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure dxBarButtonExitClick(Sender: TObject);
-    procedure dxBarLargeButton6Click(Sender: TObject);
     procedure dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure zoomValueEditChange(Sender: TObject);
-    procedure cxEditGotoCustomPagePropertiesValidate(Sender: TObject; var DisplayValue: Variant;
-      var ErrorText: TCaption; var Error: Boolean);
-  protected
-    procedure OnMessageWMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
-    procedure OnMessageWMUserZoom(var Msg: TMessage); message WM_OPPZoom;
-    procedure OnMessageWMOPPPredicate(var Msg: TMessage); message WM_OPPPredicate;
   private
-    fCurrentState: TOPPHelpPreviewFormState;
     fCurrentPredicate: TOPPHelpPredicate;
-    reloadIsInProgress : Boolean;
-
+    fCurrentState: TOPPHelpPreviewFormState;
     fNavigator: IOPPNavigator;
-
     oppHelpView: TOPPHelpViewFullScreen;
-
-    procedure HandleWMCOPYMessage(APtr: Pointer; ASize: NativeInt);
-
-    procedure ReloadNavigationPanel(ANavigator: IOPPNavigator);
-
+    reloadIsInProgress: Boolean;
     function GetInfoPanel: TdxStatusBarPanel;
-    procedure ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
+    procedure HandleWMCOPYMessage(APtr: Pointer; ASize: NativeInt);
+    procedure LoadContentFinished();
     { --- }
     procedure LoadContentStarted();
-    procedure LoadContentFinished();
     procedure OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
+    procedure ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
+    procedure ReloadNavigationPanel(ANavigator: IOPPNavigator);
     procedure RestoreFromBackground();
     procedure SearchEnded();
     procedure SearchProgress();
@@ -151,6 +198,11 @@ type
     property currentState: TOPPHelpPreviewFormState read fCurrentState write SetCurrentState;
     property InfoPanel: TdxStatusBarPanel read GetInfoPanel;
     property Navigator: IOPPNavigator read fNavigator;
+  protected
+    procedure OnMessageWMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
+    procedure OnMessageWMOPPPredicate(var Msg: TMessage); message WM_OPPPredicate;
+    procedure OnMessageWMUserZoom(var Msg: TMessage); message WM_OPPZoom;
+    procedure OnMessageWMUserZoomFit(var Msg: TMessage); message WM_OPPZoomFit;
   public
     { Public declarations }
     function GetContainerClassName: String;
@@ -171,10 +223,18 @@ uses
   OPP.Help.View.ZoomSettings,
   OPP.Help.Log, OPP.Help.System.Error,
   OPP.Help.System.Messaging.Pipe,
+  OPP.Help.System.Types,
 
   AsyncCalls;
 
+const
+  kGulfstreamContentsPageIndex = '2';
+  kGulfstreamTermsPageIndex = '1056';
+  kZoomTwoPagesFactor = 81;
+  kZoomDefaultIncrement = 5;
+
 resourcestring
+  SEvebtPostedSuccessResult = 'Posted success result';
   SEventStateTemplate = 'State: %s';
   SEventParsedPredicateTemplate = 'Parsed predicate: %s';
   SEventFinishedPDFLoadTemplate = 'Finished PDF load: %s';
@@ -182,19 +242,24 @@ resourcestring
   SFlowReceivedMessage = 'Received Message';
   SScalingTemplate = 'Масштаб %d %%';
   SStatusIdle = 'Idle';
-  SStatusSearchFinished = 'Search finished';
-  SStatusSearchProgressing = 'Search is progressing';
-  SStatusSearchStarted = 'Search started';
+  SStatusSearchFinished = ''; // Search finished
+  SStatusSearchProgressing = 'Поиск ...'; // Search is progressing
+  SStatusSearchStarted = 'Начат поиск ...'; // Search started
   SStatusHandling = 'Handling';
-  SStatusLoadContentStarted = 'Load content started';
-  SStatusLoadContentFinished = 'Load content finished';
-  SStatusFormCreated = 'Form created';
+  SStatusLoadContentStarted = 'Началась загрузка'; // Load content started
+  SStatusLoadContentFinished = 'Загрузка завершена'; // Load content finished
+  SStatusFormCreated = ''; // Form created
 
-procedure TOPPHelpPreviewForm.FormDestroy(Sender: TObject);
+procedure TOPPHelpPreviewForm.actionFitPageCustomExecute(Sender: TObject);
+var
+  specialZoom: TOPPHelpPreviewZoomForm;
 begin
-  if assigned(fNavigator) then
-  begin
-    fNavigator.SetNavigatorStatusChangesCompletion(nil);
+  specialZoom := TOPPHelpPreviewZoomForm.Create(self);
+  try
+    specialZoom.zoomValue := oppHelpView.ZoomFactor;
+    specialZoom.ShowModal;
+  finally
+    specialZoom.Free;
   end;
 end;
 
@@ -206,6 +271,25 @@ end;
 procedure TOPPHelpPreviewForm.actionFitPageWidthExecute(Sender: TObject);
 begin
   oppHelpView.FitPageWidth();
+end;
+
+procedure TOPPHelpPreviewForm.actionFitTwoPagesExecute(Sender: TObject);
+begin
+  oppHelpView.ZoomFactor := kZoomTwoPagesFactor;
+end;
+
+procedure TOPPHelpPreviewForm.actionGotoContentsExecute(Sender: TObject);
+var
+  fPredicate: TOPPHelpPredicate;
+begin
+  fPredicate := TOPPHelpPredicate.Create;
+  try
+    fPredicate.keywordType := ktPage;
+    fPredicate.value := kGulfstreamContentsPageIndex;
+    oppHelpView.setPredicate(fPredicate);
+  finally
+    fPredicate.Free;
+  end;
 end;
 
 procedure TOPPHelpPreviewForm.actionGotoFirstPageExecute(Sender: TObject);
@@ -232,15 +316,49 @@ begin
     Navigator.GotoPreviousPage;
 end;
 
+procedure TOPPHelpPreviewForm.actionGotoTermsExecute(Sender: TObject);
+var
+  fPredicate: TOPPHelpPredicate;
+begin
+  fPredicate := TOPPHelpPredicate.Create;
+  try
+    fPredicate.keywordType := ktPage;
+    fPredicate.value := kGulfstreamTermsPageIndex;
+    oppHelpView.setPredicate(fPredicate);
+  finally
+    fPredicate.Free;
+  end;
+end;
+
 procedure TOPPHelpPreviewForm.actionHideExecute(Sender: TObject);
 begin
   Close;
   // Application.Minimize;
 end;
 
+procedure TOPPHelpPreviewForm.actionPrintDialogExecute(Sender: TObject);
+begin
+  oppHelpView.ShowPrintDialog(dxComponentPrinter1);
+end;
+
+procedure TOPPHelpPreviewForm.actionPrintExecute(Sender: TObject);
+begin
+  oppHelpView.PrintCurrentPage(dxComponentPrinter1);
+end;
+
 procedure TOPPHelpPreviewForm.actionToggleFindPanelExecute(Sender: TObject);
 begin
   oppHelpView.IsFindPanelVisible := not oppHelpView.IsFindPanelVisible;
+end;
+
+procedure TOPPHelpPreviewForm.actionZoomDecreaseExecute(Sender: TObject);
+begin
+  oppHelpView.ZoomFactor := oppHelpView.ZoomFactor - kZoomDefaultIncrement;
+end;
+
+procedure TOPPHelpPreviewForm.actionZoomIncreaseExecute(Sender: TObject);
+begin
+  oppHelpView.ZoomFactor := oppHelpView.ZoomFactor + kZoomDefaultIncrement;
 end;
 
 procedure TOPPHelpPreviewForm.ApplicationEvents1Minimize(Sender: TObject);
@@ -265,28 +383,31 @@ var
   fValue: Variant;
 begin
 
-  if reloadIsInProgress then exit;
+  if reloadIsInProgress then
+    exit;
 
-  fValue := TcxBarEditItem(sender).EditValue;
+  fValue := TcxBarEditItem(Sender).EditValue;
   fIndex := StrToIntDef(Trim(VarToStr(fValue)), 1);
-  oppHelpView.GotoCustomPage((fIndex - 1));
+  oppHelpView.PageIndex := (fIndex - 1);
 
 end;
 
-procedure TOPPHelpPreviewForm.cxEditGotoCustomPagePropertiesValidate(Sender: TObject; var DisplayValue: Variant;
-  var ErrorText: TCaption; var Error: Boolean);
+procedure TOPPHelpPreviewForm.cxEditGotoCustomPagePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 var
   fIndex, fIndexToCheck: Integer;
   fCurrentIndex, fPagesCount: Integer;
 begin
-  fCurrentIndex := oppHelpView.PageIndex();
+  fCurrentIndex := oppHelpView.GetPageIndex();
   fPagesCount := oppHelpView.PagesCount();
 
   fIndex := StrToIntDef(Trim(VarToStr(DisplayValue)), -1);
   fIndexToCheck := fIndex - 1;
-  if fIndexToCheck < 0 then begin
+  if fIndexToCheck < 0 then
+  begin
     DisplayValue := (fCurrentIndex + 1);
-  end else if fIndexToCheck > fPagesCount then begin
+  end
+  else if fIndexToCheck > fPagesCount then
+  begin
     DisplayValue := (fCurrentIndex + 1);
   end else begin
     DisplayValue := fIndex;
@@ -296,19 +417,6 @@ end;
 procedure TOPPHelpPreviewForm.dxBarButtonExitClick(Sender: TObject);
 begin
   self.Close();
-end;
-
-procedure TOPPHelpPreviewForm.dxBarLargeButton6Click(Sender: TObject);
-var
-  specialZoom: TOPPHelpPreviewZoomForm;
-begin
-  specialZoom := TOPPHelpPreviewZoomForm.Create(self);
-  try
-    specialZoom.zoomValue := oppHelpView.ZoomFactor;
-    specialZoom.ShowModal;
-  finally
-    specialZoom.Free;
-  end;
 end;
 
 procedure TOPPHelpPreviewForm.dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
@@ -341,15 +449,23 @@ begin
   self.Navigator.SetNavigatorStatusChangesCompletion(
     procedure(ANavigator: IOPPNavigator)
     begin
-      if assigned(ANavigator) then begin
-        self.reloadNavigationPanel(ANavigator);
+      if assigned(ANavigator) then
+      begin
+        self.ReloadNavigationPanel(ANavigator);
       end;
-    end
-    );
+    end);
 
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
   ReloadNavigationPanel(nil);
+end;
+
+procedure TOPPHelpPreviewForm.FormDestroy(Sender: TObject);
+begin
+  if assigned(fNavigator) then
+  begin
+    fNavigator.SetNavigatorStatusChangesCompletion(nil);
+  end;
 end;
 
 function TOPPHelpPreviewForm.GetContainerClassName: String;
@@ -396,13 +512,6 @@ begin
   currentState := fsLoadContentStarted;
 end;
 
-procedure TOPPHelpPreviewForm.ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
-begin
-  resultPredicate := TOPPHelpPredicate.Create();
-  resultPredicate.readFromStream(AStream, true);
-  eventLogger.Flow(Format(SEventParsedPredicateTemplate, [resultPredicate.asString]), OPP.Help.View.Fullscreen.kEventFlowName)
-end;
-
 procedure TOPPHelpPreviewForm.OnMessageWMCopyData(var Msg: TWMCopyData);
 var
   fNotificationStream: TReadOnlyMemoryStream;
@@ -424,7 +533,7 @@ begin
 
   PostMessage(self.Handle, WM_OPPPredicate, 0, 0);
 
-  eventLogger.Flow('Posted success result', kEventFlowName);
+  eventLogger.Flow(SEvebtPostedSuccessResult, kEventFlowName);
 
   Msg.Result := SMessageResultSuccess;
 
@@ -443,11 +552,38 @@ begin
   oppHelpView.ZoomFactor := Msg.WParam;
 end;
 
+procedure TOPPHelpPreviewForm.OnMessageWMUserZoomFit(var Msg: TMessage);
+begin
+  case Msg.WParam of
+    WM_OPPZoomFitWParamHeight:
+      begin
+        oppHelpView.FitPageHeight;
+      end;
+    WM_OPPZoomFitWParamWidth:
+      begin
+        oppHelpView.FitPageWidth;
+      end;
+    WM_OPPZoomFitWParamTwoColumns:
+      begin
+        oppHelpView.ZoomFactor := 81;
+      end;
+  end;
+  Msg.Result := oppHelpView.ZoomFactor;
+  //
+end;
+
 procedure TOPPHelpPreviewForm.OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
 begin
   fitActualSizeButton.Down := (AStatus.zoomMode = TdxPreviewZoomMode.pzmPageWidth);
   zoomValueEdit.EditValue := AStatus.ZoomFactor;
   zoomMenuButton.Caption := Format(SScalingTemplate, [AStatus.ZoomFactor]);
+end;
+
+procedure TOPPHelpPreviewForm.ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
+begin
+  resultPredicate := TOPPHelpPredicate.Create();
+  resultPredicate.readFromStream(AStream, true);
+  eventLogger.Flow(Format(SEventParsedPredicateTemplate, [resultPredicate.asString]), OPP.Help.View.Fullscreen.kEventFlowName)
 end;
 
 procedure TOPPHelpPreviewForm.PresentModal;
@@ -456,23 +592,42 @@ begin
 end;
 
 procedure TOPPHelpPreviewForm.ReloadNavigationPanel(ANavigator: IOPPNavigator);
-var AConstraints: TOPPNavigatorConstraints;
+var
+  AConstraints: TOPPNavigatorConstraints;
   aPageToGo: Variant;
 begin
   reloadIsInProgress := true;
 
-  if assigned(ANavigator) then begin
+  if assigned(ANavigator) then
+  begin
     AConstraints := ANavigator.NavigatorConstraints;
-    aPageToGo := (ANavigator.PageIndex + 1);
+    aPageToGo := (ANavigator.GetPageIndex + 1);
   end else begin
     AConstraints := [];
     aPageToGo := null;
   end;
 
-  actionGotoFirstPage.Enabled :=  ncCanGoFirstPage in AConstraints;
-  actionGotoPreviousPage.Enabled :=  ncCanGoPreviousPage in AConstraints;
-  actionGotoNextPage.Enabled :=  ncCanGoNextPage in AConstraints;
-  actionGotoLastPage.Enabled :=  ncCanGoLastPage in AConstraints;
+  actionZoomIncrease.Enabled := (AConstraints <> []);
+  actionZoomDecrease.Enabled := (AConstraints <> []);
+  actionFitTwoPages.Enabled := (AConstraints <> []);
+  actionFitPageCustom.Enabled := (AConstraints <> []);
+  actionFitPageWidth.Enabled := (AConstraints <> []);
+  actionFitPageHeight.Enabled := (AConstraints <> []);
+  cxEditGotoCustomPage.Enabled := (AConstraints <> []);
+  dropdownPageSelectionEdit.Enabled := (AConstraints <> []);
+  actionToggleFindPanel.Enabled := (AConstraints <> []);
+  buttonQuickNavigation.Enabled := (AConstraints <> []);
+
+  actionPrint.Enabled := (AConstraints <> []);
+  actionPrintDialog.Enabled := (AConstraints <> []);
+
+  actionGotoContents.Enabled := (AConstraints <> []);
+  actionGotoTerms.Enabled := (AConstraints <> []);
+  actionGotoFirstPage.Enabled := ncCanGoFirstPage in AConstraints;
+  actionGotoPreviousPage.Enabled := ncCanGoPreviousPage in AConstraints;
+  actionGotoNextPage.Enabled := ncCanGoNextPage in AConstraints;
+  actionGotoLastPage.Enabled := ncCanGoLastPage in AConstraints;
+
   cxEditGotoCustomPage.Enabled := (AConstraints <> []);
   cxEditGotoCustomPage.Properties.LockUpdate(true);
   cxEditGotoCustomPage.EditValue := aPageToGo;

@@ -12,6 +12,15 @@ const
   WM_OPPHook = WM_USER + 800;
   WM_OPPZoom = WM_USER + 801;
   WM_OPPPredicate = WM_USER + 802;
+  WM_OPPZoomFit = WM_USER + 803;
+  WM_OPPZoomFitReaction = WM_USER + 804;
+
+const
+  WM_OPPZoomFitWParamHeight = 899;
+  WM_OPPZoomFitWParamWidth = 898;
+  WM_OPPZoomFitWParamTwoColumns = 897;
+
+
 
 type
 
