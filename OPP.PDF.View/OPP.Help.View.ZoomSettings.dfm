@@ -74,8 +74,8 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Caption = #1055#1088#1080#1073#1083#1080#1078#1105#1085#1085#1086
   end
   object ActionList1: TActionList
-    Left = 8
-    Top = 160
+    Left = 24
+    Top = 120
     object Action1: TAction
       Caption = 'Action1'
       ShortCut = 27

@@ -26,7 +26,25 @@ type
   TOPPHelpViewSearchInstanciator = (siDocumentLoad, siPredicate);
   TOPPHelpViewOnStatusChanged = reference to procedure(AStatus: TOPPHelpViewFullScreenStatus);
 
-  TOPPHelpViewFullScreen = class(TPanel)
+  TOPPNavigatorConstraint = (ncCanGoFirstPage, ncCanGoPreviousPage, ncCanGoNextPage, ncCanGoLastPage);
+  TOPPNavigatorConstraints = set of TOPPNavigatorConstraint;
+
+  IOPPNavigator = interface;
+  TOPPNavigatorStatusChangedCompletion = reference to procedure(ANavigator: IOPPNavigator);
+
+  IOPPNavigator = interface
+    procedure GotoFirstPage();
+    procedure GotoPreviousPage();
+    procedure GotoNextPage();
+    procedure GotoLastPage();
+    procedure GotoCustomPage(APage: Integer);
+    function NavigatorConstraints(): TOPPNavigatorConstraints;
+    function PageIndex(): Integer;
+    function PagesCount(): Integer;
+    procedure SetNavigatorStatusChangesCompletion(ACompletion: TOPPNavigatorStatusChangedCompletion);
+  end;
+
+  TOPPHelpViewFullScreen = class(TPanel, IOPPNavigator)
   private
     fEventListeners: TList<IOPPHelpViewEventListener>;
     fHasLoadedDocument: Boolean;
@@ -36,6 +54,7 @@ type
     fPDFViewer: TdxPDFViewer;
     fPredicate: TOPPHelpPredicate;
     fSearchIsInProgress: Boolean;
+    fNavigatorStatusChangesCompletion: TOPPNavigatorStatusChangedCompletion;
     function GetEventListeners(): TList<IOPPHelpViewEventListener>;
     function GetIsFindPanelVisible(): Boolean;
     function getPDFDocument(): TdxPDFDocument;
@@ -45,6 +64,7 @@ type
     procedure OnHideFindPanelEvent(Sender: TObject);
     procedure OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
     procedure OnShowFindPanelEvent(Sender: TObject);
+    procedure OnSelectedPageChanged(Sender: TObject; APageIndex: Integer);
     procedure SetHasLoadedDocument(AHasLoadedDocument: Boolean);
     procedure SetIsFindPanelVisible(AValue: Boolean);
     procedure SetZoomFactor(AValue: Integer);
@@ -71,6 +91,18 @@ type
     procedure FitPageHeight;
     procedure OnZoomFactorChanged(Sender: TObject);
 
+    { IOPPNavigator }
+    procedure GotoFirstPage();
+    procedure GotoPreviousPage();
+    procedure GotoNextPage();
+    procedure GotoLastPage();
+    procedure GotoCustomPage(APage: Integer);
+    function NavigatorConstraints(): TOPPNavigatorConstraints;
+    procedure SetNavigatorStatusChangesCompletion(ACompletion: TOPPNavigatorStatusChangedCompletion);
+    function PageIndex(): Integer;
+    function PagesCount(): Integer;
+
+    {}
     property IsFindPanelVisible: Boolean read GetIsFindPanelVisible write SetIsFindPanelVisible;
     property OnStatusChanged: TOPPHelpViewOnStatusChanged read fOnStatusChanged write fOnStatusChanged;
     property zoomFactor: Integer read GetZoomFactor write SetZoomFactor;
@@ -93,6 +125,25 @@ resourcestring
   SWarningSearchIsStillInProgress = 'Search is still in progress';
   SWarningStreamWasNotDefined = 'Stream was not defined';
 
+function TOPPHelpViewFullScreen.NavigatorConstraints: TOPPNavigatorConstraints;
+begin
+  result := [];
+  if not assigned(fPDFViewer) then
+    exit;
+
+  if fPDFViewer.CurrentPageIndex <> 0 then
+  begin
+    result := result + [ncCanGoFirstPage];
+    result := result + [ncCanGoPreviousPage];
+  end;
+
+  if fPDFViewer.CurrentPageIndex < (fPDFViewer.PageCount - 1) then
+  begin
+    result := result + [ncCanGoNextPage];
+    result := result + [ncCanGoLastPage];
+  end;
+end;
+
 constructor TOPPHelpViewFullScreen.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -106,6 +157,7 @@ begin
   fPDFViewer.OnZoomFactorChanged := OnZoomFactorChanged;
   fPDFViewer.OnHideFindPanel := OnHideFindPanelEvent;
   fPDFViewer.OnShowFindPanel := OnShowFindPanelEvent;
+  fPDFViewer.OnSelectedPageChanged := OnSelectedPageChanged;
 
   fHasLoadedDocument := false;
   fSearchIsInProgress := false;
@@ -161,6 +213,11 @@ begin
   begin
     if assigned(fListener) then
       fListener.LoadContentFinished;
+  end;
+
+  if assigned(fNavigatorStatusChangesCompletion) then
+  begin
+    fNavigatorStatusChangesCompletion(self);
   end;
 end;
 
@@ -235,6 +292,20 @@ begin
     fOnStatusChanged(Status);
 end;
 
+function TOPPHelpViewFullScreen.PageIndex: Integer;
+begin
+  result := 0;
+  if assigned(fPDFViewer) then
+    result := fPDFViewer.CurrentPageIndex;
+end;
+
+function TOPPHelpViewFullScreen.PagesCount: Integer;
+begin
+  result := 0;
+  if assigned(fPDFViewer) then
+    result := fPDFViewer.PageCount;
+end;
+
 function TOPPHelpViewFullScreen.GetStatus: TOPPHelpViewFullScreenStatus;
 begin
   result.zoomMode := fPDFViewer.OptionsZoom.zoomMode;
@@ -244,6 +315,39 @@ end;
 function TOPPHelpViewFullScreen.GetZoomFactor: Integer;
 begin
   result := fPDFViewer.OptionsZoom.zoomFactor;
+end;
+
+procedure TOPPHelpViewFullScreen.GotoCustomPage(APage: Integer);
+begin
+  if (APage < (fPDFViewer.PageCount - 1)) or (APage >= 0) then
+  begin
+    fPDFViewer.CurrentPageIndex := APage;
+  end;
+
+  if assigned(fNavigatorStatusChangesCompletion) then
+  begin
+    fNavigatorStatusChangesCompletion(self);
+  end;
+end;
+
+procedure TOPPHelpViewFullScreen.GotoFirstPage;
+begin
+  GotoCustomPage(0);
+end;
+
+procedure TOPPHelpViewFullScreen.GotoLastPage;
+begin
+  GotoCustomPage((fPDFViewer.PageCount - 1));
+end;
+
+procedure TOPPHelpViewFullScreen.GotoNextPage;
+begin
+  GotoCustomPage(fPDFViewer.CurrentPageIndex + 1);
+end;
+
+procedure TOPPHelpViewFullScreen.GotoPreviousPage;
+begin
+  GotoCustomPage(fPDFViewer.CurrentPageIndex - 1);
 end;
 
 procedure TOPPHelpViewFullScreen.SetSearchIsInProgress(const Value: Boolean);
@@ -263,6 +367,11 @@ begin
         fListener.SearchEnded;
     end;
   end;
+end;
+
+procedure TOPPHelpViewFullScreen.SetNavigatorStatusChangesCompletion(ACompletion: TOPPNavigatorStatusChangedCompletion);
+begin
+  fNavigatorStatusChangesCompletion := ACompletion;
 end;
 
 procedure TOPPHelpViewFullScreen.SetZoomFactor(AValue: Integer);
@@ -289,6 +398,14 @@ procedure TOPPHelpViewFullScreen.OnHideFindPanelEvent(Sender: TObject);
 begin
   if assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(false);
+end;
+
+procedure TOPPHelpViewFullScreen.OnSelectedPageChanged(Sender: TObject; APageIndex: Integer);
+begin
+  if assigned(fNavigatorStatusChangesCompletion) then
+  begin
+    fNavigatorStatusChangesCompletion(self);
+  end;
 end;
 
 procedure TOPPHelpViewFullScreen.OnShowFindPanelEvent(Sender: TObject);
