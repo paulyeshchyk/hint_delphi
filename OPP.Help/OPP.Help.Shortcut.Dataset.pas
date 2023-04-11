@@ -31,7 +31,7 @@ implementation
 uses
   Winapi.Windows,
   OPP.Help.Log,
-  OPP.Help.System.Error,
+  OPP.Help.System.error,
   OPP.Help.Map.Parser.JSON;
 
 constructor TOPPHelpShortcutDataset.Create;
@@ -47,11 +47,11 @@ end;
 
 function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
 begin
-  TOPPHelpMap.readJSON(AFilename, SetNewList);
+  TOPPHelpMapRESTParser.readJSON(AFilename, SetNewList);
   result := 0;
 end;
 
-procedure TOPPHelpShortcutDataset.SetNewList(AList: TList<TOPPHelpMap>; Error: Exception);
+procedure TOPPHelpShortcutDataset.SetNewList(AList: TList<TOPPHelpMap>; error: Exception);
 begin
   if assigned(error) then
     error.Log();
@@ -71,6 +71,8 @@ begin
 
   for Map in AList do
   begin
+    if not assigned(Map) then
+      continue;
     self.addMap(Map);
   end;
 end;
@@ -97,7 +99,7 @@ begin
 
   if fShortcutHelpMatrix.ContainsKey(AMap.ComponentIdentifier) then
   begin
-    eventLogger.Error(Format('TOPPHelpShortcutDataset is trying to insert duplicated id: %s', [AMap.ComponentIdentifier]));
+    eventLogger.error(Format('TOPPHelpShortcutDataset is trying to insert duplicated id: %s', [AMap.ComponentIdentifier]));
     exit;
   end;
 

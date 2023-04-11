@@ -112,12 +112,15 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     tipsRepo: TdxScreenTipRepository;
+    actionShowSettings: TAction;
+    N5: TMenuItem;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
     procedure actionPreviewShortcutExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
+    procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionUndoExecute(Sender: TObject);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -202,7 +205,8 @@ uses
   SampleFormStubsHelper,
   SampleOnly.Help.Hint.Setup,
   SampleOnly.Help.Meta.Factory,
-  SampleOnly.Help.Shortcut.Setup;
+  SampleOnly.Help.Shortcut.Setup,
+  OPP.Help.Settings.Form;
 
 resourcestring
   SWarningListItemsIsNotSelectedNotAbleToS = 'List items is not selected. not able to set caption';
@@ -388,6 +392,17 @@ begin
       else
         eventLogger.Warning(SWarningListItemsIsNotSelectedNotAbleToS, kEventFlowName);
     end);
+end;
+
+procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);
+var formSettings: TOPPHelpSettingsForm;
+begin
+  formSettings := TOPPHelpSettingsForm.Create(self);
+  try
+    formSettings.ShowModal;
+  finally
+    formSettings.Free;
+  end;
 end;
 
 procedure TSampleForm.actionUndoExecute(Sender: TObject);

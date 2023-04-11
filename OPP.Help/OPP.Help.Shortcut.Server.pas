@@ -415,7 +415,7 @@ end;
 
 function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 begin
-  result := TOPPHelpMap.saveJSON(AList, AFileName, callback);
+  result := TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
 
 function TOPPHelpShortcutServer.SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;

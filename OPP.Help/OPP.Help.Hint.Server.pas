@@ -446,7 +446,7 @@ begin
       fHintMapSet.AddMaps(AList);
     end;
 
-  TOPPHelpMap.readJSON(filename, fOPPHelpHintMapJSONReadCallback);
+  TOPPHelpMapRESTParser.readJSON(filename, fOPPHelpHintMapJSONReadCallback);
 
 end;
 
@@ -500,7 +500,7 @@ end;
 
 procedure TOPPHelpHintServer.SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);
 begin
-  TOPPHelpMap.saveJSON(AList, AFileName, callback);
+  TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
 
 procedure TOPPHelpHintServer.SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);

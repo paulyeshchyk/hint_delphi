@@ -1,0 +1,713 @@
+{
+  "type": "OPP.Help.Map.TOPPHelpMapSet",
+  "id": 1,
+  "fields": {
+    "fList": {
+      "type": "System.Generics.Collections.TList<OPP.Help.Map.TOPPHelpMap>",
+      "id": 2,
+      "fields": {
+        "FListHelper": [
+          24
+        ],
+        "FItems": [
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 3,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 4,
+                "fields": {
+                  "fValue": "hint",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": ".\\help\\shortcuts\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 5,
+                    "fields": {
+                      "FListHelper": [
+                        1
+                      ],
+                      "FItems": [
+                        {
+                          "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                          "id": 6,
+                          "fields": {
+                            "fValue": "hint bookmark33",
+                            "fKeywordType": "ktPage",
+                            "fFileName": ".\\help\\shortcuts\\gulfstream_manual_rtf.rtf",
+                            "fPredicates": {
+                              "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                              "id": 7,
+                              "fields": {
+                                "FListHelper": [
+                                  0
+                                ],
+                                "FItems": null
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Аттрибут",
+              "fIdentifier": "{33738983-A27C-4C8A-8997-F1EB45EFAE53}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 8,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 9,
+                "fields": {
+                  "fValue": "2",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 10,
+                    "fields": {
+                      "FListHelper": [
+                        1
+                      ],
+                      "FItems": [
+                        {
+                          "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                          "id": 11,
+                          "fields": {
+                            "fValue": "2",
+                            "fKeywordType": "ktPage",
+                            "fFileName": "",
+                            "fPredicates": {
+                              "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                              "id": 12,
+                              "fields": {
+                                "FListHelper": [
+                                  0
+                                ],
+                                "FItems": null
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Наим",
+              "fIdentifier": "{1EE537BC-F291-46AE-A94E-6FF5F92CFA7D}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 13,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 14,
+                "fields": {
+                  "fValue": "Kod_OKWED",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 15,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Оглавление",
+              "fIdentifier": "{70309190-8ACF-4A27-83B3-1FB51352B5E0}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 16,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 17,
+                "fields": {
+                  "fValue": "!Основание",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 18,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Основание",
+              "fIdentifier": "{A2F8E84C-F35F-4236-85C4-F35DFCC0FBFF}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 19,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 20,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 21,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Заявки на производство (от заказчиков)",
+              "fIdentifier": "{9851526E-D4C2-4A73-B592-BA14614BBD9C}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 22,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 23,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 24,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Заявки на производство (на склад)",
+              "fIdentifier": "{6DB82C1E-4480-4543-BB8F-A7F64C861ACC}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 25,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 26,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 27,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Заказы на производство (от заказчиков)",
+              "fIdentifier": "{CDCAFB54-0CCC-4581-98C9-EB57A1BD587D}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 28,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 29,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 30,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Заказы на производство (на склад)",
+              "fIdentifier": "{E6B33BE9-48FE-490C-A79C-BA3B53420B93}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 31,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 32,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 33,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Решения о закрытии",
+              "fIdentifier": "{6738E894-6FF4-437D-93D1-A4731F0DC065}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 34,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 35,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 36,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Решение о запуске",
+              "fIdentifier": "{3AFD1C2A-7889-46E5-B7C5-A44FFD9CCECC}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 37,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 38,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 39,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Документы для утверждения этапов ПП",
+              "fIdentifier": "{735B315F-6306-42D4-9596-2112E3345043}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 40,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 41,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 42,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Основания для заказа",
+              "fIdentifier": "{36052F4A-E410-4C3E-8921-A6CD0DC07E02}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 43,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 44,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 45,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Основания для ШПЗ",
+              "fIdentifier": "{B5CD80D7-722E-4872-BF32-E33E9460DE75}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 46,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 47,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 48,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Подразделения",
+              "fIdentifier": "{6A9DDD5F-288E-4EA6-B9B6-B724CB0435E7}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 49,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 50,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 51,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Контрагенты",
+              "fIdentifier": "{BD33D5A2-F1B6-4043-9D23-429D6A6DA85D}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 52,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 53,
+                "fields": {
+                  "fValue": "Kod_OKWED",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 54,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "Основание",
+              "fIdentifier": "{DF8E293E-E9A3-4D80-B47E-56F611346D2F}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 55,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 56,
+                "fields": {
+                  "fValue": "!Договор",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 57,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Договор",
+              "fIdentifier": "{28F31EE9-5BC2-46A1-A618-2B62BB19C103}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 58,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 59,
+                "fields": {
+                  "fValue": "!Контрагент",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 60,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Контрагент",
+              "fIdentifier": "{BB761ECC-8A95-4527-943C-01B8C6FC2FD3}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 61,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 62,
+                "fields": {
+                  "fValue": "!Номенклатура",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 63,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Номенклатура",
+              "fIdentifier": "{FC470192-EB58-48E5-8949-F555B5950C32}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 64,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 65,
+                "fields": {
+                  "fValue": "!Партия заказа",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 66,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Партия заказа",
+              "fIdentifier": "{FF55622D-0C5A-44ED-AC9F-260F5470AEC7}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 67,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 68,
+                "fields": {
+                  "fValue": "!Подразделения",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 69,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Подразделения",
+              "fIdentifier": "{D9933623-D661-4B77-9E70-FDC1C1C6B01C}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 70,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 71,
+                "fields": {
+                  "fValue": "!Работник",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 72,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Работник",
+              "fIdentifier": "{DD4ECBEA-4593-4DE7-95BD-90A00B45B403}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 73,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 74,
+                "fields": {
+                  "fValue": "!Тема",
+                  "fKeywordType": "ktBookmark",
+                  "fFileName": ".\\help\\hints\\gulfstream_manual_rtf.rtf",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 75,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "!Тема",
+              "fIdentifier": "{EB256DDF-A43E-49CF-BAD5-717B5909C8D9}"
+            }
+          },
+          {
+            "type": "OPP.Help.Map.TOPPHelpMap",
+            "id": 76,
+            "fields": {
+              "fPredicate": {
+                "type": "OPP.Help.Predicate.TOPPHelpPredicate",
+                "id": 77,
+                "fields": {
+                  "fValue": "",
+                  "fKeywordType": "ktSearch",
+                  "fFileName": "",
+                  "fPredicates": {
+                    "type": "System.Generics.Collections.TList<OPP.Help.Predicate.TOPPHelpPredicate>",
+                    "id": 78,
+                    "fields": {
+                      "FListHelper": [
+                        0
+                      ],
+                      "FItems": null
+                    }
+                  }
+                }
+              },
+              "fComponentIdentifier": "{0658B42C-04BF-4BB0-B32A-B7875AC84123}",
+              "fIdentifier": "{0658B42C-04BF-4BB0-B32A-B7875AC84123}"
+            }
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    }
+  }
+}

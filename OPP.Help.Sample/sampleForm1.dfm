@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 597
+  ClientHeight = 577
   ClientWidth = 1085
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,7 +24,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1085
-    Height = 597
+    Height = 577
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -32,12 +32,11 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 573
     object Splitter1: TSplitter
       Left = 530
       Top = 0
       Width = 6
-      Height = 597
+      Height = 577
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -48,7 +47,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 597
+      Height = 577
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -63,13 +62,12 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitHeight = 573
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
         Top = 34
         Width = 518
-        Height = 557
+        Height = 537
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -87,7 +85,6 @@ object SampleForm: TSampleForm
         TabOrder = 0
         ViewStyle = vsReport
         OnSelectItem = cxListView1SelectItem
-        ExplicitHeight = 533
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
@@ -106,7 +103,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 549
-      Height = 597
+      Height = 577
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -114,7 +111,6 @@ object SampleForm: TSampleForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 573
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
@@ -130,7 +126,6 @@ object SampleForm: TSampleForm
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
-        ExplicitHeight = 221
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -274,7 +269,6 @@ object SampleForm: TSampleForm
           Margins.Bottom = 6
           Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1080
           ImageIndex = 1
-          ExplicitHeight = 190
           object Panel4: TPanel
             Left = 0
             Top = 0
@@ -287,7 +281,6 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitHeight = 190
             object Panel7: TPanel
               Left = 0
               Top = 0
@@ -300,7 +293,6 @@ object SampleForm: TSampleForm
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
-              ExplicitHeight = 190
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 136
                 Top = 155
@@ -473,7 +465,7 @@ object SampleForm: TSampleForm
         Left = 6
         Top = 360
         Width = 537
-        Height = 231
+        Height = 211
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -481,7 +473,7 @@ object SampleForm: TSampleForm
         Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvLowered
-        Constraints.MinHeight = 231
+        Constraints.MinHeight = 211
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -489,7 +481,6 @@ object SampleForm: TSampleForm
         Font.Style = []
         ParentFont = False
         TabOrder = 3
-        ExplicitTop = 336
       end
     end
   end
@@ -516,6 +507,9 @@ object SampleForm: TSampleForm
     Top = 56
     object N1: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1086#1088
+      object N5: TMenuItem
+        Action = actionShowSettings
+      end
       object N2: TMenuItem
         Caption = '-'
       end
@@ -872,6 +866,10 @@ object SampleForm: TSampleForm
     object actionUndo: TAction
       Caption = 'actionUndo'
       OnExecute = actionUndoExecute
+    end
+    object actionShowSettings: TAction
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
+      OnExecute = actionShowSettingsExecute
     end
   end
 end

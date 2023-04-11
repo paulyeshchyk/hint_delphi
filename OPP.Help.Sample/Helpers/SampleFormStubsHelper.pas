@@ -129,7 +129,7 @@ var
 begin
   fList := TList<TOPPHelpMap>.Create();
   try
-    TOPPHelpMap.readJSON('.\help\tests\predicates.json',
+    TOPPHelpMapRESTParser.readJSON('.\help\tests\predicates.json',
       procedure(AList: TList<TOPPHelpMap>; error: Exception)
       begin
         fList.addRange(AList);
@@ -160,7 +160,7 @@ begin
       try
         fMap.Predicate := fPredicate;
         fList.Add(fMap);
-        TOPPHelpMap.saveJSON(fList, '.\help\tests\predicates.json',
+        TOPPHelpMapRESTParser.saveJSON(fList, '.\help\tests\predicates.json',
           procedure(AError: Exception)
           begin
           //

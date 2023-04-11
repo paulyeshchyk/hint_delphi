@@ -11,7 +11,9 @@ uses
   FormTest02 in 'Tests\FormTest02.pas' {FormTest2},
   FormTest03 in 'Tests\FormTest03.pas' {FormTest3},
   SampleFormSaveState in 'Helpers\SampleFormSaveState.pas',
-  SampleFormStubsHelper in 'Helpers\SampleFormStubsHelper.pas';
+  SampleFormStubsHelper in 'Helpers\SampleFormStubsHelper.pas',
+  OPP.Help.Settings.Form in 'OPP.Help.Settings.Form.pas' {OPPHelpSettingsForm},
+  OPP.Help.Settings.Value.Editor in 'OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor};
 
 {$R *.res}
 

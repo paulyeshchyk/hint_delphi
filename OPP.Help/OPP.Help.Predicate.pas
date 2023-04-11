@@ -17,7 +17,8 @@ type
     fPredicates: TList<TOPPHelpPredicate>;
     procedure SetValue(AValue: String);
   public
-    constructor Create;
+    constructor Create;overload;
+    constructor Create(AFileName: String; AKeywordType: TOPPKeywordType; AValue: String);overload;
     destructor Destroy; override;
 
     function copy(): TOPPHelpPredicate;
@@ -97,7 +98,17 @@ end;
 
 constructor TOPPHelpPredicate.Create;
 begin
+  inherited Create;
   fPredicates := TList<TOPPHelpPredicate>.Create;
+end;
+
+constructor TOPPHelpPredicate.Create(AFileName: String; AKeywordType: TOPPKeywordType; AValue: String);
+begin
+  inherited Create;
+  fPredicates := TList<TOPPHelpPredicate>.Create;
+  self.filename := AFileName;
+  self.keywordType := AKeywordType;
+  self.value := AValue;
 end;
 
 destructor TOPPHelpPredicate.Destroy;
