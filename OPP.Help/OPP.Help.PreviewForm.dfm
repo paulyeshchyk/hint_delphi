@@ -153,8 +153,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1077#1088#1077#1093#1086#1076#1099' '#1087#1086' '#1089#1090#1088#1072#1085#1080#1094#1072#1084
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 350
-      DockedTop = 24
+      DockedLeft = 376
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -235,8 +235,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1086#1080#1089#1082
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 64
-      DockedTop = 24
+      DockedLeft = 72
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -262,8 +262,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1077#1095#1072#1090#1100
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 256
-      DockedTop = 24
+      DockedLeft = 274
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -285,7 +285,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 24
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -306,8 +306,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1052#1072#1089#1096#1090#1072#1073
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 588
-      DockedTop = 24
+      DockedLeft = 622
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8

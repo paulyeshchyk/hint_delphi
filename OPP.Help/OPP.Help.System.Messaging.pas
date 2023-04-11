@@ -32,6 +32,7 @@ type
   end;
 
 
+  //TODO: remove ASAP
   TOPPSystemMessageRunResultType = (rrtSuccess, rrtFail);
   TOPPSystemMessageRunCompletion = reference to procedure(ARunResultType: TOPPSystemMessageRunResultType);
 

@@ -17,7 +17,8 @@ type
 implementation
 
 uses
-  {OppObjControl,}
+  OppObjControl,
+  OppAttrControl,
   cxTreeView,
 
   OPP.Help.Interfaces,
@@ -40,7 +41,7 @@ begin
     procedure(completionResult: TOPPHelpShortcutPresentingResult)
     begin
       if completionResult = prFail then
-        ShowMessage('Nothing to show');
+        ShowMessage('Nothing to show2');
     end);
 end;
 
@@ -52,7 +53,15 @@ begin
     exit;
   end;
 
-  if AControl.ClassType.InheritsFrom(TcxTreeView) then
+  if AControl.ClassType.InheritsFrom(TOppObjControl) then
+  begin
+    result := TOppObjControl(AControl).TypeObject;
+  end
+  else if AControl.ClassType.InheritsFrom(TOppAttrControl) then
+  begin
+    result := TOppAttrControl(AControl).Attribute;
+  end
+  else if AControl.ClassType.InheritsFrom(TcxTreeView) then
   begin
     result := AControl.Name;
   end
