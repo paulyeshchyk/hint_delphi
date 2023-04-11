@@ -86,7 +86,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <AppDPIAwarenessMode>system</AppDPIAwarenessMode>
-        <DCC_DcuOutput>C:\Temp\OPPHelpSample</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <DCC_UNSAFE_CAST>true</DCC_UNSAFE_CAST>
         <DCC_BpiOutput>.\$(Platform)\$(Config)\bpi</DCC_BpiOutput>
         <DCC_HppOutput>.\$(Platform)\$(Config)\hpp</DCC_HppOutput>
@@ -100,8 +100,6 @@
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\22.0\bin;D:\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBase2020\IDE_spoof;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Users\Paul\AppData\Local\Microsoft\WindowsApps;D:\Embarcadero\Studio\22.0;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
         <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_UsePackage>OPPHelp</DCC_UsePackage>
-        <UWP_DelphiLogo44>..\OPP.Help\icons\dev-tool.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>..\OPP.Help\icons\dev-tool.png</UWP_DelphiLogo150>
         <Icon_MainIcon>..\OPP.Help\icons\dev-tool.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -176,17 +174,17 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\OPP.Help\icons\dev-tool.png" Configuration="Debug" Class="UWP_DelphiLogo150">
-                    <Platform Name="Win32">
-                        <RemoteDir>Assets\</RemoteDir>
-                        <RemoteName>Logo150x150.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="sources\docs\readme.txt" Configuration="Debug" Class="File">
                     <Platform Name="Win32">
                         <RemoteName>readme.txt</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Configuration="Debug" Class="UWP_DelphiLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

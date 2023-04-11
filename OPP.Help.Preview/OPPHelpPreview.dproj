@@ -84,13 +84,13 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
-        <DCC_UnitSearchPath>D:\projects\ascon\gulfstream\Sources\Common\Help\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_DcpOutput>..\..\..\..\Compiled\Units</DCC_DcpOutput>
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <AppDPIAwarenessMode>system</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -146,6 +146,13 @@
                 <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHelpPreview.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHelpPreview.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Configuration="Debug" Class="UWP_DelphiLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -105,7 +105,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_DcuOutput>C:\Temp\OPPHelpSample</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <Debugger_HostApplication>..\..\..\..\Compiled\Executable\OPPHintTunning.exe</Debugger_HostApplication>
@@ -189,9 +189,11 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="D:\Compiled\Executable\OPPHelp.bpl">(untitled)</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">OPPHelp.dpk</Source>
