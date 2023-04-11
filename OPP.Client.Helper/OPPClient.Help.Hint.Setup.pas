@@ -32,6 +32,11 @@ uses
   OPP.Help.Hint.Server,
   OPPClient.Help.Meta.Factory;
 
+resourcestring
+  SWarningTipsRepositoryNotAvailableTemplate = 'Form: %s; No Screentip be created, because Tips repository is not defined';
+  SWarningHintControllerNotAvailableTemplate = 'Form: %s; No Screentip be created, because HintController is not defined';
+  SWarningHintsNotAvailableTemplate = 'Form: %s; No Screentip be created, because hints are not available';
+
 constructor TOPPClientHintHelper.Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
 begin
   fHintController := AHintController;
@@ -108,19 +113,19 @@ begin
   fFormName := AForm.ClassName;
   if (not assigned(AHintList)) or (AHintList.Count = 0) then
   begin
-    eventLogger.Warning(Format('Form: %s; No Screentip be created, because hints are not available', [fFormName]));
+    eventLogger.Warning(Format(SWarningHintsNotAvailableTemplate, [fFormName]));
     exit;
   end;
 
   if not assigned(fHintController) then
   begin
-    eventLogger.Warning(Format('Form: %s; No Screentip be created, because HintController is not defined', [fFormName]));
+    eventLogger.Warning(Format(SWarningHintControllerNotAvailableTemplate, [fFormName]));
     exit;
   end;
 
   if not assigned(fRepo) then
   begin
-    eventLogger.Warning(Format('Form: %s; No Screentip be created, because Tips repository is not defined', [fFormName]));
+    eventLogger.Warning(Format(SWarningTipsRepositoryNotAvailableTemplate, [fFormName]));
     exit;
   end;
 

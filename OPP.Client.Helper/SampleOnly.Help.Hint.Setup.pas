@@ -12,7 +12,7 @@ uses
   OPP.Help.Hint.Server;
 
 type
-  TOPPOnMapsLoadedEvent = reference to procedure (AList: TList<TOPPHelpMap>; completion: TOPPHelpMapsCompletion);
+  TOPPOnMapsLoadedEvent = reference to procedure(AList: TList<TOPPHelpMap>; completion: TOPPHelpMapsCompletion);
 
   TOPPClientHintHelper = class
   private
@@ -27,9 +27,13 @@ implementation
 
 uses
   OPP.Help.Log,
+  OPP.Help.Tips.Factory,
   OPP.Help.Component.Enumerator,
 
   SampleOnly.Help.Meta.Factory;
+
+resourcestring
+  SWarningHintsAreNotDefinedTemplate = 'hints are not defined for %s';
 
 var
   fMetaFactory: TOPPHelpMetaHintFactory;
@@ -44,6 +48,9 @@ begin
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
 
     try
+
+      hintController.HintHidePause := -1;
+
       fRequest.OnGetHintFactory := fMetaFactory.GetChildrenHelpMeta;
       helpHintServer.LoadHints(fRequest,
         procedure(hints: TList<TOPPHelpHint>)
@@ -85,28 +92,8 @@ begin
 end;
 
 class procedure TOPPClientHintHelper.CreateHintView(AHint: TOPPHelpHint; AControl: TControl; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
-var
-  fScreenTip: TdxScreenTip;
-  fScreenTipLink: TdxScreenTipLink;
-
 begin
-  if not assigned(AControl) then
-    exit;
-
-  AControl.ShowHint := true;
-
-  fScreenTip := ARepository.Items.Add;
-  fScreenTip.Width := 789;
-
-  fScreenTip.Header.PlainText := true;
-  fScreenTip.Header.Text := ''; // Заголовок
-
-  fScreenTip.Description.PlainText := false;
-  fScreenTip.Description.Text := AHint.Data.rtf;
-
-  fScreenTipLink := TdxScreenTipStyle(AHintController.HintStyle).ScreenTipLinks.Add;
-  fScreenTipLink.ScreenTip := fScreenTip;
-  fScreenTipLink.control := AControl;
+  TOPPHelpTipsFactory.AddTipsView(AHint, AControl, AHintController, ARepository);
 end;
 
 class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
@@ -116,7 +103,7 @@ var
 begin
   if not assigned(hints) or (hints.Count = 0) then
   begin
-    eventLogger.Warning(Format('hints are not defined for %s', [AForm.classname]));
+    eventLogger.Warning(Format(SWarningHintsAreNotDefinedTemplate, [AForm.classname]));
     if assigned(completion) then
       completion();
     exit;

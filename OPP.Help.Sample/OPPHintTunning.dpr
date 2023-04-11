@@ -13,7 +13,8 @@ uses
   OPP.Help.Settings.Value.Editor in 'OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor},
   SampleOnly.Help.Hint.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas',
   SampleOnly.Help.Meta.Factory in '..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas',
-  SampleOnly.Help.Shortcut.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas';
+  SampleOnly.Help.Shortcut.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas',
+  OPP.Help.Tips.Factory in '..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas';
 
 {$R *.res}
 
