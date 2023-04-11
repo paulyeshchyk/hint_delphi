@@ -103,23 +103,24 @@ end;
 procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; AHintList: TList<TOPPHelpHint>);
 var
   fHint: TOPPHelpHint;
+  fFormName: String;
 begin
-
+  fFormName := AForm.ClassName;
   if (not assigned(AHintList)) or (AHintList.Count = 0) then
   begin
-    eventLogger.Warning(Format('No Screentip be created, because hints are not available for [%s]', [AForm.ClassName]));
+    eventLogger.Warning(Format('Form: %s; No Screentip be created, because hints are not available', [fFormName]));
     exit;
   end;
 
   if not assigned(fHintController) then
   begin
-    eventLogger.Warning(Format('No Screentip be created, because HintController is not defined in [%s]', [AForm.ClassName]));
+    eventLogger.Warning(Format('Form: %s; No Screentip be created, because HintController is not defined', [fFormName]));
     exit;
   end;
 
   if not assigned(fRepo) then
   begin
-    eventLogger.Warning(Format('No Screentip be created, because Tips repository is not defined in [%s]', [AForm.ClassName]));
+    eventLogger.Warning(Format('Form: %s; No Screentip be created, because Tips repository is not defined', [fFormName]));
     exit;
   end;
 
