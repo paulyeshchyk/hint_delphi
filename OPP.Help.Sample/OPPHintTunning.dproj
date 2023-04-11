@@ -123,9 +123,6 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Reader.pas"/>
-        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas"/>
-        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas"/>
-        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas"/>
         <DCCReference Include="Tests\FormTest01.pas">
             <Form>FormTest1</Form>
             <FormType>dfm</FormType>
@@ -147,6 +144,9 @@
             <Form>OPPHelpSettingsValueEditor</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas"/>
+        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas"/>
+        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
