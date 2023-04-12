@@ -19,7 +19,7 @@ type
 implementation
 
 uses
-  Vcl.Forms,
+  Vcl.Forms, System.SysUtils,
   {OppObjControl,}
   cxTreeView,
 
@@ -30,7 +30,7 @@ uses
   OPP.Help.Hint.Server,
   OPP.Help.Map,
   OPP.Help.Hint.Reader,
-
+  OPP.Help.System.Error,
   OPP.Help.Log;
 
 class procedure TOPPClientHelpShortcutHelper.showHelp(AMessage: TWMHelp);
@@ -40,10 +40,11 @@ begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, AMessage);
   try
     helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-      procedure(completionResult: TOPPHelpShortcutPresentingResult)
+      procedure(completionResult: Exception)
       begin
-        if completionResult = prFail then
-          eventLogger.Warning('not able to open help form');
+        if completionResult = nil then
+          exit;
+        completionResult.Log();
       end);
   finally
     fShortcutRequest.Free;

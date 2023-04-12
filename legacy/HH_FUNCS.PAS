@@ -272,7 +272,7 @@ begin
 
   {Hook in our help}
   FOldHelpEvent := Application.OnHelp;
-  Application.OnHelp := HelpHook;
+  //Application.OnHelp := HelpHook;
 
   {Debug}
   if _DebugMode then
@@ -286,7 +286,7 @@ begin
     hh_funcs.HHCloseAll;
 
   {Unhook our help}
-  Application.OnHelp := FOldHelpEvent;
+  //Application.OnHelp := FOldHelpEvent;
   inherited destroy;
   if _DebugMode then
     DebugOut('THookHelpSystem.Destroy',['']);

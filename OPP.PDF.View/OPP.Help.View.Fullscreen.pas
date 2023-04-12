@@ -297,7 +297,7 @@ end;
 function TOPPHelpViewFullScreen.NavigatorConstraints: TOPPNavigatorConstraints;
 begin
   result := [];
-  if not assigned(fPDFViewer) then
+  if not Assigned(fPDFViewer) then
     exit;
 
   if fPDFViewer.CurrentPageIndex <> 0 then
@@ -315,7 +315,7 @@ end;
 
 procedure TOPPHelpViewFullScreen.OnHideFindPanelEvent(Sender: TObject);
 begin
-  if assigned(fOnFindPanelVisiblityChange) then
+  if Assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(false);
 end;
 
@@ -327,13 +327,13 @@ end;
 
 procedure TOPPHelpViewFullScreen.OnSelectedPageChanged(Sender: TObject; APageIndex: Integer);
 begin
-  if assigned(fNavigatorStatusChangesCompletion) then
+  if Assigned(fNavigatorStatusChangesCompletion) then
     fNavigatorStatusChangesCompletion(self);
 end;
 
 procedure TOPPHelpViewFullScreen.OnShowFindPanelEvent(Sender: TObject);
 begin
-  if assigned(fOnFindPanelVisiblityChange) then
+  if Assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(true);
 end;
 
@@ -363,7 +363,7 @@ begin
     exit;
   end;
 
-  SetLength(pages, 1);
+  SetLength(pages,1);
   pages[0] := (fPDFViewer.CurrentPageIndex + 1);
 
   lnk := TdxPDFViewerReportLink.Create(self);
@@ -495,6 +495,7 @@ begin
     fPDFViewer.CurrentPageIndex := CurrentPageIndex;
   end;
 {$ENDREGION}
+
 end;
 
 end.

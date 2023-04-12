@@ -3,7 +3,7 @@ unit OPP.Help.System.Messaging;
 interface
 
 uses
-  System.Types, System.Classes, System.Generics.Collections,
+  System.Types, System.Classes, System.Generics.Collections, System.SysUtils,
   WinAPI.Windows, WinAPI.Messages,
   Vcl.Controls, Vcl.StdCtrls,
   Vcl.Forms;
@@ -31,10 +31,7 @@ type
     Result: Longint;
   end;
 
-
-  //TODO: remove ASAP
-  TOPPSystemMessageRunResultType = (rrtSuccess, rrtFail);
-  TOPPSystemMessageRunCompletion = reference to procedure(ARunResultType: TOPPSystemMessageRunResultType);
+  TOPPSystemMessageRunCompletion = reference to procedure(ARunResultType: Exception);
 
   TOPPSystemMessageHelper = class
   private
@@ -49,7 +46,7 @@ type
 
 implementation
 
-uses TLHelp32, System.Sysutils, OPP.Help.System.Str;
+uses TLHelp32, OPP.Help.System.Str;
 
 class function TOPPSystemMessageHelper.GetProcessList(): TDictionary<THandle, String>;
 var
@@ -167,18 +164,19 @@ begin
   fCreateProcessResult := WinAPI.Windows.CreateProcess(nil, AProcessName.toWideChar, nil, nil, true, CREATE_NEW_PROCESS_GROUP, nil, nil, tmpStartupInfo, tmpProcessInformation);
   if not fCreateProcessResult then
   begin
-    completion(rrtFail);
+    completion(Exception.Create(Format('Process [%s] was not created',[AProcessName])));
     exit;
   end;
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hThread);
 
+  //TODO: implement callback or use postmessage to determine if app was executed in time
   WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, ActivationDelay);
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hProcess);
 
   if Assigned(completion) then
-    completion(rrtSuccess);
+    completion(nil);
 
 end;
 

@@ -348,15 +348,16 @@ var
 begin
   helpHintServer.FindHelpMap(fSelectedItem,
     procedure(const AMap: TOPPHelpMap)
-    var point: TPoint;
+    var
+      point: TPoint;
     begin
       PanelPreview.ShowHint := true;
       PanelPreview.HelpKeyword := 'Kod_OKWED';
       PanelPreview.Hint := 'Wrong hint2';
       point := ClientToScreen(PanelPreview.ClientOrigin);
       Application.ActivateHint(point);
-//      TOPPClientHintHelper.LoadHints(self,'.\Документация\hint.idx', self.cxHintController,self.tipsRepo,nil);
-      //TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
+      // TOPPClientHintHelper.LoadHints(self,'.\Документация\hint.idx', self.cxHintController,self.tipsRepo,nil);
+      // TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
     end);
 
 end;
@@ -367,9 +368,11 @@ begin
     procedure(const AMap: TOPPHelpMap)
     begin
       helpShortcutServer.showHelp(AMap.Predicate, vmExternal,
-        procedure(APresentingResult: TOPPHelpShortcutPresentingResult)
+        procedure(APresentingResult: Exception)
         begin
-          //
+          if APresentingResult = nil then
+            exit;
+          APresentingResult.Log();
         end);
     end);
 end;

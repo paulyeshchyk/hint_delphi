@@ -244,13 +244,13 @@ resourcestring
   SFlowReceivedMessage = 'Received Message';
   SScalingTemplate = 'Масштаб %d %%';
   SStatusIdle = 'Idle';
-  SStatusSearchFinished = ''; // Search finished
+  SStatusSearchFinished = 'Поиск закончен'; // Search finished
   SStatusSearchProgressing = 'Поиск ...'; // Search is progressing
   SStatusSearchStarted = 'Начат поиск ...'; // Search started
   SStatusHandling = 'Handling';
   SStatusLoadContentStarted = 'Началась загрузка'; // Load content started
   SStatusLoadContentFinished = 'Загрузка завершена'; // Load content finished
-  SStatusFormCreated = ''; // Form created
+  SStatusFormCreated = 'Form Created'; // Form created
 
 procedure TOPPHelpPreviewForm.actionFitPageCustomExecute(Sender: TObject);
 var
@@ -520,6 +520,8 @@ procedure TOPPHelpPreviewForm.OnMessageWMCopyData(var Msg: TWMCopyData);
 var
   fNotificationStream: TReadOnlyMemoryStream;
 begin
+
+  eventLogger.Flow('Received message: WM_COPYDATA', kEventFlowName);
 
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
   try

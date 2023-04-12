@@ -26,6 +26,7 @@ uses
   Vcl.Forms,
 
   OPP.Help.Log,
+  OPP.Help.System.Error,
   SampleOnly.Help.Hint.Setup,
   OPP.Help.Shortcut.Server,
   OPP.Help.System.Types,
@@ -64,12 +65,16 @@ begin
       fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\huge_readme.pdf';
       fPredicate.predicates.Add(fChild);
       helpShortcutServer.showHelp(fPredicate, vmExternal,
-        procedure(completionResult: TOPPHelpShortcutPresentingResult)
+        procedure(completionResult: Exception)
         var
           strmessage: String;
         begin
-          strmessage := Format('show help completion result: %d', [Integer(completionResult)]);
-          eventLogger.Debug(strmessage);
+          if completionResult = nil then
+          begin
+            eventLogger.Flow('show help finished','SampleStub');
+          end else begin
+            completionResult.log();
+          end;
         end);
     finally
       fPredicate.Free;
@@ -163,7 +168,7 @@ begin
         TOPPHelpMapRESTParser.saveJSON(fList, '.\help\tests\predicates.json',
           procedure(AError: Exception)
           begin
-          //
+            //
           end);
       finally
         fMap.Free;

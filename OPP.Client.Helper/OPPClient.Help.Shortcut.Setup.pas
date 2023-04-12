@@ -29,7 +29,9 @@ uses
   OPP.Help.Map,
   OPP.Help.Hint.Reader,
 
+  System.SysUtils,
   OPP.Help.Log,
+  OPP.Help.System.Error,
   OPPClientChild;
 
 class procedure TOPPClientHelpShortcutHelper.showHelp(AControl: TControl; AMessage: TWMHelp);
@@ -39,10 +41,11 @@ begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(AControl, AMessage);
   try
     helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-      procedure(completionResult: TOPPHelpShortcutPresentingResult)
+      procedure(completionResult: Exception)
       begin
-        if completionResult = prFail then
-          eventLogger.Warning('not able to open help form');
+        if completionResult = nil then
+          exit;
+        completionResult.Log();
       end);
   finally
     fShortcutRequest.Free;

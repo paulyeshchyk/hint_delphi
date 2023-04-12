@@ -27,9 +27,13 @@ implementation
 uses
   System.Rtti,
   System.StrUtils,
+  System.SysUtils,
   System.Classes;
 
-{ TOPPHelpSystemAppExecutor }
+const
+  kApplicationFormClassName = 'TOPPHelpPreviewForm';
+
+  { TOPPHelpSystemAppExecutor }
 
 class function TOPPHelpSystemAppExecutor.FindClass(AName: String): Pointer;
 var
@@ -78,7 +82,7 @@ var
   fOPPViewerClassName: String;
 begin
 
-  fOPPViewerClassName := 'TOPPHelpPreviewForm';//GetTypeData(AViewerClassInfo).ClassType.ClassName;
+  fOPPViewerClassName := kApplicationFormClassName; // GetTypeData(AViewerClassInfo).ClassType.ClassName;
 
   fSelfHandle := Application.Handle;
 
@@ -90,19 +94,17 @@ begin
   end;
 
   TOPPSystemMessageHelper.RunProcess(Appname, fSelfHandle, AActivationDelay,
-    procedure(ARunResultType: TOPPSystemMessageRunResultType)
+    procedure(ARunResultType: Exception)
     begin
-      case ARunResultType of
-        rrtFail:
-          begin
-            completion(nil, rtFailedDueUnableToRunProcess);
-          end;
-        rrtSuccess:
-          begin
-            fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fOPPViewerClassName);
-            completion(fWindowClassHandleList, rtNewInstance);
-          end;
+      if ARunResultType = nil then
+      begin
+        fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fOPPViewerClassName);
+        completion(fWindowClassHandleList, rtNewInstance);
+        exit;
       end;
+
+      completion(nil, rtFailedDueUnableToRunProcess);
+
     end);
 
 end;

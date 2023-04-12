@@ -24,8 +24,7 @@ type
 
   TOPPHelpViewMode = (vmInternal, vmExternal);
 
-  TOPPHelpShortcutPresentingResult = (prSuccess, prFail);
-  TOPPHelpShortcutPresentingCompletion = reference to procedure(APresentingResult: TOPPHelpShortcutPresentingResult);
+  TOPPHelpShortcutPresentingCompletion = reference to procedure(Error: Exception);
   TOPPHelpShortcutOnGetIdentifier = reference to function(AControl: TControl): String;
   TOPPHelpShortcutServerLoadStreamStatus = (ssCreated, ssReused, ssError);
   TOPPHelpShortcutServerLoadStreamCompletion = reference to procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus);
@@ -108,9 +107,9 @@ resourcestring
   SErrorCompletionIsNotDefined = 'TOPPHelpShortcutServer.NewMap completion was not defined';
   SEventLoadDataFromFileTemplate = 'Load data from file: "%s"';
   SErrorFileNotFoundTemplate = 'File not found: "%s"';
-  kEventFlowName = 'Shortcut server';
 
 const
+  kContext = 'OPPHelpShortcutServer';
   kPreviewFormClassName: String = 'TOPPHelpPreviewForm';
   kPreviewFormProcessName: String = 'OPPHelpPreview.exe';
   kShortcutMappingDefaultFileName: String = '.\Документация\help.idx';
@@ -172,7 +171,7 @@ begin
     begin
       if fMap = nil then
         continue;
-      eventLogger.Flow(Format(SEventRemovedRecordTemplate, [fMap.Identifier]), kEventFlowName);
+      eventLogger.Flow(Format(SEventRemovedRecordTemplate, [fMap.Identifier]), kContext);
       fShortcutDataset.list.Remove(fMap);
     end;
 
@@ -191,7 +190,7 @@ begin
   result := nil;
   if not Assigned(completion) then
   begin
-    eventLogger.Error(SErrorFindMapCompletionIsNotDefined,kEventFlowName);
+    eventLogger.Error(SErrorFindMapCompletionIsNotDefined, kContext);
     exit;
   end;
 
@@ -218,13 +217,13 @@ var
 begin
   if not FileExists(AFileName) then
   begin
-    eventLogger.Error(Format(SErrorFileNotFoundTemplate, [AFileName]), kEventFlowName);
+    eventLogger.Error(Format(SErrorFileNotFoundTemplate, [AFileName]), kContext);
     if Assigned(completion) then
       completion(nil, ssError);
     exit;
   end;
 
-  eventLogger.Flow(Format(SEventLoadDataFromFileTemplate, [AFileName]), kEventFlowName);
+  eventLogger.Flow(Format(SEventLoadDataFromFileTemplate, [AFileName]), kContext);
 
   fFileNameHash := AFileName.hashString;
   fPDFMemoryStream.TryGetValue(fFileNameHash, fStream);
@@ -258,7 +257,7 @@ begin
   end;
 
   fID := GUIDToString(newGUID);
-  eventLogger.Flow(Format(SEventCreatedShortcutMapTemplate, [fID]), kEventFlowName);
+  eventLogger.Flow(Format(SEventCreatedShortcutMapTemplate, [fID]), kContext);
   fHelpMap := TOPPHelpMap.Create(fID);
   try
     fShortcutDataset.AddMap(fHelpMap);
@@ -289,11 +288,11 @@ begin
 
   if not Assigned(fOnGetIdentifier) then
   begin
-    eventLogger.Error(SErrorGetIdentifierIsNotDefined, kEventFlowName);
+    eventLogger.Error(SErrorGetIdentifierIsNotDefined, kContext);
     exit;
   end;
 
-  eventLogger.Flow(Format(SEventWillShowHelpForTemplate, [ARequest.ActiveControl.classname, ARequest.ActiveControl.name]), 'OPPHelpShortcutServer');
+  eventLogger.Flow(Format(SEventWillShowHelpForTemplate, [ARequest.ActiveControl.classname, ARequest.ActiveControl.name]), kContext);
 
   fShortcutIdentifier := fOnGetIdentifier(ARequest.ActiveControl);
 
@@ -301,7 +300,7 @@ begin
   if not Assigned(fMapping) then
   begin
     if Assigned(completion) then
-      completion(prFail);
+      completion(Exception.Create('Mapping is not defined'));
     exit;
   end;
 
@@ -323,27 +322,27 @@ begin
   if not result then
   begin
     if Assigned(completion) then
-      completion(prFail);
+      completion(Exception.Create('Predicate is not assigned'));
     exit;
   end else begin
     clazzType := GetClass(kPreviewFormClassName); // ->TOPPHelpViewFullScreen
     { clazzType := GetTypeData(AViewerClassInfo).ClassType };
     if not clazzType.InheritsFrom(TForm) then
     begin
-      eventLogger.Error(SErrorViewerIsNotSupportingTFormClass, kEventFlowName);
+      eventLogger.Error(SErrorViewerIsNotSupportingTFormClass, kContext);
       exit;
     end;
 
     if not Supports(clazzType, IOPPHelpShortcutViewer) then
     begin
-      eventLogger.Error(SErrorViewerIsNotSupportingIOPPHelpSho,kEventFlowName);
+      eventLogger.Error(SErrorViewerIsNotSupportingIOPPHelpSho, kContext);
       exit;
     end;
 
     fViewer := TFormClass(clazzType).Create(nil);
     if not Assigned(fViewer) then
     begin
-      eventLogger.Error(SErrorViewerWasNotCreated, kEventFlowName);
+      eventLogger.Error(SErrorViewerWasNotCreated, kContext);
       exit;
     end;
 
@@ -355,7 +354,7 @@ begin
     end;
 
     if Assigned(completion) then
-      completion(prSuccess);
+      completion(nil);
 
   end;
 end;
@@ -371,19 +370,19 @@ begin
       if not(Assigned(AList) and (AList.Count <> 0)) then
       begin
         if Assigned(completion) then
-          completion(prFail);
-      end else begin
-
-        for hwnd in AList do
-        begin
-          ForceForegroundWindow(hwnd);
-          sentResult := SendOpenPage(hwnd, APredicate);
-          eventLogger.Flow(Format(SEventSentMessageResultTemplate,[sentResult.asString]),kEventFlowName);
-        end;
-
-        if Assigned(completion) then
-          completion(prSuccess);
+          completion(Exception.Create('Help app was not executed'));
+        exit;
       end;
+
+      for hwnd in AList do
+      begin
+        ForceForegroundWindow(hwnd);
+        sentResult := sendOpenPage(hwnd, APredicate);
+        eventLogger.Flow(Format(SEventSentMessageResultTemplate, [sentResult.asString]), kContext);
+      end;
+
+      if Assigned(completion) then
+        completion(nil);
     end);
 end;
 
@@ -428,7 +427,7 @@ begin
   else
     fFileName := AFileName;
 
-  eventLogger.Flow(Format(SEventDidSavedMapsInTemplate, [fFileName]), kEventFlowName);
+  eventLogger.Flow(Format(SEventDidSavedMapsInTemplate, [fFileName]), kContext);
 
   fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
 
