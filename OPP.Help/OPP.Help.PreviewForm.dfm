@@ -93,7 +93,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Height = 392
     Align = dalRight
     BarManager = dxBarManager1
-    ExplicitLeft = 855
+    ExplicitLeft = 857
   end
   object dxBarDockControl3: TdxBarDockControl
     Left = 0
@@ -102,7 +102,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Height = 3
     Align = dalBottom
     BarManager = dxBarManager1
-    ExplicitTop = 469
+    ExplicitTop = 471
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace
@@ -154,7 +154,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 376
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -236,7 +236,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 72
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -263,7 +263,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 274
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -285,7 +285,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -307,7 +307,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 622
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8

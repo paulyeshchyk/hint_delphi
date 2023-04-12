@@ -23,8 +23,8 @@ function CanShowTopics(const Topics, sHelpFile: string): integer;
 implementation
 uses StrUtils, forms;
 
-//Topics (str) - названия топиков через ","
-//Result (int) - номер (начинается с 1) доступного топика, 0 - если таковых нет
+//Topics (str) - РЅР°Р·РІР°РЅРёСЏ С‚РѕРїРёРєРѕРІ С‡РµСЂРµР· ","
+//Result (int) - РЅРѕРјРµСЂ (РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 1) РґРѕСЃС‚СѓРїРЅРѕРіРѕ С‚РѕРїРёРєР°, 0 - РµСЃР»Рё С‚Р°РєРѕРІС‹С… РЅРµС‚
 
 function CanShowTopics(const Topics, sHelpFile: string): integer;
 function IsChmFile(const FileName: string): Boolean;
@@ -125,7 +125,7 @@ begin
 //    Result := True;
 //  end
 //  else
-//    Opp_MessageBox('Файл справки не найден',
+//    Opp_MessageBox('Р¤Р°Р№Р» СЃРїСЂР°РІРєРё РЅРµ РЅР°Р№РґРµРЅ',
 //      MB_ICONError);
 end;
 
@@ -155,6 +155,11 @@ procedure CHMHelpExecute(HelpContext: integer = 0);
       Result := 0;
   end;
 begin
+
+  //РР·-Р·Р° РІРІРѕРґР° РЅРѕРІРѕР№ СЃРёСЃС‚РµРјС‹ РїРѕРјРѕС‰Рё РЅРµРѕР±С…РѕРґРёРјРѕ РёР·Р±Р°РІРёС‚СЊСЃСЏ РѕС‚ СЃС‚Р°СЂРѕР№ РјРµС‚РѕРґРёРєРё РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РїРѕРґСЃРєР°Р·РѕРє
+  exit;
+
+
   if HelpContext = 0 then
   begin
     if Screen.ActiveForm <> nil then

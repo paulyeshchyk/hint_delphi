@@ -37,12 +37,16 @@ var
   fShortcutRequest: TOPPHelpShortcutRequest;
 begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(AControl, AMessage);
-  helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-    procedure(completionResult: TOPPHelpShortcutPresentingResult)
-    begin
-      if completionResult = prFail then
-        ShowMessage('Nothing to show2');
-    end);
+  try
+    helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
+      procedure(completionResult: TOPPHelpShortcutPresentingResult)
+      begin
+        if completionResult = prFail then
+          eventLogger.Warning('not able to open help form');
+      end);
+  finally
+    fShortcutRequest.Free;
+  end;
 end;
 
 function GetWinControlHelpKeyword(AControl: TControl): String;
