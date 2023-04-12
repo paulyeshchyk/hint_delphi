@@ -19,7 +19,7 @@ type
   public
     class function FindAnyClass(const Name: string): Pointer;
     class function FindClass(AName: String): Pointer;
-    class procedure Execute(Appname: String; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal = 300);
+    class procedure Execute(Appname: String; completion: TOPPHelpSystemAppExecutorCompletion; AActivationDelay: Cardinal = 1000);
   end;
 
 implementation
