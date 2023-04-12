@@ -1,5 +1,7 @@
 program OPPHelpPreview;
 
+{$R 'OPPHelpPreview_Ext.res' 'OPPHelpPreview_Ext.rc'}
+
 uses
   Vcl.Forms,
   OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas',
@@ -8,11 +10,11 @@ uses
   OPP.Help.View.ZoomSettings in '..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas' {OPPHelpPreviewZoomForm};
 
 {$R *.res}
+{$R 'OPPHelpPreview_Ext.res' 'OPPHelpPreview_Ext.rc'}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TOPPHelpPreviewForm, OPPHelpPreviewForm);
-  Application.CreateForm(TOPPHelpPreviewZoomForm, OPPHelpPreviewZoomForm);
   Application.Run;
 end.

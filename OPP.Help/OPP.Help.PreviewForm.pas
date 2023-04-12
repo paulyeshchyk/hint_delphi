@@ -235,6 +235,7 @@ const
   kZoomDefaultIncrement = 5;
 
 resourcestring
+  SRC_PDF_TITLE = 'RC_PDF_TITLE';
   SEvebtPostedSuccessResult = 'Posted success result';
   SEventStateTemplate = 'State: %s';
   SEventParsedPredicateTemplate = 'Parsed predicate: %s';
@@ -440,6 +441,8 @@ begin
   oppHelpView.Align := alClient;
   oppHelpView.OnStatusChanged := self.OnViewStatusChanged;
   self.OnViewStatusChanged(oppHelpView.Status);
+
+  oppHelpView.loadDefaultResource(SRC_PDF_TITLE);
 
   oppHelpView.OnFindPanelVisibilityChange := procedure(AValue: Boolean)
     begin
