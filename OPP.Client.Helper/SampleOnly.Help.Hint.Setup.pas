@@ -30,20 +30,20 @@ uses
   OPP.Help.Tips.Factory,
   OPP.Help.Component.Enumerator,
 
-  SampleOnly.Help.Meta.Factory;
+  SampleOnly.Help.Meta.Extractor;
 
 resourcestring
   SWarningHintsAreNotDefinedTemplate = 'hints are not defined for %s';
 
 var
-  fMetaFactory: TOPPHelpMetaHintFactory;
+  fMetaFactory: TSampleOnlyHelpMetaExtractor;
 
 class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
 var
   fRequest: TOPPHelpHintMappingLoadRequest;
 begin
 
-  fMetaFactory := TOPPHelpMetaHintFactory.Create;
+  fMetaFactory := TSampleOnlyHelpMetaExtractor.Create;
   try
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
 
@@ -68,10 +68,10 @@ end;
 class procedure TOPPClientHintHelper.SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
 var
   fRequest: TOPPHelpHintMappingSaveRequest;
-  fMetaFactory: TOPPHelpMetaHintFactory;
+  fMetaFactory: TSampleOnlyHelpMetaExtractor;
 begin
 
-  fMetaFactory := TOPPHelpMetaHintFactory.Create;
+  fMetaFactory := TSampleOnlyHelpMetaExtractor.Create;
   try
     fRequest := TOPPHelpHintMappingSaveRequest.Create(AForm, AFilename);
     try
@@ -120,3 +120,5 @@ begin
 end;
 
 end.
+
+

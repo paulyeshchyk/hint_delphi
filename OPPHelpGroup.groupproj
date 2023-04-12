@@ -9,8 +9,8 @@
         <Projects Include="OPP.Help.Preview\OPPHelpPreview.dproj">
             <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
-        <Projects Include="OPP.Help.Sample\OPPHintTunning.dproj">
-            <Dependencies>OPP.Help.Package\OPPHelp.dproj;OPP.Help.Preview\OPPHelpPreview.dproj</Dependencies>
+        <Projects Include="OPP.HelpMapping.Editor\OPPHintTunning.dproj">
+            <Dependencies/>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -38,14 +38,14 @@
     <Target Name="OPPHelpPreview:Make" DependsOnTargets="OPPHelp:Make">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPHintTunning" DependsOnTargets="OPPHelp;OPPHelpPreview">
-        <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj"/>
+    <Target Name="OPPHintTunning">
+        <MSBuild Projects="OPP.HelpMapping.Editor\OPPHintTunning.dproj"/>
     </Target>
-    <Target Name="OPPHintTunning:Clean" DependsOnTargets="OPPHelp:Clean;OPPHelpPreview:Clean">
-        <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj" Targets="Clean"/>
+    <Target Name="OPPHintTunning:Clean">
+        <MSBuild Projects="OPP.HelpMapping.Editor\OPPHintTunning.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHintTunning:Make" DependsOnTargets="OPPHelp:Make;OPPHelpPreview:Make">
-        <MSBuild Projects="OPP.Help.Sample\OPPHintTunning.dproj" Targets="Make"/>
+    <Target Name="OPPHintTunning:Make">
+        <MSBuild Projects="OPP.HelpMapping.Editor\OPPHintTunning.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="OPPHelp;OPPHelpPreview;OPPHintTunning"/>

@@ -116,7 +116,7 @@ uses
   OPP.Help.Log;
 
 const
-  kHintsMappingDefaultFileName: String = '.\help\mapping\hints_matrix.json';
+  kHintsMappingDefaultFileName: String = '.\Документация\hint.idx';
 
 var
   fLock: TCriticalSection;

@@ -169,8 +169,8 @@ type
     procedure updateMap(AMap: TOPPHelpMap; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
     procedure wipeFields(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
     property HasRecords: Boolean read GetHasRecords;
-    property isIdentifierValid: Boolean read fIsIdentifierValid write SetIsIdentifierValid;
-    property isModified: Boolean read fIsModified write SetIsModified;
+    property isIdentifierValid: Boolean read fIsIdentifierValid write setIsIdentifierValid;
+    property isModified: Boolean read fIsModified write setIsModified;
     property SelectedHintMap: TOPPHelpMap read fSelectedHintMap write SetSelectedHintMap;
     property SelectedShortcutMap: TOPPHelpMap read fSelectedShortcutMap write SetSelectedShortcutMap;
   end;
@@ -204,7 +204,7 @@ uses
   OPP.Help.System.Str,
   SampleFormStubsHelper,
   SampleOnly.Help.Hint.Setup,
-  SampleOnly.Help.Meta.Factory,
+  SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
   OPP.Help.Settings.Form;
 
@@ -346,11 +346,19 @@ var
   p: TPoint;
   fHint: TOPPHelpHint;
 begin
-  PanelPreview.ShowHint := true;
-  PanelPreview.Hint := 'Test';
-  p := PanelPreview.ClientOrigin;
+  helpHintServer.FindHelpMap(fSelectedItem,
+    procedure(const AMap: TOPPHelpMap)
+    var point: TPoint;
+    begin
+      PanelPreview.ShowHint := true;
+      PanelPreview.HelpKeyword := 'Kod_OKWED';
+      PanelPreview.Hint := 'Wrong hint2';
+      point := ClientToScreen(PanelPreview.ClientOrigin);
+      Application.ActivateHint(point);
+//      TOPPClientHintHelper.LoadHints(self,'.\Документация\hint.idx', self.cxHintController,self.tipsRepo,nil);
+      //TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
+    end);
 
-  TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
 end;
 
 procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);
@@ -395,7 +403,8 @@ begin
 end;
 
 procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);
-var formSettings: TOPPHelpSettingsForm;
+var
+  formSettings: TOPPHelpSettingsForm;
 begin
   formSettings := TOPPHelpSettingsForm.Create(self);
   try
@@ -763,11 +772,11 @@ begin
   begin
     if assigned(Map) then
     begin
-      if map.IsValid then
+      if Map.isValid then
       begin
         cxListView1.AddItem(Map.ComponentIdentifier, nil);
       end else begin
-        eventLogger.Error(Format(SErrorInvalidMapDetected, [map.Identifier]));
+        eventLogger.Error(Format(SErrorInvalidMapDetected, [Map.identifier]));
       end;
     end;
   end;
@@ -898,7 +907,7 @@ begin
     cxEditIdentifierName.Style.Color := clInfoBK;
 end;
 
-procedure TSampleForm.SetIsModified(AValue: Boolean);
+procedure TSampleForm.setIsModified(AValue: Boolean);
 begin
   fIsModified := AValue;
   self.UpdateButtonStates;
@@ -908,27 +917,27 @@ procedure TSampleForm.SetSelectedHintMap(const AMap: TOPPHelpMap);
 begin
   fSelectedHintMap := AMap;
   self.updateForm(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
-  actionPreviewHint.Enabled := Assigned(self.SelectedHintMap);
+  actionPreviewHint.Enabled := assigned(self.SelectedHintMap);
 end;
 
 procedure TSampleForm.SetSelectedShortcutMap(const AMap: TOPPHelpMap);
 begin
   fSelectedShortcutMap := AMap;
   self.updateForm(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
-  actionPreviewShortcut.Enabled := Assigned(self.SelectedShortcutMap);
+  actionPreviewShortcut.Enabled := assigned(self.SelectedShortcutMap);
 end;
 
 procedure TSampleForm.UpdateButtonStates;
 begin
-  actionSave.Enabled := Self.IsModified and Self.IsIdentifierValid;
-  cxListView1.Enabled := not Self.IsModified;
-  actionNewRecord.Enabled := not Self.IsModified;
-  actionDeleteRecord.Enabled := Self.HasRecords and (not Self.isModified);
-  actionReload.Enabled := Self.HasRecords and (not Self.IsModified);
-  actionPreview.Enabled := not Self.IsModified;
-  actionUndo.Enabled := Self.IsModified;
-  actionPreviewHint.Enabled := Assigned(self.fSelectedHintMap) and (not Self.IsModified);
-  actionPreviewShortcut.Enabled := Assigned(self.fSelectedShortcutMap) and (not Self.IsModified);
+  actionSave.Enabled := self.isModified and self.isIdentifierValid;
+  cxListView1.Enabled := not self.isModified;
+  actionNewRecord.Enabled := not self.isModified;
+  actionDeleteRecord.Enabled := self.HasRecords and (not self.isModified);
+  actionReload.Enabled := self.HasRecords and (not self.isModified);
+  actionPreview.Enabled := not self.isModified;
+  actionUndo.Enabled := self.isModified;
+  actionPreviewHint.Enabled := assigned(self.fSelectedHintMap) and (not self.isModified);
+  actionPreviewShortcut.Enabled := assigned(self.fSelectedShortcutMap) and (not self.isModified);
 end;
 
 procedure TSampleForm.updateForm(AMap: TOPPHelpMap; newIdentifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
@@ -1017,7 +1026,7 @@ end;
 
 procedure TSampleForm.WMHOOK(var Msg: TMessage);
 begin
-  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\help\mapping\hints_matrix__.json', '.\help\hints\gulfstream_manual_rtf.rtf');
+  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\Документация\hint.idx', '.\Документация\hints.data');
 end;
 
 { -- message handlers }

@@ -143,7 +143,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas"/>
-        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Meta.Factory.pas"/>
+        <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Meta.Extractor.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas"/>
         <BuildConfiguration Include="Release">

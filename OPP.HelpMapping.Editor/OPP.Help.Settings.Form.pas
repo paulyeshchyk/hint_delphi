@@ -1,4 +1,4 @@
-unit OPP.Help.Settings.Form;
+п»їunit OPP.Help.Settings.Form;
 
 interface
 
@@ -74,8 +74,8 @@ uses
 procedure TOPPHelpSettingsForm.FormCreate(Sender: TObject);
 begin
   fDefaults := TOPPHelpDefaults.Create;
-  fDefaults.HintsFilePath := 'hints_matrix.json';
-  fDefaults.ShortcutFilePath := 'shortcut_matrix.json';
+  fDefaults.HintsFilePath := '.\Р”РѕРєСѓРјРµРЅС‚Р°С†РёСЏ\hint.idx';
+  fDefaults.ShortcutFilePath := '.\Р”РѕРєСѓРјРµРЅС‚Р°С†РёСЏ\help.idx';
 
   cxListView1.loadSettings(fDefaults);
 
@@ -179,12 +179,12 @@ begin
     exit;
 
   fItem := Self.Items.Add;
-  fItem.Caption := 'Путь к файлу подсказок';
+  fItem.Caption := 'РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РїРѕРґСЃРєР°Р·РѕРє';
   fItem.Subitems.Add(ASettings.HintsFilePath);
   fItem.Subitems.Add('HintsFilePath');
   //
   fItem := Self.Items.Add;
-  fItem.Caption := 'Путь к файлу помощи';
+  fItem.Caption := 'РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РїРѕРјРѕС‰Рё';
   fItem.Subitems.Add(ASettings.ShortcutFilePath);
   fItem.Subitems.Add('ShortcutFilePath');
 end;

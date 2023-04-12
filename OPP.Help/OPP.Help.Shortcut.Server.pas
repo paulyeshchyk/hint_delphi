@@ -113,7 +113,7 @@ resourcestring
 const
   kPreviewFormClassName: String = 'TOPPHelpPreviewForm';
   kPreviewFormProcessName: String = 'OPPHelpPreview.exe';
-  kShortcutMappingDefaultFileName: String = '.\help\mapping\shortcut_matrix.json';
+  kShortcutMappingDefaultFileName: String = '.\Документация\help.idx';
 
 var
   fLock: TCriticalSection;

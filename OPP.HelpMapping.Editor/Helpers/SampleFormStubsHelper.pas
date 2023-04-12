@@ -81,7 +81,7 @@ end;
 
 class procedure TSampleFormStubsHelper.generateHintMapping;
 begin
-  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\help\mapping\hints_matrix__.json', '.\help\hints\gulfstream_manual_rtf.rtf');
+  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\Документация\hint.idx', '.\Документация\hints.data');
 end;
 
 class procedure TSampleFormStubsHelper.savePredicateToStream;
