@@ -39,7 +39,7 @@ const
   kContext = 'SettingsManager';
 
 resourcestring
-  SSettingsFileName = 'defaults.json';
+  SSettingsFileName = 'OPPHintTunning.settings';
   SFileNotFoundMessage = 'File not found';
   SDefaultHelpIdx = '.\Документация\help.idx';
   SDefaultHintIdx = '.\Документация\hint.idx';
