@@ -81,7 +81,6 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure loadDefaultResource(AResourceName: String);
     procedure addStateChangeListener(AListener: IOPPHelpViewEventListener);
     procedure FitPageHeight;
     procedure FitPageWidth;
@@ -91,6 +90,7 @@ type
     procedure GotoNextPage();
     procedure GotoPreviousPage();
     procedure LoadContent(AStream: TMemoryStream);
+    procedure LoadDefaultResource(AResourceName: String = '');
     function NavigatorConstraints(): TOPPNavigatorConstraints;
     procedure OnZoomFactorChanged(Sender: TObject);
     function PagesCount(): Integer;
@@ -119,6 +119,8 @@ uses System.SysUtils,
   OPP.Help.View.Helper,
   {print customization}
   dxPSGlbl, dxPrnDlg;
+
+{$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
 
 resourcestring
   SEventPrinterComponentWasNotDefined = 'Printer component was not defined';
@@ -274,30 +276,10 @@ begin
   end;
 end;
 
-procedure TOPPHelpViewFullScreen.loadDefaultResource(AResourceName: String);
-var
-  stream: TResourceStream;
-begin
-  try
-    stream := TResourceStream.Create(HInstance, AResourceName, RT_RCDATA);
-    try
-      fPDFViewer.LoadFromStream(stream);
-      fPDFViewer.OptionsZoom.ZoomMode := pzmPageWidth;
-    finally
-      stream.Free;
-    end;
-  except
-    on E: Exception do
-    begin
-      //
-    end;
-  end;
-end;
-
 function TOPPHelpViewFullScreen.NavigatorConstraints: TOPPNavigatorConstraints;
 begin
   result := [];
-  if not Assigned(fPDFViewer) then
+  if not assigned(fPDFViewer) then
     exit;
 
   if fPDFViewer.CurrentPageIndex <> 0 then
@@ -315,7 +297,7 @@ end;
 
 procedure TOPPHelpViewFullScreen.OnHideFindPanelEvent(Sender: TObject);
 begin
-  if Assigned(fOnFindPanelVisiblityChange) then
+  if assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(false);
 end;
 
@@ -327,13 +309,13 @@ end;
 
 procedure TOPPHelpViewFullScreen.OnSelectedPageChanged(Sender: TObject; APageIndex: Integer);
 begin
-  if Assigned(fNavigatorStatusChangesCompletion) then
+  if assigned(fNavigatorStatusChangesCompletion) then
     fNavigatorStatusChangesCompletion(self);
 end;
 
 procedure TOPPHelpViewFullScreen.OnShowFindPanelEvent(Sender: TObject);
 begin
-  if Assigned(fOnFindPanelVisiblityChange) then
+  if assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(true);
 end;
 
@@ -363,7 +345,7 @@ begin
     exit;
   end;
 
-  SetLength(pages,1);
+  SetLength(pages, 1);
   pages[0] := (fPDFViewer.CurrentPageIndex + 1);
 
   lnk := TdxPDFViewerReportLink.Create(self);
@@ -476,6 +458,38 @@ begin
 
 end;
 
+procedure TOPPHelpViewFullScreen.LoadDefaultResource(AResourceName: String = '');
+var
+  stream: TResourceStream;
+  fResourceName: String;
+begin
+  if Length(AResourceName) = 0 then
+    fResourceName := 'RC_PDF_TITLE'
+  else
+    fResourceName := AResourceName;
+
+  if (FindResource(hInstance, PChar(fResourceName), RT_RCDATA) = 0) then
+  begin
+    eventLogger.Error(Format('Resource ''%s'' not found',[fResourceName]));
+    exit;
+  end;
+
+  try
+    stream := TResourceStream.Create(hInstance, fResourceName, RT_RCDATA);
+    try
+      fPDFViewer.LoadFromStream(stream);
+      fPDFViewer.OptionsZoom.zoomMode := pzmPageWidth;
+    finally
+      stream.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      //
+    end;
+  end;
+end;
+
 function TOPPHelpViewFullScreen.GetStatus: TOPPHelpViewFullScreenStatus;
 var
   CurrentPageIndex: Integer;
@@ -495,7 +509,6 @@ begin
     fPDFViewer.CurrentPageIndex := CurrentPageIndex;
   end;
 {$ENDREGION}
-
 end;
 
 end.

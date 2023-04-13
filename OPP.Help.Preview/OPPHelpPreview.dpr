@@ -1,6 +1,6 @@
 program OPPHelpPreview;
 
-{$R 'OPPHelpPreview_Ext.res' 'OPPHelpPreview_Ext.rc'}
+{$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
 
 uses
   Vcl.Forms,
@@ -10,7 +10,6 @@ uses
   OPP.Help.View.ZoomSettings in '..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas' {OPPHelpPreviewZoomForm};
 
 {$R *.res}
-{$R 'OPPHelpPreview_Ext.res' 'OPPHelpPreview_Ext.rc'}
 
 begin
   Application.Initialize;

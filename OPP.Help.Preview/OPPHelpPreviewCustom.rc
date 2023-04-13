@@ -1,0 +1,2 @@
+RC_DEFAULT_SPLASH       RCDATA         "..\resources\gulfstream8.png"
+RC_PDF_TITLE            RCDATA         "..\resources\title.pdf"

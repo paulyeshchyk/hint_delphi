@@ -208,7 +208,7 @@ type
     { Public declarations }
     function GetContainerClassName: String;
     procedure PresentModal();
-    procedure runPredicate(const APredicate: TOPPHelpPredicate);
+    procedure RunPredicate(const APredicate: TOPPHelpPredicate);
   end;
 
 var
@@ -235,7 +235,6 @@ const
   kZoomDefaultIncrement = 5;
 
 resourcestring
-  SRC_PDF_TITLE = 'RC_PDF_TITLE';
   SEvebtPostedSuccessResult = 'Posted success result';
   SEventStateTemplate = 'State: %s';
   SEventParsedPredicateTemplate = 'Parsed predicate: %s';
@@ -442,7 +441,7 @@ begin
   oppHelpView.OnStatusChanged := self.OnViewStatusChanged;
   self.OnViewStatusChanged(oppHelpView.Status);
 
-  oppHelpView.loadDefaultResource(SRC_PDF_TITLE);
+  oppHelpView.LoadDefaultResource('');
 
   oppHelpView.OnFindPanelVisibilityChange := procedure(AValue: Boolean)
     begin
@@ -495,7 +494,7 @@ begin
   try
     ParsePredicate(fNotificationStream, fPredicate);
     try
-      runPredicate(fPredicate);
+      RunPredicate(fPredicate);
     finally
       fPredicate.Free;
     end;
@@ -549,7 +548,7 @@ procedure TOPPHelpPreviewForm.OnMessageWMOPPPredicate(var Msg: TMessage);
 begin
   Msg.Result := SMessageResultSuccess;
 
-  runPredicate(fCurrentPredicate);
+  RunPredicate(fCurrentPredicate);
 
 end;
 
@@ -649,7 +648,7 @@ begin
   self.WindowState := TWindowState.wsNormal;
 end;
 
-procedure TOPPHelpPreviewForm.runPredicate(const APredicate: TOPPHelpPredicate);
+procedure TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate);
 begin
   eventLogger.Flow(Format(SEventStartedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kEventFlowName);
   helpShortcutServer.loadPDF(APredicate.filename,
