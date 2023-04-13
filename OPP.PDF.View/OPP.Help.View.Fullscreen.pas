@@ -14,7 +14,6 @@ uses
   OPP.Help.Interfaces,
   OPP.Help.Predicate,
   OPP.Help.System.References,
-  OPP.Help.System.Thread,
 
   {print}
   dxPSdxPDFViewerLnk, dxPSCore;

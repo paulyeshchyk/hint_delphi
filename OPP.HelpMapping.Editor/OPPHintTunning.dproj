@@ -135,17 +135,19 @@
         </DCCReference>
         <DCCReference Include="Helpers\SampleFormSaveState.pas"/>
         <DCCReference Include="Helpers\SampleFormStubsHelper.pas"/>
-        <DCCReference Include="OPP.Help.Settings.Form.pas">
-            <Form>OPPHelpSettingsForm</Form>
-        </DCCReference>
-        <DCCReference Include="OPP.Help.Settings.Value.Editor.pas">
-            <Form>OPPHelpSettingsValueEditor</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Meta.Extractor.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas"/>
         <DCCReference Include="..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas"/>
+        <DCCReference Include="Settings\OPP.Help.Settings.Form.pas">
+            <Form>OPPHelpSettingsForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Settings\OPP.Help.Settings.Manager.pas"/>
+        <DCCReference Include="Settings\OPP.Help.Settings.Value.Editor.pas">
+            <Form>OPPHelpSettingsValueEditor</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -181,13 +183,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHintTunning.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHintTunning.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

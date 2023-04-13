@@ -57,10 +57,6 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     TabOrder = 1
     ViewStyle = vsReport
     OnDblClick = actionEditValueExecute
-    ExplicitLeft = 136
-    ExplicitTop = 56
-    ExplicitWidth = 121
-    ExplicitHeight = 97
   end
   object ActionList1: TActionList
     Left = 200

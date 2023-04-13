@@ -155,7 +155,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.Server.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Error.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Str.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Thread.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Controls.Styler.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>

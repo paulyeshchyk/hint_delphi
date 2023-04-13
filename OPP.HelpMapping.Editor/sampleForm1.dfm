@@ -3,7 +3,7 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 517
+  ClientHeight = 497
   ClientWidth = 1085
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,7 +24,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1085
-    Height = 517
+    Height = 497
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -36,7 +36,7 @@ object SampleForm: TSampleForm
       Left = 530
       Top = 0
       Width = 6
-      Height = 517
+      Height = 497
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -47,7 +47,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 517
+      Height = 497
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -67,7 +67,7 @@ object SampleForm: TSampleForm
         Left = 6
         Top = 34
         Width = 518
-        Height = 477
+        Height = 457
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -103,7 +103,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 549
-      Height = 517
+      Height = 497
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -465,7 +465,7 @@ object SampleForm: TSampleForm
         Left = 6
         Top = 360
         Width = 537
-        Height = 151
+        Height = 131
         Hint = 'Wrong hint'
         HelpType = htKeyword
         HelpKeyword = 'Kod_OKWED'
@@ -476,7 +476,7 @@ object SampleForm: TSampleForm
         Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvLowered
-        Constraints.MinHeight = 151
+        Constraints.MinHeight = 131
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -494,22 +494,22 @@ object SampleForm: TSampleForm
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
     UseHintControlLookAndFeel = True
-    Left = 384
-    Top = 416
+    Left = 264
+    Top = 72
   end
   object tipsRepo: TdxScreenTipRepository
-    Left = 384
-    Top = 200
+    Left = 368
+    Top = 72
     PixelsPerInch = 96
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
-    Left = 73
-    Top = 336
+    Left = 209
+    Top = 176
   end
   object MainMenu1: TMainMenu
-    Left = 72
-    Top = 56
+    Left = 24
+    Top = 120
     object N1: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1086#1088
       object N5: TMenuItem
@@ -553,8 +553,8 @@ object SampleForm: TSampleForm
     MenusShowRecentItemsFirst = False
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 387
-    Top = 121
+    Left = 155
+    Top = 73
     PixelsPerInch = 96
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
@@ -832,8 +832,8 @@ object SampleForm: TSampleForm
     end
   end
   object ActionList1: TActionList
-    Left = 216
-    Top = 96
+    Left = 24
+    Top = 40
     object actionNewRecord: TAction
       Caption = #1057#1086#1079#1076#1072#1090#1100
       ShortCut = 16462

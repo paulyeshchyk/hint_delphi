@@ -42,7 +42,7 @@ type
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
-    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+    procedure NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
   end;
 
   TOPPHelpShortcutServer = class(TComponent, IOPPHelpShortcutServer)
@@ -72,7 +72,7 @@ type
     function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
     function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 
-    procedure NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+    procedure NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -245,7 +245,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpShortcutServer.NewMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+procedure TOPPHelpShortcutServer.NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
 var
   fHelpMap: TOPPHelpMap;
   fID: String;
@@ -260,6 +260,8 @@ begin
   eventLogger.Flow(Format(SEventCreatedShortcutMapTemplate, [fID]), kContext);
   fHelpMap := TOPPHelpMap.Create(fID);
   try
+    if Assigned(onApplyDefaults) then
+      onApplyDefaults(@fHelpMap);
     fShortcutDataset.AddMap(fHelpMap);
     completion(fHelpMap);
   finally

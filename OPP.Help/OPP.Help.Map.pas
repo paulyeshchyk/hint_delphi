@@ -27,6 +27,7 @@ type
     property Predicate: TOPPHelpPredicate read fPredicate write fPredicate;
   end;
 
+  TOPPHelpMapApplyDefaultsCompletion = reference to procedure(const AMap: POPPHelpMap);
   TOPPHelpMapCompletion = reference to procedure(const AMap: TOPPHelpMap);
   TOPPHelpMapParserJSONCallback = reference to procedure(AList: TList<TOPPHelpMap>; Error: Exception);
 

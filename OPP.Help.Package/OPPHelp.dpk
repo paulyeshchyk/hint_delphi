@@ -63,7 +63,6 @@ contains
   OPP.Help.Shortcut.Server in '..\OPP.Help\OPP.Help.Shortcut.Server.pas',
   OPP.Help.System.Error in '..\OPP.Help\OPP.Help.System.Error.pas',
   OPP.Help.System.Str in '..\OPP.Help\OPP.Help.System.Str.pas',
-  OPP.Help.System.Thread in '..\OPP.Help\OPP.Help.System.Thread.pas',
   OPP.Help.Controls.Styler in '..\OPP.Help\OPP.Help.Controls.Styler.pas',
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
   OPP.Help.System.Stream in '..\OPP.Help\OPP.Help.System.Stream.pas',

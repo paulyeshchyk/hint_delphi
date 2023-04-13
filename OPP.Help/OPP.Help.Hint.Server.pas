@@ -54,18 +54,18 @@ type
 
   IOPPHelpMapContainer = interface
     procedure RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
-    procedure CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+    procedure CreateHelpMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
     function AddHelpMap(AMap: TOPPHelpMap): Boolean;
     function GetAvailableMaps(): TList<TOPPHelpMap>;
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
     procedure MergeHelpMaps(AList: TList<TOPPHelpMap>);
-    procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion);overload;
-    procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);overload;
+    procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion); overload;
+    procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion); overload;
     procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpBooleanCompletion);
   end;
 
-  IOPPHelpHintServer = interface (IOPPHelpMapContainer)
+  IOPPHelpHintServer = interface(IOPPHelpMapContainer)
 
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
@@ -92,13 +92,13 @@ type
     function AddHelpMap(AMap: TOPPHelpMap): Boolean;
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
     function GetAvailableMaps: TList<TOPPHelpMap>;
-    procedure CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+    procedure CreateHelpMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
     procedure MergeHelpMaps(AList: TList<TOPPHelpMap>);
     procedure RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
-    procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion);overload;
-    procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);overload;
+    procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion); overload;
+    procedure SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion); overload;
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
     procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpBooleanCompletion);
@@ -116,6 +116,7 @@ uses
   OPP.Help.Log;
 
 const
+  kContext = 'OPPHelpHintServer';
   kHintsMappingDefaultFileName: String = '.\Документация\hint.idx';
 
 var
@@ -183,7 +184,7 @@ begin
   completion(fHintMapSet.list);
 end;
 
-procedure TOPPHelpHintServer.CreateHelpMap(newGUID: TGUID; completion: TOPPHelpMapCompletion);
+procedure TOPPHelpHintServer.CreateHelpMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
 var
   fHelpMap: TOPPHelpMap;
   fID: String;
@@ -195,9 +196,13 @@ begin
   end;
 
   fID := GUIDToString(newGUID);
-  eventLogger.Flow(Format('Created hint map: %s', [fID]), 'OPPHelpHintServer');
+  eventLogger.Flow(Format('Created hint map: %s', [fID]), kContext);
   fHelpMap := TOPPHelpMap.Create(fID);
   try
+
+    if Assigned(onApplyDefaults) then
+      onApplyDefaults(@fHelpMap);
+
     fHintMapSet.AddMap(fHelpMap);
     completion(fHelpMap);
   finally
@@ -377,7 +382,7 @@ var
   fMetaIdentifier: TOPPHelpHintMapIdentifier;
 begin
 
-  eventLogger.Flow(Format('Load hints started for [%s]', [ARequest.Control.ClassName]), 'OPPHelpHint');
+  eventLogger.Flow(Format('Load hints started for [%s]', [ARequest.Control.ClassName]), kContext);
 
   self.reloadConfigurationIfNeed(ARequest.MappingFileName);
   if not fLoaded then
@@ -409,7 +414,7 @@ begin
     self.findOrCreateReader(fMetaIdentifier);
   end;
 
-  eventLogger.Flow(Format('Will create hints for [%s]', [ARequest.Control.ClassName]), 'OPPHelpHint');
+  eventLogger.Flow(Format('Will create hints for [%s]', [ARequest.Control.ClassName]), kContext);
 
   self.GetHints(ARequest, fChildrenHelpMetaList, completion);
 end;
@@ -440,7 +445,7 @@ begin
         exit;
       end;
 
-      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [AList.Count]), 'OPPHelpHint');
+      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [AList.Count]), kContext);
 
       self.fLoaded := true;
       fHintMapSet.AddMaps(AList);
@@ -470,7 +475,7 @@ begin
     begin
       if fMap = nil then
         continue;
-      eventLogger.Flow(Format('Removed record: [%s]', [fMap.Identifier]), 'OPPHelpHintServer');
+      eventLogger.Flow(Format('Removed record: [%s]', [fMap.Identifier]), kContext);
       fHintMapSet.list.Remove(fMap);
     end;
 
@@ -491,7 +496,7 @@ begin
   else
     fFileName := AFileName;
 
-  eventLogger.Flow(Format('Did saved maps in %s', [fFileName]), 'OPPHelpHintServer');
+  eventLogger.Flow(Format('Did saved maps in %s', [fFileName]), kContext);
 
   fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
 

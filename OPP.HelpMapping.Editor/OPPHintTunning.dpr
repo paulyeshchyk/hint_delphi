@@ -9,12 +9,13 @@ uses
   FormTest03 in 'Tests\FormTest03.pas' {FormTest3},
   SampleFormSaveState in 'Helpers\SampleFormSaveState.pas',
   SampleFormStubsHelper in 'Helpers\SampleFormStubsHelper.pas',
-  OPP.Help.Settings.Form in 'OPP.Help.Settings.Form.pas' {OPPHelpSettingsForm},
-  OPP.Help.Settings.Value.Editor in 'OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor},
   SampleOnly.Help.Hint.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Hint.Setup.pas',
   SampleOnly.Help.Meta.Extractor in '..\OPP.Client.Helper\SampleOnly.Help.Meta.Extractor.pas',
   SampleOnly.Help.Shortcut.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas',
-  OPP.Help.Tips.Factory in '..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas';
+  OPP.Help.Tips.Factory in '..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas',
+  OPP.Help.Settings.Form in 'Settings\OPP.Help.Settings.Form.pas' {OPPHelpSettingsForm},
+  OPP.Help.Settings.Manager in 'Settings\OPP.Help.Settings.Manager.pas',
+  OPP.Help.Settings.Value.Editor in 'Settings\OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor};
 
 {$R *.res}
 
@@ -23,6 +24,8 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TSampleForm, SampleForm);
+  Application.CreateForm(TOPPHelpSettingsForm, OPPHelpSettingsForm);
+  Application.CreateForm(TOPPHelpSettingsValueEditor, OPPHelpSettingsValueEditor);
   Application.Run;
 
 end.

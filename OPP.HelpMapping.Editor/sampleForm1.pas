@@ -20,6 +20,7 @@ uses
   OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
   OPP.Help.System.Messaging,
   OPP.Help.System.References,
+  OPP.Help.Settings.Manager,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
   SampleFormSaveState,
 
@@ -138,6 +139,7 @@ type
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure WMHOOK(var Msg: TMessage); message WM_OPPHook;
   private
+    fDefaultSettings: TOPPHelpDefaults;
     fCanChangeModificationFlag: Boolean;
     fIsIdentifierValid: Boolean;
     fIsModified: Boolean;
@@ -155,6 +157,8 @@ type
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
+    procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
+    procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
 
     function preferableIndexToJump(from: Integer): Integer;
     procedure RefreshPreviewButtonAction;
@@ -209,6 +213,7 @@ uses
   OPP.Help.Settings.Form;
 
 resourcestring
+  SWarningDefaultSettingsAreNotDefined = 'Default settings are not defined';
   SWarningListItemsIsNotSelectedNotAbleToS = 'List items is not selected. not able to set caption';
   SErrorPassedNotTControl = 'passed not TControl';
   SEmpty = '';
@@ -225,7 +230,7 @@ resourcestring
   SEventDidSavedShortcut = 'Did saved shortcut';
   SEventWillSaveMap = 'Will save map';
   SFileFilterPDF = 'PDF|*.pdf';
-  SFileFilterRTF = 'RTF|*.rtf';
+  SFileFilterRTF = 'DATA|*.data';
   SktBookmark = 'Переход на закладку';
   SktPage = 'Переход на страницу';
   SktSearch = 'Поиск';
@@ -322,14 +327,14 @@ begin
 
     CreateGUID(newGUID);
 
-    helpHintServer.CreateHelpMap(newGUID,
+    helpHintServer.CreateHelpMap(newGUID, onApplyHintMapDefaults,
       procedure(const AHintMap: TOPPHelpMap)
       begin
         fState.hintWasUpdated := true;
         fState.checkAndRunMapId(GUIDToString(newGUID));
       end);
 
-    helpShortcutServer.NewMap(newGUID,
+    helpShortcutServer.NewMap(newGUID, onApplyShortcutMapDefaults,
       procedure(const AShortcutMap: TOPPHelpMap)
       begin
         fState.shortcutWasUpdated := true;
@@ -411,7 +416,20 @@ var
 begin
   formSettings := TOPPHelpSettingsForm.Create(self);
   try
+
     formSettings.ShowModal;
+
+    TOPPHelpSettingsManager.readSettings(
+      procedure(AResult: TOPPHelpDefaults; Error: Exception)
+      begin
+        if assigned(Error) then
+        begin
+          exit;
+        end;
+
+        fDefaultSettings := AResult;
+      end);
+
   finally
     formSettings.Free;
   end;
@@ -657,6 +675,17 @@ begin
   self.isModified := false;
   self.RefreshPreviewButtonAction;
 
+  TOPPHelpSettingsManager.readSettings(
+    procedure(AResult: TOPPHelpDefaults; Error: Exception)
+    begin
+      if assigned(Error) then
+      begin
+        exit;
+      end;
+
+      fDefaultSettings := AResult;
+    end);
+
   cxListView1.Columns[0].Width := cxListView1.Width - 10;
   TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo,
     procedure()
@@ -707,6 +736,26 @@ end;
 procedure TSampleForm.N31Click(Sender: TObject);
 begin
   TFormTest3.Create(self).ShowModal;
+end;
+
+procedure TSampleForm.onApplyHintMapDefaults(const AMap: POPPHelpMap);
+begin
+  if not assigned(fDefaultSettings) then begin
+    eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
+    exit;
+  end;
+  AMap^.Predicate.filename := fDefaultSettings.HintsFilePath;
+  //
+end;
+
+procedure TSampleForm.onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
+begin
+  if not assigned(fDefaultSettings) then begin
+    eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
+    exit;
+  end;
+  AMap^.Predicate.filename := fDefaultSettings.ShortcutFilePath;
+  //
 end;
 
 procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);

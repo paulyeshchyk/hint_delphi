@@ -18,11 +18,10 @@ uses
   dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxContainer, cxEdit, cxListView,
-  Vcl.StdActns;
+  Vcl.StdActns,
+  OPP.Help.Settings.Manager;
 
 type
-
-  TOPPHelpDefaults = class;
 
   TOPPHelpSettingsForm = class(TForm)
     Panel1: TPanel;
@@ -37,26 +36,19 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
-    fDefaults: TOPPHelpDefaults;
-    procedure saveRESTJSON;
+    ffDefaults: TOPPHelpDefaults;
+    procedure setDefaults(AValue: TOPPHelpDefaults);
+    procedure saveSettings();
+    procedure OnSettingsRead(AResult: TOPPHelpDefaults; error: Exception);
     procedure OnEditorCompletion(AValue: TOPPHelpSettingsValue; Saved: Boolean);
   public
     { Public declarations }
-    property Defaults: TOPPHelpDefaults read fDefaults;
+    property Defaults: TOPPHelpDefaults read ffDefaults write setDefaults;
   end;
 
   TOPPCxListView = class helper for TcxListView
   public
     procedure loadSettings(ASettings: TOPPHelpDefaults);
-  end;
-
-  TOPPHelpDefaults = class
-  private
-    fHintsFilePath: String;
-    fShortcutFilePath: String;
-  public
-    property HintsFilePath: String read fHintsFilePath write fHintsFilePath;
-    property ShortcutFilePath: String read fShortcutFilePath write fShortcutFilePath;
   end;
 
 var
@@ -65,72 +57,78 @@ var
 implementation
 
 uses
-  OPP.Help.predicate,OPP.Help.System.Types,
+  OPP.Help.predicate, OPP.Help.System.Types,
   OPP.Help.log,
+  OPP.Help.System.error,
+  OPP.Help.System.Files,
   System.IOUtils, System.JSON, DBXJSONReflect, REST.JSON;
+
+const
+  kShortcutFilePathPropertyName = 'ShortcutFilePath';
+  kHintsFilePathPropertyName = 'HintsFilePath';
+
+resourcestring
+  SHintFilePathCaption = 'Путь к файлу подсказок';
+  SShortFilePathCaption = 'Путь к файлу помощи';
 
 {$R *.dfm}
 
 procedure TOPPHelpSettingsForm.FormCreate(Sender: TObject);
 begin
-  fDefaults := TOPPHelpDefaults.Create;
-  fDefaults.HintsFilePath := '.\Документация\hint.idx';
-  fDefaults.ShortcutFilePath := '.\Документация\help.idx';
-
-  cxListView1.loadSettings(fDefaults);
-
+  TOPPHelpSettingsManager.readSettings(OnSettingsRead);
 end;
 
 procedure TOPPHelpSettingsForm.OnEditorCompletion(AValue: TOPPHelpSettingsValue; Saved: Boolean);
 begin
   if not Saved then
     exit;
-  if AValue.propertyName = 'HintsFilePath' then
-    fDefaults.HintsFilePath := AValue.propertyValue;
-  if AValue.propertyName = 'ShortcutFilePath' then
-    fDefaults.ShortcutFilePath := AValue.propertyValue;
-  cxListView1.loadSettings(fDefaults);
+  if AValue.propertyName = kHintsFilePathPropertyName then
+    self.Defaults.HintsFilePath := AValue.propertyValue;
+  if AValue.propertyName = kShortcutFilePathPropertyName then
+    self.Defaults.ShortcutFilePath := AValue.propertyValue;
+  cxListView1.loadSettings(self.Defaults);
 end;
 
-procedure TOPPHelpSettingsForm.saveRESTJSON;
-var
-  fPredicate, ffPredicate : TOPPHelpPredicate;
-  serializer: TJSONMarshal;
-  jsonObj: TJSONObject;
-  jsonString: String;
-  s: String;
+procedure TOPPHelpSettingsForm.OnSettingsRead(AResult: TOPPHelpDefaults; error: Exception);
 begin
-  //
-
-
-  fPredicate := TOPPHelpPredicate.Create;
-  fPredicate.filename := 'zz';
-  fPredicate.predicates.Add(TOPPHelpPredicate.Create('test.x',ktBookmark, 'bm'));
-
-  s:= TJSON.ObjectToJsonString(fPredicate);
-  eventLogger.Debug(s);
-
-
-//  ffPredicate := TOPPHelpPredicate.Create;
-  ffPredicate := TJson.JsonToObject<TOPPHelpPredicate>(s);
-
-  serializer := TJSONMarshal.Create;
-
-  jsonObj := serializer.marshal(fDefaults) as TJSONObject;
-  try
-    jsonString := TJson.JsonEncode(jsonObj);
-    try
-      TFile.WriteAllText('c:\defaults.json', jsonString);
-    except
-      on Error: Exception do
-      begin
-        //
-      end;
-    end;
-  finally
-    jsonObj.Free;
-    FreeAndNil(serializer);
+  if not assigned(error) then
+  begin
+    Defaults := AResult;
+    exit;
   end;
+
+  error.log();
+
+  TOPPHelpSettingsManager.defaultSettings(
+    procedure(AResult: TOPPHelpDefaults; error: Exception)
+    begin
+      if assigned(error) then
+      begin
+        error.log();
+        exit;
+      end;
+      self.Defaults := AResult;
+    end);
+end;
+
+procedure TOPPHelpSettingsForm.saveSettings();
+begin
+  TOPPHelpSettingsManager.saveSettings(self.Defaults,
+    procedure(error: Exception)
+    begin
+      if assigned(error) then
+      begin
+        error.log();
+        exit;
+      end;
+      eventLogger.Flow('settings was saved', 'OPPSettingsForm');
+    end);
+end;
+
+procedure TOPPHelpSettingsForm.setDefaults(AValue: TOPPHelpDefaults);
+begin
+  ffDefaults := AValue;
+  cxListView1.loadSettings(ffDefaults);
 end;
 
 procedure TOPPHelpSettingsForm.actionEditValueExecute(Sender: TObject);
@@ -145,10 +143,10 @@ begin
   fValue.propertyValue := cxListView1.Selected.Subitems[0];
   fValue.propertyName := cxListView1.Selected.Subitems[1];
 
-  Editor := TOPPHelpSettingsValueEditor.Create(Self);
+  Editor := TOPPHelpSettingsValueEditor.Create(self);
   try
     Editor.setValue(fValue);
-    Editor.onCompletion := Self.OnEditorCompletion;
+    Editor.onCompletion := self.OnEditorCompletion;
     Editor.ShowModal;
   finally
     Editor.Free;
@@ -157,15 +155,14 @@ end;
 
 procedure TOPPHelpSettingsForm.actionSaveExecute(Sender: TObject);
 begin
-
-  saveRESTJSON;
-
   Close;
 end;
 
 procedure TOPPHelpSettingsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  fDefaults.Free;
+  saveSettings();
+
+  self.Defaults.Free;
 end;
 
 { TOPPCxListView }
@@ -174,19 +171,19 @@ procedure TOPPCxListView.loadSettings(ASettings: TOPPHelpDefaults);
 var
   fItem: TListItem;
 begin
-  Self.Clear;
+  self.Clear;
   if not assigned(ASettings) then
     exit;
 
-  fItem := Self.Items.Add;
-  fItem.Caption := 'Путь к файлу подсказок';
+  fItem := self.Items.Add;
+  fItem.Caption := SHintFilePathCaption;
   fItem.Subitems.Add(ASettings.HintsFilePath);
-  fItem.Subitems.Add('HintsFilePath');
+  fItem.Subitems.Add(kHintsFilePathPropertyName);
   //
-  fItem := Self.Items.Add;
-  fItem.Caption := 'Путь к файлу помощи';
+  fItem := self.Items.Add;
+  fItem.Caption := SShortFilePathCaption;
   fItem.Subitems.Add(ASettings.ShortcutFilePath);
-  fItem.Subitems.Add('ShortcutFilePath');
+  fItem.Subitems.Add(kShortcutFilePathPropertyName);
 end;
 
 end.
