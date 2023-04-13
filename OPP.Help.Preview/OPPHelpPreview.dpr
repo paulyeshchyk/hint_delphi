@@ -4,7 +4,7 @@ program OPPHelpPreview;
 
 uses
   Vcl.Forms,
-  OPP.Help.PreviewForm in '..\OPP.Help\OPP.Help.PreviewForm.pas',
+  OPP.Help.PreviewForm in '..\OPP.PDF.View\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
   OPP.Help.View.Fullscreen in '..\OPP.PDF.View\OPP.Help.View.Fullscreen.pas',
   OPP.Help.View.Helper in '..\OPP.PDF.View\OPP.Help.View.Helper.pas',
   OPP.Help.View.ZoomSettings in '..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas' {OPPHelpPreviewZoomForm};

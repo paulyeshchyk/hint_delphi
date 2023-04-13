@@ -110,7 +110,9 @@
         <RcCompile Include="OPPHelpPreviewCustom.rc">
             <Form>OPPHelpPreviewCustom.res</Form>
         </RcCompile>
-        <DCCReference Include="..\OPP.Help\OPP.Help.PreviewForm.pas"/>
+        <DCCReference Include="..\OPP.PDF.View\OPP.Help.PreviewForm.pas">
+            <Form>OPPHelpPreviewForm</Form>
+        </DCCReference>
         <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.Fullscreen.pas"/>
         <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.Helper.pas"/>
         <DCCReference Include="..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas">
