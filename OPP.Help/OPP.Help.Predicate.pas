@@ -21,7 +21,6 @@ type
     constructor Create(AFileName: String; AKeywordType: TOPPKeywordType; AValue: String);overload;
     destructor Destroy; override;
 
-    function copy(): TOPPHelpPredicate;
     property value: String read fValue write SetValue;
     property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
     property filename: String read fFileName write fFileName;
@@ -113,25 +112,10 @@ end;
 
 destructor TOPPHelpPredicate.Destroy;
 begin
+  fPredicates.Clear;
+  fPredicates.Pack;
   fPredicates.Free;
   inherited Destroy;
-end;
-
-function TOPPHelpPredicate.copy(): TOPPHelpPredicate;
-var
-  fChild, fNewChild: TOPPHelpPredicate;
-begin
-
-  result := TOPPHelpPredicate.Create();
-
-  result.value := self.value;
-  result.keywordType := self.keywordType;
-  result.filename := self.filename;
-  for fChild in self.predicates do
-  begin
-    fNewChild := fChild.copy();
-    result.predicates.Add(fNewChild);
-  end;
 end;
 
 procedure TOPPHelpPredicate.SetValue(AValue: String);

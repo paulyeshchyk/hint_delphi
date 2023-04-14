@@ -66,10 +66,14 @@ begin
   result := TList<TOPPHelpMeta>.Create();
 
   list := AComponent.GetChildrenRecursive;
-  for child in list do
-  begin
-    fMeta := self.GetHintMeta(child);
-    result.Add(fMeta)
+  try
+    for child in list do
+    begin
+      fMeta := self.GetHintMeta(child);
+      result.Add(fMeta)
+    end;
+  finally
+    list.Free;
   end;
 end;
 

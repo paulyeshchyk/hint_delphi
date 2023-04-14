@@ -6,11 +6,6 @@ uses SysUtils;
 
 type
 
-  ErrorHelper = class helper for Exception
-  public
-    procedure Log(ADetails: String = '');
-  end;
-
   IOPPSystemError = interface
     function errorCode(): Integer;
     function errorMessage(): String;
@@ -31,11 +26,6 @@ uses
   WinAPI.Windows,
   OPP.Help.Log,
   OPP.Help.System.Str;
-
-procedure ErrorHelper.Log(ADetails: String);
-begin
-  eventLogger.Error(Format('%s - %s', [self.message, ADetails]));
-end;
 
 constructor TOPPHelpShortcutDatasetError.Create(errorCode: Integer; errorMessage: String; errorClass: String);
 begin

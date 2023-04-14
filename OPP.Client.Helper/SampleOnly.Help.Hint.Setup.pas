@@ -46,11 +46,8 @@ begin
   fMetaFactory := TSampleOnlyHelpMetaExtractor.Create;
   try
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
-
     try
-
       hintController.HintHidePause := -1;
-
       fRequest.OnGetHintFactory := fMetaFactory.GetChildrenHelpMeta;
       helpHintServer.LoadHints(fRequest,
         procedure(hints: TList<TOPPHelpHint>)
@@ -58,6 +55,7 @@ begin
           TOPPClientHintHelper.CreateHintViews(AForm, hints, hintController, repo, completion);
         end);
     finally
+      fRequest.OnGetHintFactory := nil;
       fRequest.Free;
     end;
   finally

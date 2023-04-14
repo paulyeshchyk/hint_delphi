@@ -65,7 +65,6 @@ begin
     end;
   end;
   result := loadResult;
-
 end;
 
 function TOPPHelpRichtextHintReader.FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;

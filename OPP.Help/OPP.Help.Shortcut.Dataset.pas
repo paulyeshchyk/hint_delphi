@@ -13,17 +13,16 @@ type
   TOPPHelpShortcutDataset = class
   private
     fShortcutHelpMatrix: TOPPHelpShortcutDatasetType;
-    function GetList: TList<TOPPHelpMap>;
     procedure Merge(AList: TList<TOPPHelpMap>);
-    procedure SetNewList(AList: TList<TOPPHelpMap>; error: Exception);
+    procedure SetNewList(Mapset: TOPPHelpMapSet; error: Exception);
   public
     constructor Create;
     destructor Destroy; override;
     function load(AFilename: String): Integer;
     function GetMapping(const key: String): TOPPHelpMap;
-    function addMap(const AMap: TOPPHelpMap): Integer;
-
-    property list: TList<TOPPHelpMap> read GetList;
+    function AddMap(const AMap: TOPPHelpMap): Integer;
+    procedure RemoveMap(const AIdentifier: String);
+    function List(): TList<TOPPHelpMap>;
   end;
 
 implementation
@@ -41,6 +40,7 @@ end;
 
 destructor TOPPHelpShortcutDataset.Destroy;
 begin
+  fShortcutHelpMatrix.Clear;
   fShortcutHelpMatrix.Free;
   inherited;
 end;
@@ -51,13 +51,19 @@ begin
   result := 0;
 end;
 
-procedure TOPPHelpShortcutDataset.SetNewList(AList: TList<TOPPHelpMap>; error: Exception);
+procedure TOPPHelpShortcutDataset.SetNewList(Mapset: TOPPHelpMapSet; error: Exception);
+var fMap: TOPPHelpMap;
 begin
   if assigned(error) then
-    error.Log();
+  begin
+    eventLogger.error(error);
+    exit;
+  end;
 
   fShortcutHelpMatrix.Clear;
-  self.Merge(AList);
+  for fMap in Mapset.list do begin
+    self.AddMap(fMap);
+  end;
 end;
 
 procedure TOPPHelpShortcutDataset.Merge(AList: TList<TOPPHelpMap>);
@@ -73,22 +79,16 @@ begin
   begin
     if not assigned(Map) then
       continue;
-    self.addMap(Map);
+    self.AddMap(Map);
   end;
 end;
 
-function TOPPHelpShortcutDataset.GetList: TList<TOPPHelpMap>;
-var
-  pair: TPair<String, TOPPHelpMap>;
+procedure TOPPHelpShortcutDataset.RemoveMap(const AIdentifier: String);
 begin
-  result := TList<TOPPHelpMap>.Create;
-  for pair in fShortcutHelpMatrix.ToArray do
-  begin
-    result.Add(pair.Value);
-  end;
+  fShortcutHelpMatrix.Remove(AIdentifier);
 end;
 
-function TOPPHelpShortcutDataset.addMap(const AMap: TOPPHelpMap): Integer;
+function TOPPHelpShortcutDataset.AddMap(const AMap: TOPPHelpMap): Integer;
 begin
   result := 0;
   if not assigned(AMap) then
@@ -114,8 +114,19 @@ begin
   except
     on e: Exception do
     begin
-      e.Log(key);
+      eventLogger.error(Format('Error: %s; %s', [e.Message, key]));
     end;
+  end;
+end;
+
+function TOPPHelpShortcutDataset.List: TList<TOPPHelpMap>;
+var
+  pair: TPair<String, TOPPHelpMap>;
+begin
+  result := TList<TOPPHelpMap>.Create();
+  for pair in fShortcutHelpMatrix.ToArray do
+  begin
+    result.Add(pair.Value)
   end;
 end;
 

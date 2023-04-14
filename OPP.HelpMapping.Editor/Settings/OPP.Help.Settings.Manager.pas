@@ -56,10 +56,13 @@ begin
   end;
 
   defaults := TOPPHelpDefaults.Create;
-  defaults.HintsFilePath := SDefaultHintIdx;
-  defaults.ShortcutFilePath := SDefaultHelpIdx;
-  completion(defaults, nil);
-
+  try
+    defaults.HintsFilePath := SDefaultHintIdx;
+    defaults.ShortcutFilePath := SDefaultHelpIdx;
+    completion(defaults, nil);
+  finally
+    defaults.Free;
+  end;
 end;
 
 class procedure TOPPHelpSettingsManager.readSettings(completion: TOPPHelpSettingsManagerReadCompletion);
@@ -69,6 +72,7 @@ var
   fSerializer: TJSONUnMarshal;
   data: TJSONValue;
   fResult: TOPPHelpDefaults;
+  error: Exception;
 const
   isUTF8 = true;
 begin
@@ -76,7 +80,14 @@ begin
   if not FileExists(fFileName) then
   begin
     if assigned(completion) then
-      completion(nil, Exception.Create(SFileNotFoundMessage));
+    begin
+      error := Exception.Create(SFileNotFoundMessage);
+      try
+        completion(nil, error);
+      finally
+        error.Free;
+      end;
+    end;
     exit;
   end;
 

@@ -11,6 +11,7 @@ uses
 
 type
 
+  TOPPHelpMapSet = class;
   POPPHelpMap = ^TOPPHelpMap;
 
   TOPPHelpMap = class(TObject)
@@ -20,7 +21,9 @@ type
     fPredicate: TOPPHelpPredicate;
     function GetIsValid: Boolean;
   public
+    constructor Create; overload;
     constructor Create(AIdentifier: String); overload;
+    destructor Destroy; override;
     property ComponentIdentifier: TOPPHelpHintMapIdentifier read fComponentIdentifier write fComponentIdentifier;
     property Identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
     property IsValid: Boolean read GetIsValid;
@@ -29,14 +32,15 @@ type
 
   TOPPHelpMapApplyDefaultsCompletion = reference to procedure(const AMap: POPPHelpMap);
   TOPPHelpMapCompletion = reference to procedure(const AMap: TOPPHelpMap);
-  TOPPHelpMapParserJSONCallback = reference to procedure(AList: TList<TOPPHelpMap>; Error: Exception);
+  TOPPHelpMapParserJSONCallback = reference to procedure(Mapset: TOPPHelpMapSet; Error: Exception);
 
   TOPPHelpMapSet = class(TObject)
   private
     fList: TList<TOPPHelpMap>;
     function GetList(): TList<TOPPHelpMap>;
   public
-    constructor Create(AList: TList<TOPPHelpMap> = nil);
+    constructor Create(AList: TList<OPP.Help.Map.TOPPHelpMap> = nil);
+    destructor Destroy; override;
     procedure AddMap(AMap: TOPPHelpMap);
     procedure AddMaps(AList: TList<TOPPHelpMap>);
     function GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpMap;
@@ -56,6 +60,18 @@ begin
   fPredicate := TOPPHelpPredicate.Create;
 end;
 
+constructor TOPPHelpMap.Create;
+begin
+  inherited Create;
+  fPredicate := TOPPHelpPredicate.Create;
+end;
+
+destructor TOPPHelpMap.Destroy;
+begin
+  FreeAndNil(fPredicate);
+  inherited;
+end;
+
 function TOPPHelpMap.GetIsValid: Boolean;
 begin
   result := Length(fComponentIdentifier) <> 0;
@@ -63,11 +79,22 @@ end;
 
 constructor TOPPHelpMapSet.Create(AList: TList<OPP.Help.Map.TOPPHelpMap> = nil);
 begin
+  inherited Create;
   fList := TList<TOPPHelpMap>.Create;
   if assigned(AList) then
   begin
     fList.AddRange(AList);
   end;
+end;
+
+destructor TOPPHelpMapSet.Destroy;
+begin
+
+  fList.Clear;
+  fList.Pack;
+  fList.Free;
+
+  inherited;
 end;
 
 procedure TOPPHelpMapSet.AddMap(AMap: TOPPHelpMap);
@@ -125,19 +152,24 @@ begin
     exit;
 
   fDictionary := TDictionary<String, TOPPHelpMap>.Create;
-  for fItem in fList do
-  begin
-    if not fDictionary.ContainsKey(fItem.ComponentIdentifier) then
-      fDictionary.Add(fItem.ComponentIdentifier, fItem);
-  end;
-
-  for fItem in AList do
-  begin
-    if fItem.IsValid then
+  try
+    for fItem in fList do
     begin
       if not fDictionary.ContainsKey(fItem.ComponentIdentifier) then
-        fList.Add(fItem);
+        fDictionary.Add(fItem.ComponentIdentifier, fItem);
     end;
+
+    for fItem in AList do
+    begin
+      if fItem.IsValid then
+      begin
+        if not fDictionary.ContainsKey(fItem.ComponentIdentifier) then
+          fList.Add(fItem);
+      end;
+    end;
+  finally
+    fDictionary.Clear;
+    fDictionary.Free;
   end;
 
   fList.Pack;

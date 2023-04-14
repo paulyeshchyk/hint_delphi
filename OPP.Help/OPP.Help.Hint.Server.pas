@@ -33,6 +33,7 @@ type
     fOnGetHintFactory: TOPPHelpHintServerOnGetMetaFactory;
   public
     constructor Create(AControl: TControl; AMappingFileName: String = '');
+    destructor Destroy; override;
     property MappingFileName: String read fMappingFileName;
     property Control: TControl read fControl;
     property OnGetHintFactory: TOPPHelpHintServerOnGetMetaFactory read fOnGetHintFactory write fOnGetHintFactory;
@@ -149,6 +150,12 @@ begin
     fMappingFileName := kHintsMappingDefaultFileName;
 end;
 
+destructor TOPPHelpHintMappingRequest.Destroy;
+begin
+  fControl := nil;
+  inherited;
+end;
+
 constructor TOPPHelpHintServer.Create;
 begin
   fHintDataReaders := TDictionary<String, IOPPHelpHintDataReader>.Create();
@@ -158,7 +165,11 @@ end;
 
 destructor TOPPHelpHintServer.Destroy;
 begin
-  fHintDataReaders := nil;
+
+  fHintDataReaders.Free;
+  fHintMapSet.Free;
+  fHintMetaDict.Free;
+
   inherited Destroy;
 end;
 
@@ -338,15 +349,19 @@ begin
   end;
 
   fHintTexts := TList<TOPPHelpHint>.Create;
-  for fHintMeta in hintsMetaList do
-  begin
-    fHint := GetHint(fHintMeta);
-    if not fHint.Data.isEmpty() then
+  try
+    for fHintMeta in hintsMetaList do
     begin
-      fHintTexts.Add(fHint);
+      fHint := GetHint(fHintMeta);
+      if not fHint.Data.isEmpty() then
+      begin
+        fHintTexts.Add(fHint);
+      end;
     end;
+    completion(fHintTexts);
+  finally
+    fHintTexts.Free;
   end;
-  completion(fHintTexts);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -366,7 +381,7 @@ begin
     except
       on e: Exception do
       begin
-        e.Log();
+        eventLogger.Error(e);
       end;
     end;
 
@@ -401,22 +416,27 @@ begin
   end;
 
   fChildrenHelpMetaList := ARequest.OnGetHintFactory(ARequest.Control);
-  if (not Assigned(fChildrenHelpMetaList)) or (fChildrenHelpMetaList.Count = 0) then
+  if (not Assigned(fChildrenHelpMetaList)) then
   begin
     eventLogger.Debug(Format('Class [%s] has no controls, that are suporting hints', [ARequest.Control.ClassName]));
     completion(nil);
     exit;
   end;
 
-  for fChildHelpMeta in fChildrenHelpMetaList do
-  begin
-    fMetaIdentifier := fChildHelpMeta.Identifier;
-    self.findOrCreateReader(fMetaIdentifier);
+  try
+
+    for fChildHelpMeta in fChildrenHelpMetaList do
+    begin
+      fMetaIdentifier := fChildHelpMeta.Identifier;
+      self.findOrCreateReader(fMetaIdentifier);
+    end;
+
+    eventLogger.Flow(Format('Will create hints for [%s]', [ARequest.Control.ClassName]), kContext);
+
+    self.GetHints(ARequest, fChildrenHelpMetaList, completion);
+  finally
+    fChildrenHelpMetaList.Free;
   end;
-
-  eventLogger.Flow(Format('Will create hints for [%s]', [ARequest.Control.ClassName]), kContext);
-
-  self.GetHints(ARequest, fChildrenHelpMetaList, completion);
 end;
 
 procedure TOPPHelpHintServer.MergeHelpMaps(AList: TList<TOPPHelpMap>);
@@ -436,19 +456,33 @@ begin
     exit;
   end;
 
-  fOPPHelpHintMapJSONReadCallback := procedure(AList: TList<TOPPHelpMap>; Error: Exception)
+  fOPPHelpHintMapJSONReadCallback := procedure(Mapset: TOPPHelpMapSet; Error: Exception)
+    var
+      fMap: TOPPHelpMap;
+
     begin
 
       if Assigned(Error) then
       begin
-        Error.Log();
+        eventLogger.Error(Error);
         exit;
       end;
 
-      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [AList.Count]), kContext);
+      if not Assigned(Mapset) then
+      begin
+        eventLogger.Error('Mapset is not defined');
+        exit;
+      end;
+
+      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [Mapset.list.Count]), kContext);
+
+      for fMap in Mapset.list do
+      begin
+        fHintMapSet.AddMap(fMap);
+      end;
 
       self.fLoaded := true;
-      fHintMapSet.AddMaps(AList);
+
     end;
 
   TOPPHelpMapRESTParser.readJSON(filename, fOPPHelpHintMapJSONReadCallback);
@@ -602,8 +636,6 @@ begin
     end);
 
 end;
-
-{ private }
 
 initialization
 

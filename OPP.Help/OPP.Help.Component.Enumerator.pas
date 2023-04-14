@@ -29,6 +29,7 @@ var
   fChild: TComponent;
   i: Integer;
   fComparatorResult: Boolean;
+  fChildren: TList<TComponent>;
 begin
   result := TList<TComponent>.Create();
 
@@ -50,7 +51,12 @@ begin
       end;
 
       // recursion: add all children, even parent is not valid
-      result.AddRange(fChild.GetChildrenRecursive(AComparator, ACompletion));
+      fChildren := fChild.GetChildrenRecursive(AComparator, ACompletion);
+      try
+        result.AddRange(fChildren);
+      finally
+        fChildren.Free;
+      end;
 
     end else begin
       // eventLogger.Debug(Format('Enumerator: adding [%s]', [fChild.ClassName]));
@@ -59,7 +65,13 @@ begin
         ACompletion(fChild);
 
       // recursion
-      result.AddRange(fChild.GetChildrenRecursive(AComparator, ACompletion));
+      fChildren := fChild.GetChildrenRecursive(AComparator, ACompletion);
+      try
+        result.AddRange(fChildren);
+      finally
+        fChildren.Free;
+      end;
+
     end;
   end;
 end;
@@ -121,6 +133,7 @@ begin
 
   end;
 
+  //fChildren.Free;
 end;
 
 end.

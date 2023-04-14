@@ -1,6 +1,8 @@
 program OPPHintTunning;
 
 uses
+
+  FastMM4 in 'D:\projects\FastMM4\FastMM4.pas',
   Vcl.Forms,
   sampleForm1 in 'sampleForm1.pas' {SampleForm},
   OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
@@ -24,8 +26,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TSampleForm, SampleForm);
-  Application.CreateForm(TOPPHelpSettingsForm, OPPHelpSettingsForm);
-  Application.CreateForm(TOPPHelpSettingsValueEditor, OPPHelpSettingsValueEditor);
   Application.Run;
 
 end.

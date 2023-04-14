@@ -45,7 +45,7 @@ type
     procedure NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
   end;
 
-  TOPPHelpShortcutServer = class(TComponent, IOPPHelpShortcutServer)
+  TOPPHelpShortcutServer = class(TInterfacedObject, IOPPHelpShortcutServer)
   private
     fShortcutDataset: TOPPHelpShortcutDataset;
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
@@ -74,14 +74,12 @@ type
 
     procedure NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
 
-    constructor Create(AOwner: TComponent); override;
+    constructor Create();
     destructor Destroy; override;
     property ShortcutDataset: TOPPHelpShortcutDataset read fShortcutDataset write fShortcutDataset;
   end;
 
 function helpShortcutServer: IOPPHelpShortcutServer;
-
-procedure Register;
 
 implementation
 
@@ -114,29 +112,9 @@ const
   kPreviewFormProcessName: String = 'OPPHelpPreview.exe';
   kShortcutMappingDefaultFileName: String = '.\Документация\help.idx';
 
-var
-  fLock: TCriticalSection;
-  fHelpServer: IOPPHelpShortcutServer;
-
-function helpShortcutServer: IOPPHelpShortcutServer;
+constructor TOPPHelpShortcutServer.Create();
 begin
-  fLock.Acquire;
-  try
-    if not Assigned(fHelpServer) then
-    begin
-      fHelpServer := TOPPHelpShortcutServer.Create(nil);
-    end;
-    result := fHelpServer;
-  finally
-    fLock.Release;
-  end;
-end;
-
-// ---
-
-constructor TOPPHelpShortcutServer.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
+  inherited Create();
 
   fPDFMemoryStream := TDictionary<String, TMemoryStream>.Create;
 
@@ -152,31 +130,15 @@ begin
 end;
 
 function TOPPHelpShortcutServer.RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
-var
-  fMap: TOPPHelpMap;
-  itemsToRemove: TList<TOPPHelpMap>;
 begin
 
-  itemsToRemove := TList<TOPPHelpMap>.Create();
   try
-    for fMap in self.fShortcutDataset.list do
-    begin
-      if fMap = nil then
-        continue;
-      if fMap.ComponentIdentifier = AIdentifier then
-        itemsToRemove.Add(fMap);
-    end;
+    try
+      fShortcutDataset.RemoveMap(AIdentifier);
+    except
 
-    for fMap in itemsToRemove do
-    begin
-      if fMap = nil then
-        continue;
-      eventLogger.Flow(Format(SEventRemovedRecordTemplate, [fMap.Identifier]), kContext);
-      fShortcutDataset.list.Remove(fMap);
     end;
-
   finally
-    itemsToRemove.Free;
     result := self.SaveMaps('', callback);
   end;
 
@@ -194,20 +156,8 @@ begin
     exit;
   end;
 
-  for fMap in fShortcutDataset.list do
-  begin
-    if fMap = nil then
-      continue;
-    if not Assigned(fMap) then
-      continue;
-    if fMap.ComponentIdentifier = AIdentifier then
-    begin
-      result := fMap;
-      break;
-    end;
-  end;
-
-  completion(result);
+  fMap := fShortcutDataset.GetMapping(AIdentifier);
+  completion(fMap);
 end;
 
 procedure TOPPHelpShortcutServer.loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
@@ -284,6 +234,7 @@ var
   fMapping: TOPPHelpMap;
   fOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier;
   fShortcutIdentifier: String;
+  Error: Exception;
 begin
 
   fOnGetIdentifier := fDefaultOnGetIdentifier;
@@ -302,7 +253,14 @@ begin
   if not Assigned(fMapping) then
   begin
     if Assigned(completion) then
-      completion(Exception.Create('Mapping is not defined'));
+    begin
+      Error := Exception.Create('Mapping is not defined');
+      try
+        completion(Error);
+      finally
+        Error.Free;
+      end;
+    end;
     exit;
   end;
 
@@ -319,12 +277,20 @@ var
   clazzType: TClass;
   fViewer: TForm;
   result: Boolean;
+  Error: Exception;
 begin
   result := Assigned(APredicate);
   if not result then
   begin
     if Assigned(completion) then
-      completion(Exception.Create('Predicate is not assigned'));
+    begin
+      Error := Exception.Create('Predicate is not assigned');
+      try
+        completion(Error);
+      finally
+        Error.Free;
+      end;
+    end;
     exit;
   end else begin
     clazzType := GetClass(kPreviewFormClassName); // ->TOPPHelpViewFullScreen
@@ -357,7 +323,6 @@ begin
 
     if Assigned(completion) then
       completion(nil);
-
   end;
 end;
 
@@ -368,11 +333,19 @@ begin
     var
       hwnd: THandle;
       sentResult: TOPPMessagePipeSendResult;
+      Error: Exception;
     begin
       if not(Assigned(AList) and (AList.Count <> 0)) then
       begin
         if Assigned(completion) then
-          completion(Exception.Create('Help app was not executed'));
+        begin
+          Error := Exception.Create('Help app was not executed');
+          try
+            completion(Error);
+          finally
+            Error.Free;
+          end;
+        end;
         exit;
       end;
 
@@ -423,6 +396,7 @@ function TOPPHelpShortcutServer.SaveMaps(AFileName: String; callback: TOPPHelpEr
 var
   fFileName: String;
   fFileNameFullPath: String;
+  fList: TList<TOPPHelpMap>;
 begin
   if Length(AFileName) = 0 then
     fFileName := kShortcutMappingDefaultFileName
@@ -433,7 +407,12 @@ begin
 
   fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
 
-  result := SaveCustomList(fShortcutDataset.list, fFileNameFullPath, callback);
+  fList := fShortcutDataset.List();
+  try
+    result := SaveCustomList(fList, fFileNameFullPath, callback);
+  finally
+    fList.Free;
+  end;
 end;
 
 procedure TOPPHelpShortcutServer.setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
@@ -500,9 +479,24 @@ begin
   result := fShortcutDataset.AddMap(AMap);
 end;
 
-procedure Register;
+// ---
+
+var
+  fLock: TCriticalSection;
+  fHelpServer: IOPPHelpShortcutServer;
+
+function helpShortcutServer: IOPPHelpShortcutServer;
 begin
-  RegisterComponents('OPPHelp', [TOPPHelpShortcutServer])
+  fLock.Acquire;
+  try
+    if not Assigned(fHelpServer) then
+    begin
+      fHelpServer := TOPPHelpShortcutServer.Create();
+    end;
+    result := fHelpServer;
+  finally
+    fLock.Release;
+  end;
 end;
 
 initialization

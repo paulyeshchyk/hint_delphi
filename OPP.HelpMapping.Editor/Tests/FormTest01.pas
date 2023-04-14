@@ -16,6 +16,7 @@ type
     tipsRepo: TdxScreenTipRepository;
     cxHintStyleController1: TcxHintStyleController;
     procedure externalHelpViewerButtonClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure internalHelpViewerButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -36,6 +37,11 @@ uses SampleFormStubsHelper, SampleOnly.Help.Hint.Setup;
 procedure TFormTest1.externalHelpViewerButtonClick(Sender: TObject);
 begin
   TSampleFormStubsHelper.openExternalHelp;
+end;
+
+procedure TFormTest1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+//
 end;
 
 procedure TFormTest1.FormCreate(Sender: TObject);

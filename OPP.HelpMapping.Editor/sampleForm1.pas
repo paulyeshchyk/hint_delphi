@@ -373,11 +373,11 @@ begin
     procedure(const AMap: TOPPHelpMap)
     begin
       helpShortcutServer.showHelp(AMap.Predicate, vmExternal,
-        procedure(APresentingResult: Exception)
+        procedure(error: Exception)
         begin
-          if APresentingResult = nil then
+          if error = nil then
             exit;
-          APresentingResult.Log();
+          eventLogger.Error(error);
         end);
     end);
 end;
@@ -633,6 +633,8 @@ end;
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   helpShortcutServer.killExternalViewer;
+  if assigned(fDefaultSettings) then
+    fDefaultSettings.Free;
 end;
 
 procedure TSampleForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -740,7 +742,8 @@ end;
 
 procedure TSampleForm.onApplyHintMapDefaults(const AMap: POPPHelpMap);
 begin
-  if not assigned(fDefaultSettings) then begin
+  if not assigned(fDefaultSettings) then
+  begin
     eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
     exit;
   end;
@@ -750,7 +753,8 @@ end;
 
 procedure TSampleForm.onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
 begin
-  if not assigned(fDefaultSettings) then begin
+  if not assigned(fDefaultSettings) then
+  begin
     eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
     exit;
   end;

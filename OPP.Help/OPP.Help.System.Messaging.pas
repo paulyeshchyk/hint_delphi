@@ -20,8 +20,6 @@ const
   WM_OPPZoomFitWParamWidth = 898;
   WM_OPPZoomFitWParamTwoColumns = 897;
 
-
-
 type
 
   TWMCopyData = packed record
@@ -55,7 +53,7 @@ var
   ContinueLoop: Boolean;
   fProcessName: String;
 begin
-  result := TDictionary<THandle, String>.Create();
+  Result := TDictionary<THandle, String>.Create();
   FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); // Create a process snapshot
   FProcessEntry32.dwSize := Sizeof(FProcessEntry32);
 
@@ -63,7 +61,7 @@ begin
   while ContinueLoop do
   begin
     fProcessName := Lowercase(FProcessEntry32.szExeFile);
-    result.AddOrSetValue(GetHWndByPID(FProcessEntry32.th32ProcessID), fProcessName);
+    Result.AddOrSetValue(GetHWndByPID(FProcessEntry32.th32ProcessID), fProcessName);
     ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
   end;
   CloseHandle(FSnapshotHandle);
@@ -83,9 +81,9 @@ type
     PID: DWORD;
   begin
     GetWindowThreadProcessID(Wnd, @PID);
-    result := (PID <> EI.ProcessID) or (not IsWindowVisible(Wnd)) or (not IsWindowEnabled(Wnd));
+    Result := (PID <> EI.ProcessID) or (not IsWindowVisible(Wnd)) or (not IsWindowEnabled(Wnd));
 
-    if not result then
+    if not Result then
       EI.HWND := Wnd;
   end;
 
@@ -96,24 +94,24 @@ type
     fEnumInfo.ProcessID := PID;
     fEnumInfo.HWND := 0;
     EnumWindows(@EnumWindowsProc, Integer(@fEnumInfo));
-    result := fEnumInfo.HWND;
+    Result := fEnumInfo.HWND;
   end;
 
 begin
   if hPID <> 0 then
-    result := FindMainWindow(hPID)
+    Result := FindMainWindow(hPID)
   else
-    result := 0;
+    Result := 0;
 end;
 
 class function TOPPSystemMessageHelper.GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
 var
   fHandle: THandle;
 begin
-  result := TList<THandle>.Create();
+  Result := TList<THandle>.Create();
   fHandle := FindWindow(AWindowClassName.toWideChar, nil);
   if (fHandle <> 0) then
-    result.Add(fHandle);
+    Result.Add(fHandle);
 
 end;
 
@@ -126,7 +124,7 @@ var
   fSearchValue: String;
 begin
 
-  result := TList<THandle>.Create;
+  Result := TList<THandle>.Create;
 
   fSearchValue := Lowercase(AProcessName);
 
@@ -139,7 +137,7 @@ begin
     fProcessName := Lowercase(WideCharToString(FProcessEntry32.szExeFile));
     if (fProcessName = fSearchValue) then
     begin
-      result.Add(GetHWndByPID(FProcessEntry32.th32ProcessID));
+      Result.Add(GetHWndByPID(FProcessEntry32.th32ProcessID));
     end;
     ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
   end;
@@ -152,6 +150,7 @@ var
   tmpStartupInfo: TStartupInfo;
   tmpProcessInformation: TProcessInformation;
   fCreateProcessResult: Boolean;
+  error: Exception;
 begin
 
   System.FillChar(tmpStartupInfo, Sizeof(tmpStartupInfo), 0);
@@ -164,18 +163,26 @@ begin
   fCreateProcessResult := WinAPI.Windows.CreateProcess(nil, AProcessName.toWideChar, nil, nil, true, CREATE_NEW_PROCESS_GROUP, nil, nil, tmpStartupInfo, tmpProcessInformation);
   if not fCreateProcessResult then
   begin
-    completion(Exception.Create(Format('Process [%s] was not created',[AProcessName])));
+    if assigned(completion) then
+    begin
+      error := Exception.Create(Format('Process [%s] was not created', [AProcessName]));
+      try
+        completion(error);
+      finally
+        error.Free;
+      end;
+    end;
     exit;
   end;
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hThread);
 
-  //TODO: implement callback or use postmessage to determine if app was executed in time
+  // TODO: implement callback or use postmessage to determine if app was executed in time
   WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, ActivationDelay);
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hProcess);
 
-  if Assigned(completion) then
+  if assigned(completion) then
     completion(nil);
 
 end;
@@ -188,7 +195,7 @@ var
   FSnapshotHandle: THandle;
   FProcessEntry32: TProcessEntry32;
 begin
-  result := 0;
+  Result := 0;
   FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   FProcessEntry32.dwSize := Sizeof(FProcessEntry32);
   ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
@@ -196,7 +203,7 @@ begin
   while Integer(ContinueLoop) <> 0 do
   begin
     if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile)) = UpperCase(ExeFileName)) or (UpperCase(FProcessEntry32.szExeFile) = UpperCase(ExeFileName))) then
-      result := Integer(TerminateProcess(OpenProcess(PROCESS_TERMINATE, BOOL(0), FProcessEntry32.th32ProcessID), 0));
+      Result := Integer(TerminateProcess(OpenProcess(PROCESS_TERMINATE, BOOL(0), FProcessEntry32.th32ProcessID), 0));
     ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
   end;
   CloseHandle(FSnapshotHandle);

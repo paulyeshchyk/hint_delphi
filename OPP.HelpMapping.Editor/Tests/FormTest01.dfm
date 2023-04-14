@@ -13,6 +13,7 @@ object FormTest1: TFormTest1
   Font.Style = []
   OldCreateOrder = True
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
   TextHeight = 13

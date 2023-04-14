@@ -40,11 +40,11 @@ begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(Screen.ActiveControl, AMessage);
   try
     helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-      procedure(completionResult: Exception)
+      procedure(error: Exception)
       begin
-        if completionResult = nil then
+        if error = nil then
           exit;
-        completionResult.Log();
+        eventLogger.Error(error);
       end);
   finally
     fShortcutRequest.Free;

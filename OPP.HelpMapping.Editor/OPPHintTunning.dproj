@@ -91,14 +91,13 @@
         <DCC_BpiOutput>.\$(Platform)\$(Config)\bpi</DCC_BpiOutput>
         <DCC_HppOutput>.\$(Platform)\$(Config)\hpp</DCC_HppOutput>
         <DCC_ObjOutput>.\$(Platform)\$(Config)\obj</DCC_ObjOutput>
-        <DCC_UnitSearchPath>..\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\OPP.Help;D:\projects\FastMM4;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <BRCC_Verbose>true</BRCC_Verbose>
         <BRCC_IncludePath>..\OPP.Help;$(BRCC_IncludePath)</BRCC_IncludePath>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\22.0\bin;D:\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBase2020\IDE_spoof;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Users\Paul\AppData\Local\Microsoft\WindowsApps;D:\Embarcadero\Studio\22.0;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
-        <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_UsePackage>OPPHelp</DCC_UsePackage>
         <Icon_MainIcon>..\OPP.Help\icons\dev-tool.ico</Icon_MainIcon>
     </PropertyGroup>
@@ -116,22 +115,19 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="D:\projects\FastMM4\FastMM4.pas"/>
         <DCCReference Include="sampleForm1.pas">
             <Form>SampleForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Reader.pas"/>
         <DCCReference Include="Tests\FormTest01.pas">
             <Form>FormTest1</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Tests\FormTest02.pas">
             <Form>FormTest2</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Tests\FormTest03.pas">
             <Form>FormTest3</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Helpers\SampleFormSaveState.pas"/>
         <DCCReference Include="Helpers\SampleFormStubsHelper.pas"/>
@@ -141,12 +137,10 @@
         <DCCReference Include="..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas"/>
         <DCCReference Include="Settings\OPP.Help.Settings.Form.pas">
             <Form>OPPHelpSettingsForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Settings\OPP.Help.Settings.Manager.pas"/>
         <DCCReference Include="Settings\OPP.Help.Settings.Value.Editor.pas">
             <Form>OPPHelpSettingsValueEditor</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

@@ -97,14 +97,14 @@ begin
     exit;
   end;
 
-  error.log();
+  eventLogger.Error(error);
 
   TOPPHelpSettingsManager.defaultSettings(
     procedure(AResult: TOPPHelpDefaults; error: Exception)
     begin
       if assigned(error) then
       begin
-        error.log();
+        eventLogger.Error(error);
         exit;
       end;
       self.Defaults := AResult;
@@ -118,7 +118,7 @@ begin
     begin
       if assigned(error) then
       begin
-        error.log();
+        eventLogger.Error(error);
         exit;
       end;
       eventLogger.Flow('settings was saved', 'OPPSettingsForm');

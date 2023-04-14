@@ -40,11 +40,19 @@ class procedure TOPPHelpMapRESTParserExtended.deserializeExtendedJSON(AJSON: TJS
 var
   mapList: TOPPHelpMapSet;
   deSerializer: TJSONUnMarshal;
+  Error: Exception;
 begin
   if not assigned(AJSON) then
   begin
     if assigned(callback) then
-      callback(nil, Exception.Create('JSON is not assigned'));
+    begin
+      Error := Exception.Create('JSON is not assigned');
+      try
+        callback(nil, Error);
+      finally
+        Error.Free;
+      end;
+    end;
     exit;
   end;
 
@@ -52,9 +60,13 @@ begin
   try
     try
       mapList := deSerializer.unmarshal(AJSON) as TOPPHelpMapSet;
-      if assigned(callback) then
-      begin
-        callback(mapList.list, nil);
+      try
+        if assigned(callback) then
+        begin
+          callback(mapList, nil);
+        end;
+      finally
+        mapList.Free;
       end;
       FreeAndNil(deSerializer);
     except
@@ -63,7 +75,7 @@ begin
         if assigned(callback) then
           callback(nil, E)
         else
-          E.Log();
+          eventLogger.Error(E);
       end;
     end;
   finally
@@ -74,29 +86,40 @@ end;
 class procedure TOPPHelpMapRESTParser.deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
 var
   mapList: TOPPHelpMapSet;
-  //deSerializer: TJSONUnMarshal;
+  Error: Exception;
 begin
   if not assigned(AJSON) then
   begin
     if assigned(callback) then
-      callback(nil, Exception.Create('JSON is not assigned'));
+    begin
+      Error := Exception.Create('JSON is not assigned');
+      try
+        callback(nil, Error);
+      finally
+        Error.Free;
+      end;
+    end;
     exit;
   end;
 
   try
     mapList := TJson.JsonToObject<TOPPHelpMapSet>(AJSON);
-    if assigned(callback) then
-    begin
-      callback(mapList.list, nil);
+    try
+      if assigned(callback) then
+      begin
+        callback(mapList, nil);
+      end;
+    finally
+      mapList.list.Clear;
+      mapList.list.Pack;
+      FreeAndNil(mapList);
     end;
-    //FreeAndNil(deSerializer);
   except
     on E: Exception do
     begin
+      eventLogger.Error(E);
       if assigned(callback) then
-        callback(nil, E)
-      else
-        E.Log();
+        callback(nil, E);
     end;
   end;
 
@@ -106,19 +129,22 @@ class procedure TOPPHelpMapRESTParserExtended.parseExtendedJSONBytes(ABytes: Sys
 var
   jsonObject: TJSONObject;
 begin
+  jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
   try
-    jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
-    deserializeExtendedJSON(jsonObject, callback);
-    FreeAndNil(jsonObject);
-  except
-    on E: Exception do
-    begin
-      E.Log();
-      if assigned(callback) then
+    try
+      deserializeExtendedJSON(jsonObject, callback);
+    except
+      on E: Exception do
       begin
-        callback(nil, E);
+        eventLogger.Error(E);
+        if assigned(callback) then
+        begin
+          callback(nil, E);
+        end;
       end;
     end;
+  finally
+    jsonObject.Free;
   end;
 end;
 
@@ -126,19 +152,22 @@ class procedure TOPPHelpMapRESTParser.parseJSONBytes(ABytes: System.TArray<Syste
 var
   jsonObject: TJSONObject;
 begin
+  jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
   try
-    jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
-    deserializeJSON(jsonObject, callback);
-    FreeAndNil(jsonObject);
-  except
-    on E: Exception do
-    begin
-      E.Log();
-      if assigned(callback) then
+    try
+      DeserializeJSON(jsonObject, callback);
+    except
+      on E: Exception do
       begin
-        callback(nil, E);
+        eventLogger.Error(E);
+        if assigned(callback) then
+        begin
+          callback(nil, E);
+        end;
       end;
     end;
+  finally
+    FreeAndNil(jsonObject);
   end;
 end;
 
@@ -150,21 +179,33 @@ end;
 class procedure TOPPHelpMapRESTParser.readJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
 var
   bytes: System.TArray<System.Byte>;
+  Error: Exception;
 begin
   if not FileExists(AFileName) then
   begin
     if assigned(callback) then
-      callback(nil, Exception.Create(Format('File not found: %s', [AFileName])));
+    begin
+      Error := Exception.Create(Format('File not found: %s', [AFileName]));
+      try
+        callback(nil, Error);
+      finally
+        Error.Free;
+      end;
+    end;
     exit;
   end;
 
   try
     bytes := TFile.ReadAllBytes(AFileName);
-    parseJSONBytes(bytes, true, callback);
+    try
+      parseJSONBytes(bytes, true, callback);
+    finally
+      SetLength(bytes, 0);
+    end;
   except
     on Error: Exception do
     begin
-      Error.Log(TOPPHelpSystemFilesHelper.AbsolutePath(AFileName));
+      eventLogger.Error(Format('Error: %s; %s', [Error.Message, TOPPHelpSystemFilesHelper.AbsolutePath(AFileName)]));
     end;
   end;
 end;
@@ -176,23 +217,26 @@ var
   jsonString: String;
 begin
   serializer := TJSONMarshal.Create;
-  jsonObj := serializer.marshal(TOPPHelpMapSet.Create(AList)) as TJSONObject;
   try
-    jsonString := TJson.JsonEncode(jsonObj);
+    jsonObj := serializer.marshal(TOPPHelpMapSet.Create(AList)) as TJSONObject;
     try
-      TFile.WriteAllText(AFileName, jsonString);
-      if assigned(callback) then
-        callback(nil);
-    except
-      on Error: Exception do
-      begin
-        Error.Log();
+      jsonString := TJson.JsonEncode(jsonObj);
+      try
+        TFile.WriteAllText(AFileName, jsonString);
         if assigned(callback) then
-          callback(Error);
+          callback(nil);
+      except
+        on Error: Exception do
+        begin
+          eventLogger.Error(Error);
+          if assigned(callback) then
+            callback(Error);
+        end;
       end;
+    finally
+      jsonObj.Free;
     end;
   finally
-    jsonObj.Free;
     FreeAndNil(serializer);
   end;
 
@@ -216,7 +260,7 @@ begin
   except
     on Error: Exception do
     begin
-      Error.Log();
+      eventLogger.Error(Error);
       if assigned(callback) then
         callback(Error);
     end;

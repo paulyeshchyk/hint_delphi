@@ -65,15 +65,15 @@ begin
       fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\huge_readme.pdf';
       fPredicate.predicates.Add(fChild);
       helpShortcutServer.showHelp(fPredicate, vmExternal,
-        procedure(completionResult: Exception)
+        procedure(error: Exception)
         var
           strmessage: String;
         begin
-          if completionResult = nil then
+          if error = nil then
           begin
             eventLogger.Flow('show help finished','SampleStub');
           end else begin
-            completionResult.log();
+            eventLogger.Error(error);
           end;
         end);
     finally
@@ -135,9 +135,12 @@ begin
   fList := TList<TOPPHelpMap>.Create();
   try
     TOPPHelpMapRESTParser.readJSON('.\help\tests\predicates.json',
-      procedure(AList: TList<TOPPHelpMap>; error: Exception)
+      procedure(Mapset: TOPPHelpMapSet; error: Exception)
+      var fMap: TOPPHelpMap;
       begin
-        fList.addRange(AList);
+        for fMap in mapset.list do begin
+          fList.Add(fMap)
+        end;
       end);
   finally
     fList.Free;
@@ -161,7 +164,7 @@ begin
     fPredicate.predicates.Add(fChild);
     try
 
-      fMap := TOPPHelpMap.Create;
+      fMap := TOPPHelpMap.Create('');
       try
         fMap.Predicate := fPredicate;
         fList.Add(fMap);

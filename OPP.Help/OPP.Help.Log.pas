@@ -2,26 +2,37 @@ unit OPP.Help.Log;
 
 interface
 
+uses System.SysUtils;
+
 type
   TOPPLogMessageType = (lmInfo, lmError, lmWarning, lmDebug, lmFlow);
 
-  TOPPHelpLog = class
-  private
-    procedure Log(AString: String; postfix: String = ''; messageType: TOPPLogMessageType = lmInfo);
-  public
-    procedure Error(AString: String; AFlowName: String = '');
+  IOPPHelpLog = interface
+    procedure Error(AString: String; AFlowName: String = ''); overload;
+    procedure Error(AError: Exception; AFlowName: String = ''); overload;
     procedure Warning(AString: String; AFlowName: String = '');
     procedure Debug(AString: String; AFlowName: String = '');
     procedure Flow(AString: String; AFlowName: String = '');
   end;
 
-function eventLogger: TOPPHelpLog;
+  TOPPHelpLog = class(TInterfacedObject, IOPPHelpLog)
+  private
+    procedure Log(AString: String; postfix: String = ''; messageType: TOPPLogMessageType = lmInfo);
+  public
+    destructor Destroy; override;
+    procedure Error(AString: String; AFlowName: String = ''); overload;
+    procedure Error(AError: Exception; AFlowName: String = ''); overload;
+    procedure Warning(AString: String; AFlowName: String = '');
+    procedure Debug(AString: String; AFlowName: String = '');
+    procedure Flow(AString: String; AFlowName: String = '');
+  end;
+
+function eventLogger: IOPPHelpLog;
 
 implementation
 
 uses
   System.SyncObjs,
-  System.SysUtils,
   WinAPI.Windows,
   OPP.Help.System.Str;
 
@@ -37,6 +48,7 @@ resourcestring
 
 procedure TOPPHelpLog.Debug(AString: string; AFlowName: String = '');
 begin
+  exit;
   if Length(AFlowName) > 0 then
     self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmDebug)
   else
@@ -48,12 +60,25 @@ begin
   self.Log(AString, AFlowName, lmFlow);
 end;
 
+destructor TOPPHelpLog.Destroy;
+begin
+  //
+  inherited;
+end;
+
 procedure TOPPHelpLog.Error(AString: string; AFlowName: String = '');
 begin
   if Length(AFlowName) > 0 then
     self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmError)
   else
     self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmError);
+end;
+
+procedure TOPPHelpLog.Error(AError: Exception; AFlowName: String = '');
+begin
+  if not assigned(AError) then
+    exit;
+  Error(AError.message, AFlowName);
 end;
 
 procedure TOPPHelpLog.Warning(AString: string; AFlowName: String = '');
@@ -68,8 +93,8 @@ procedure TOPPHelpLog.Log(AString: string; postfix: String; messageType: TOPPLog
 var
   outresult: String;
   completeString: String;
+  fWideChar: PWideChar;
 begin
-
   case messageType of
     lmDebug:
       outresult := Format(SDebugNoFlowTemplate, [AString]);
@@ -81,7 +106,7 @@ begin
       outresult := Format(SWarningNoFlowTemplate, [AString]);
     lmFlow:
       begin
-        if length(postfix) = 0 then
+        if Length(postfix) = 0 then
           completeString := SFlow
         else
           completeString := postfix;
@@ -89,21 +114,26 @@ begin
       end;
   end;
 
-  OutputDebugString(outresult.toWideChar);
+  fWideChar := outresult.toWideChar;
+  try
+    OutputDebugString(fWideChar);
+  finally
+    FreeMem(fWideChar);
+  end;
 end;
 
 { ------------ }
 var
   fInfoLogLock: TCriticalSection;
-  fInfoLog: TOPPHelpLog;
+  fInfoLog: IOPPHelpLog;
 
-function eventLogger: TOPPHelpLog;
+function eventLogger: IOPPHelpLog;
 begin
   fInfoLogLock.Acquire;
   try
-    if not Assigned(fInfoLog) then
+    if not assigned(fInfoLog) then
     begin
-      fInfoLog := TOPPHelpLog.Create;
+      fInfoLog := TOPPHelpLog.Create();
     end;
     result := fInfoLog;
   finally
