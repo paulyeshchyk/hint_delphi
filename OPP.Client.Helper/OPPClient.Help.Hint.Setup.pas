@@ -32,6 +32,9 @@ uses
   OPP.Help.Hint.Server,
   OPPClient.Help.Meta.Factory;
 
+const
+  kOPPHintHidePause: Integer = (MaxInt - 1);
+
 resourcestring
   SWarningTipsRepositoryNotAvailableTemplate = 'Form: %s; No Screentip be created, because Tips repository is not defined';
   SWarningHintControllerNotAvailableTemplate = 'Form: %s; No Screentip be created, because HintController is not defined';
@@ -128,6 +131,8 @@ begin
     eventLogger.Warning(Format(SWarningTipsRepositoryNotAvailableTemplate, [fFormName]));
     exit;
   end;
+
+  fHintController.HintHidePause := kOPPHintHidePause;
 
   AForm.GetChildrenRecursive(nil,
     procedure(AComponent: TComponent)

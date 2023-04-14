@@ -32,6 +32,9 @@ uses
 
   SampleOnly.Help.Meta.Extractor;
 
+const
+  kOPPHintHidePause: Integer = MaxInt;
+
 resourcestring
   SWarningHintsAreNotDefinedTemplate = 'hints are not defined for %s';
 
@@ -47,7 +50,7 @@ begin
   try
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
     try
-      hintController.HintHidePause := -1;
+      hintController.HintHidePause := kOPPHintHidePause;
       fRequest.OnGetHintFactory := fMetaFactory.GetChildrenHelpMeta;
       helpHintServer.LoadHints(fRequest,
         procedure(hints: TList<TOPPHelpHint>)
@@ -118,5 +121,3 @@ begin
 end;
 
 end.
-
-
