@@ -62,6 +62,7 @@ begin
     on E: Exception do
     begin
       loadResult.error := Exception.Create(E.Message);
+      fLoaded := false;
     end;
   end;
   result := loadResult;
@@ -80,8 +81,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
-        if result.isEmpty then begin
-          eventLogger.Error(Format('hint is empty for search: %s in %s',[APredicate.value, APredicate.fileName]));
+        if result.isEmpty then
+        begin
+          eventLogger.error(Format('hint is empty for search: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
     ktPage:
@@ -90,8 +92,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
-        if result.isEmpty then begin
-          eventLogger.Error(Format('hint is empty for page: %s in %s',[APredicate.value, APredicate.fileName]));
+        if result.isEmpty then
+        begin
+          eventLogger.error(Format('hint is empty for page: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
     ktBookmark:
@@ -100,8 +103,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
-        if result.isEmpty then begin
-          eventLogger.Error(Format('hint is empty for bookmark: %s in %s',[APredicate.value, APredicate.fileName]));
+        if result.isEmpty then
+        begin
+          eventLogger.error(Format('hint is empty for bookmark: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
     ktAny:
@@ -110,8 +114,9 @@ begin
         paragraph := self.GetParagraph(bookmark);
         result.text := self.GetPlainText(paragraph);
         result.rtf := self.GetRichText(paragraph);
-        if result.isEmpty then begin
-          eventLogger.Error(Format('hint is empty for any: %s in %s',[APredicate.value, APredicate.fileName]));
+        if result.isEmpty then
+        begin
+          eventLogger.error(Format('hint is empty for any: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
   end;
@@ -131,13 +136,17 @@ begin
   result := nil;
   if Length(AHintIdentifier) = 0 then
     exit;
+  if not assigned(Document) then
+    exit;
   result := Document.bookmarks.items[AHintIdentifier];
 end;
 
 function TOPPHelpRichtextHintReader.GetParagraph(bookmark: dxRichEdit.NativeAPI.IdxRichEditBookmark): dxRichEdit.NativeAPI.IdxRichEditParagraph;
 begin
   result := nil;
-  if not Assigned(bookmark) then
+  if not assigned(bookmark) then
+    exit;
+  if not assigned(Document) then
     exit;
   result := Document.Paragraphs.Get(bookmark.range.Start);
 end;
@@ -145,7 +154,9 @@ end;
 function TOPPHelpRichtextHintReader.GetParagraph(position: dxRichEdit.NativeAPI.IdxRichEditDocumentPosition): dxRichEdit.NativeAPI.IdxRichEditParagraph;
 begin
   result := nil;
-  if not Assigned(position) then
+  if not assigned(position) then
+    exit;
+  if not assigned(Document) then
     exit;
   result := Document.Paragraphs.Get(position);
 end;
@@ -155,9 +166,11 @@ var
   fragmentOptions: TdxRichEditTextFragmentOptions;
 begin
   result := '';
-  if not Assigned(paragraph) then
+  if not assigned(paragraph) then
     exit;
   if not fLoaded then
+    exit;
+  if not assigned(Document) then
     exit;
   fragmentOptions := TdxRichEditTextFragmentOptions.Create;
   fragmentOptions.AllowExtendingDocumentRange := true;
@@ -167,9 +180,11 @@ end;
 function TOPPHelpRichtextHintReader.GetRichText(paragraph: dxRichEdit.NativeAPI.IdxRichEditParagraph): String;
 begin
   result := '';
-  if not Assigned(paragraph) then
+  if not assigned(paragraph) then
     exit;
   if not fLoaded then
+    exit;
+  if not assigned(Document) then
     exit;
   result := Document.GetRtfText(paragraph.range);
 end;

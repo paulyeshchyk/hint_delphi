@@ -29,6 +29,7 @@ uses
   OPP.Help.Log,
   OPP.Help.Component.Enumerator,
 
+  OPPClient.TdxScreenTip.Helper,
   OPP.Help.Hint.Server,
   OPPClient.Help.Meta.Factory;
 
@@ -173,21 +174,21 @@ var
   fControl: TControl;
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
-
 begin
   if not(AComponent is TControl) then
     exit;
+
+
   fControl := AComponent as TControl;
-
   fControl.ShowHint := true;
-  fScreenTip := fRepo.Items.Add;
-  fScreenTip.Width := 789;
 
+  fScreenTip := fRepo.Items.Add;
   fScreenTip.Header.PlainText := true;
   fScreenTip.Header.Text := ''; // Заголовок
 
   fScreenTip.Description.PlainText := false;
   fScreenTip.Description.Text := AHint.Data.rtf; // rtf;
+  fScreenTip.setAspectRatio(3.0, AHint.Data.rtf);
 
   fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
   fScreenTipLink.ScreenTip := fScreenTip;

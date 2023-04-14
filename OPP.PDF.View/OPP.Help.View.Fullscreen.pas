@@ -116,7 +116,10 @@ implementation
 uses System.SysUtils,
   OPP.Help.Log, OPP.Help.System.Types,
   OPP.Help.View.Helper,
+  {customization}
+  cxControls,
   {print customization}
+
   dxPSGlbl, dxPrnDlg;
 
 {$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
