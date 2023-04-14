@@ -2,7 +2,7 @@ program OPPHintTunning;
 
 uses
 
-  FastMM4 in 'D:\projects\FastMM4\FastMM4.pas',
+  //FastMM4 in 'D:\projects\FastMM4\FastMM4.pas',
   Vcl.Forms,
   sampleForm1 in 'sampleForm1.pas' {SampleForm},
   OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
@@ -22,7 +22,7 @@ uses
 {$R *.res}
 
 begin
-  Application.Title := 'Настройка индексов системы помощи';
+  Application.Title := 'РќР°СЃС‚СЂРѕР№РєР° РёРЅРґРµРєСЃРѕРІ СЃРёСЃС‚РµРјС‹ РїРѕРјРѕС‰Рё';
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TSampleForm, SampleForm);

@@ -409,7 +409,7 @@ begin
     formSettings.ShowModal;
 
     TOPPHelpSettingsManager.readSettings(
-      procedure(AResult: TOPPHelpDefaults; Error: Exception)
+      procedure(const AResult: TOPPHelpDefaults; Error: Exception)
       begin
         if assigned(Error) then
         begin
@@ -667,7 +667,7 @@ begin
   self.RefreshPreviewButtonAction;
 
   TOPPHelpSettingsManager.readSettings(
-    procedure(AResult: TOPPHelpDefaults; Error: Exception)
+    procedure(const AResult: TOPPHelpDefaults; Error: Exception)
     begin
       if assigned(Error) then
       begin

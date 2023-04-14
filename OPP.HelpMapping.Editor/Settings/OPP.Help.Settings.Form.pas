@@ -28,9 +28,9 @@ type
   private
     { Private declarations }
     ffDefaults: TOPPHelpDefaults;
-    procedure setDefaults(AValue: TOPPHelpDefaults);
+    procedure setDefaults(const AValue: TOPPHelpDefaults);
     procedure saveSettings();
-    procedure OnSettingsRead(AResult: TOPPHelpDefaults; error: Exception);
+    procedure OnSettingsRead(const AResult: TOPPHelpDefaults; error: Exception);
     procedure OnEditorCompletion(AValue: TOPPHelpSettingsValue; Saved: Boolean);
   public
     { Public declarations }
@@ -74,13 +74,13 @@ begin
   if not Saved then
     exit;
   if AValue.propertyName = kHintsFilePathPropertyName then
-    self.Defaults.HintsFilePath := AValue.propertyValue;
+    ffDefaults.HintsFilePath := AValue.propertyValue;
   if AValue.propertyName = kShortcutFilePathPropertyName then
-    self.Defaults.ShortcutFilePath := AValue.propertyValue;
+    ffDefaults.ShortcutFilePath := AValue.propertyValue;
   cxListView1.loadSettings(self.Defaults);
 end;
 
-procedure TOPPHelpSettingsForm.OnSettingsRead(AResult: TOPPHelpDefaults; error: Exception);
+procedure TOPPHelpSettingsForm.OnSettingsRead(const AResult: TOPPHelpDefaults; error: Exception);
 begin
   if not assigned(error) then
   begin
@@ -91,7 +91,7 @@ begin
   eventLogger.Error(error);
 
   TOPPHelpSettingsManager.defaultSettings(
-    procedure(AResult: TOPPHelpDefaults; error: Exception)
+    procedure(const AResult: TOPPHelpDefaults; error: Exception)
     begin
       if assigned(error) then
       begin
@@ -104,7 +104,7 @@ end;
 
 procedure TOPPHelpSettingsForm.saveSettings();
 begin
-  TOPPHelpSettingsManager.saveSettings(self.Defaults,
+  TOPPHelpSettingsManager.saveSettings(ffDefaults,
     procedure(error: Exception)
     begin
       if assigned(error) then
@@ -116,10 +116,10 @@ begin
     end);
 end;
 
-procedure TOPPHelpSettingsForm.setDefaults(AValue: TOPPHelpDefaults);
+procedure TOPPHelpSettingsForm.setDefaults(const AValue: TOPPHelpDefaults);
 begin
   ffDefaults := AValue;
-  cxListView1.loadSettings(ffDefaults);
+  cxListView1.loadSettings(AValue);
 end;
 
 procedure TOPPHelpSettingsForm.actionEditValueExecute(Sender: TObject);
@@ -152,8 +152,6 @@ end;
 procedure TOPPHelpSettingsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   saveSettings();
-
-  self.Defaults.Free;
 end;
 
 { TOPPCxListView }

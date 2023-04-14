@@ -1,4 +1,4 @@
-unit OPP.Help.Settings.Manager;
+п»їunit OPP.Help.Settings.Manager;
 
 interface
 
@@ -7,7 +7,7 @@ uses
 
 type
   TOPPHelpDefaults = class;
-  TOPPHelpSettingsManagerReadCompletion = reference to procedure(AResult: TOPPHelpDefaults; error: Exception);
+  TOPPHelpSettingsManagerReadCompletion = reference to procedure(const AResult: TOPPHelpDefaults; error: Exception);
   TOPPHelpSettingsManagerSaveCompletion = reference to procedure(error: Exception);
 
   TOPPHelpDefaults = class
@@ -41,27 +41,28 @@ const
 resourcestring
   SSettingsFileName = 'OPPHintTunning.settings';
   SFileNotFoundMessage = 'File not found';
-  SDefaultHelpIdx = '.\Документация\help.idx';
-  SDefaultHintIdx = '.\Документация\hint.idx';
+const
+  SDefaultHelpIdx = '.\Р”РѕРєСѓРјРµРЅС‚Р°С†РёСЏ\help.idx';
+  SDefaultHintIdx = '.\Р”РѕРєСѓРјРµРЅС‚Р°С†РёСЏ\hint.idx';
 
   { TOPPHelpSettingsManager }
 
 class procedure TOPPHelpSettingsManager.defaultSettings(completion: TOPPHelpSettingsManagerReadCompletion);
 var
-  defaults: TOPPHelpDefaults;
+  fDefaults: TOPPHelpDefaults;
 begin
   if not assigned(completion) then
   begin
     exit;
   end;
 
-  defaults := TOPPHelpDefaults.Create;
+  fDefaults := TOPPHelpDefaults.Create;
   try
-    defaults.HintsFilePath := SDefaultHintIdx;
-    defaults.ShortcutFilePath := SDefaultHelpIdx;
-    completion(defaults, nil);
+    fDefaults.HintsFilePath := SDefaultHintIdx;
+    fDefaults.ShortcutFilePath := SDefaultHelpIdx;
+    completion(fDefaults, nil);
   finally
-    defaults.Free;
+    //fDefaults.Free;
   end;
 end;
 
