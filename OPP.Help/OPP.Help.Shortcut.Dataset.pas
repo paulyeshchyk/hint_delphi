@@ -8,7 +8,7 @@ uses
   OPP.Help.Map;
 
 type
-  TOPPHelpShortcutDatasetType = TDictionary<String, TOPPHelpMap>;
+  TOPPHelpShortcutDatasetType = TObjectDictionary<String, TOPPHelpMap>;
 
   TOPPHelpShortcutDataset = class
   private
@@ -47,12 +47,12 @@ end;
 
 function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
 begin
+
   TOPPHelpMapRESTParser.readJSON(AFilename, SetNewList);
   result := 0;
 end;
 
 procedure TOPPHelpShortcutDataset.SetNewList(Mapset: TOPPHelpMapSet; error: Exception);
-var fMap: TOPPHelpMap;
 begin
   if assigned(error) then
   begin
@@ -61,9 +61,7 @@ begin
   end;
 
   fShortcutHelpMatrix.Clear;
-  for fMap in Mapset.list do begin
-    self.AddMap(fMap);
-  end;
+  self.Merge(Mapset.list);
 end;
 
 procedure TOPPHelpShortcutDataset.Merge(AList: TList<TOPPHelpMap>);

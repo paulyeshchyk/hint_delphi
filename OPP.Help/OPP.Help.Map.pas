@@ -135,7 +135,7 @@ begin
   begin
     if fHintMap = nil then
       continue;
-    if fHintMap.ComponentIdentifier = AHintIdentifier then
+    if CompareStr(fHintMap.ComponentIdentifier, AHintIdentifier) = 0 then
     begin
       result := fHintMap;
       break;

@@ -91,7 +91,7 @@
         <DCC_BpiOutput>.\$(Platform)\$(Config)\bpi</DCC_BpiOutput>
         <DCC_HppOutput>.\$(Platform)\$(Config)\hpp</DCC_HppOutput>
         <DCC_ObjOutput>.\$(Platform)\$(Config)\obj</DCC_ObjOutput>
-        <DCC_UnitSearchPath>..\OPP.Help;D:\projects\FastMM4;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\OPP.Help;..\FastMM4;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <BRCC_Verbose>true</BRCC_Verbose>
         <BRCC_IncludePath>..\OPP.Help;$(BRCC_IncludePath)</BRCC_IncludePath>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
@@ -115,7 +115,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="D:\projects\FastMM4\FastMM4.pas"/>
+        <DCCReference Include="..\FastMM4\FastMM4.pas"/>
         <DCCReference Include="sampleForm1.pas">
             <Form>SampleForm</Form>
         </DCCReference>

@@ -1,8 +1,7 @@
-program OPPHintTunning;
+﻿program OPPHintTunning;
 
 uses
-
-  //FastMM4 in 'D:\projects\FastMM4\FastMM4.pas',
+  FastMM4 in '..\FastMM4\FastMM4.pas',
   Vcl.Forms,
   sampleForm1 in 'sampleForm1.pas' {SampleForm},
   OPP.Help.Hint.Reader in '..\OPP.Help\OPP.Help.Hint.Reader.pas',
