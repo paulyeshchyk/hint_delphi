@@ -33,9 +33,13 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     cxButton3: TcxButton;
+    actionZoomHeight: TAction;
+    actionZoomWidth: TAction;
+    actionZoomTwoColumns: TAction;
+    actionCustomZoom: TAction;
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
-    procedure cxButton2Click(Sender: TObject);
+    procedure actionCustomZoomExecute(Sender: TObject);
     procedure cxSpinEdit1PropertiesEditValueChanged(Sender: TObject);
   private
     { Private declarations }
@@ -43,6 +47,7 @@ type
     fIsHandlingMessage: Boolean;
     procedure setZoomValue(AValue: Integer);
     procedure PostZoomChangeMessage(AValue: Integer);
+    procedure applyHints;
 
   public
     { Public declarations }
@@ -62,7 +67,8 @@ uses
 
 procedure TOPPHelpPreviewZoomForm.FormCreate(Sender: TObject);
 begin
-fIsHandlingMessage := false;
+  fIsHandlingMessage := false;
+  applyHints;
 end;
 
 procedure TOPPHelpPreviewZoomForm.setZoomValue(AValue: Integer);
@@ -81,7 +87,7 @@ begin
   close;
 end;
 
-procedure TOPPHelpPreviewZoomForm.cxButton2Click(Sender: TObject);
+procedure TOPPHelpPreviewZoomForm.actionCustomZoomExecute(Sender: TObject);
 var
   fTag: Integer;
   fHandle: THandle;
@@ -90,7 +96,7 @@ const
   fClassName: String = 'TOPPHelpPreviewForm';
 begin
   fIsHandlingMessage := true;
-  fTag := TcxButton(Sender).Tag;
+  fTag := TAction(Sender).Tag;
   fHandle := FindWindow(fClassName.toWideChar(), nil);
   messageResult := SendMessage(fHandle, WM_OPPZoomFit, fTag, 0);
   cxSpinEdit1.Properties.BeginUpdate;
@@ -99,9 +105,17 @@ begin
   fIsHandlingMessage := false;
 end;
 
+procedure TOPPHelpPreviewZoomForm.applyHints;
+begin
+  actionZoomHeight.Hint := 'Подобрать размер по высоте';
+  actionZoomWidth.Hint := 'Подобрать размер по ширине';
+  actionZoomTwoColumns.Hint := 'Подобрать размер для двух страниц';
+end;
+
 procedure TOPPHelpPreviewZoomForm.cxSpinEdit1PropertiesEditValueChanged(Sender: TObject);
 begin
-  if fIsHandlingMessage then exit;
+  if fIsHandlingMessage then
+    exit;
   zoomValue := cxSpinEdit1.Value;
   // cxSpinEdit1.SelectAll;
 end;

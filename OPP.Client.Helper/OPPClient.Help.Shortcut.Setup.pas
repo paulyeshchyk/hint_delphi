@@ -41,11 +41,11 @@ begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(AControl, AMessage);
   try
     helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-      procedure(completionResult: Exception)
+      procedure(error: Exception)
       begin
-        if completionResult = nil then
+        if error = nil then
           exit;
-        completionResult.Log();
+        eventLogger.Error(error, 'TOPPClientHelpShortcut');
       end);
   finally
     fShortcutRequest.Free;

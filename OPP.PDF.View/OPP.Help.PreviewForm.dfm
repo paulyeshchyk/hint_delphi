@@ -151,6 +151,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       83
       0)
     object barNavigator: TdxBar
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
       Caption = #1055#1077#1088#1077#1093#1086#1076#1099' '#1087#1086' '#1089#1090#1088#1072#1085#1080#1094#1072#1084
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -233,6 +235,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       WholeRow = True
     end
     object barJump: TdxBar
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
       Caption = #1055#1086#1080#1089#1082
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -260,6 +264,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       WholeRow = False
     end
     object barPrint: TdxBar
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
       Caption = #1055#1077#1095#1072#1090#1100
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -282,6 +288,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       WholeRow = False
     end
     object barExit: TdxBar
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
       Caption = #1047#1072#1082#1088#1099#1090#1100
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -304,6 +312,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       WholeRow = False
     end
     object barZoom: TdxBar
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
       Caption = #1052#1072#1089#1096#1090#1072#1073
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -335,7 +345,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       WholeRow = False
     end
     object dxBarButtonExit: TdxBarButton
-      Action = FileExit1
+      Action = actionCloseWindow
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -916,7 +926,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       ShowCaption = False
     end
     object dxBarLargeButton1: TdxBarLargeButton
-      Action = FileExit1
+      Action = actionCloseWindow
       Category = 0
       LargeGlyph.SourceDPI = 96
       LargeGlyph.Data = {
@@ -2291,10 +2301,9 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   object ActionList1: TActionList
     Left = 32
     Top = 200
-    object FileExit1: TFileExit
+    object actionCloseWindow: TFileExit
       Category = 'File'
       Caption = 'E&xit'
-      Hint = 'Exit|Quits the application'
       ImageIndex = 43
     end
     object actionFitPageCustom: TAction

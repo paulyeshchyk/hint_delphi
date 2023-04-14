@@ -87,14 +87,13 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 224
     object cxButton1: TcxButton
       Tag = 899
       Left = 16
       Top = 3
       Width = 89
       Height = 94
+      Action = actionZoomHeight
       OptionsImage.Glyph.SourceDPI = 288
       OptionsImage.Glyph.Data = {
         89504E470D0A1A0A0000000D49484452000001000000010008030000006BAC58
@@ -180,10 +179,10 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
         6174653A6D6F6469667900323032312D30352D31365431393A33313A30372B30
         303A303029494DBC0000000049454E44AE426082}
       PaintStyle = bpsGlyph
-      SpeedButtonOptions.GroupIndex = 1
+      ParentShowHint = False
+      ShowHint = True
       SpeedButtonOptions.Flat = True
       TabOrder = 0
-      OnClick = cxButton2Click
     end
     object cxButton2: TcxButton
       Tag = 898
@@ -191,6 +190,7 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
       Top = 3
       Width = 97
       Height = 94
+      Action = actionZoomWidth
       OptionsImage.Glyph.SourceDPI = 288
       OptionsImage.Glyph.Data = {
         89504E470D0A1A0A0000000D49484452000001000000010008030000006BAC58
@@ -274,10 +274,10 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
         30307B7C9EA00000002574455874646174653A6D6F6469667900323032312D30
         352D31365431393A33303A31372B30303A30300A21261C0000000049454E44AE
         426082}
-      SpeedButtonOptions.GroupIndex = 1
+      ParentShowHint = False
+      ShowHint = True
       SpeedButtonOptions.Flat = True
       TabOrder = 1
-      OnClick = cxButton2Click
     end
     object cxButton3: TcxButton
       Tag = 897
@@ -285,6 +285,7 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
       Top = 3
       Width = 97
       Height = 94
+      Action = actionZoomTwoColumns
       OptionsImage.Glyph.SourceDPI = 288
       OptionsImage.Glyph.Data = {
         89504E470D0A1A0A0000000D4948445200000100000001000804000000F67B60
@@ -329,10 +330,10 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
         66696C653A2F2F2E2F75706C6F6164732F35362F756B6C764933752F32373936
         2F6C61796F75745F74776F5F636F6C756D6E735F69636F6E5F3137383137342E
         706E67D064AA160000000049454E44AE426082}
-      SpeedButtonOptions.GroupIndex = 1
+      ParentShowHint = False
+      ShowHint = True
       SpeedButtonOptions.Flat = True
       TabOrder = 2
-      OnClick = cxButton2Click
     end
   end
   object Panel3: TPanel
@@ -343,10 +344,6 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 128
-    ExplicitTop = 216
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object Button1: TButton
       Left = 328
       Top = 3
@@ -364,6 +361,22 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
       ShortCut = 27
       OnExecute = actionCloseExecute
     end
+    object actionZoomHeight: TAction
+      Tag = 899
+      OnExecute = actionCustomZoomExecute
+    end
+    object actionZoomWidth: TAction
+      Tag = 898
+      OnExecute = actionCustomZoomExecute
+    end
+    object actionZoomTwoColumns: TAction
+      Tag = 897
+      OnExecute = actionCustomZoomExecute
+    end
+    object actionCustomZoom: TAction
+      Caption = 'actionCustomZoom'
+      OnExecute = actionCustomZoomExecute
+    end
   end
   object ImageList1: TImageList
     Height = 256
@@ -371,7 +384,7 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
     Left = 96
     Top = 160
     Bitmap = {
-      494C010102001400200000010001FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102001400240000010001FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000400000001000001002000000000000000
       100000000000000000000000000000000000100F0E651C1A19B31F1C1BC41E1C
       1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C

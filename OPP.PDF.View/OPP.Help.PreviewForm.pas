@@ -118,7 +118,7 @@ type
     dxDockingManager1: TdxDockingManager;
     dxStatusBar1: TdxStatusBar;
     dxStatusBar1Container0: TdxStatusBarContainerControl;
-    FileExit1: TFileExit;
+    actionCloseWindow: TFileExit;
     findPaneTogglerButton: TdxBarButton;
     findPaneTogglerButton1: TdxBarLargeButton;
     fitActualSizeButton: TdxBarButton;
@@ -185,6 +185,7 @@ type
     procedure SearchStarted();
     { --- }
 
+    procedure applyHints();
     procedure SendToBackground();
     procedure SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     property currentState: TOPPHelpPreviewFormState read fCurrentState write SetCurrentState;
@@ -364,6 +365,27 @@ begin
   TrayIcon1.Visible := false;
 end;
 
+procedure TOPPHelpPreviewForm.applyHints;
+begin
+  actionCloseWindow.Hint := 'Спрятать окно';
+  actionFitPageCustom.Hint := 'Подобрать размер';
+  actionFitPageHeight.Hint := 'Подобрать размер по высоте';
+  actionFitPageWidth.Hint := 'Подобрать размер по ширине';
+  actionFitTwoPages.Hint := 'Подобрать размер для двух страниц';
+  actionGotoContents.Hint := 'Перейти к содержанию';
+  actionGotoFirstPage.Hint := 'Перейти на первую страницу';
+  actionGotoLastPage.Hint := 'Перейти на последнюю страницу';
+  actionGotoNextPage.Hint := 'Перейти на слудеющую страницу';
+  actionGotoPreviousPage.Hint := 'Перейти на предыдущую страницу';
+  actionGotoTerms.Hint := 'Перейти на список сокращений';
+  actionHide.Hint := 'Спрятать';
+  actionPrint.Hint := 'Распечатать';
+  actionPrintDialog.Hint := 'Распечатать, используя диалог';
+  actionToggleFindPanel.Hint := 'Найти текст';
+  actionZoomDecrease.Hint := 'Уменьшить масштаб';
+  actionZoomIncrease.Hint := 'Увеличить масштаб';
+end;
+
 procedure TOPPHelpPreviewForm.cxBarEditItem4Change(Sender: TObject);
 begin
   oppHelpView.ZoomFactor := Integer(cxBarEditItem4.EditValue);
@@ -452,6 +474,7 @@ begin
   cxProgressBar1.Properties.ShowText := false;
   oppHelpView.addStateChangeListener(self);
   ReloadNavigationPanel(nil);
+  applyHints();
 end;
 
 procedure TOPPHelpPreviewForm.FormDestroy(Sender: TObject);
@@ -518,9 +541,9 @@ begin
     try
       ParsePredicate(fNotificationStream, fCurrentPredicate);
     except
-      on e: Exception do
+      on Error: Exception do
       begin
-        e.Log();
+        eventLogger.Error(Error, 'TOPPHelpPreviewForm');
       end;
     end;
   finally

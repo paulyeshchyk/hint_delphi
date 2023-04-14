@@ -405,7 +405,7 @@ end;
 
 procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
 begin
-  fPredicate := APredicate.copy();
+  fPredicate := APredicate;
   DoSearchIfPossible(siPredicate);
 end;
 
