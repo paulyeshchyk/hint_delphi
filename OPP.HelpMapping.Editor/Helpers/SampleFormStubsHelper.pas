@@ -35,6 +35,10 @@ uses
   OPP.Help.Hint.Server,
   OPP.Help.Map.Parser.JSON;
 
+const
+  kHintIndexFilename = '.\Документация\hint.idx';
+  kHelpIndexFilename = '.\Документация\hints.data';
+
 class procedure TSampleFormStubsHelper.openInternalHelp;
 // var
 // fPredicate: TOPPHelpPredicate;
@@ -86,7 +90,7 @@ end;
 
 class procedure TSampleFormStubsHelper.generateHintMapping;
 begin
-  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, '.\Документация\hint.idx', '.\Документация\hints.data');
+  TOPPClientHintHelper.SaveHints(Screen.ActiveForm, kHintIndexFilename, kHelpIndexFileName);
 end;
 
 class procedure TSampleFormStubsHelper.savePredicateToStream;

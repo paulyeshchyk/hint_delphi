@@ -350,8 +350,6 @@ begin
       PanelPreview.Hint := 'Wrong hint2';
       point := ClientToScreen(PanelPreview.ClientOrigin);
       Application.ActivateHint(point);
-      // TOPPClientHintHelper.LoadHints(self,'.\Документация\hint.idx', self.cxHintController,self.tipsRepo,nil);
-      // TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
     end);
 
 end;

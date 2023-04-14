@@ -42,8 +42,8 @@ resourcestring
   SSettingsFileName = 'OPPHintTunning.settings';
   SFileNotFoundMessage = 'File not found';
 const
-  SDefaultHelpIdx = '.\Документация\help.idx';
-  SDefaultHintIdx = '.\Документация\hint.idx';
+  SDefaultHintData = '.\Документация\hint.data';
+  SDefaultHelpData = '.\Документация\sample.pdf';
 
   { TOPPHelpSettingsManager }
 
@@ -58,8 +58,8 @@ begin
 
   fDefaults := TOPPHelpDefaults.Create;
   try
-    fDefaults.HintsFilePath := SDefaultHintIdx;
-    fDefaults.ShortcutFilePath := SDefaultHelpIdx;
+    fDefaults.HintsFilePath := SDefaultHintData;
+    fDefaults.ShortcutFilePath := SDefaultHelpData;
     completion(fDefaults, nil);
   finally
     //fDefaults.Free;
