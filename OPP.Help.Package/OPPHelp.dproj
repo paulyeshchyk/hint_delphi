@@ -54,8 +54,14 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -68,6 +74,10 @@
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>OPPHelp</SanitizedProjectName>
         <DCC_UsePackage>RESTComponents;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_DcpOutput>..\..\..\..\Compiled\Units</DCC_DcpOutput>
+        <VerInfo_Locale>1049</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -87,9 +97,10 @@
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;OPPVCL;dsnap;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
+        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;dsnap;$(DCC_UsePackage)</DCC_UsePackage>
@@ -106,7 +117,6 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
-        <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <Debugger_HostApplication>..\..\..\..\Compiled\Executable\OPPHintTunning.exe</Debugger_HostApplication>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
@@ -117,6 +127,10 @@
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
