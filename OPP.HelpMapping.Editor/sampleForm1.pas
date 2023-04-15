@@ -204,6 +204,7 @@ uses
   OPP.Help.Settings.Form;
 
 resourcestring
+  SSettingsReadErrorTemplate = 'Ошибка при чтении настроек: %s';
   SWarningDefaultSettingsAreNotDefined = 'Default settings are not defined';
   SWarningListItemsIsNotSelectedNotAbleToS = 'List items is not selected. not able to set caption';
   SErrorPassedNotTControl = 'passed not TControl';
@@ -819,7 +820,7 @@ procedure TSampleForm.onDefaultSettingsReadEvent(const AResult: TOPPHelpDefaults
 begin
   if Assigned(AError) then begin
     fDefaultSettings := nil;
-    ShowMessage(Format('Ошибка при чтении настроек: %s',[AError.Message]));
+    ShowMessage(Format(SSettingsReadErrorTemplate,[AError.Message]));
     exit;
   end;
 

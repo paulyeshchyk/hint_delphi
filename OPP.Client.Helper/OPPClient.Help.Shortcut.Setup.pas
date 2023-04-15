@@ -11,7 +11,8 @@ uses
 type
   TOPPClientHelpShortcutHelper = class
   public
-    class procedure showHelp(AControl: TControl; AMessage: TWMHelp);
+    class procedure showHelp(AControl: TControl; AMessage: TWMHelp);overload;
+    class procedure showHelp(AControl: TControl);overload;
   end;
 
 implementation
@@ -33,6 +34,24 @@ uses
   OPP.Help.Log,
   OPP.Help.System.Error,
   OPPClientChild;
+
+class procedure TOPPClientHelpShortcutHelper.showHelp(AControl: TControl);
+var
+  fShortcutRequest: TOPPHelpShortcutRequest;
+begin
+  fShortcutRequest := TOPPHelpShortcutRequest.Create(AControl);
+  try
+    helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
+      procedure(error: Exception)
+      begin
+        if error = nil then
+          exit;
+        eventLogger.Error(error, 'TOPPClientHelpShortcut');
+      end);
+  finally
+    fShortcutRequest.Free;
+  end;
+end;
 
 class procedure TOPPClientHelpShortcutHelper.showHelp(AControl: TControl; AMessage: TWMHelp);
 var

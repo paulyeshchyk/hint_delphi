@@ -15,9 +15,10 @@ type
     fActiveControl: TControl;
 
   public
-    constructor Create(AActiveControl: TControl; msg: TWMHelp);
+    constructor Create(AActiveControl: TControl; msg: TWMHelp);overload;
+    constructor Create(AActiveControl: TControl);overload;
 
-    property msg: TWMHelp read fMsg;
+    property messag: TWMHelp read fMsg;
     property ActiveControl: TControl read fActiveControl;
   end;
 
@@ -31,6 +32,13 @@ begin
   fMsg := msg;
   fActiveControl := AActiveControl;
 
+  eventLogger.Debug(fActiveControl.ClassName);
+end;
+
+constructor TOPPHelpShortcutRequest.Create(AActiveControl: TControl);
+begin
+  inherited Create;
+  fActiveControl := AActiveControl;
   eventLogger.Debug(fActiveControl.ClassName);
 end;
 
