@@ -33,6 +33,15 @@ type
     function asString(): String;
   end;
 
+  TOPPHelpPreviewNavigationPanelInfo = record
+    constraints: TOPPNavigatorConstraints;
+    gotopage: Variant;
+  end;
+
+  TOPPHelpPreviewNavigationPanelInfoHelper = record helper for TOPPHelpPreviewNavigationPanelInfo
+    function hasConstraints: Boolean;
+  end;
+
   TOPPHelpPreviewForm = class(TForm, IOPPHelpViewEventListener, IOPPHelpShortcutViewer)
     actionFitPageCustom: TAction;
     actionFitPageHeight: TAction;
@@ -137,12 +146,21 @@ type
     actionZoomDecrease: TAction;
     dxBarLargeButton11: TdxBarLargeButton;
     dxBarLargeButton12: TdxBarLargeButton;
+    dxBarButton20: TdxBarButton;
+    dxBarSeparator10: TdxBarSeparator;
+    actionGotoInitialText: TAction;
+    dxBarButton21: TdxBarButton;
+    dxBarSeparator11: TdxBarSeparator;
+    dxBarButton22: TdxBarButton;
+    dxBarSeparator12: TdxBarSeparator;
+    actionVersion: TAction;
     procedure actionFitPageCustomExecute(Sender: TObject);
     procedure actionFitPageHeightExecute(Sender: TObject);
     procedure actionFitPageWidthExecute(Sender: TObject);
     procedure actionFitTwoPagesExecute(Sender: TObject);
     procedure actionGotoContentsExecute(Sender: TObject);
     procedure actionGotoFirstPageExecute(Sender: TObject);
+    procedure actionGotoInitialTextExecute(Sender: TObject);
     procedure actionGotoLastPageExecute(Sender: TObject);
     procedure actionGotoNextPageExecute(Sender: TObject);
     procedure actionGotoPreviousPageExecute(Sender: TObject);
@@ -166,7 +184,7 @@ type
     procedure TrayIcon1Click(Sender: TObject);
     procedure zoomValueEditChange(Sender: TObject);
   private
-    fCurrentPredicate: TOPPHelpPredicate;
+    fDefaultPredicate: TOPPHelpPredicate;
     fCurrentState: TOPPHelpPreviewFormState;
     fNavigator: IOPPNavigator;
     oppHelpView: TOPPHelpViewFullScreen;
@@ -185,6 +203,7 @@ type
     procedure SearchStarted();
     { --- }
 
+    function NavigationInfo(ANavigator: IOPPNavigator): TOPPHelpPreviewNavigationPanelInfo;
     procedure applyHints();
     procedure SendToBackground();
     procedure SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
@@ -221,12 +240,15 @@ uses
   AsyncCalls;
 
 const
+  kContext = 'TOPPHelpPreviewForm';
   kGulfstreamContentsPageIndex = '2';
   kGulfstreamTermsPageIndex = '1056';
   kZoomTwoPagesFactor = 81;
   kZoomDefaultIncrement = 5;
 
 resourcestring
+  SEventReceivedMessageWM_COPYDATA = 'Received message: WM_COPYDATA';
+  SErrorPredicateIsNotDefined = 'Predicate is not defined';
   SEvebtPostedSuccessResult = 'Posted success result';
   SEventStateTemplate = 'State: %s';
   SEventParsedPredicateTemplate = 'Parsed predicate: %s';
@@ -289,6 +311,11 @@ procedure TOPPHelpPreviewForm.actionGotoFirstPageExecute(Sender: TObject);
 begin
   if assigned(Navigator) then
     Navigator.GotoFirstPage;
+end;
+
+procedure TOPPHelpPreviewForm.actionGotoInitialTextExecute(Sender: TObject);
+begin
+  RunPredicate(fDefaultPredicate);
 end;
 
 procedure TOPPHelpPreviewForm.actionGotoLastPageExecute(Sender: TObject);
@@ -384,6 +411,7 @@ begin
   actionToggleFindPanel.Hint := 'Найти текст';
   actionZoomDecrease.Hint := 'Уменьшить масштаб';
   actionZoomIncrease.Hint := 'Увеличить масштаб';
+  actionGotoInitialText.Hint := 'Изначальная страница';
 end;
 
 procedure TOPPHelpPreviewForm.cxBarEditItem4Change(Sender: TObject);
@@ -441,6 +469,8 @@ end;
 procedure TOPPHelpPreviewForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   oppHelpView.removeStateChangeListener(self);
+  if assigned(fDefaultPredicate) then
+    fDefaultPredicate.Free;
 end;
 
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
@@ -534,16 +564,16 @@ var
   fNotificationStream: TReadOnlyMemoryStream;
 begin
 
-  eventLogger.Flow('Received message: WM_COPYDATA', kEventFlowName);
+  eventLogger.Flow(SEventReceivedMessageWM_COPYDATA, kEventFlowName);
 
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
   try
     try
-      ParsePredicate(fNotificationStream, fCurrentPredicate);
+      ParsePredicate(fNotificationStream, fDefaultPredicate);
     except
       on Error: Exception do
       begin
-        eventLogger.Error(Error, 'TOPPHelpPreviewForm');
+        eventLogger.Error(Error, kContext);
       end;
     end;
   finally
@@ -562,7 +592,7 @@ procedure TOPPHelpPreviewForm.OnMessageWMOPPPredicate(var Msg: TMessage);
 begin
   Msg.Result := SMessageResultSuccess;
 
-  RunPredicate(fCurrentPredicate);
+  RunPredicate(fDefaultPredicate);
 
 end;
 
@@ -584,7 +614,7 @@ begin
       end;
     WM_OPPZoomFitWParamTwoColumns:
       begin
-        oppHelpView.ZoomFactor := 81;
+        oppHelpView.ZoomFactor := kZoomTwoPagesFactor;
       end;
   end;
   Msg.Result := oppHelpView.ZoomFactor;
@@ -610,46 +640,52 @@ begin
   ShowModal;
 end;
 
+function TOPPHelpPreviewForm.NavigationInfo(ANavigator: IOPPNavigator): TOPPHelpPreviewNavigationPanelInfo;
+begin
+  if assigned(ANavigator) then
+  begin
+    Result.constraints := ANavigator.NavigatorConstraints;
+    Result.gotopage := (ANavigator.GetPageIndex + 1);
+  end else begin
+    Result.constraints := [];
+    Result.gotopage := null;
+  end;
+end;
+
 procedure TOPPHelpPreviewForm.ReloadNavigationPanel(ANavigator: IOPPNavigator);
 var
-  AConstraints: TOPPNavigatorConstraints;
-  aPageToGo: Variant;
+  fNavigationInfo: TOPPHelpPreviewNavigationPanelInfo;
 begin
   reloadIsInProgress := true;
 
-  if assigned(ANavigator) then
-  begin
-    AConstraints := ANavigator.NavigatorConstraints;
-    aPageToGo := (ANavigator.GetPageIndex + 1);
-  end else begin
-    AConstraints := [];
-    aPageToGo := null;
-  end;
+  fNavigationInfo := NavigationInfo(ANavigator);
 
-  actionZoomIncrease.Enabled := (AConstraints <> []);
-  actionZoomDecrease.Enabled := (AConstraints <> []);
-  actionFitTwoPages.Enabled := (AConstraints <> []);
-  actionFitPageCustom.Enabled := (AConstraints <> []);
-  actionFitPageWidth.Enabled := (AConstraints <> []);
-  actionFitPageHeight.Enabled := (AConstraints <> []);
-  cxEditGotoCustomPage.Enabled := (AConstraints <> []);
-  dropdownPageSelectionEdit.Enabled := (AConstraints <> []);
-  actionToggleFindPanel.Enabled := (AConstraints <> []);
-  buttonQuickNavigation.Enabled := (AConstraints <> []);
+  actionGotoInitialText.Enabled := fNavigationInfo.hasConstraints;
+  actionZoomIncrease.Enabled := fNavigationInfo.hasConstraints;
+  actionZoomDecrease.Enabled := fNavigationInfo.hasConstraints;
+  actionFitTwoPages.Enabled := fNavigationInfo.hasConstraints;
+  actionFitPageCustom.Enabled := fNavigationInfo.hasConstraints;
+  actionFitPageWidth.Enabled := fNavigationInfo.hasConstraints;
+  actionFitPageHeight.Enabled := fNavigationInfo.hasConstraints;
+  cxEditGotoCustomPage.Enabled := fNavigationInfo.hasConstraints;
+  dropdownPageSelectionEdit.Enabled := fNavigationInfo.hasConstraints;
+  actionToggleFindPanel.Enabled := fNavigationInfo.hasConstraints;
+  buttonQuickNavigation.Enabled := fNavigationInfo.hasConstraints;
 
-  actionPrint.Enabled := (AConstraints <> []);
-  actionPrintDialog.Enabled := (AConstraints <> []);
+  actionPrint.Enabled := fNavigationInfo.hasConstraints;
+  actionPrintDialog.Enabled := fNavigationInfo.hasConstraints;
 
-  actionGotoContents.Enabled := (AConstraints <> []);
-  actionGotoTerms.Enabled := (AConstraints <> []);
-  actionGotoFirstPage.Enabled := ncCanGoFirstPage in AConstraints;
-  actionGotoPreviousPage.Enabled := ncCanGoPreviousPage in AConstraints;
-  actionGotoNextPage.Enabled := ncCanGoNextPage in AConstraints;
-  actionGotoLastPage.Enabled := ncCanGoLastPage in AConstraints;
+  actionGotoContents.Enabled := fNavigationInfo.hasConstraints;
+  actionGotoTerms.Enabled := fNavigationInfo.hasConstraints;
+  actionGotoFirstPage.Enabled := ncCanGoFirstPage in fNavigationInfo.constraints;
+  actionGotoPreviousPage.Enabled := ncCanGoPreviousPage in fNavigationInfo.constraints;
+  actionGotoNextPage.Enabled := ncCanGoNextPage in fNavigationInfo.constraints;
+  actionGotoLastPage.Enabled := ncCanGoLastPage in fNavigationInfo.constraints;
 
-  cxEditGotoCustomPage.Enabled := (AConstraints <> []);
+  cxEditGotoCustomPage.Enabled := fNavigationInfo.hasConstraints;
+
   cxEditGotoCustomPage.Properties.LockUpdate(true);
-  cxEditGotoCustomPage.EditValue := aPageToGo;
+  cxEditGotoCustomPage.EditValue := fNavigationInfo.gotopage;
   cxEditGotoCustomPage.Properties.LockUpdate(false);
   reloadIsInProgress := false;
 end;
@@ -664,6 +700,12 @@ end;
 
 procedure TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate);
 begin
+  if not assigned(APredicate) then
+  begin
+    eventLogger.Error(SErrorPredicateIsNotDefined, kContext);
+    exit;
+  end;
+
   eventLogger.Flow(Format(SEventStartedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kEventFlowName);
   helpShortcutServer.loadPDF(APredicate.filename,
     procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus)
@@ -745,6 +787,13 @@ begin
     fsIdle:
       Result := SStatusIdle;
   end;
+end;
+
+{ TOPPHelpPreviewNavigationPanelInfoHelper }
+
+function TOPPHelpPreviewNavigationPanelInfoHelper.hasConstraints: Boolean;
+begin
+  result := (self.constraints <> []);
 end;
 
 end.

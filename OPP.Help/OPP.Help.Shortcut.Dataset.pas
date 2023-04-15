@@ -18,7 +18,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function load(AFilename: String): Integer;
+    function load(const AFilename: String): Integer;
     function GetMapping(const key: String): TOPPHelpMap;
     function AddMap(const AMap: TOPPHelpMap): Integer;
     procedure RemoveMap(const AIdentifier: String);
@@ -45,7 +45,7 @@ begin
   inherited;
 end;
 
-function TOPPHelpShortcutDataset.load(AFilename: string): Integer;
+function TOPPHelpShortcutDataset.load(const AFilename: String): Integer;
 begin
 
   TOPPHelpMapRESTParser.readJSON(AFilename, SetNewList);
@@ -61,7 +61,7 @@ begin
   end;
 
   fShortcutHelpMatrix.Clear;
-  self.Merge(Mapset.list);
+  self.Merge(Mapset.List);
 end;
 
 procedure TOPPHelpShortcutDataset.Merge(AList: TList<TOPPHelpMap>);
