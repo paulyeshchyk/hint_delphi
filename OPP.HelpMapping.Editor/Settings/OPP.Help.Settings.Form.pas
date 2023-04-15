@@ -30,7 +30,6 @@ type
     ffDefaults: TOPPHelpDefaults;
     procedure setDefaults(const AValue: TOPPHelpDefaults);
     procedure saveSettings();
-    procedure OnSettingsRead(const AResult: TOPPHelpDefaults; error: Exception);
     procedure OnEditorCompletion(AValue: TOPPHelpSettingsValue; Saved: Boolean);
   public
     { Public declarations }
@@ -48,6 +47,7 @@ var
 implementation
 
 uses
+  commctrl,
   OPP.Help.predicate, OPP.Help.System.Types,
   OPP.Help.log,
   OPP.Help.System.error,
@@ -55,10 +55,12 @@ uses
   System.IOUtils, System.JSON, DBXJSONReflect, REST.JSON;
 
 const
+  kContext = 'OPPSettingsForm';
   kShortcutFilePathPropertyName = 'ShortcutFilePath';
   kHintsFilePathPropertyName = 'HintsFilePath';
 
 resourcestring
+  SEventSettingsWasSaved = 'settings was saved';
   SHintFilePathCaption = 'Путь к файлу подсказок';
   SShortFilePathCaption = 'Путь к файлу помощи';
 
@@ -66,7 +68,11 @@ resourcestring
 
 procedure TOPPHelpSettingsForm.FormCreate(Sender: TObject);
 begin
-  TOPPHelpSettingsManager.readSettings(OnSettingsRead);
+  TOPPHelpSettingsManager.createDefaultSettingsIfNeed(
+    procedure(const AResult: TOPPHelpDefaults; const AError: Exception)
+    begin
+      self.Defaults := AResult;
+    end);
 end;
 
 procedure TOPPHelpSettingsForm.OnEditorCompletion(AValue: TOPPHelpSettingsValue; Saved: Boolean);
@@ -80,39 +86,17 @@ begin
   cxListView1.loadSettings(self.Defaults);
 end;
 
-procedure TOPPHelpSettingsForm.OnSettingsRead(const AResult: TOPPHelpDefaults; error: Exception);
-begin
-  if not assigned(error) then
-  begin
-    Defaults := AResult;
-    exit;
-  end;
-
-  eventLogger.Error(error);
-
-  TOPPHelpSettingsManager.defaultSettings(
-    procedure(const AResult: TOPPHelpDefaults; error: Exception)
-    begin
-      if assigned(error) then
-      begin
-        eventLogger.Error(error);
-        exit;
-      end;
-      self.Defaults := AResult;
-    end);
-end;
-
 procedure TOPPHelpSettingsForm.saveSettings();
 begin
-  TOPPHelpSettingsManager.saveSettings(ffDefaults,
+  TOPPHelpSettingsManager.encodeSettings(ffDefaults,
     procedure(error: Exception)
     begin
       if assigned(error) then
       begin
-        eventLogger.Error(error);
+        eventLogger.error(error);
         exit;
       end;
-      eventLogger.Flow('settings was saved', 'OPPSettingsForm');
+      eventLogger.Flow(SEventSettingsWasSaved, kContext);
     end);
 end;
 
@@ -173,6 +157,9 @@ begin
   fItem.Caption := SShortFilePathCaption;
   fItem.Subitems.Add(ASettings.ShortcutFilePath);
   fItem.Subitems.Add(kShortcutFilePathPropertyName);
+
+  self.Columns[0].Width := LVSCW_AUTOSIZE or LVSCW_AUTOSIZE_USEHEADER;
+  self.Columns[1].Width := LVSCW_AUTOSIZE or LVSCW_AUTOSIZE_USEHEADER;
 end;
 
 end.

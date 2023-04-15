@@ -3,24 +3,25 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
-  ClientHeight = 767
-  ClientWidth = 884
+  ClientHeight = 463
+  ClientWidth = 499
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 685
-    Width = 884
-    Height = 82
+    Top = 422
+    Width = 499
+    Height = 41
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -28,26 +29,31 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 686
-    ExplicitWidth = 898
+    ExplicitTop = 685
+    ExplicitWidth = 884
+    DesignSize = (
+      499
+      41)
     object Button1: TButton
-      Left = 704
-      Top = 12
-      Width = 150
-      Height = 50
+      Left = 408
+      Top = 8
+      Width = 75
+      Height = 25
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
       Action = actionSave
+      Anchors = [akTop, akRight]
       TabOrder = 0
+      ExplicitLeft = 384
     end
   end
   object cxListView1: TcxListView
     Left = 0
     Top = 0
-    Width = 884
-    Height = 685
+    Width = 499
+    Height = 422
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -62,14 +68,19 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         Width = 520
       end>
-    Items.ItemData = {
-      05460000000100000000000000FFFFFFFFFFFFFFFF00000000FFFFFFFF000000
-      00161F04430442044C0420003A0420004404300439043B04430420003F043E04
-      340441043A04300437043E043A04}
+    ParentFont = False
     RowSelect = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = []
+    Style.IsFontAssigned = True
     TabOrder = 1
     ViewStyle = vsReport
     OnDblClick = actionEditValueExecute
+    ExplicitWidth = 884
+    ExplicitHeight = 685
   end
   object ActionList1: TActionList
     Left = 200

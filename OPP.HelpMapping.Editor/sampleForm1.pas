@@ -148,6 +148,8 @@ type
     procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
     procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
     procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
+    //settings
+    procedure onDefaultSettingsReadEvent(const AResult: TOPPHelpDefaults; const AError: Exception);
 
     function preferableIndexToJump(from: Integer): Integer;
     procedure RefreshPreviewButtonAction;
@@ -228,7 +230,7 @@ resourcestring
   SWarningWillNotDeleteAnythingBecauseList = 'Will not delete anything, because  listview has no selected item';
 
 const
-  kEventFlowName = 'SampleForm';
+  kContext = 'SampleForm';
   kShortcutDropdownItemsArray: array [1 .. 2] of string = (SktSearch, SktPage);
   kHintDropdownItemsArray: array [1 .. 3] of string = (SktSearch, SktPage, SktBookmark);
 
@@ -254,7 +256,7 @@ begin
   try
     fState.completion := procedure(AIdentifier: String)
       begin
-        eventLogger.Flow(SEventDidRemovedRecord, kEventFlowName);
+        eventLogger.Flow(SEventDidRemovedRecord, kContext);
         ReloadListView(
           procedure
           begin
@@ -267,14 +269,14 @@ begin
     helpHintServer.RemoveHelpMap(cxListView1.Selected.Caption,
       procedure(AError: Exception)
       begin
-        eventLogger.Flow(SEventDidRemovedHint, kEventFlowName);
+        eventLogger.Flow(SEventDidRemovedHint, kContext);
         fState.hintWasUpdated := true;
         fState.checkAndRunMapId(SEmpty)
       end);
     helpShortcutServer.RemoveHelpMap(cxListView1.Selected.Caption,
       procedure(AError: Exception)
       begin
-        eventLogger.Flow(SEventDidRemovedShortcut, kEventFlowName);
+        eventLogger.Flow(SEventDidRemovedShortcut, kContext);
         fState.shortcutWasUpdated := true;
         fState.checkAndRunMapId(SEmpty)
       end);
@@ -360,11 +362,11 @@ begin
     procedure(const AMap: TOPPHelpMap)
     begin
       helpShortcutServer.showHelp(AMap.Predicate, vmExternal,
-        procedure(error: Exception)
+        procedure(Error: Exception)
         begin
-          if error = nil then
+          if Error = nil then
             exit;
-          eventLogger.Error(error);
+          eventLogger.Error(Error);
         end);
     end);
 end;
@@ -393,7 +395,7 @@ begin
       if assigned(listItem) then
         cxListView1.Selected.Caption := ANewIdentifier
       else
-        eventLogger.Warning(SWarningListItemsIsNotSelectedNotAbleToS, kEventFlowName);
+        eventLogger.Warning(SWarningListItemsIsNotSelectedNotAbleToS, kContext);
     end);
 end;
 
@@ -406,16 +408,7 @@ begin
 
     formSettings.ShowModal;
 
-    TOPPHelpSettingsManager.readSettings(
-      procedure(const AResult: TOPPHelpDefaults; Error: Exception)
-      begin
-        if assigned(Error) then
-        begin
-          exit;
-        end;
-
-        fDefaultSettings := AResult;
-      end);
+    TOPPHelpSettingsManager.createDefaultSettingsIfNeed(onDefaultSettingsReadEvent);
 
   finally
     formSettings.Free;
@@ -454,7 +447,7 @@ var
 begin
   if not(AComponent is TControl) then
   begin
-    eventLogger.Error(SErrorPassedNotTControl, kEventFlowName);
+    eventLogger.Error(SErrorPassedNotTControl, kContext);
     exit;
   end;
   TControl(AComponent).ShowHint := true;
@@ -648,6 +641,9 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
+  // settings
+  TOPPHelpSettingsManager.createDefaultSettingsIfNeed(onDefaultSettingsReadEvent);
+
   for dropdownItem in kShortcutDropdownItemsArray do
   begin
     ShortcutKeywordTypeComboBox.Properties.Items.Add(dropdownItem);
@@ -664,16 +660,6 @@ begin
   self.isModified := false;
   self.RefreshPreviewButtonAction;
 
-  TOPPHelpSettingsManager.readSettings(
-    procedure(const AResult: TOPPHelpDefaults; Error: Exception)
-    begin
-      if assigned(Error) then
-      begin
-        exit;
-      end;
-
-      fDefaultSettings := AResult;
-    end);
 
   cxListView1.Columns[0].Width := cxListView1.Width - 10;
   TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo,
@@ -829,6 +815,17 @@ begin
 
 end;
 
+procedure TSampleForm.onDefaultSettingsReadEvent(const AResult: TOPPHelpDefaults; const AError: Exception);
+begin
+  if Assigned(AError) then begin
+    fDefaultSettings := nil;
+    ShowMessage(Format('Ошибка при чтении настроек: %s',[AError.Message]));
+    exit;
+  end;
+
+  fDefaultSettings := AResult;
+end;
+
 procedure TSampleForm.PageControl1Change(Sender: TObject);
 begin
   RefreshPreviewButtonAction;
@@ -884,11 +881,11 @@ begin
 
   if Length(oldIdentifier) = 0 then
   begin
-    eventLogger.Error(SErrorCantSaveMapIdIsEmpty, kEventFlowName);
+    eventLogger.Error(SErrorCantSaveMapIdIsEmpty, kContext);
     exit;
   end;
 
-  eventLogger.Flow(SEventWillSaveMap, kEventFlowName);
+  eventLogger.Flow(SEventWillSaveMap, kContext);
 
   fState := TSampleFormSaveState.Create;
   try
@@ -902,7 +899,7 @@ begin
         fState.hintWasUpdated := true;
         if not assigned(AMap) then
         begin
-          eventLogger.Error(SErrorFindMapForHintReturnsNilMap, kEventFlowName);
+          eventLogger.Error(SErrorFindMapForHintReturnsNilMap, kContext);
           fState.checkAndRunMap(AMap);
           exit;
         end;
@@ -911,7 +908,7 @@ begin
         helpHintServer.SaveHelpMaps('',
           procedure(AError: Exception)
           begin
-            eventLogger.Flow(SEventDidSavedHint, kEventFlowName);
+            eventLogger.Flow(SEventDidSavedHint, kContext);
             fState.checkAndRunMap(AMap);
           end);
       end);
@@ -922,7 +919,7 @@ begin
         fState.shortcutWasUpdated := true;
         if not assigned(AMap) then
         begin
-          eventLogger.Error(SErrorFindMapForShortcutReturnsNilMap, kEventFlowName);
+          eventLogger.Error(SErrorFindMapForShortcutReturnsNilMap, kContext);
           fState.checkAndRunMap(AMap);
           exit;
         end;
@@ -930,7 +927,7 @@ begin
         helpShortcutServer.SaveMaps('',
           procedure(AError: Exception)
           begin
-            eventLogger.Flow(SEventDidSavedShortcut, kEventFlowName);
+            eventLogger.Flow(SEventDidSavedShortcut, kContext);
             fState.checkAndRunMap(AMap);
           end);
       end);
