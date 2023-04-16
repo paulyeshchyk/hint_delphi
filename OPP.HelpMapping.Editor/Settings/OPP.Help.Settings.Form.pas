@@ -21,6 +21,8 @@ type
     actionSave: TAction;
     cxListView1: TcxListView;
     actionEditValue: TAction;
+    actionClose: TAction;
+    procedure actionCloseExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actionEditValueExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
@@ -65,6 +67,11 @@ resourcestring
   SShortFilePathCaption = 'Путь к файлу помощи';
 
 {$R *.dfm}
+
+procedure TOPPHelpSettingsForm.actionCloseExecute(Sender: TObject);
+begin
+  close;
+end;
 
 procedure TOPPHelpSettingsForm.FormCreate(Sender: TObject);
 begin

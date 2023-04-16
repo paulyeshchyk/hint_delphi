@@ -8,15 +8,14 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -12
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 13
+  TextHeight = 14
   object Panel1: TPanel
     Left = 0
     Top = 422
@@ -29,8 +28,8 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 685
-    ExplicitWidth = 884
+    ExplicitTop = 421
+    ExplicitWidth = 485
     DesignSize = (
       499
       41)
@@ -46,7 +45,7 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
       Action = actionSave
       Anchors = [akTop, akRight]
       TabOrder = 0
-      ExplicitLeft = 384
+      ExplicitLeft = 394
     end
   end
   object cxListView1: TcxListView
@@ -79,8 +78,8 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     TabOrder = 1
     ViewStyle = vsReport
     OnDblClick = actionEditValueExecute
-    ExplicitWidth = 884
-    ExplicitHeight = 685
+    ExplicitWidth = 485
+    ExplicitHeight = 421
   end
   object ActionList1: TActionList
     Left = 200
@@ -92,6 +91,11 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     object actionEditValue: TAction
       Caption = 'actionEditValue'
       OnExecute = actionEditValueExecute
+    end
+    object actionClose: TAction
+      Caption = 'actionClose'
+      ShortCut = 27
+      OnExecute = actionCloseExecute
     end
   end
 end
