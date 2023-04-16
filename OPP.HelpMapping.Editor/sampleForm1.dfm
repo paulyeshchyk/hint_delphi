@@ -3,28 +3,27 @@ object SampleForm: TSampleForm
   Top = 0
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 417
-  ClientWidth = 1085
+  ClientHeight = 433
+  ClientWidth = 1043
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -12
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
-  OldCreateOrder = True
   Position = poScreenCenter
   Visible = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 13
+  TextHeight = 14
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1085
-    Height = 417
+    Width = 1043
+    Height = 433
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -32,11 +31,12 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 414
     object Splitter1: TSplitter
       Left = 530
       Top = 0
       Width = 6
-      Height = 417
+      Height = 433
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -47,7 +47,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 417
+      Height = 433
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -62,10 +62,11 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      ExplicitHeight = 414
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
-        Top = 34
+        Top = 50
         Width = 518
         Height = 377
         Margins.Left = 6
@@ -90,7 +91,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 530
-        Height = 28
+        Height = 44
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -102,8 +103,8 @@ object SampleForm: TSampleForm
     object panelAddBorder: TPanel
       Left = 536
       Top = 0
-      Width = 549
-      Height = 417
+      Width = 507
+      Height = 433
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -111,11 +112,12 @@ object SampleForm: TSampleForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 414
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
-        Top = 103
-        Width = 537
+        Top = 119
+        Width = 495
         Height = 245
         Margins.Left = 6
         Margins.Top = 6
@@ -126,6 +128,7 @@ object SampleForm: TSampleForm
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
+        ExplicitWidth = 481
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -135,8 +138,8 @@ object SampleForm: TSampleForm
           object Panel5: TPanel
             Left = 0
             Top = 0
-            Width = 529
-            Height = 214
+            Width = 487
+            Height = 213
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -272,8 +275,8 @@ object SampleForm: TSampleForm
           object Panel4: TPanel
             Left = 0
             Top = 0
-            Width = 529
-            Height = 214
+            Width = 487
+            Height = 213
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -281,11 +284,12 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitWidth = 473
             object Panel7: TPanel
               Left = 0
               Top = 0
-              Width = 529
-              Height = 214
+              Width = 487
+              Height = 213
               Margins.Left = 6
               Margins.Top = 6
               Margins.Right = 6
@@ -293,6 +297,7 @@ object SampleForm: TSampleForm
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
+              ExplicitWidth = 473
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 136
                 Top = 155
@@ -415,8 +420,8 @@ object SampleForm: TSampleForm
       end
       object PanelIDContainer: TPanel
         Left = 0
-        Top = 28
-        Width = 549
+        Top = 44
+        Width = 507
         Height = 69
         Margins.Left = 6
         Margins.Top = 6
@@ -425,6 +430,7 @@ object SampleForm: TSampleForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 493
         object cxLabel5: TcxLabel
           Left = 8
           Top = 8
@@ -451,8 +457,8 @@ object SampleForm: TSampleForm
       object dxBarDockControl2: TdxBarDockControl
         Left = 0
         Top = 0
-        Width = 549
-        Height = 28
+        Width = 507
+        Height = 44
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -463,8 +469,8 @@ object SampleForm: TSampleForm
       object PanelPreview: TPanel
         AlignWithMargins = True
         Left = 6
-        Top = 360
-        Width = 537
+        Top = 376
+        Width = 495
         Height = 51
         Hint = 'Wrong hint'
         HelpType = htKeyword
@@ -486,6 +492,7 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
+        ExplicitWidth = 481
       end
     end
   end
@@ -500,7 +507,7 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 368
     Top = 72
-    PixelsPerInch = 96
+    PixelsPerInch = 192
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
@@ -555,7 +562,7 @@ object SampleForm: TSampleForm
     UseSystemFont = True
     Left = 155
     Top = 73
-    PixelsPerInch = 96
+    PixelsPerInch = 192
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
       AllowCustomizing = False

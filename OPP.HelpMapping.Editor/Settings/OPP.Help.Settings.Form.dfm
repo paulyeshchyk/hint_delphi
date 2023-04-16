@@ -27,7 +27,7 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     Margins.Bottom = 6
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 0
+    TabOrder = 1
     ExplicitTop = 421
     ExplicitWidth = 485
     DesignSize = (
@@ -75,7 +75,7 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = []
     Style.IsFontAssigned = True
-    TabOrder = 1
+    TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = actionEditValueExecute
     ExplicitWidth = 485
@@ -90,6 +90,7 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     end
     object actionEditValue: TAction
       Caption = 'actionEditValue'
+      ShortCut = 13
       OnExecute = actionEditValueExecute
     end
     object actionClose: TAction

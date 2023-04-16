@@ -22,6 +22,7 @@ uses
   OPP.Help.System.References,
   OPP.Help.Settings.Manager,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
+  OPP.Help.Defaults,
   SampleFormSaveState;
 
 type
@@ -38,6 +39,7 @@ type
     actionPreviewShortcut: TAction;
     actionReload: TAction;
     actionSave: TAction;
+    actionShowSettings: TAction;
     actionUndo: TAction;
     cxComboBoxHintDetailsKeywordType: TcxComboBox;
     cxComboBoxHintKeywordType: TcxComboBox;
@@ -83,16 +85,17 @@ type
     N3: TMenuItem;
     N31: TMenuItem;
     N4: TMenuItem;
+    N5: TMenuItem;
     OpenTextFileDialog1: TOpenTextFileDialog;
     PageControl1: TPageControl;
-    PanelPreview: TPanel;
     Panel2: TPanel;
     Panel4: TPanel;
     Panel5: TPanel;
     Panel7: TPanel;
-    PanelIDContainer: TPanel;
     panelAddBorder: TPanel;
+    PanelIDContainer: TPanel;
     panelList: TPanel;
+    PanelPreview: TPanel;
     ShortcutDetailsKeywordTypeComboBox: TcxComboBox;
     ShortcutDetailsPredicateValueEdit: TcxTextEdit;
     ShortcutKeywordTypeComboBox: TcxComboBox;
@@ -102,8 +105,6 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     tipsRepo: TdxScreenTipRepository;
-    actionShowSettings: TAction;
-    N5: TMenuItem;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
@@ -124,12 +125,9 @@ type
     procedure OnEditValueChanged(Sender: TObject);
     procedure OnIdentificatorChanged(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
-  protected
-    procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
-    procedure WMHOOK(var Msg: TMessage); message WM_OPPHook;
   private
-    fDefaultSettings: TOPPHelpDefaults;
     fCanChangeModificationFlag: Boolean;
+    fDefaultSettings: TOPPHelpDefaults;
     fIsIdentifierValid: Boolean;
     fIsModified: Boolean;
     fSelectedHintMap: TOPPHelpMap;
@@ -143,14 +141,11 @@ type
     procedure FindMapsById(ItemCaption: String);
     function GetHasRecords: Boolean;
     function GetWinControlHelpKeyword(AControl: TControl): String;
+    procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
+    procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
-    procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
-    procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
-    //settings
-    procedure onDefaultSettingsReadEvent(const AResult: TOPPHelpDefaults; const AError: Exception);
-
     function preferableIndexToJump(from: Integer): Integer;
     procedure RefreshPreviewButtonAction;
     procedure ReloadListView(completion: TOPPHelpCompletion);
@@ -168,6 +163,9 @@ type
     property isModified: Boolean read fIsModified write setIsModified;
     property SelectedHintMap: TOPPHelpMap read fSelectedHintMap write SetSelectedHintMap;
     property SelectedShortcutMap: TOPPHelpMap read fSelectedShortcutMap write SetSelectedShortcutMap;
+  protected
+    procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
+    procedure WMHOOK(var Msg: TMessage); message WM_OPPHook;
   end;
 
 var
@@ -409,7 +407,7 @@ begin
 
     formSettings.ShowModal;
 
-    TOPPHelpSettingsManager.createDefaultSettingsIfNeed(onDefaultSettingsReadEvent);
+    fDefaultSettings := TOPPHelpSettingsForm.GetUserDefaults();
 
   finally
     formSettings.Free;
@@ -643,7 +641,7 @@ var
   dropdownItem: String;
 begin
   // settings
-  TOPPHelpSettingsManager.createDefaultSettingsIfNeed(onDefaultSettingsReadEvent);
+  fDefaultSettings := TOPPHelpSettingsForm.GetUserDefaults();
 
   for dropdownItem in kShortcutDropdownItemsArray do
   begin
@@ -814,17 +812,6 @@ begin
   if assigned(completion) then
     completion();
 
-end;
-
-procedure TSampleForm.onDefaultSettingsReadEvent(const AResult: TOPPHelpDefaults; const AError: Exception);
-begin
-  if Assigned(AError) then begin
-    fDefaultSettings := nil;
-    ShowMessage(Format(SSettingsReadErrorTemplate,[AError.Message]));
-    exit;
-  end;
-
-  fDefaultSettings := AResult;
 end;
 
 procedure TSampleForm.PageControl1Change(Sender: TObject);

@@ -15,7 +15,9 @@ uses
   OPP.Help.Tips.Factory in '..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas',
   OPP.Help.Settings.Form in 'Settings\OPP.Help.Settings.Form.pas' {OPPHelpSettingsForm},
   OPP.Help.Settings.Manager in 'Settings\OPP.Help.Settings.Manager.pas',
-  OPP.Help.Settings.Value.Editor in 'Settings\OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor};
+  OPP.Help.Settings.Value.Editor in 'Settings\OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor},
+  OPP.Help.Defaults in 'Settings\OPP.Help.Defaults.pas',
+  OPP.Help.Defaults.Codable in 'Settings\OPP.Help.Defaults.Codable.pas';
 
 {$R *.res}
 
