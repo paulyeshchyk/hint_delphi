@@ -1,7 +1,6 @@
 object SampleForm: TSampleForm
   Left = 0
   Top = 0
-  BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
   ClientHeight = 433
   ClientWidth = 1074
@@ -12,7 +11,7 @@ object SampleForm: TSampleForm
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
-  Position = poScreenCenter
+  Position = poDefault
   Visible = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
@@ -31,8 +30,6 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1088
-    ExplicitHeight = 432
     object Splitter1: TSplitter
       Left = 530
       Top = 0
@@ -112,8 +109,6 @@ object SampleForm: TSampleForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 552
-      ExplicitHeight = 432
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
@@ -129,7 +124,7 @@ object SampleForm: TSampleForm
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
-        ExplicitWidth = 481
+        ExplicitWidth = 512
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -285,6 +280,7 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitWidth = 504
             object Panel7: TPanel
               Left = 0
               Top = 0
@@ -297,6 +293,7 @@ object SampleForm: TSampleForm
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
+              ExplicitWidth = 504
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 136
                 Top = 155
@@ -429,6 +426,7 @@ object SampleForm: TSampleForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 524
         object cxLabel5: TcxLabel
           Left = 8
           Top = 8
@@ -490,7 +488,7 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
-        ExplicitWidth = 481
+        ExplicitWidth = 512
       end
     end
   end

@@ -236,7 +236,7 @@ uses
   OPP.Help.Log, OPP.Help.System.Error,
   OPP.Help.System.Messaging.Pipe,
   OPP.Help.System.Types,
-
+  OPP.Help.System.Codable.FormSizeSettings,
   AsyncCalls;
 
 const
@@ -468,6 +468,9 @@ end;
 
 procedure TOPPHelpPreviewForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+
+  self.SaveFormState;
+
   oppHelpView.removeStateChangeListener(self);
   if assigned(fDefaultPredicate) then
     fDefaultPredicate.Free;
@@ -475,6 +478,9 @@ end;
 
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
+
+  self.ReadFormState;
+
   reloadIsInProgress := false;
   self.currentState := fsFormCreated;
 

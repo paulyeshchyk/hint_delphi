@@ -7,10 +7,10 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.Actions, Vcl.ActnList, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
 
   OPP.Help.Settings.Value.Editor,
+  OPP.Help.System.Codable.TunningEditorDefaultSettings,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, cxListView,
-  Vcl.StdActns,
-  OPP.Help.System.Setting.Editor.Defaults;
+  Vcl.StdActns;
 
 type
 
@@ -35,11 +35,10 @@ type
     procedure SetSettingEditorDefaults(const AValue: TOPPHelpHintTunningEditorDefaultSettings);
   public
     { Public declarations }
-    property EditorDefaults: TOPPHelpHintTunningEditorDefaultSettings read fEditorDefaults write SetSettingEditorDefaults;
+    property EditorDefaultSettings: TOPPHelpHintTunningEditorDefaultSettings read fEditorDefaults write SetSettingEditorDefaults;
   end;
 
   TOPPHelpSettingsFormHelper = class helper for TOPPHelpSettingsForm
-    // class function CreateEditorDefaults(): TOPPHelpSystemSettingEditorDefaults;
     class function GetEditorDefaults(): TOPPHelpHintTunningEditorDefaultSettings;
     class procedure SetEditorDefaults(ADefaults: TOPPHelpHintTunningEditorDefaultSettings);
   end;
@@ -50,13 +49,13 @@ var
 implementation
 
 uses
-  commctrl,
   OPP.Help.predicate, OPP.Help.System.Types,
   OPP.Help.log,
   OPP.Help.System.error,
   OPP.Help.System.Files,
+  OPP.Help.System.Codable.Helper,
 
-  System.IOUtils, System.JSON, DBXJSONReflect, REST.JSON;
+  CommCtrl;
 
 const
   kContext = 'OPPSettingsForm';
@@ -83,7 +82,7 @@ type
 class function TOPPHelpSettingsFormHelper.GetEditorDefaults: TOPPHelpHintTunningEditorDefaultSettings;
 begin
   try
-    TOPPHelpHintTunningEditorDefaultSettings.Decode(SSettingsFileName, result);
+    TOPPCodableHelper<TOPPHelpHintTunningEditorDefaultSettings>.Decode(SSettingsFileName, result);
   except
     on E: Exception do
     begin
@@ -96,7 +95,7 @@ end;
 class procedure TOPPHelpSettingsFormHelper.SetEditorDefaults(ADefaults: TOPPHelpHintTunningEditorDefaultSettings);
 begin
   try
-    TOPPHelpHintTunningEditorDefaultSettings.Encode(SSettingsFileName, ADefaults);
+    TOPPCodableHelper<TOPPHelpHintTunningEditorDefaultSettings>.Encode(SSettingsFileName, ADefaults);
   except
     on E: Exception do
     begin
@@ -138,8 +137,8 @@ end;
 procedure TOPPHelpSettingsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   SaveEditorDefaults();
-  if assigned(EditorDefaults) then
-    EditorDefaults.Free;
+  if assigned(EditorDefaultSettings) then
+    EditorDefaultSettings.Free;
 end;
 
 procedure TOPPHelpSettingsForm.FormCreate(Sender: TObject);
@@ -147,8 +146,8 @@ var
   fDefaults: TOPPHelpHintTunningEditorDefaultSettings;
 begin
   try
-    TOPPHelpHintTunningEditorDefaultSettings.Decode(SSettingsFileName, fDefaults);
-    self.EditorDefaults := fDefaults;
+    TOPPCodableHelper<TOPPHelpHintTunningEditorDefaultSettings>.Decode(SSettingsFileName, fDefaults);
+    self.EditorDefaultSettings := fDefaults;
   except
     on E: Exception do
     begin
@@ -166,13 +165,13 @@ begin
     fEditorDefaults.HintsFilePath := AValue.propertyValue;
   if AValue.propertyName = kShortcutFilePathPropertyName then
     fEditorDefaults.ShortcutFilePath := AValue.propertyValue;
-  cxListView1.LoadEditorDefaults(self.EditorDefaults);
+  cxListView1.LoadEditorDefaults(self.EditorDefaultSettings);
 end;
 
 procedure TOPPHelpSettingsForm.SaveEditorDefaults;
 begin
   try
-    TOPPHelpHintTunningEditorDefaultSettings.Encode(SSettingsFileName, self.EditorDefaults);
+    TOPPCodableHelper<TOPPHelpHintTunningEditorDefaultSettings>.Encode(SSettingsFileName, EditorDefaultSettings);
   except
     on E: Exception do
     begin

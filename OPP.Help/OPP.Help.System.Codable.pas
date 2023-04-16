@@ -4,8 +4,7 @@ interface
 
 uses
   System.SysUtils, System.JSON,
-  OPP.Help.Interfaces,
-  OPP.Help.System.Setting.Editor.Defaults;
+  OPP.Help.Interfaces;
 
 type
   OPPFileNotFoundException = class(Exception);
@@ -14,6 +13,12 @@ type
   OPPCoderDeserializeException = class(Exception);
   OPPCoderDecodeException = class(Exception);
   OPPCoderEncodeException = class(Exception);
+
+  TOPPCodable = class
+    constructor Create;Virtual;
+    procedure SetDefaults();Virtual;
+  end;
+  TOPPCodableClass = class of TOPPCodable;
 
   TOPPCoder<T> = class(TInterfacedObject, IOPPCodable<T>)
   private
@@ -143,6 +148,18 @@ begin
   finally
     fSerializer.Free;
   end;
+end;
+
+{ TBaseCodable }
+
+constructor TOPPCodable.Create;
+begin
+//
+end;
+
+procedure TOPPCodable.SetDefaults;
+begin
+//
 end;
 
 end.

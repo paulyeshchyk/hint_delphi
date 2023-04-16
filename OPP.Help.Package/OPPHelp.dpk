@@ -78,9 +78,10 @@ contains
   AsyncCalls in '..\OPP.Help\AsyncCalls.pas',
   OPP.Help.System.References in '..\OPP.Help\OPP.Help.System.References.pas',
   OPP.Help.System.Types in '..\OPP.Help\OPP.Help.System.Types.pas',
-  OPP.Help.System.Setting.Form.Size in '..\OPP.Help\OPP.Help.System.Setting.Form.Size.pas',
-  OPP.Help.System.Setting.Editor.Defaults in '..\OPP.Help\OPP.Help.System.Setting.Editor.Defaults.pas',
-  OPP.Help.System.Codable in '..\OPP.Help\OPP.Help.System.Codable.pas';
+  OPP.Help.System.Codable.FormSizeSettings in '..\OPP.Help\OPP.Help.System.Codable.FormSizeSettings.pas',
+  OPP.Help.System.Codable.Helper in '..\OPP.Help\OPP.Help.System.Codable.Helper.pas',
+  OPP.Help.System.Codable in '..\OPP.Help\OPP.Help.System.Codable.pas',
+  OPP.Help.System.Codable.TunningEditorDefaultSettings in '..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas';
 
 end.
 

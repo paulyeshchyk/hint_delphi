@@ -21,8 +21,7 @@ uses
   OPP.Help.System.Messaging,
   OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
-
-  OPP.Help.System.Setting.Editor.Defaults,
+  OPP.Help.System.Codable.TunningEditorDefaultSettings,
   SampleFormSaveState;
 
 type
@@ -127,7 +126,9 @@ type
     procedure PageControl1Change(Sender: TObject);
   private
     fCanChangeModificationFlag: Boolean;
+
     fDefaultSettings: TOPPHelpHintTunningEditorDefaultSettings;
+
     fIsIdentifierValid: Boolean;
     fIsModified: Boolean;
     fSelectedHintMap: TOPPHelpMap;
@@ -199,7 +200,8 @@ uses
   SampleOnly.Help.Hint.Setup,
   SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
-  OPP.Help.Settings.Form;
+  OPP.Help.Settings.Form,
+  OPP.Help.System.Codable.FormSizeSettings;
 
 resourcestring
   SSettingsReadErrorTemplate = 'Ошибка при чтении настроек: %s';
@@ -607,6 +609,10 @@ end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+
+  self.SaveFormState;
+
+
   helpShortcutServer.killExternalViewer;
   if assigned(fDefaultSettings) then
     fDefaultSettings.Free;
@@ -638,6 +644,9 @@ var
 begin
   // settings
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
+
+  self.ReadFormState;
+
 
   for dropdownItem in kShortcutDropdownItemsArray do
   begin

@@ -184,9 +184,10 @@
         <DCCReference Include="..\OPP.Help\AsyncCalls.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.References.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Types.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Setting.Form.Size.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Setting.Editor.Defaults.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.FormSizeSettings.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.Helper.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
