@@ -3,8 +3,8 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
-  ClientHeight = 463
-  ClientWidth = 499
+  ClientHeight = 460
+  ClientWidth = 457
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
   TextHeight = 14
   object Panel1: TPanel
     Left = 0
-    Top = 422
-    Width = 499
+    Top = 419
+    Width = 457
     Height = 41
     Margins.Left = 6
     Margins.Top = 6
@@ -31,10 +31,10 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     ExplicitTop = 421
     ExplicitWidth = 485
     DesignSize = (
-      499
+      457
       41)
     object Button1: TButton
-      Left = 408
+      Left = 310
       Top = 8
       Width = 75
       Height = 25
@@ -45,14 +45,14 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
       Action = actionSave
       Anchors = [akTop, akRight]
       TabOrder = 0
-      ExplicitLeft = 394
+      ExplicitLeft = 380
     end
   end
   object cxListView1: TcxListView
     Left = 0
     Top = 0
-    Width = 499
-    Height = 422
+    Width = 457
+    Height = 419
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -78,8 +78,6 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = actionEditValueExecute
-    ExplicitWidth = 485
-    ExplicitHeight = 421
   end
   object ActionList1: TActionList
     Left = 200

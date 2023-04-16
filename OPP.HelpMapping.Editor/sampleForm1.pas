@@ -20,9 +20,9 @@ uses
   OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
   OPP.Help.System.Messaging,
   OPP.Help.System.References,
-  OPP.Help.Settings.Manager,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
-  OPP.Help.Defaults,
+
+  OPP.Help.System.Setting.Editor.Defaults,
   SampleFormSaveState;
 
 type
@@ -127,7 +127,7 @@ type
     procedure PageControl1Change(Sender: TObject);
   private
     fCanChangeModificationFlag: Boolean;
-    fDefaultSettings: TOPPHelpDefaults;
+    fDefaultSettings: TOPPHelpHintTunningEditorDefaultSettings;
     fIsIdentifierValid: Boolean;
     fIsModified: Boolean;
     fSelectedHintMap: TOPPHelpMap;
@@ -279,7 +279,6 @@ begin
         fState.shortcutWasUpdated := true;
         fState.checkAndRunMapId(SEmpty)
       end);
-
   finally
     fState.Free;
   end;
@@ -337,9 +336,6 @@ begin
 end;
 
 procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
-var
-  p: TPoint;
-  fHint: TOPPHelpHint;
 begin
   helpHintServer.FindHelpMap(fSelectedItem,
     procedure(const AMap: TOPPHelpMap)
@@ -402,13 +398,13 @@ procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);
 var
   formSettings: TOPPHelpSettingsForm;
 begin
+  if Assigned(fDefaultSettings) then
+    FreeAndNil(fDefaultSettings);
+
   formSettings := TOPPHelpSettingsForm.Create(self);
   try
-
     formSettings.ShowModal;
-
-    fDefaultSettings := TOPPHelpSettingsForm.GetUserDefaults();
-
+    fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
   finally
     formSettings.Free;
   end;
@@ -641,7 +637,7 @@ var
   dropdownItem: String;
 begin
   // settings
-  fDefaultSettings := TOPPHelpSettingsForm.GetUserDefaults();
+  fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
 
   for dropdownItem in kShortcutDropdownItemsArray do
   begin
@@ -658,7 +654,6 @@ begin
   fCanChangeModificationFlag := false;
   self.isModified := false;
   self.RefreshPreviewButtonAction;
-
 
   cxListView1.Columns[0].Width := cxListView1.Width - 10;
   TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo,

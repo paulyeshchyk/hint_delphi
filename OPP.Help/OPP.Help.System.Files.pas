@@ -10,16 +10,20 @@ function PathCanonicalize(lpszDst: PChar; lpszSrc: PChar): LongBool; stdcall; ex
 function AbsToRel(const AbsPath, BasePath: string): string;
 function RelToAbs(const RelPath, BasePath: string): string;
 
+
 type
   TOPPHelpSystemFilesHelper = class
   public
     class function RelativePath(APath: String): String;
     class function AbsolutePath(APath: String): String;
+    class function GetOPPSettingsPath(AFileName: String): String;
   end;
 
 implementation
 
-uses System.SysUtils, vcl.forms;
+uses System.SysUtils,
+  System.IOUtils,
+  vcl.forms;
 
 class function TOPPHelpSystemFilesHelper.RelativePath(APath: String): String;
 begin
@@ -45,6 +49,19 @@ var
 begin
   PathCanonicalize(@Dst[0], PChar(IncludeTrailingBackslash(BasePath) + RelPath));
   result := Dst;
+end;
+
+class function TOPPHelpSystemFilesHelper.GetOPPSettingsPath(AFilename: String): String;
+var
+  fSettingsPath: String;
+begin
+  try
+    fSettingsPath := TPath.Combine(TPath.GetHomePath, 'OPP\Settings');
+    TDirectory.CreateDirectory(fSettingsPath);
+    result := fSettingsPath + TPath.DirectorySeparatorChar + AFilename;
+  except
+    result := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
+  end;
 end;
 
 end.

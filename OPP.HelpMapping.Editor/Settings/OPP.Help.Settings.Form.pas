@@ -10,7 +10,7 @@ uses
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, cxListView,
   Vcl.StdActns,
-  OPP.Help.Defaults, OPP.Help.Settings.Manager;
+  OPP.Help.System.Setting.Editor.Defaults;
 
 type
 
@@ -29,21 +29,19 @@ type
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
-    ffDefaults: TOPPHelpDefaults;
+    fEditorDefaults: TOPPHelpHintTunningEditorDefaultSettings;
+    procedure SaveEditorDefaults();
     procedure OnEditorCompletion(AValue: TOPPHelpSettingsValue; Saved: Boolean);
-    procedure saveSettings();
-    procedure setDefaults(const AValue: TOPPHelpDefaults);
+    procedure SetSettingEditorDefaults(const AValue: TOPPHelpHintTunningEditorDefaultSettings);
   public
-    class function CreateUserDefaults(): TOPPHelpDefaults;
-    class function GetUserDefaults(): TOPPHelpDefaults;
-    class procedure SetUserDefaults(ADefaults: TOPPHelpDefaults);
     { Public declarations }
-    property Defaults: TOPPHelpDefaults read ffDefaults write setDefaults;
+    property EditorDefaults: TOPPHelpHintTunningEditorDefaultSettings read fEditorDefaults write SetSettingEditorDefaults;
   end;
 
-  TOPPCxListView = class helper for TcxListView
-  public
-    procedure loadSettings(ASettings: TOPPHelpDefaults);
+  TOPPHelpSettingsFormHelper = class helper for TOPPHelpSettingsForm
+    // class function CreateEditorDefaults(): TOPPHelpSystemSettingEditorDefaults;
+    class function GetEditorDefaults(): TOPPHelpHintTunningEditorDefaultSettings;
+    class procedure SetEditorDefaults(ADefaults: TOPPHelpHintTunningEditorDefaultSettings);
   end;
 
 var
@@ -57,8 +55,6 @@ uses
   OPP.Help.log,
   OPP.Help.System.error,
   OPP.Help.System.Files,
-
-  OPP.Help.Defaults.Codable,
 
   System.IOUtils, System.JSON, DBXJSONReflect, REST.JSON;
 
@@ -77,46 +73,35 @@ resourcestring
 
 {$R *.dfm}
 
-class function TOPPHelpSettingsForm.GetUserDefaults: TOPPHelpDefaults;
-var
-  fOPPDecoder: TOPPCoder<TOPPHelpDefaults>;
+type
+  TOPPCxListView = class helper for TcxListView
+  public
+    function GetSettingsValue: TOPPHelpSettingsValue;
+    procedure LoadEditorDefaults(ASettings: TOPPHelpHintTunningEditorDefaultSettings);
+  end;
+
+class function TOPPHelpSettingsFormHelper.GetEditorDefaults: TOPPHelpHintTunningEditorDefaultSettings;
 begin
-  fOPPDecoder := TOPPCoder<TOPPHelpDefaults>.Create;
   try
-    try
-      fOPPDecoder.DecodeFromJSON(SSettingsFileName, true, result);
-    except
-      on OPPFileNotFoundException do
-      begin
-        result := CreateUserDefaults;
-        fOPPDecoder.EncodeToJSON(SSettingsFileName,result);
-      end;
-      on Error: Exception do
-      begin
-        eventLogger.Error(Error, kContext);
-      end;
+    TOPPHelpHintTunningEditorDefaultSettings.Decode(SSettingsFileName, result);
+  except
+    on E: Exception do
+    begin
+      result := nil;
+      eventLogger.Error(E);
     end;
-  finally
-    fOPPDecoder.free;
   end;
 end;
 
-class procedure TOPPHelpSettingsForm.SetUserDefaults(ADefaults: TOPPHelpDefaults);
-var
-  fOPPDecoder: TOPPCoder<TOPPHelpDefaults>;
+class procedure TOPPHelpSettingsFormHelper.SetEditorDefaults(ADefaults: TOPPHelpHintTunningEditorDefaultSettings);
 begin
-  fOPPDecoder := TOPPCoder<TOPPHelpDefaults>.Create;
   try
-    try
-      fOPPDecoder.EncodeToJSON(SSettingsFileName, ADefaults);
-    except
-      on Error: Exception do
-      begin
-        eventLogger.Error(Error, kContext);
-      end;
+    TOPPHelpHintTunningEditorDefaultSettings.Encode(SSettingsFileName, ADefaults);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E);
     end;
-  finally
-    fOPPDecoder.free;
   end;
 end;
 
@@ -133,9 +118,7 @@ begin
   if not assigned(cxListView1.Selected) then
     exit;
 
-  fValue.propertyCaption := cxListView1.Selected.Caption;
-  fValue.propertyValue := cxListView1.Selected.Subitems[0];
-  fValue.propertyName := cxListView1.Selected.Subitems[1];
+  fValue := cxListView1.GetSettingsValue;
 
   Editor := TOPPHelpSettingsValueEditor.Create(self);
   try
@@ -152,51 +135,68 @@ begin
   Close;
 end;
 
-class function TOPPHelpSettingsForm.CreateUserDefaults: TOPPHelpDefaults;
-const
-  SDefaultHintData = '.\Документация\hint.data';
-  SDefaultHelpData = '.\Документация\ГОЛЬФСТРИМ_Руководство пользователя.pdf';
-begin
-  result := TOPPHelpDefaults.Create;
-  result.HintsFilePath := SDefaultHintData;
-  result.ShortcutFilePath := SDefaultHelpData;
-end;
-
 procedure TOPPHelpSettingsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  saveSettings();
+  SaveEditorDefaults();
+  if assigned(EditorDefaults) then
+    EditorDefaults.Free;
 end;
 
 procedure TOPPHelpSettingsForm.FormCreate(Sender: TObject);
+var
+  fDefaults: TOPPHelpHintTunningEditorDefaultSettings;
 begin
-  self.Defaults := TOPPHelpSettingsForm.GetUserDefaults;
+  try
+    TOPPHelpHintTunningEditorDefaultSettings.Decode(SSettingsFileName, fDefaults);
+    self.EditorDefaults := fDefaults;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
 end;
 
 procedure TOPPHelpSettingsForm.OnEditorCompletion(AValue: TOPPHelpSettingsValue; Saved: Boolean);
 begin
   if not Saved then
     exit;
+
   if AValue.propertyName = kHintsFilePathPropertyName then
-    ffDefaults.HintsFilePath := AValue.propertyValue;
+    fEditorDefaults.HintsFilePath := AValue.propertyValue;
   if AValue.propertyName = kShortcutFilePathPropertyName then
-    ffDefaults.ShortcutFilePath := AValue.propertyValue;
-  cxListView1.loadSettings(self.Defaults);
+    fEditorDefaults.ShortcutFilePath := AValue.propertyValue;
+  cxListView1.LoadEditorDefaults(self.EditorDefaults);
 end;
 
-procedure TOPPHelpSettingsForm.saveSettings();
+procedure TOPPHelpSettingsForm.SaveEditorDefaults;
 begin
-  TOPPHelpSettingsForm.SetUserDefaults(self.Defaults);
+  try
+    TOPPHelpHintTunningEditorDefaultSettings.Encode(SSettingsFileName, self.EditorDefaults);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
 end;
 
-procedure TOPPHelpSettingsForm.setDefaults(const AValue: TOPPHelpDefaults);
+procedure TOPPHelpSettingsForm.SetSettingEditorDefaults(const AValue: TOPPHelpHintTunningEditorDefaultSettings);
 begin
-  ffDefaults := AValue;
-  cxListView1.loadSettings(AValue);
+  fEditorDefaults := AValue;
+  cxListView1.LoadEditorDefaults(AValue);
 end;
 
 { TOPPCxListView }
 
-procedure TOPPCxListView.loadSettings(ASettings: TOPPHelpDefaults);
+function TOPPCxListView.GetSettingsValue: TOPPHelpSettingsValue;
+begin
+  result.propertyCaption := self.Selected.Caption;
+  result.propertyValue := self.Selected.Subitems[0];
+  result.propertyName := self.Selected.Subitems[1];
+end;
+
+procedure TOPPCxListView.LoadEditorDefaults(ASettings: TOPPHelpHintTunningEditorDefaultSettings);
 var
   fItem: TListItem;
 begin

@@ -1,13 +1,19 @@
-﻿unit OPP.Help.Defaults.Codable;
+﻿unit OPP.Help.System.Codable;
 
 interface
 
 uses
   System.SysUtils, System.JSON,
-  OPP.Help.Interfaces, OPP.Help.Defaults;
+  OPP.Help.Interfaces,
+  OPP.Help.System.Setting.Editor.Defaults;
 
 type
   OPPFileNotFoundException = class(Exception);
+  OPPFileWriteException = class(Exception);
+  OPPCoderRecreateException = class(Exception);
+  OPPCoderDeserializeException = class(Exception);
+  OPPCoderDecodeException = class(Exception);
+  OPPCoderEncodeException = class(Exception);
 
   TOPPCoder<T> = class(TInterfacedObject, IOPPCodable<T>)
   private
@@ -32,16 +38,15 @@ resourcestring
 procedure TOPPCoder<T>.DecodeFromJSON(const AFileName: String; isUTF8: Boolean; out subject: T);
 var
   fBuffer: System.TArray<System.Byte>;
-  fFileName: String;
   data: TJSONObject;
 begin
-  fFileName := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
-  if not FileExists(fFileName) then
+
+  if not FileExists(AFileName) then
   begin
     raise OPPFileNotFoundException.Create(AFileName);
   end;
 
-  fBuffer := TFile.ReadAllBytes(fFileName);
+  fBuffer := TFile.ReadAllBytes(AFileName);
   try
     try
       data := TJSONObject.ParseJSONValue(fBuffer, 0, isUTF8) as TJSONObject;
@@ -49,9 +54,13 @@ begin
       if Assigned(data) then
         data.Free;
     except
-      on Error: Exception do
+      on OPPCoderDeserializeException do
       begin
         raise;
+      end;
+      on Exception do
+      begin
+        raise OPPCoderDecodeException.Create('');
       end;
     end;
   finally
@@ -67,6 +76,9 @@ var
   fSerializer: TJSONUnMarshal;
   fResult: TObject;
 begin
+
+  fResult := nil;
+
   fSerializer := TJSONUnMarshal.Create;
   try
     try
@@ -78,9 +90,11 @@ begin
       end;
 
     except
-      on Error: Exception do
+      on Exception do
       begin
-        raise;
+        if Assigned(fResult) then
+          FreeAndNil(fResult);
+        raise OPPCoderDeserializeException.Create('');
       end;
     end;
   finally
@@ -92,35 +106,39 @@ procedure TOPPCoder<T>.EncodeToJSON(const AFileName: String; const subject: T);
 var
   fFileName: String;
   fSerializer: TJSONMarshal;
-  jsonObj: TJSONObject;
+  fJsonObject: TJSONObject;
   jsonString: String;
   fObjectToEncode: TObject;
+  fSettingsPath: String;
 begin
 
   fSerializer := TJSONMarshal.Create;
   try
     try
       fObjectToEncode := TObject((@subject)^);
-      jsonObj := fSerializer.marshal(fObjectToEncode) as TJSONObject;
+      fJsonObject := fSerializer.marshal(fObjectToEncode) as TJSONObject;
     except
       on Error: Exception do
       begin
-        raise;
+        raise OPPCoderEncodeException.Create(Error.message);
       end;
     end;
-    try
-      jsonString := TJson.JsonEncode(jsonObj);
+
+    if Assigned(fJsonObject) then
+    begin
       try
-        fFileName := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
-        TFile.WriteAllText(fFileName, jsonString);
-      except
-        on Error: Exception do
-        begin
-          raise;
+        jsonString := TJson.JsonEncode(fJsonObject);
+        try
+          TFile.WriteAllText(AFileName, jsonString);
+        except
+          on Error: Exception do
+          begin
+            raise OPPFileWriteException.Create(Error.message);
+          end;
         end;
+      finally
+        fJsonObject.Free;
       end;
-    finally
-      jsonObj.Free;
     end;
   finally
     fSerializer.Free;

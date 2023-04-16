@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.Classes,
+  System.Classes, System.SysUtils,
   OPP.Help.Predicate,
   OPP.Help.Hint;
 
@@ -43,6 +43,11 @@ type
 
   IOPPHelpViewHint = interface
 
+  end;
+
+  IOPPCodable<T> = interface
+    procedure EncodeToJSON(const AFileName: String; const subject: T);
+    procedure DecodeFromJSON(const AFileName: String; isUTF8: Boolean; out subject: T);
   end;
 
 implementation

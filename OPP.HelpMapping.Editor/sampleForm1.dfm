@@ -4,7 +4,7 @@ object SampleForm: TSampleForm
   BorderStyle = bsSingle
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
   ClientHeight = 433
-  ClientWidth = 1043
+  ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object SampleForm: TSampleForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1043
+    Width = 1074
     Height = 433
     Margins.Left = 12
     Margins.Top = 12
@@ -31,7 +31,8 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 414
+    ExplicitWidth = 1088
+    ExplicitHeight = 432
     object Splitter1: TSplitter
       Left = 530
       Top = 0
@@ -62,7 +63,6 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitHeight = 414
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
@@ -103,7 +103,7 @@ object SampleForm: TSampleForm
     object panelAddBorder: TPanel
       Left = 536
       Top = 0
-      Width = 507
+      Width = 538
       Height = 433
       Margins.Left = 6
       Margins.Top = 6
@@ -112,12 +112,13 @@ object SampleForm: TSampleForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 414
+      ExplicitWidth = 552
+      ExplicitHeight = 432
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
         Top = 119
-        Width = 495
+        Width = 526
         Height = 245
         Margins.Left = 6
         Margins.Top = 6
@@ -138,7 +139,7 @@ object SampleForm: TSampleForm
           object Panel5: TPanel
             Left = 0
             Top = 0
-            Width = 487
+            Width = 518
             Height = 213
             Margins.Left = 6
             Margins.Top = 6
@@ -275,7 +276,7 @@ object SampleForm: TSampleForm
           object Panel4: TPanel
             Left = 0
             Top = 0
-            Width = 487
+            Width = 518
             Height = 213
             Margins.Left = 6
             Margins.Top = 6
@@ -284,11 +285,10 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 473
             object Panel7: TPanel
               Left = 0
               Top = 0
-              Width = 487
+              Width = 518
               Height = 213
               Margins.Left = 6
               Margins.Top = 6
@@ -297,7 +297,6 @@ object SampleForm: TSampleForm
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
-              ExplicitWidth = 473
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 136
                 Top = 155
@@ -421,7 +420,7 @@ object SampleForm: TSampleForm
       object PanelIDContainer: TPanel
         Left = 0
         Top = 44
-        Width = 507
+        Width = 538
         Height = 69
         Margins.Left = 6
         Margins.Top = 6
@@ -430,7 +429,6 @@ object SampleForm: TSampleForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 493
         object cxLabel5: TcxLabel
           Left = 8
           Top = 8
@@ -457,7 +455,7 @@ object SampleForm: TSampleForm
       object dxBarDockControl2: TdxBarDockControl
         Left = 0
         Top = 0
-        Width = 507
+        Width = 538
         Height = 44
         Margins.Left = 6
         Margins.Top = 6
@@ -470,7 +468,7 @@ object SampleForm: TSampleForm
         AlignWithMargins = True
         Left = 6
         Top = 376
-        Width = 495
+        Width = 526
         Height = 51
         Hint = 'Wrong hint'
         HelpType = htKeyword

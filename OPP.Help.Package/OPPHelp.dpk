@@ -77,7 +77,10 @@ contains
   OPP.Help.System.Files in '..\OPP.Help\OPP.Help.System.Files.pas',
   AsyncCalls in '..\OPP.Help\AsyncCalls.pas',
   OPP.Help.System.References in '..\OPP.Help\OPP.Help.System.References.pas',
-  OPP.Help.System.Types in '..\OPP.Help\OPP.Help.System.Types.pas';
+  OPP.Help.System.Types in '..\OPP.Help\OPP.Help.System.Types.pas',
+  OPP.Help.System.Setting.Form.Size in '..\OPP.Help\OPP.Help.System.Setting.Form.Size.pas',
+  OPP.Help.System.Setting.Editor.Defaults in '..\OPP.Help\OPP.Help.System.Setting.Editor.Defaults.pas',
+  OPP.Help.System.Codable in '..\OPP.Help\OPP.Help.System.Codable.pas';
 
 end.
 
