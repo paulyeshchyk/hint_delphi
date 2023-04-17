@@ -56,7 +56,7 @@ var
   fSettingsPath: String;
 begin
   try
-    fSettingsPath := TPath.Combine(TPath.GetHomePath, 'OPP\Settings');
+    fSettingsPath := TPath.Combine(TPath.GetHomePath, 'Ascon\Gulfstream\Settings');
     TDirectory.CreateDirectory(fSettingsPath);
     result := fSettingsPath + TPath.DirectorySeparatorChar + AFilename;
   except

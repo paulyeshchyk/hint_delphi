@@ -102,7 +102,7 @@ end;
 procedure TOPPHelpSystemCodableFormSizeSettings.SetDefaults;
 begin
   inherited;
-  self.Frame := TRect.Create(0, 0, 500, 200);
+  self.Frame := Screen.WorkAreaRect;
   self.WindowState := wsNormal;
 end;
 
