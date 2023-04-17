@@ -104,26 +104,36 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     tipsRepo: TdxScreenTipRepository;
+    N41: TMenuItem;
+    N6: TMenuItem;
+    actionShowSchemeEditor: TAction;
+    actionShowSchemeEditor1: TMenuItem;
+    actionOnItemSelect: TAction;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
+    procedure actionOnItemSelectExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
     procedure actionPreviewShortcutExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
+    procedure actionShowSchemeEditorExecute(Sender: TObject);
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionUndoExecute(Sender: TObject);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N21Click(Sender: TObject);
     procedure N31Click(Sender: TObject);
-    procedure OnEditValueChanged(Sender: TObject);
-    procedure OnIdentificatorChanged(Sender: TObject);
+    procedure N41Click(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
+    procedure cxEditIdentifierNamePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure cxListView1CustomDrawItem(Sender: TCustomListView; Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure cxListView1InfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
+    procedure cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
+    procedure OncxControlValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
   private
     fCanChangeModificationFlag: Boolean;
 
@@ -180,10 +190,13 @@ implementation
 {$ENDIF}
 
 uses
+  System.Generics.Defaults,
   System.UITypes,
   FormTest01,
   FormTest02,
   FormTest03,
+  FormTest04,
+  FormSchemeEditor,
   OPP.Help.System.Types,
   OPP.Help.Component.Enumerator,
   OPP.Help.Controls.Styler,
@@ -284,7 +297,6 @@ begin
   finally
     fState.Free;
   end;
-
 end;
 
 procedure TSampleForm.actionNewRecordExecute(Sender: TObject);
@@ -337,20 +349,48 @@ begin
   end;
 end;
 
+procedure TSampleForm.actionOnItemSelectExecute(Sender: TObject);
+begin
+
+  fIsIdentifierValid := false;
+  fCanChangeModificationFlag := false;
+  if (not assigned(cxListView1.Selected)) or (cxListView1.Selected = nil) then
+  begin
+    fSelectedItem := SEmpty;
+    eventLogger.Warning(SWarningSelectedNilItem);
+    exit;
+  end;
+
+  fIsIdentifierValid := true;
+  if not isModified then
+  begin
+    fSelectedItem := cxListView1.Selected.Caption;
+    FindMapsById(cxListView1.Selected.Caption);
+    exit;
+  end;
+
+  doModificationCheck(cxListView1.Selected, self.doSaveIfNeed);
+end;
+
 procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
 begin
-  helpHintServer.FindHelpMap(fSelectedItem,
-    procedure(const AMap: TOPPHelpMap)
-    var
-      point: TPoint;
-    begin
-      PanelPreview.ShowHint := true;
-      PanelPreview.HelpKeyword := 'Kod_OKWED';
-      PanelPreview.Hint := 'Wrong hint2';
-      point := ClientToScreen(PanelPreview.ClientOrigin);
-      Application.ActivateHint(point);
-    end);
-
+//  helpHintServer.FindHelpMap(fSelectedItem,
+//    procedure(const AMap: TOPPHelpMap)
+//    var
+//      point: TPoint;
+//      fHint: TOPPHelpHint;
+//      fMeta: TOPPHelpMeta;
+//      oldTip : TdxScreenTip;
+//    begin
+//
+//      fMeta.propertyName := '';
+//      fMeta.identifier := AMap.ComponentIdentifier;
+//      fHint := helpHintServer.GetHint(fMeta);
+//      TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
+//
+//      point := ClientToScreen(PanelPreview.ClientOrigin);
+//      setcursorpos(point.X, point.Y);
+//    end);
 end;
 
 procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);
@@ -375,8 +415,7 @@ begin
   ReloadListView(
     procedure
     begin
-      if cxListView1.Items.Count > 0 then
-        changeItemIndex(0);
+      changeItemIndex(0);
     end);
 end;
 
@@ -396,11 +435,24 @@ begin
     end);
 end;
 
+procedure TSampleForm.actionShowSchemeEditorExecute(Sender: TObject);
+var
+  schemeEditor: TOPPHintAttributeSchemeEditorForm;
+begin
+  schemeEditor := TOPPHintAttributeSchemeEditorForm.Create(self);
+  try
+    schemeEditor.ShowModal;
+  finally
+    schemeEditor.Free;
+  end;
+
+end;
+
 procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);
 var
   formSettings: TOPPHelpSettingsForm;
 begin
-  if Assigned(fDefaultSettings) then
+  if assigned(fDefaultSettings) then
     FreeAndNil(fDefaultSettings);
 
   formSettings := TOPPHelpSettingsForm.Create(self);
@@ -476,6 +528,19 @@ begin
   end;
 end;
 
+procedure TSampleForm.cxEditIdentifierNamePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+begin
+  if fCanChangeModificationFlag then
+  begin
+    helpHintServer.ValidateHelpMapIdentifier(fSelectedItem, cxEditIdentifierName.Text,
+      procedure(isValid: Boolean)
+      begin
+        self.isIdentifierValid := isValid;
+        self.isModified := true;
+      end);
+  end;
+end;
+
 procedure TSampleForm.cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   OpenTextFileDialog1.InitialDir := ExtractFileDir(Application.ExeName);
@@ -490,26 +555,19 @@ begin
 
 end;
 
+procedure TSampleForm.cxListView1CustomDrawItem(Sender: TCustomListView; Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+begin
+  //
+end;
+
+procedure TSampleForm.cxListView1InfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
+begin
+  InfoTip := Item.Caption;
+end;
+
 procedure TSampleForm.cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
 begin
-  fIsIdentifierValid := false;
-  fCanChangeModificationFlag := false;
-  if (not assigned(Item)) or (Item = nil) then
-  begin
-    fSelectedItem := SEmpty;
-    eventLogger.Warning(SWarningSelectedNilItem);
-    exit;
-  end;
-
-  fIsIdentifierValid := true;
-  if not isModified then
-  begin
-    fSelectedItem := Item.Caption;
-    FindMapsById(Item.Caption);
-    exit;
-  end;
-
-  doModificationCheck(Item, self.doSaveIfNeed);
+  actionOnItemSelect.Execute;
 end;
 
 procedure TSampleForm.DiscardChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -612,7 +670,6 @@ begin
 
   self.SaveFormState;
 
-
   helpShortcutServer.killExternalViewer;
   if assigned(fDefaultSettings) then
     fDefaultSettings.Free;
@@ -642,11 +699,11 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
+
   // settings
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
 
   self.ReadFormState;
-
 
   for dropdownItem in kShortcutDropdownItemsArray do
   begin
@@ -716,6 +773,11 @@ begin
   TFormTest3.Create(self).ShowModal;
 end;
 
+procedure TSampleForm.N41Click(Sender: TObject);
+begin
+  TFormTest4.Create(self).ShowModal;
+end;
+
 procedure TSampleForm.onApplyHintMapDefaults(const AMap: POPPHelpMap);
 begin
   if not assigned(fDefaultSettings) then
@@ -756,7 +818,7 @@ begin
   end;
 end;
 
-procedure TSampleForm.OnEditValueChanged(Sender: TObject);
+procedure TSampleForm.OncxControlValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 begin
   if fCanChangeModificationFlag then
   begin
@@ -778,19 +840,6 @@ begin
   end;
 end;
 
-procedure TSampleForm.OnIdentificatorChanged(Sender: TObject);
-begin
-  if fCanChangeModificationFlag then
-  begin
-    helpHintServer.ValidateHelpMapIdentifier(fSelectedItem, cxEditIdentifierName.Text,
-      procedure(isValid: Boolean)
-      begin
-        self.isIdentifierValid := isValid;
-        self.isModified := true;
-      end);
-  end;
-end;
-
 procedure TSampleForm.onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
 var
   Map: TOPPHelpMap;
@@ -808,7 +857,7 @@ begin
       begin
         cxListView1.AddItem(Map.ComponentIdentifier, nil);
       end else begin
-        eventLogger.Error(Format(SErrorInvalidMapDetected, [Map.identifier]));
+        eventLogger.Warning(Format(SErrorInvalidMapDetected, [Map.identifier]), kContext);
       end;
     end;
   end;
@@ -859,9 +908,14 @@ begin
   cxListView1.Items.Clear;
 
   maps := helpHintServer.GetAvailableMaps;
-  onMapsLoaded(maps, completion);
 
-  // TOPPClientHintHelper.AvailableMaps(onMapsLoaded, completion);
+  maps.Sort(TComparer<TOPPHelpMap>.Construct(
+    function(const Left, Right: TOPPHelpMap): Integer
+    begin
+      result := CompareStr(Left.ComponentIdentifier, Right.ComponentIdentifier);
+    end));
+
+  onMapsLoaded(maps, completion);
 end;
 
 procedure TSampleForm.SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -979,7 +1033,7 @@ begin
 
   if (AMap = nil) or (not assigned(AMap)) then
   begin
-    wipeFields(newIdentifier, filename, keyword, value, detailskeyword, detailsvalue);
+    wipeFields(nil, filename, keyword, value, detailskeyword, detailsvalue);
     exit;
   end;
 
@@ -1043,12 +1097,18 @@ end;
 
 procedure TSampleForm.wipeFields(identifier: TcxTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
 begin
-  identifier.Text := '';
-  filename.Text := '';
-  keyword.ItemIndex := -1;
-  value.Text := '';
-  detailskeyword.ItemIndex := -1;
-  detailsvalue.Text := '';
+  if assigned(identifier) then
+    identifier.Text := '';
+  if assigned(filename) then
+    filename.Text := '';
+  if assigned(keyword) then
+    keyword.ItemIndex := -1;
+  if assigned(value) then
+    value.Text := '';
+  if assigned(detailskeyword) then
+    detailskeyword.ItemIndex := -1;
+  if assigned(detailsvalue) then
+    detailsvalue.Text := '';
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);

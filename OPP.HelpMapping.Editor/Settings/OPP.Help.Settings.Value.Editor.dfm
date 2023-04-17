@@ -3,24 +3,25 @@ object OPPHelpSettingsValueEditor: TOPPHelpSettingsValueEditor
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
-  ClientHeight = 184
-  ClientWidth = 884
+  ClientHeight = 130
+  ClientWidth = 431
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 13
   object Label1: TLabel
     Left = 16
     Top = 16
-    Width = 64
-    Height = 27
+    Width = 31
+    Height = 13
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -29,9 +30,9 @@ object OPPHelpSettingsValueEditor: TOPPHelpSettingsValueEditor
   end
   object Panel1: TPanel
     Left = 0
-    Top = 110
-    Width = 884
-    Height = 74
+    Top = 93
+    Width = 431
+    Height = 37
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -39,13 +40,13 @@ object OPPHelpSettingsValueEditor: TOPPHelpSettingsValueEditor
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 109
+    ExplicitTop = 150
     ExplicitWidth = 870
     object cxButton1: TcxButton
-      Left = 496
-      Top = 16
-      Width = 150
-      Height = 50
+      Left = 240
+      Top = 8
+      Width = 75
+      Height = 25
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -55,10 +56,10 @@ object OPPHelpSettingsValueEditor: TOPPHelpSettingsValueEditor
       TabOrder = 0
     end
     object cxButton2: TcxButton
-      Left = 688
-      Top = 16
-      Width = 150
-      Height = 50
+      Left = 344
+      Top = 8
+      Width = 75
+      Height = 25
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -77,7 +78,7 @@ object OPPHelpSettingsValueEditor: TOPPHelpSettingsValueEditor
     Margins.Bottom = 6
     TabOrder = 1
     Text = 'cxTextEdit1'
-    Width = 824
+    Width = 403
   end
   object ActionList1: TActionList
     Left = 96

@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 433
+  ClientHeight = 456
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,6 +11,7 @@ object SampleForm: TSampleForm
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
+  OldCreateOrder = True
   Position = poDefault
   Visible = True
   OnClose = FormClose
@@ -22,7 +23,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 433
+    Height = 456
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -34,7 +35,7 @@ object SampleForm: TSampleForm
       Left = 530
       Top = 0
       Width = 6
-      Height = 433
+      Height = 456
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -45,7 +46,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 433
+      Height = 456
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -63,9 +64,9 @@ object SampleForm: TSampleForm
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
-        Top = 50
+        Top = 34
         Width = 518
-        Height = 377
+        Height = 416
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -77,18 +78,22 @@ object SampleForm: TSampleForm
             Width = 100
           end>
         HideSelection = False
+        ParentShowHint = False
         ReadOnly = True
         RowSelect = True
         ShowColumnHeaders = False
+        ShowHint = True
         TabOrder = 0
         ViewStyle = vsReport
+        OnCustomDrawItem = cxListView1CustomDrawItem
+        OnInfoTip = cxListView1InfoTip
         OnSelectItem = cxListView1SelectItem
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
         Top = 0
         Width = 530
-        Height = 44
+        Height = 28
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -101,7 +106,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 538
-      Height = 433
+      Height = 456
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -112,19 +117,18 @@ object SampleForm: TSampleForm
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
-        Top = 119
+        Top = 103
         Width = 526
         Height = 245
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
         Margins.Bottom = 6
-        ActivePage = TabSheet2
+        ActivePage = TabSheet1
         Align = alTop
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
-        ExplicitWidth = 512
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -166,7 +170,7 @@ object SampleForm: TSampleForm
                 end>
               Properties.ReadOnly = True
               Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
-              Properties.OnEditValueChanged = OnEditValueChanged
+              Properties.OnValidate = OncxControlValidate
               TabOrder = 1
               Width = 377
             end
@@ -186,7 +190,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
+              Properties.OnValidate = OncxControlValidate
               TabOrder = 3
               Width = 218
             end
@@ -206,7 +210,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
+              Properties.OnValidate = OncxControlValidate
               TabOrder = 5
               Width = 377
             end
@@ -226,7 +230,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
+              Properties.OnValidate = OncxControlValidate
               TabOrder = 7
               Width = 218
             end
@@ -246,7 +250,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
+              Properties.OnValidate = OncxControlValidate
               TabOrder = 9
               Width = 377
             end
@@ -280,7 +284,6 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 504
             object Panel7: TPanel
               Left = 0
               Top = 0
@@ -293,7 +296,6 @@ object SampleForm: TSampleForm
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
-              ExplicitWidth = 504
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 136
                 Top = 155
@@ -301,7 +303,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
+                Properties.OnValidate = OncxControlValidate
                 TabOrder = 0
                 Width = 218
               end
@@ -321,7 +323,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
+                Properties.OnValidate = OncxControlValidate
                 TabOrder = 2
                 Width = 377
               end
@@ -341,7 +343,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
+                Properties.OnValidate = OncxControlValidate
                 TabOrder = 4
                 Width = 377
               end
@@ -361,7 +363,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
+                Properties.OnValidate = OncxControlValidate
                 TabOrder = 6
                 Width = 218
               end
@@ -388,7 +390,7 @@ object SampleForm: TSampleForm
                   end>
                 Properties.ReadOnly = True
                 Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
-                Properties.OnEditValueChanged = OnEditValueChanged
+                Properties.OnValidate = OncxControlValidate
                 TabOrder = 8
                 Width = 377
               end
@@ -416,7 +418,7 @@ object SampleForm: TSampleForm
       end
       object PanelIDContainer: TPanel
         Left = 0
-        Top = 44
+        Top = 28
         Width = 538
         Height = 69
         Margins.Left = 6
@@ -426,7 +428,6 @@ object SampleForm: TSampleForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 524
         object cxLabel5: TcxLabel
           Left = 8
           Top = 8
@@ -444,7 +445,7 @@ object SampleForm: TSampleForm
           Margins.Right = 6
           Margins.Bottom = 6
           ParentShowHint = False
-          Properties.OnEditValueChanged = OnIdentificatorChanged
+          Properties.OnValidate = cxEditIdentifierNamePropertiesValidate
           ShowHint = True
           TabOrder = 1
           Width = 521
@@ -454,7 +455,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 538
-        Height = 44
+        Height = 28
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -465,9 +466,9 @@ object SampleForm: TSampleForm
       object PanelPreview: TPanel
         AlignWithMargins = True
         Left = 6
-        Top = 376
+        Top = 360
         Width = 526
-        Height = 51
+        Height = 90
         Hint = 'Wrong hint'
         HelpType = htKeyword
         HelpKeyword = 'Kod_OKWED'
@@ -478,7 +479,7 @@ object SampleForm: TSampleForm
         Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvLowered
-        Constraints.MinHeight = 51
+        Constraints.MinHeight = 47
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -488,7 +489,6 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
-        ExplicitWidth = 512
       end
     end
   end
@@ -503,7 +503,7 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 368
     Top = 72
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
@@ -527,6 +527,12 @@ object SampleForm: TSampleForm
     end
     object N4: TMenuItem
       Caption = #1058#1077#1089#1090#1099
+      object actionShowSchemeEditor1: TMenuItem
+        Action = actionShowSchemeEditor
+      end
+      object N6: TMenuItem
+        Caption = '-'
+      end
       object N11: TMenuItem
         Caption = #1058#1077#1089#1090'1'
         OnClick = N11Click
@@ -538,6 +544,10 @@ object SampleForm: TSampleForm
       object N31: TMenuItem
         Caption = #1058#1077#1089#1090'3'
         OnClick = N31Click
+      end
+      object N41: TMenuItem
+        Caption = #1058#1077#1089#1090'4'
+        OnClick = N41Click
       end
     end
   end
@@ -558,7 +568,7 @@ object SampleForm: TSampleForm
     UseSystemFont = True
     Left = 155
     Top = 73
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
       AllowCustomizing = False
@@ -878,6 +888,14 @@ object SampleForm: TSampleForm
     object actionShowSettings: TAction
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       OnExecute = actionShowSettingsExecute
+    end
+    object actionShowSchemeEditor: TAction
+      Caption = #1057#1093#1077#1084#1072
+      OnExecute = actionShowSchemeEditorExecute
+    end
+    object actionOnItemSelect: TAction
+      Caption = 'actionOnItemSelect'
+      OnExecute = actionOnItemSelectExecute
     end
   end
 end

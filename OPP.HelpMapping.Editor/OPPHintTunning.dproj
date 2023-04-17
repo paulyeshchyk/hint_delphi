@@ -91,9 +91,6 @@
         <AppDPIAwarenessMode>system</AppDPIAwarenessMode>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <DCC_UNSAFE_CAST>true</DCC_UNSAFE_CAST>
-        <DCC_BpiOutput>.\$(Platform)\$(Config)\bpi</DCC_BpiOutput>
-        <DCC_HppOutput>.\$(Platform)\$(Config)\hpp</DCC_HppOutput>
-        <DCC_ObjOutput>.\$(Platform)\$(Config)\obj</DCC_ObjOutput>
         <BRCC_Verbose>true</BRCC_Verbose>
         <BRCC_IncludePath>..\OPP.Help;$(BRCC_IncludePath)</BRCC_IncludePath>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
@@ -144,15 +141,23 @@
         <DCCReference Include="Settings\OPP.Help.Settings.Value.Editor.pas">
             <Form>OPPHelpSettingsValueEditor</Form>
         </DCCReference>
+        <DCCReference Include="Tests\FormTest04.pas">
+            <Form>FormTest4</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Tests\FormSchemeEditor.pas">
+            <Form>OPPHintAttributeSchemeEditorForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -179,13 +184,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHintTunning.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHintTunning.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
