@@ -92,6 +92,7 @@ uses
   System.TypInfo;
 
 resourcestring
+  SWarningMappingIsNotDefinedTemplate = 'Mapping is not defined for [%s]';
   SErrorViewerIsNotSupportingTFormClass = 'viewer is not supporting TFormClass';
   SErrorFindMapCompletionIsNotDefined = 'FindMap completion is not defined';
   SEventRemovedRecordTemplate = 'Removed record: [%s]';
@@ -136,7 +137,10 @@ begin
     try
       fShortcutDataset.RemoveMap(AIdentifier);
     except
-
+      on E: Exception do
+      begin
+        eventLogger.Error(E, kContext);
+      end;
     end;
   finally
     result := self.SaveMaps('', callback);
@@ -250,21 +254,16 @@ begin
   fShortcutIdentifier := fOnGetIdentifier(ARequest.ActiveControl);
 
   fMapping := fShortcutDataset.GetMapping(fShortcutIdentifier);
-  if not Assigned(fMapping) then
+  if Assigned(fMapping) then
   begin
-    if Assigned(completion) then
-    begin
-      Error := Exception.Create('Mapping is not defined');
-      try
-        completion(Error);
-      finally
-        Error.Free;
-      end;
-    end;
-    exit;
+    showHelp(fMapping.Predicate, viewMode, completion);
+
+  end else begin
+    eventLogger.Warning(Format(SWarningMappingIsNotDefinedTemplate, [fShortcutIdentifier]), kContext);
+
+    showHelp(TOPPHelpPredicate.defaultPredicate, viewMode, completion)
   end;
 
-  showHelp(fMapping.Predicate, viewMode, completion);
 end;
 
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;

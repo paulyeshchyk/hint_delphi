@@ -28,6 +28,7 @@ type
   end;
 
   TOPPHelpPredicateStreamHelper = class helper for TOPPHelpPredicate
+    class function defaultPredicate(): TOPPHelpPredicate;
     function asString(): String;
     function writeToStream(AStream: TStream): Boolean;
     function readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
@@ -67,6 +68,14 @@ end;
 function TOPPHelpPredicateStreamHelper.asString: String;
 begin
   result := Format('Filename: %s; Value: %s, Type:%s',[self.filename, self.value, self.KeywordType.asString]);
+end;
+
+class function TOPPHelpPredicateStreamHelper.defaultPredicate: TOPPHelpPredicate;
+begin
+  result := TOPPHelpPredicate.Create;
+  result.filename := '.\Документация\ГОЛЬФСТРИМ_Руководство пользователя.pdf';
+  result.keywordType := ktPage;
+  result.value := '2';
 end;
 
 function TOPPHelpPredicateStreamHelper.readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;

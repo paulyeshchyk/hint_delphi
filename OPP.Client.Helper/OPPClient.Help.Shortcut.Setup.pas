@@ -35,6 +35,9 @@ uses
   OPP.Help.System.Error,
   OPPClientChild;
 
+const
+  kContext = 'TOPPClientHelpShortcut';
+
 class procedure TOPPClientHelpShortcutHelper.showHelp(AControl: TControl);
 var
   fShortcutRequest: TOPPHelpShortcutRequest;
@@ -46,7 +49,7 @@ begin
       begin
         if error = nil then
           exit;
-        eventLogger.Error(error, 'TOPPClientHelpShortcut');
+        eventLogger.Error(error, kContext);
       end);
   finally
     fShortcutRequest.Free;
@@ -64,7 +67,7 @@ begin
       begin
         if error = nil then
           exit;
-        eventLogger.Error(error, 'TOPPClientHelpShortcut');
+        eventLogger.Error(error, kContext);
       end);
   finally
     fShortcutRequest.Free;
