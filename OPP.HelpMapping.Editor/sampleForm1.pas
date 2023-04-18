@@ -145,7 +145,7 @@ type
     fSelectedItem: String;
     fSelectedShortcutMap: TOPPHelpMap;
     procedure changeItemIndex(AItemIndex: Integer);
-    procedure CreateScreenTip(fHint: TOPPHelpHint; AComponent: TComponent);
+    function CreateScreenTip(fHint: TOPPHelpHint; AComponent: TComponent): TdxScreenTipLink;
     procedure DiscardChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
     procedure doModificationCheck(ItemToSelect: TListItem; completion: TOPPHelpSaveReactionCompletion);
     procedure doSaveIfNeed(ItemToSelect: TListItem; AShouldSave: Boolean);
@@ -192,6 +192,7 @@ implementation
 uses
   System.Generics.Defaults,
   System.UITypes,
+  System.Types,
   FormTest01,
   FormTest02,
   FormTest03,
@@ -214,7 +215,11 @@ uses
   SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
   OPP.Help.Settings.Form,
-  OPP.Help.System.Codable.FormSizeSettings;
+  OPP.Help.System.Codable.FormSizeSettings,
+
+  OPPClient.TdxScreenTip.Helper,
+
+  System.Threading;
 
 resourcestring
   SSettingsReadErrorTemplate = 'Ошибка при чтении настроек: %s';
@@ -374,23 +379,39 @@ end;
 
 procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
 begin
-//  helpHintServer.FindHelpMap(fSelectedItem,
-//    procedure(const AMap: TOPPHelpMap)
-//    var
-//      point: TPoint;
-//      fHint: TOPPHelpHint;
-//      fMeta: TOPPHelpMeta;
-//      oldTip : TdxScreenTip;
-//    begin
-//
-//      fMeta.propertyName := '';
-//      fMeta.identifier := AMap.ComponentIdentifier;
-//      fHint := helpHintServer.GetHint(fMeta);
-//      TOPPClientHintHelper.CreateHintView(fHint, PanelPreview, cxHintController, tipsRepo);
-//
-//      point := ClientToScreen(PanelPreview.ClientOrigin);
-//      setcursorpos(point.X, point.Y);
-//    end);
+  helpHintServer.FindHelpMap(fSelectedItem,
+    procedure(const AMap: TOPPHelpMap)
+    var
+      point: TPoint;
+      fHint: TOPPHelpHint;
+      fMeta: TOPPHelpMeta;
+      fScreenTip: TdxScreenTip;
+      fScreenTipLink: TdxScreenTipLink;
+
+    begin
+
+      fMeta.propertyName := '';
+      fMeta.identifier := AMap.ComponentIdentifier;
+      fHint := helpHintServer.GetHint(fMeta);
+
+      fScreenTipLink := CreateScreenTip(fHint, PanelPreview);
+
+      try
+        point.X := PanelPreview.Left;
+        point.Y := PanelPreview.Height div 4;
+        point := PanelPreview.ClientToScreen(point);
+
+        TdxScreenTipStyle(cxHintController.HintStyle).ShowScreenTip(point.X, point.Y, fScreenTipLink.ScreenTip);
+        TTask.Run(procedure() begin
+          Sleep(2500);
+          TdxScreenTipStyle(cxHintController.HintStyle).ShowScreenTip(point.X, point.Y, nil);
+        end);
+      finally
+        fScreenTipLink.Control := nil;
+        fScreenTipLink.ScreenTip := nil;
+        fScreenTipLink.Free;
+      end;
+    end);
 end;
 
 procedure TSampleForm.actionPreviewShortcutExecute(Sender: TObject);
@@ -489,7 +510,7 @@ begin
   cxListView1.ItemIndex := AItemIndex;
 end;
 
-procedure TSampleForm.CreateScreenTip(fHint: TOPPHelpHint; AComponent: TComponent);
+function TSampleForm.CreateScreenTip(fHint: TOPPHelpHint; AComponent: TComponent): TdxScreenTipLink;
 var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
@@ -502,17 +523,18 @@ begin
   TControl(AComponent).ShowHint := true;
 
   fScreenTip := tipsRepo.Items.Add;
-  fScreenTip.Width := 789;
 
   fScreenTip.Header.PlainText := true;
   fScreenTip.Header.Text := ''; // Заголовок
 
   fScreenTip.Description.PlainText := false;
   fScreenTip.Description.Text := fHint.Data.rtf;
+  fScreenTip.setAspectRatio(3.0, fHint.Data.rtf);
 
   fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
   fScreenTipLink.ScreenTip := fScreenTip;
   fScreenTipLink.control := TControl(AComponent);
+  result := fScreenTipLink;
 end;
 
 procedure TSampleForm.cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);

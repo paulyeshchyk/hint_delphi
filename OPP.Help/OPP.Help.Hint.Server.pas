@@ -71,6 +71,7 @@ type
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
 
+    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
   end;
 
@@ -82,7 +83,6 @@ type
     fHintMetaDict: TDictionary<TSymbolName, String>;
     fLoaded: Boolean;
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
-    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint; overload;
     function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
     procedure GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -93,6 +93,7 @@ type
     function AddHelpMap(AMap: TOPPHelpMap): Boolean;
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
     function GetAvailableMaps: TList<TOPPHelpMap>;
+    function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
     procedure CreateHelpMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;

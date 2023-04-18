@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 456
+  ClientHeight = 413
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 456
+    Height = 413
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -35,7 +35,7 @@ object SampleForm: TSampleForm
       Left = 530
       Top = 0
       Width = 6
-      Height = 456
+      Height = 413
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -46,7 +46,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 456
+      Height = 413
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -61,12 +61,13 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      ExplicitHeight = 396
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
         Top = 34
         Width = 518
-        Height = 416
+        Height = 373
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -88,6 +89,7 @@ object SampleForm: TSampleForm
         OnCustomDrawItem = cxListView1CustomDrawItem
         OnInfoTip = cxListView1InfoTip
         OnSelectItem = cxListView1SelectItem
+        ExplicitHeight = 356
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
@@ -106,7 +108,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 538
-      Height = 456
+      Height = 413
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -468,7 +470,7 @@ object SampleForm: TSampleForm
         Left = 6
         Top = 360
         Width = 526
-        Height = 90
+        Height = 47
         Hint = 'Wrong hint'
         HelpType = htKeyword
         HelpKeyword = 'Kod_OKWED'
@@ -496,6 +498,7 @@ object SampleForm: TSampleForm
     HintStyleClassName = 'TdxScreenTipStyle'
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
+    HintHidePause = 500
     UseHintControlLookAndFeel = True
     Left = 264
     Top = 72
