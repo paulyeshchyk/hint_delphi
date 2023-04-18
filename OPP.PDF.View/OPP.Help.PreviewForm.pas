@@ -169,6 +169,7 @@ type
     procedure actionPrintDialogExecute(Sender: TObject);
     procedure actionPrintExecute(Sender: TObject);
     procedure actionToggleFindPanelExecute(Sender: TObject);
+    procedure actionVersionExecute(Sender: TObject);
     procedure actionZoomDecreaseExecute(Sender: TObject);
     procedure actionZoomIncreaseExecute(Sender: TObject);
     procedure ApplicationEvents1Minimize(Sender: TObject);
@@ -190,7 +191,6 @@ type
     oppHelpView: TOPPHelpViewFullScreen;
     reloadIsInProgress: Boolean;
     function GetInfoPanel: TdxStatusBarPanel;
-    procedure HandleWMCOPYMessage(APtr: Pointer; ASize: NativeInt);
     procedure LoadContentFinished();
     { --- }
     procedure LoadContentStarted();
@@ -237,6 +237,7 @@ uses
   OPP.Help.System.Messaging.Pipe,
   OPP.Help.System.Types,
   OPP.Help.System.Codable.FormSizeSettings,
+  OPP.Help.System.Application,
   AsyncCalls;
 
 const
@@ -371,6 +372,11 @@ begin
   oppHelpView.IsFindPanelVisible := not oppHelpView.IsFindPanelVisible;
 end;
 
+procedure TOPPHelpPreviewForm.actionVersionExecute(Sender: TObject);
+begin
+  Application.openMarketingWebPage;
+end;
+
 procedure TOPPHelpPreviewForm.actionZoomDecreaseExecute(Sender: TObject);
 begin
   oppHelpView.ZoomFactor := oppHelpView.ZoomFactor - kZoomDefaultIncrement;
@@ -479,6 +485,8 @@ end;
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
 
+  actionVersion.Caption := Application.BuildNumber;
+
   self.ReadFormState;
 
   reloadIsInProgress := false;
@@ -529,28 +537,6 @@ end;
 function TOPPHelpPreviewForm.GetInfoPanel: TdxStatusBarPanel;
 begin
   Result := dxStatusBar1.Panels[1];
-end;
-
-procedure TOPPHelpPreviewForm.HandleWMCOPYMessage(APtr: Pointer; ASize: NativeInt);
-var
-  fPredicate: TOPPHelpPredicate;
-  fNotificationStream: TReadOnlyMemoryStream;
-begin
-  eventLogger.Flow(SFlowReceivedMessage, OPP.Help.View.Fullscreen.kEventFlowName);
-
-  currentState := fsHandlingMessage;
-
-  fNotificationStream := TReadOnlyMemoryStream.Create(APtr, ASize);
-  try
-    ParsePredicate(fNotificationStream, fPredicate);
-    try
-      RunPredicate(fPredicate);
-    finally
-      fPredicate.Free;
-    end;
-  finally
-    fNotificationStream.Free;
-  end;
 end;
 
 { --------- }

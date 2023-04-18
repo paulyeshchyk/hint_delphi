@@ -151,9 +151,7 @@ end;
 procedure TOPPHelpShortcutServer.FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 var
   fMap: TOPPHelpMap;
-  result: TOPPHelpMap;
 begin
-  result := nil;
   if not Assigned(completion) then
   begin
     eventLogger.Error(SErrorFindMapCompletionIsNotDefined, kContext);
@@ -238,7 +236,6 @@ var
   fMapping: TOPPHelpMap;
   fOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier;
   fShortcutIdentifier: String;
-  Error: Exception;
 begin
 
   fOnGetIdentifier := fDefaultOnGetIdentifier;

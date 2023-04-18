@@ -81,7 +81,8 @@ contains
   OPP.Help.System.Codable.FormSizeSettings in '..\OPP.Help\OPP.Help.System.Codable.FormSizeSettings.pas',
   OPP.Help.System.Codable.Helper in '..\OPP.Help\OPP.Help.System.Codable.Helper.pas',
   OPP.Help.System.Codable in '..\OPP.Help\OPP.Help.System.Codable.pas',
-  OPP.Help.System.Codable.TunningEditorDefaultSettings in '..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas';
+  OPP.Help.System.Codable.TunningEditorDefaultSettings in '..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas',
+  OPP.Help.System.Application in '..\OPP.Help\OPP.Help.System.Application.pas';
 
 end.
 

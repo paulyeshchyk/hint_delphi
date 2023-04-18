@@ -1,4 +1,4 @@
-program OPPHelpPreview;
+﻿program OPPHelpPreview;
 
 {$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
 
@@ -12,6 +12,7 @@ uses
 {$R *.res}
 
 begin
+  Application.Title := 'ГОЛЬФСТРИМ Помощь';
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TOPPHelpPreviewForm, OPPHelpPreviewForm);

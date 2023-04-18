@@ -10,6 +10,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -41,8 +42,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         Width = 40
       end>
     ParentFont = True
-    ExplicitTop = 477
-    ExplicitWidth = 850
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 2
       Top = 4
@@ -82,30 +81,31 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   end
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
-    Top = 152
+    Top = 83
     Width = 3
-    Height = 323
+    Height = 392
     Align = dalLeft
     BarManager = dxBarManager1
   end
   object dxBarDockControl2: TdxBarDockControl
-    Left = 837
-    Top = 152
+    Left = 861
+    Top = 83
     Width = 3
-    Height = 323
+    Height = 392
     Align = dalRight
     BarManager = dxBarManager1
+    ExplicitLeft = 857
   end
   object dxBarDockControl3: TdxBarDockControl
     Left = 0
-    Top = 451
+    Top = 475
     Width = 864
     Height = 3
     Align = dalBottom
     BarManager = dxBarManager1
+    ExplicitTop = 471
   end
   object dxDockingManager1: TdxDockingManager
-    AutoHideMovingSize = 40
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
@@ -117,22 +117,20 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
-    DockZonesWidth = 40
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Tahoma'
     Font.Style = []
-    ResizeZonesWidth = 8
-    SelectionFrameWidth = 8
+    ResizeZonesWidth = 4
     Left = 96
     Top = 288
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
@@ -146,11 +144,11 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     UseSystemFont = False
     Left = 392
     Top = 296
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      152
+      83
       0)
     object barNavigator: TdxBar
       AllowCustomizing = False
@@ -158,8 +156,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1077#1088#1077#1093#1086#1076#1099' '#1087#1086' '#1089#1090#1088#1072#1085#1080#1094#1072#1084
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 555
-      DockedTop = 45
+      DockedLeft = 317
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -209,7 +207,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       FloatClientHeight = 0
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -24
+      Font.Height = -12
       Font.Name = 'Tahoma'
       Font.Style = []
       IsMainMenu = True
@@ -242,8 +240,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1086#1080#1089#1082
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 85
-      DockedTop = 45
+      DockedLeft = 53
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -271,8 +269,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1077#1095#1072#1090#1100
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 415
-      DockedTop = 45
+      DockedLeft = 234
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -296,7 +294,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 45
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -319,8 +317,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1052#1072#1089#1096#1090#1072#1073
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 755
-      DockedTop = 45
+      DockedLeft = 544
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -362,14 +360,13 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         262331303B3C7374796C6520747970653D22746578742F6373732220786D6C3A
         73706163653D227072657365727665223E2E426C61636B7B66696C6C3A233732
         373237323B7D262331333B262331303B2623393B2E5265647B66696C6C3A2344
-        31314331433B7D3C2F7374796C653E0D0A3C672069643D2245786974223E0D0A
-        09093C706F6C79676F6E20636C6173733D225265642220706F696E74733D2231
-        362C31302032322C31362031362C32322031362C313820322C313820322C3134
-        2031362C3134202623393B222F3E0D0A09093C706F6C79676F6E20636C617373
-        3D22426C61636B2220706F696E74733D22382C3220382C31322031302C313220
-        31302C342032382C342032382C32382031302C32382031302C323020382C3230
-        20382C33302033302C33302033302C32202623393B222F3E0D0A093C2F673E0D
-        0A3C2F7376673E0D0A}
+        31314331433B7D3C2F7374796C653E3C672069643D2245786974223E3C706F6C
+        79676F6E20636C6173733D225265642220706F696E74733D2231362C31302032
+        322C31362031362C32322031362C313820322C313820322C31342031362C3134
+        202623393B222F3E3C706F6C79676F6E20636C6173733D22426C61636B222070
+        6F696E74733D22382C3220382C31322031302C31322031302C342032382C3420
+        32382C32382031302C32382031302C323020382C323020382C33302033302C33
+        302033302C32202623393B222F3E3C2F673E3C2F7376673E}
     end
     object dxBarSubItem1: TdxBarSubItem
       Caption = '&File'
@@ -578,7 +575,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Width = 200
       PropertiesClassName = 'TcxButtonEditProperties'
       Properties.Buttons = <
         item
@@ -590,7 +586,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Category = 0
       Visible = ivAlways
       OnChange = zoomValueEditChange
-      Width = 200
       PropertiesClassName = 'TcxSpinEditProperties'
       CanSelect = False
       Properties.Alignment.Horz = taCenter
@@ -617,7 +612,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Width = 200
       PropertiesClassName = 'TdxLookupSparklineProperties'
       Properties.Series = <>
       Properties.Padding.All = 4
@@ -627,7 +621,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Width = 200
       PropertiesClassName = 'TdxNumericWheelPickerProperties'
     end
     object cxBarEditItem4: TcxBarEditItem
@@ -636,7 +629,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Hint = #1055#1088#1080#1073#1083#1080#1078#1105#1085#1085#1086
       Visible = ivAlways
       OnChange = cxBarEditItem4Change
-      Width = 200
       PropertiesClassName = 'TcxTrackBarProperties'
       Properties.Frequency = 30
       Properties.Max = 500
@@ -657,7 +649,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         end
         item
           UserDefine = [udWidth]
-          UserWidth = 576
+          UserWidth = 288
           Visible = True
           ItemName = 'cxBarEditItem4'
         end>
@@ -948,14 +940,13 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         262331303B3C7374796C6520747970653D22746578742F6373732220786D6C3A
         73706163653D227072657365727665223E2E426C61636B7B66696C6C3A233732
         373237323B7D262331333B262331303B2623393B2E5265647B66696C6C3A2344
-        31314331433B7D3C2F7374796C653E0D0A3C672069643D2245786974223E0D0A
-        09093C706F6C79676F6E20636C6173733D225265642220706F696E74733D2231
-        362C31302032322C31362031362C32322031362C313820322C313820322C3134
-        2031362C3134202623393B222F3E0D0A09093C706F6C79676F6E20636C617373
-        3D22426C61636B2220706F696E74733D22382C3220382C31322031302C313220
-        31302C342032382C342032382C32382031302C32382031302C323020382C3230
-        20382C33302033302C33302033302C32202623393B222F3E0D0A093C2F673E0D
-        0A3C2F7376673E0D0A}
+        31314331433B7D3C2F7374796C653E3C672069643D2245786974223E3C706F6C
+        79676F6E20636C6173733D225265642220706F696E74733D2231362C31302032
+        322C31362031362C32322031362C313820322C313820322C31342031362C3134
+        202623393B222F3E3C706F6C79676F6E20636C6173733D22426C61636B222070
+        6F696E74733D22382C3220382C31322031302C31322031302C342032382C3420
+        32382C32382031302C32382031302C323020382C323020382C33302033302C33
+        302033302C32202623393B222F3E3C2F673E3C2F7376673E}
       GlyphLayout = glLeft
       ShowCaption = False
     end
@@ -1261,7 +1252,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Width = 200
       PropertiesClassName = 'TcxSpinEditProperties'
     end
     object dxBarSeparator4: TdxBarSeparator
@@ -1485,7 +1475,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Hint = #1057#1090#1088#1072#1085#1080#1094#1072' '#1087#1086' '#1085#1086#1084#1077#1088#1091
       Visible = ivAlways
       OnChange = cxEditGotoCustomPageChange
-      Width = 96
+      Width = 48
       PropertiesClassName = 'TcxButtonEditProperties'
       Properties.Alignment.Horz = taCenter
       Properties.Buttons = <
@@ -1659,7 +1649,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton14'
+          ItemName = 'dxBarButton22'
         end
         item
           Visible = True
@@ -1667,7 +1657,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton22'
+          ItemName = 'dxBarButton14'
         end
         item
           Visible = True
@@ -1780,7 +1770,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Hint = #1057#1090#1088#1072#1085#1080#1094#1072
       Visible = ivAlways
       OnChange = cxEditGotoCustomPageChange
-      Width = 200
       PropertiesClassName = 'TcxTextEditProperties'
       Properties.OnValidate = cxEditGotoCustomPagePropertiesValidate
       InternalEditValue = nil
@@ -2207,8 +2196,46 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     end
     object dxBarButton22: TdxBarButton
       Action = actionVersion
-      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
       Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000000970485973000001F1000001F1019EB96D670000001974455874536F
+        667477617265007777772E696E6B73636170652E6F72679BEE3C1A0000041B49
+        4441543811011004EFFB01FFFFFF000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        000000010101015C2300B3040000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        010101016D2B00BF461B003F0200000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000010101
+        01742E00C35B24003F0101000004000000000000000000000000000000000000
+        000000000000000000000000000000000000000000000000000001010101752E
+        00C5542100390000000000000000040000000000000000000000000000000000
+        000000000000000000000000000000000000000000000001010101782F00C751
+        2000370000000000000000000000000400000000000000000000000000000000
+        000000000000000000000000000000000000000001010102722C00C851200035
+        0000000000000000000000000000000002000000000000000000000000000000
+        000000000000000000000000000000000001010103702C00C857230035000000
+        0000000000000000000000000000000000020000000000000000000000000000
+        0000000000000000000000000000010101036F2C00C759230035000000000000
+        0000000000000000000000000000000000000200000000000000000000000000
+        0000000000000000000000010101036F2C00CA5A2300350000000000000000FA
+        FE0000ECF800FF00000000000000000000000002000000000000000000000000
+        0000000000000000010101036E2B00C75A2300320000000000000000F8FD0000
+        9AD80098E4F500EC000000000000000000000000020000000000000000000000
+        0000000000010101036D2B00C85A2400350000000000000000F7FC00009FDA00
+        89A2DAFF69FBFE00FA0000000000000000000000000400000000000000000000
+        000001010103562200B81D0B0012C4E700DE0000000000000000D0EE00A3A3DB
+        FF8000000000DFF300C5F9FD0035090400060D05001A00FFFFFF00FFFFFF0000
+        0000036B2A00C9C74E00FF6C2A00C100000001FFFFFF00FFFFFF00FFFFFF00FF
+        FFFF00FFFFFF00FFFFFF00401B001C893500E2B44700FF040000000001010102
+        6B2A00C55D250036010000005C25003EFF0000BC000000430000000000000000
+        00000000000000005923015A672600A0220E0005EBF8000004010101026A2A00
+        C55D2500370100000000000000F8FD0000F0FA00C93F1B01626C28009C120800
+        01E7F600FBA9DC0072431D0075220E00050000000000000000045A2300A0461B
+        0033E9F600FB00000000FE000000AEE0008FA4DBFF7A00000000502001023B17
+        0086BFE80051B6E3FFC587350165E8F6001900000000F0FA00FD461C8CA0E33E
+        EC1F0000000049454E44AE426082}
     end
     object dxBarSeparator12: TdxBarSeparator
       Caption = 'New Separator'
@@ -2446,13 +2473,14 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       OnExecute = actionZoomDecreaseExecute
     end
     object actionVersion: TAction
-      Caption = #1042#1077#1088#1089#1080#1103
+      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
+      OnExecute = actionVersionExecute
     end
   end
   object dxComponentPrinter1: TdxComponentPrinter
     Version = 0
     Left = 408
     Top = 360
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
 end
