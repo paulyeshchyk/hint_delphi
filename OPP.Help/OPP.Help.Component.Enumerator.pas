@@ -37,14 +37,14 @@ begin
   begin
     fChild := self.Components[i];
 
-    // eventLogger.Debug(Format('Enumerator: enumerating [%s]', [fChild.ClassName]));
+    eventLogger.Debug(Format('enumerating [%s]', [fChild.ClassName]),'Enumerator');
 
     if assigned(AComparator) then
     begin
       fComparatorResult := AComparator(fChild);
       if fComparatorResult = true then
       begin
-        // eventLogger.Debug(Format('Enumerator: adding [%s]', [fChild.ClassName]));
+        eventLogger.Debug(Format('adding component [%s] with comparator', [fChild.ClassName]),'Enumerator');
         result.Add(fChild);
         if assigned(ACompletion) then
           ACompletion(fChild);
@@ -59,7 +59,7 @@ begin
       end;
 
     end else begin
-      // eventLogger.Debug(Format('Enumerator: adding [%s]', [fChild.ClassName]));
+      eventLogger.Debug(Format('adding component [%s] w/o comparator', [fChild.ClassName]),'Enumerator');
       result.Add(fChild);
       if assigned(ACompletion) then
         ACompletion(fChild);

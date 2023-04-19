@@ -2387,7 +2387,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   end
   object ApplicationEvents1: TApplicationEvents
     OnMinimize = ApplicationEvents1Minimize
-    OnRestore = ApplicationEvents1Restore
     Left = 208
     Top = 136
   end
@@ -2475,6 +2474,14 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     object actionVersion: TAction
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
       OnExecute = actionVersionExecute
+    end
+    object actionSendToBackground: TAction
+      Caption = 'actionSendToBackground'
+      OnExecute = actionSendToBackgroundExecute
+    end
+    object actionSendToForeground: TAction
+      Caption = 'actionSendToForeground'
+      OnExecute = actionSendToForegroundExecute
     end
   end
   object dxComponentPrinter1: TdxComponentPrinter

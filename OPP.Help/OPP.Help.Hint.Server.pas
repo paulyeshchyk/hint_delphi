@@ -397,7 +397,6 @@ var
   fChildrenHelpMetaList: TList<TOPPHelpMeta>;
   fMetaIdentifier: TOPPHelpHintMapIdentifier;
 begin
-
   eventLogger.Flow(Format('Load hints started for [%s]', [ARequest.Control.ClassName]), kContext);
 
   self.reloadConfigurationIfNeed(ARequest.MappingFileName);

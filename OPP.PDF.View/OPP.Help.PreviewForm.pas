@@ -154,6 +154,8 @@ type
     dxBarButton22: TdxBarButton;
     dxBarSeparator12: TdxBarSeparator;
     actionVersion: TAction;
+    actionSendToBackground: TAction;
+    actionSendToForeground: TAction;
     procedure actionFitPageCustomExecute(Sender: TObject);
     procedure actionFitPageHeightExecute(Sender: TObject);
     procedure actionFitPageWidthExecute(Sender: TObject);
@@ -168,6 +170,8 @@ type
     procedure actionHideExecute(Sender: TObject);
     procedure actionPrintDialogExecute(Sender: TObject);
     procedure actionPrintExecute(Sender: TObject);
+    procedure actionSendToBackgroundExecute(Sender: TObject);
+    procedure actionSendToForegroundExecute(Sender: TObject);
     procedure actionToggleFindPanelExecute(Sender: TObject);
     procedure actionVersionExecute(Sender: TObject);
     procedure actionZoomDecreaseExecute(Sender: TObject);
@@ -205,7 +209,6 @@ type
 
     function NavigationInfo(ANavigator: IOPPNavigator): TOPPHelpPreviewNavigationPanelInfo;
     procedure applyHints();
-    procedure SendToBackground();
     procedure SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     property currentState: TOPPHelpPreviewFormState read fCurrentState write SetCurrentState;
     property InfoPanel: TdxStatusBarPanel read GetInfoPanel;
@@ -215,6 +218,8 @@ type
     procedure OnMessageWMOPPPredicate(var Msg: TMessage); message WM_OPPPredicate;
     procedure OnMessageWMUserZoom(var Msg: TMessage); message WM_OPPZoom;
     procedure OnMessageWMUserZoomFit(var Msg: TMessage); message WM_OPPZoomFit;
+    procedure WMExitSizeMove(var Message: TMessage); message WM_EXITSIZEMOVE;
+    procedure WMEnterSizeMove(var Message: TMessage); message WM_ENTERSIZEMOVE;
   public
     { Public declarations }
     function GetContainerClassName: String;
@@ -367,6 +372,21 @@ begin
   oppHelpView.PrintCurrentPage(dxComponentPrinter1);
 end;
 
+procedure TOPPHelpPreviewForm.actionSendToBackgroundExecute(Sender: TObject);
+begin
+  self.Hide();
+  WindowState := wsMinimized;
+  TrayIcon1.Visible := true;
+end;
+
+procedure TOPPHelpPreviewForm.actionSendToForegroundExecute(Sender: TObject);
+begin
+  TrayIcon1.Visible := false;
+  self.show();
+  self.WindowState := TWindowState.wsNormal;
+  Application.BringToFront();
+end;
+
 procedure TOPPHelpPreviewForm.actionToggleFindPanelExecute(Sender: TObject);
 begin
   oppHelpView.IsFindPanelVisible := not oppHelpView.IsFindPanelVisible;
@@ -389,8 +409,7 @@ end;
 
 procedure TOPPHelpPreviewForm.ApplicationEvents1Minimize(Sender: TObject);
 begin
-  self.SendToBackground();
-  TrayIcon1.Visible := true;
+  actionSendToBackground.Execute;
 end;
 
 procedure TOPPHelpPreviewForm.ApplicationEvents1Restore(Sender: TObject);
@@ -556,6 +575,8 @@ var
   fNotificationStream: TReadOnlyMemoryStream;
 begin
 
+  actionSendToForeground.Execute;
+
   eventLogger.Flow(SEventReceivedMessageWM_COPYDATA, kEventFlowName);
 
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
@@ -684,10 +705,6 @@ end;
 
 procedure TOPPHelpPreviewForm.RestoreFromBackground;
 begin
-  Application.Restore;
-  Application.BringToFront();
-  self.show();
-  self.WindowState := TWindowState.wsNormal;
 end;
 
 procedure TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate);
@@ -729,12 +746,6 @@ begin
   currentState := fsSearchStarted;
 end;
 
-procedure TOPPHelpPreviewForm.SendToBackground;
-begin
-  self.Hide();
-  self.WindowState := TWindowState.wsMinimized;
-end;
-
 procedure TOPPHelpPreviewForm.SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
 var
   fStateStr: String;
@@ -748,7 +759,20 @@ end;
 
 procedure TOPPHelpPreviewForm.TrayIcon1Click(Sender: TObject);
 begin
-  self.RestoreFromBackground();
+  actionSendToForeground.Execute;
+end;
+
+procedure TOPPHelpPreviewForm.WMEnterSizeMove(var Message: TMessage);
+begin
+  //
+  oppHelpView.Perform(WM_SETREDRAW, 0, 0);
+end;
+
+procedure TOPPHelpPreviewForm.WMExitSizeMove(var Message: TMessage);
+begin
+  //
+  oppHelpView.Perform(WM_SETREDRAW, 1, 0);
+  RedrawWindow(self.Handle, nil, 0, RDW_ERASE or RDW_INVALIDATE or RDW_ALLCHILDREN);
 end;
 
 procedure TOPPHelpPreviewForm.zoomValueEditChange(Sender: TObject);
@@ -785,7 +809,7 @@ end;
 
 function TOPPHelpPreviewNavigationPanelInfoHelper.hasConstraints: Boolean;
 begin
-  result := (self.constraints <> []);
+  Result := (self.constraints <> []);
 end;
 
 end.
