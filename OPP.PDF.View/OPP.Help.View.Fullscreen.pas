@@ -1,4 +1,4 @@
-unit OPP.Help.View.Fullscreen;
+﻿unit OPP.Help.View.Fullscreen;
 
 interface
 
@@ -14,6 +14,10 @@ uses
   OPP.Help.Interfaces,
   OPP.Help.Predicate,
   OPP.Help.System.References,
+
+  {resources}
+  dxPDFViewerDialogsStrs,
+  dxCore,
 
   {print}
   dxPSdxPDFViewerLnk, dxPSCore;
@@ -119,7 +123,6 @@ uses System.SysUtils,
   {customization}
   cxControls,
   {print customization}
-
   dxPSGlbl, dxPrnDlg;
 
 {$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
@@ -155,7 +158,6 @@ end;
 destructor TOPPHelpViewFullScreen.Destroy;
 begin
   fEventListeners.Free;
-  fPDFViewer.Free;
 
   inherited;
 end;
@@ -472,7 +474,7 @@ begin
 
   if (FindResource(hInstance, PChar(fResourceName), RT_RCDATA) = 0) then
   begin
-    eventLogger.Error(Format('Resource ''%s'' not found',[fResourceName]));
+    eventLogger.Error(Format('Resource ''%s'' not found', [fResourceName]));
     exit;
   end;
 
@@ -512,5 +514,19 @@ begin
   end;
 {$ENDREGION}
 end;
+
+{ TOPPPDFViewerFindPanelViewInfo }
+
+initialization
+
+cxSetResourceString(@sdxPDFViewerFindPanelFindCaption, 'Найти');
+cxSetResourceString(@sdxPDFViewerFindPanelNextButtonCaption, 'Следующий');
+cxSetResourceString(@sdxPDFViewerFindPanelPreviousButtonCaption, 'Предыдущий');
+cxSetResourceString(@sdxPDFViewerTextSearchingNoMatchesFoundMessage, 'Поиск закончен. Ничего больше не найдено.');
+cxSetResourceString(@sdxPDFViewerTextSearchingCompleteMessage, 'Поиск закончен.');
+cxSetResourceString(@sdxPDFViewerFindPanelPopupMenuCaseSensitive, 'Зависимость от регистра');
+cxSetResourceString(@sdxPDFViewerFindPanelPopupMenuWholeWords, 'Слова целиком');
+
+finalization
 
 end.
