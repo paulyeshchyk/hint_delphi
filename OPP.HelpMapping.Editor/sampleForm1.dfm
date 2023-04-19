@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 413
+  ClientHeight = 393
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 413
+    Height = 393
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -35,7 +35,7 @@ object SampleForm: TSampleForm
       Left = 530
       Top = 0
       Width = 6
-      Height = 413
+      Height = 393
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -46,7 +46,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 413
+      Height = 393
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -61,13 +61,12 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitHeight = 396
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
         Top = 34
         Width = 518
-        Height = 373
+        Height = 353
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -89,7 +88,6 @@ object SampleForm: TSampleForm
         OnCustomDrawItem = cxListView1CustomDrawItem
         OnInfoTip = cxListView1InfoTip
         OnSelectItem = cxListView1SelectItem
-        ExplicitHeight = 356
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
@@ -108,7 +106,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 538
-      Height = 413
+      Height = 393
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -470,7 +468,7 @@ object SampleForm: TSampleForm
         Left = 6
         Top = 360
         Width = 526
-        Height = 47
+        Height = 27
         Hint = 'Wrong hint'
         HelpType = htKeyword
         HelpKeyword = 'Kod_OKWED'
@@ -481,7 +479,7 @@ object SampleForm: TSampleForm
         Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvLowered
-        Constraints.MinHeight = 47
+        Constraints.MinHeight = 27
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -551,6 +549,9 @@ object SampleForm: TSampleForm
       object N41: TMenuItem
         Caption = #1058#1077#1089#1090'4'
         OnClick = N41Click
+      end
+      object actionShowBuffer1: TMenuItem
+        Action = actionShowBuffer
       end
     end
   end
@@ -899,6 +900,10 @@ object SampleForm: TSampleForm
     object actionOnItemSelect: TAction
       Caption = 'actionOnItemSelect'
       OnExecute = actionOnItemSelectExecute
+    end
+    object actionShowBuffer: TAction
+      Caption = #1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
+      OnExecute = actionShowBufferExecute
     end
   end
 end

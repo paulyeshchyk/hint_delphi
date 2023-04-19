@@ -109,6 +109,8 @@ type
     actionShowSchemeEditor: TAction;
     actionShowSchemeEditor1: TMenuItem;
     actionOnItemSelect: TAction;
+    actionShowBuffer: TAction;
+    actionShowBuffer1: TMenuItem;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionOnItemSelectExecute(Sender: TObject);
@@ -116,6 +118,7 @@ type
     procedure actionPreviewShortcutExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
+    procedure actionShowBufferExecute(Sender: TObject);
     procedure actionShowSchemeEditorExecute(Sender: TObject);
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionUndoExecute(Sender: TObject);
@@ -198,6 +201,7 @@ uses
   FormTest03,
   FormTest04,
   FormSchemeEditor,
+  OPP.Buffer.Form,
   OPP.Help.System.Types,
   OPP.Help.Component.Enumerator,
   OPP.Help.Controls.Styler,
@@ -402,10 +406,12 @@ begin
         point := PanelPreview.ClientToScreen(point);
 
         TdxScreenTipStyle(cxHintController.HintStyle).ShowScreenTip(point.X, point.Y, fScreenTipLink.ScreenTip);
-        TTask.Run(procedure() begin
-          Sleep(2500);
-          TdxScreenTipStyle(cxHintController.HintStyle).ShowScreenTip(point.X, point.Y, nil);
-        end);
+        TTask.Run(
+          procedure()
+          begin
+            Sleep(2500);
+            TdxScreenTipStyle(cxHintController.HintStyle).ShowScreenTip(point.X, point.Y, nil);
+          end);
       finally
         fScreenTipLink.Control := nil;
         fScreenTipLink.ScreenTip := nil;
@@ -454,6 +460,18 @@ begin
       else
         eventLogger.Warning(SWarningListItemsIsNotSelectedNotAbleToS, kContext);
     end);
+end;
+
+procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
+var
+  Form: TOPPBufferForm;
+begin
+  Form := TOPPBufferForm.Create(self);
+  try
+    Form.ShowModal;
+  finally
+    Form.Free;
+  end;
 end;
 
 procedure TSampleForm.actionShowSchemeEditorExecute(Sender: TObject);

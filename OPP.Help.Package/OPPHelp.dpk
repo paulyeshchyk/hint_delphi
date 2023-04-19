@@ -82,7 +82,8 @@ contains
   OPP.Help.System.Codable.Helper in '..\OPP.Help\OPP.Help.System.Codable.Helper.pas',
   OPP.Help.System.Codable in '..\OPP.Help\OPP.Help.System.Codable.pas',
   OPP.Help.System.Codable.TunningEditorDefaultSettings in '..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas',
-  OPP.Help.System.Application in '..\OPP.Help\OPP.Help.System.Application.pas';
+  OPP.Help.System.Application in '..\OPP.Help\OPP.Help.System.Application.pas',
+  OPP.Help.System.Clipboard in '..\OPP.Help\OPP.Help.System.Clipboard.pas';
 
 end.
 

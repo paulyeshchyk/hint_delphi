@@ -17,7 +17,8 @@ uses
   OPP.Help.Settings.Value.Editor in 'Settings\OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor},
   FormTest04 in 'Tests\FormTest04.pas' {FormTest4},
   FormSchemeEditor in 'Tests\FormSchemeEditor.pas' {OPPHintAttributeSchemeEditorForm},
-  OPPClient.TdxScreenTip.Helper in '..\OPP.Client.Helper\OPPClient.TdxScreenTip.Helper.pas';
+  OPPClient.TdxScreenTip.Helper in '..\OPP.Client.Helper\OPPClient.TdxScreenTip.Helper.pas',
+  OPP.Buffer.Form in 'Tests\OPPBuffer\OPP.Buffer.Form.pas' {OPPBufferForm};
 
 {$R *.res}
 
