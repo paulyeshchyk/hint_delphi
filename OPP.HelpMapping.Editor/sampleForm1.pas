@@ -533,7 +533,7 @@ begin
 
   fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
   fScreenTipLink.ScreenTip := fScreenTip;
-  fScreenTipLink.control := TControl(AComponent);
+  fScreenTipLink.Control := TControl(AComponent);
   result := fScreenTipLink;
 end;
 

@@ -7,7 +7,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = True
@@ -16,7 +16,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 13
   object dxStatusBar1: TdxStatusBar
     Left = 0
     Top = 478

@@ -515,8 +515,6 @@ begin
 {$ENDREGION}
 end;
 
-{ TOPPPDFViewerFindPanelViewInfo }
-
 initialization
 
 cxSetResourceString(@sdxPDFViewerFindPanelFindCaption, 'Найти');
