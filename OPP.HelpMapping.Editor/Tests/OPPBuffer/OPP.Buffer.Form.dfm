@@ -3,7 +3,7 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = []
   Caption = 'OPPBufferForm'
-  ClientHeight = 485
+  ClientHeight = 425
   ClientWidth = 487
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object OPPBufferForm: TOPPBufferForm
     Left = 3
     Top = 3
     Width = 481
-    Height = 479
+    Height = 419
     Align = alClient
     TabOrder = 0
     object cxGrid1DBTableView1: TcxGridDBTableView
@@ -34,22 +34,27 @@ object OPPBufferForm: TOPPBufferForm
       OptionsCustomize.ColumnFiltering = False
       OptionsCustomize.ColumnGrouping = False
       OptionsCustomize.ColumnMoving = False
+      OptionsSelection.CellSelect = False
       OptionsSelection.MultiSelect = True
       OptionsSelection.InvertSelect = False
       OptionsView.GroupByBox = False
       object cxGrid1DBTableView1Column1: TcxGridDBColumn
-        DataBinding.FieldName = 'order'
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'SortIndex'
         Options.Editing = False
         Options.Focusing = False
+        VisibleForEditForm = bFalse
         Width = 46
       end
       object cxGrid1DBTableView1Column2: TcxGridDBColumn
-        DataBinding.FieldName = 'value'
-        Options.Editing = False
-        Width = 339
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'data'
+        Width = 147
       end
       object cxGrid1DBTableView1Column3: TcxGridDBColumn
+        Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103
         DataBinding.FieldName = 'isFixed'
+        Width = 85
       end
     end
     object cxGrid1Level1: TcxGridLevel
@@ -66,15 +71,18 @@ object OPPBufferForm: TOPPBufferForm
     end
     object actionExportSettings: TAction
       Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
+      OnExecute = actionExportSettingsExecute
     end
     object actionImportSettings: TAction
       Caption = #1048#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
     end
     object actionExportBuffer: TAction
       Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1087#1080#1089#1080
+      OnExecute = actionExportBufferExecute
     end
     object actionImportBuffer: TAction
       Caption = #1048#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1087#1080#1089#1080
+      OnExecute = actionImportBufferExecute
     end
     object actionNewRecord: TAction
       Caption = #1053#1086#1074#1072#1103' '#1079#1072#1087#1080#1089#1100
@@ -99,33 +107,17 @@ object OPPBufferForm: TOPPBufferForm
       Caption = 'actionSaveRecords'
       OnExecute = actionSaveRecordsExecute
     end
-  end
-  object ClientDataSet1: TClientDataSet
-    PersistDataPacket.Data = {
-      440000009619E0BD01000000180000000200000000000300000044000576616C
-      7565020049000000010005574944544802000200FF0007697346697865640200
-      0300000000000000}
-    Active = True
-    Aggregates = <>
-    Params = <>
-    OnCalcFields = ClientDataSet1CalcFields
-    Left = 152
-    Top = 152
-    object ClientDataSet1order: TIntegerField
-      FieldKind = fkCalculated
-      FieldName = 'order'
-      Calculated = True
+    object actionTurnEditMode: TAction
+      Caption = #1056#1077#1078#1080#1084' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103
+      OnExecute = actionTurnEditModeExecute
     end
-    object ClientDataSet1value: TStringField
-      FieldName = 'value'
-      Size = 255
-    end
-    object ClientDataSet1isFixed: TBooleanField
-      FieldName = 'isFixed'
+    object actionApplySelection: TAction
+      Caption = 'actionApplySelection'
+      ShortCut = 13
+      OnExecute = actionApplySelectionExecute
     end
   end
   object DataSource1: TDataSource
-    DataSet = ClientDataSet1
     Left = 320
     Top = 248
   end
@@ -155,6 +147,12 @@ object OPPBufferForm: TOPPBufferForm
     end
     object N8: TMenuItem
       Caption = #1047#1072#1087#1080#1089#1080
+      object menuItemIsEditMode: TMenuItem
+        Action = actionTurnEditMode
+      end
+      object N9: TMenuItem
+        Caption = '-'
+      end
       object N11: TMenuItem
         Action = actionNewRecord
       end
@@ -177,5 +175,17 @@ object OPPBufferForm: TOPPBufferForm
         Action = actionImportBuffer
       end
     end
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '*.oppclipboarddata'
+    Filter = 'oppclipboarddata|*.oppclipboarddata'
+    Left = 240
+    Top = 248
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '*.oppclipboarddata'
+    Filter = 'oppclipboarddata|*.oppclipboarddata'
+    Left = 296
+    Top = 168
   end
 end

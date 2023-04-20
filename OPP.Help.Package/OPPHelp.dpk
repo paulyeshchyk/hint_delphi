@@ -83,7 +83,11 @@ contains
   OPP.Help.System.Codable in '..\OPP.Help\OPP.Help.System.Codable.pas',
   OPP.Help.System.Codable.TunningEditorDefaultSettings in '..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas',
   OPP.Help.System.Application in '..\OPP.Help\OPP.Help.System.Application.pas',
-  OPP.Help.System.Clipboard in '..\OPP.Help\OPP.Help.System.Clipboard.pas';
+  OPP.Help.System.Clipboard in '..\OPP.Help\OPP.Help.System.Clipboard.pas',
+  OPP.Buffer.Manager in '..\OPP.Buffer\OPP.Buffer.Manager.pas',
+  OPP.Buffer.Manager.Settings.Data in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas',
+  OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
+  OPP.Buffer.Clipboard in '..\OPP.Buffer\OPP.Buffer.Clipboard.pas';
 
 end.
 

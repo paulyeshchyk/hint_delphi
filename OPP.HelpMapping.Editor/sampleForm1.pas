@@ -22,7 +22,7 @@ uses
   OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
   OPP.Help.System.Codable.TunningEditorDefaultSettings,
-  SampleFormSaveState;
+  SampleFormSaveState, JvComponentBase, JvClipboardMonitor;
 
 type
 
@@ -111,6 +111,7 @@ type
     actionOnItemSelect: TAction;
     actionShowBuffer: TAction;
     actionShowBuffer1: TMenuItem;
+    JvClipboardMonitor1: TJvClipboardMonitor;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionOnItemSelectExecute(Sender: TObject);
@@ -136,6 +137,7 @@ type
     procedure cxListView1CustomDrawItem(Sender: TCustomListView; Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure cxListView1InfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
     procedure cxListView1SelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
+    procedure JvClipboardMonitor1Change(Sender: TObject);
     procedure OncxControlValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
   private
     fCanChangeModificationFlag: Boolean;
@@ -223,7 +225,12 @@ uses
 
   OPPClient.TdxScreenTip.Helper,
 
-  System.Threading;
+  OPP.Buffer.Clipboard,
+  OPP.Buffer.Manager,
+
+  System.Threading,
+
+  System.TypInfo, System.Rtti;
 
 resourcestring
   SSettingsReadErrorTemplate = 'Ошибка при чтении настроек: %s';
@@ -464,13 +471,45 @@ end;
 
 procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
 var
-  Form: TOPPBufferForm;
+  fForm: TOPPBufferForm;
+  fControl: TWinControl;
+
+  function HasTextProp(AControl: TControl): Boolean;
+  var
+    Ctx: TRttiContext;
+    Prop: TRttiProperty;
+  begin
+    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
+    Result := (Prop <> nil) and (Prop.Visibility in [mvPublic, mvPublished]);
+  end;
+
+  procedure SetTextProp(AControl: TControl; AText: String);
+  var
+    Ctx: TRttiContext;
+    Prop: TRttiProperty;
+  begin
+    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
+    Prop.SetValue(AControl, AText);
+  end;
+
 begin
-  Form := TOPPBufferForm.Create(self);
+  fControl := Screen.ActiveControl;
+  if not HasTextProp(fControl) then
+    exit;
+
+  fForm := TOPPBufferForm.Create(self);
   try
-    Form.ShowModal;
+    fForm.OnApply := procedure(AData: String)
+      var
+        Ctx: TRttiContext;
+        Prop: TRttiProperty;
+      begin
+        Prop := Ctx.GetType(fControl.ClassType).GetProperty('Text');
+        Prop.SetValue(fControl, AData);
+      end;
+    fForm.ShowModal;
   finally
-    Form.Free;
+    fForm.Free;
   end;
 end;
 
@@ -552,7 +591,7 @@ begin
   fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
   fScreenTipLink.ScreenTip := fScreenTip;
   fScreenTipLink.Control := TControl(AComponent);
-  result := fScreenTipLink;
+  Result := fScreenTipLink;
 end;
 
 procedure TSampleForm.cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -658,7 +697,7 @@ end;
 
 procedure TSampleForm.doModificationCheck(ItemToSelect: TListItem; completion: TOPPHelpSaveReactionCompletion);
 var
-  result: Integer;
+  Result: Integer;
 begin
   if not assigned(completion) then
     exit;
@@ -669,8 +708,8 @@ begin
     exit;
   end;
 
-  result := MessageDlg(SSaveChanges, mtwarning, [mbYes, mbNo], 0);
-  completion(ItemToSelect, (result = mrYes));
+  Result := MessageDlg(SSaveChanges, mtwarning, [mbYes, mbNo], 0);
+  completion(ItemToSelect, (Result = mrYes));
 end;
 
 procedure TSampleForm.doSaveIfNeed(ItemToSelect: TListItem; AShouldSave: Boolean);
@@ -707,6 +746,7 @@ end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  JvClipboardMonitor1.OnChange := nil;
 
   self.SaveFormState;
 
@@ -739,6 +779,8 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
+
+  oppBufferManager.SetFormat(ifText);
 
   // settings
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
@@ -775,25 +817,30 @@ end;
 
 function TSampleForm.GetHasRecords: Boolean;
 begin
-  result := cxListView1.Items.Count > 0;
+  Result := cxListView1.Items.Count > 0;
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
 begin
   if not assigned(AControl) then
   begin
-    result := '';
+    Result := '';
     exit;
   end;
 
   eventLogger.Debug(AControl.ClassName);
   if Length(AControl.HelpKeyword) <> 0 then
   begin
-    result := AControl.HelpKeyword;
+    Result := AControl.HelpKeyword;
     exit;
   end;
 
-  result := GetWinControlHelpKeyword(AControl.Parent);
+  Result := GetWinControlHelpKeyword(AControl.Parent);
+end;
+
+procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
+begin
+  oppBufferManager.OnClipboardChange(Sender);
 end;
 
 { ------------ }
@@ -916,15 +963,15 @@ function TSampleForm.preferableIndexToJump(from: Integer): Integer;
 begin
   if cxListView1.Items.Count = 0 then
   begin
-    result := -1;
+    Result := -1;
     exit;
   end;
   if from < cxListView1.Items.Count then
   begin
-    result := from;
+    Result := from;
     exit;
   end;
-  result := cxListView1.Items.Count - 1;
+  Result := cxListView1.Items.Count - 1;
 end;
 
 procedure TSampleForm.RefreshPreviewButtonAction;
@@ -952,7 +999,7 @@ begin
   maps.Sort(TComparer<TOPPHelpMap>.Construct(
     function(const Left, Right: TOPPHelpMap): Integer
     begin
-      result := CompareStr(Left.ComponentIdentifier, Right.ComponentIdentifier);
+      Result := CompareStr(Left.ComponentIdentifier, Right.ComponentIdentifier);
     end));
 
   onMapsLoaded(maps, completion);
@@ -1167,7 +1214,7 @@ function GetWinControlHelpKeyword(AControl: TControl): String;
 begin
   if not assigned(AControl) then
   begin
-    result := '';
+    Result := '';
     exit;
   end;
 
@@ -1175,29 +1222,29 @@ begin
 
   if AControl.ClassType.InheritsFrom(TForm) then
   begin
-    result := AControl.Name;
+    Result := AControl.Name;
   end
   else if AControl.ClassType.InheritsFrom(TEdit) then
   begin
-    result := AControl.HelpKeyword;
+    Result := AControl.HelpKeyword;
   end
   else if Length(AControl.HelpKeyword) <> 0 then
   begin
-    result := AControl.HelpKeyword;
+    Result := AControl.HelpKeyword;
   end else begin
-    result := GetWinControlHelpKeyword(AControl.Parent);
+    Result := GetWinControlHelpKeyword(AControl.Parent);
   end;
 end;
 
 function ControlHelpIdentifier(AControl: TControl): String;
 begin
-  result := GetWinControlHelpKeyword(AControl);
+  Result := GetWinControlHelpKeyword(AControl);
 end;
 
 function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
 begin
-  result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(AMap.Predicate.filename);
+  Result := TOPPHelpRichtextHintReader.Create;
+  Result.loadData(AMap.Predicate.filename);
 end;
 
 initialization
