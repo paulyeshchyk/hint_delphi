@@ -41,6 +41,11 @@ requires
   dxRichEditDocumentModelRS25,
   dxSpreadSheetCoreRS25,
   dxSkinsCoreRS25,
+  cxTreeListRS25,
+  dxSpreadSheetCoreConditionalFormattingDialogsRS25,
+  Jcl,
+  JvCore,
+  JvSystem,
   RESTComponents,
   dbrtl,
   DbxCommonDriver,
@@ -87,7 +92,10 @@ contains
   OPP.Buffer.Manager in '..\OPP.Buffer\OPP.Buffer.Manager.pas',
   OPP.Buffer.Manager.Settings.Data in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas',
   OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
-  OPP.Buffer.Clipboard in '..\OPP.Buffer\OPP.Buffer.Clipboard.pas';
+  OPP.Buffer.Clipboard in '..\OPP.Buffer\OPP.Buffer.Clipboard.pas',
+  OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
+  OPP.Buffer.Form in '..\OPP.Buffer\OPP.Buffer.Form.pas' {OPPBufferForm},
+  OPP.Buffer.Manager.Dataset in '..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas';
 
 end.
 

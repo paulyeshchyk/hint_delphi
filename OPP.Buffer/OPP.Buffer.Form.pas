@@ -65,10 +65,14 @@ type
     procedure actionLoadRecordsExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionSaveRecordsExecute(Sender: TObject);
+    procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionTurnEditModeExecute(Sender: TObject);
     procedure ClientDataSet1CalcFields(DataSet: TDataSet);
+    procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormResize(Sender: TObject);
     procedure JvClipboardMonitor1Change(Sender: TObject);
+  protected
   private
     fIsEditMode: Boolean;
     fOnApply: TOPPBufferFormOnApply;
@@ -88,6 +92,7 @@ implementation
 
 uses
   Vcl.Clipbrd,
+  OPP.Buffer.Settings.Form,
   OPP.Help.System.Files,
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard;
@@ -98,8 +103,9 @@ procedure TOPPBufferForm.actionApplySelectionExecute(Sender: TObject);
 var
   fData: String;
 begin
-  if Assigned(fOnApply) then begin
-    fData := Datasource1.DataSet.FieldByName('data').AsString;
+  if Assigned(fOnApply) then
+  begin
+    fData := DataSource1.DataSet.FieldByName('data').AsString;
     fOnApply(fData);
   end;
   Close;
@@ -168,9 +174,23 @@ begin
   //
 end;
 
+procedure TOPPBufferForm.actionShowSettingsExecute(Sender: TObject);
+var
+  fSettingsForm: TOPPBufferSettingsForm;
+begin
+
+  fSettingsForm := TOPPBufferSettingsForm.Create(self);
+  try
+    fSettingsForm.ShowModal;
+  finally
+    fSettingsForm.Free;
+  end;
+
+end;
+
 procedure TOPPBufferForm.actionTurnEditModeExecute(Sender: TObject);
 begin
-  self.isEditMode := not self.isEditMode;
+  self.IsEditMode := not self.IsEditMode;
 end;
 
 procedure TOPPBufferForm.ClientDataSet1CalcFields(DataSet: TDataSet);
@@ -178,11 +198,25 @@ begin
   DataSet.FieldByName('order').AsInteger := DataSet.RecNo;
 end;
 
+procedure TOPPBufferForm.FormActivate(Sender: TObject);
+var
+  done: Boolean;
+begin
+  cxGrid1.SetFocus;
+  // cxGrid1DBTableView1.DataController.FocusControl(0,done);
+  // self.ActiveControl := cxGrid1;
+end;
+
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   oppBufferManager.SaveRecords();
   DataSource1.DataSet := nil;
   self.saveFormState;
+end;
+
+procedure TOPPBufferForm.FormResize(Sender: TObject);
+begin
+  cxGrid1DBTableView1.Columns[1].Width := cxGrid1.Width - cxGrid1DBTableView1.Columns[2].Width - cxGrid1DBTableView1.Columns[0].Width - 2;
 end;
 
 procedure TOPPBufferForm.JvClipboardMonitor1Change(Sender: TObject);

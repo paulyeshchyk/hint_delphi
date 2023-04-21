@@ -840,6 +840,14 @@ end;
 
 procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
 begin
+  eventLogger.Debug(Format('clipboard viewer: %d',[GetClipboardViewer]), kContext);
+  eventLogger.Debug(Format('clipboard owner:  %d',[GetClipboardOwner]), kContext);
+  eventLogger.Debug(Format('active form:      %d',[Application.ActiveFormHandle]), kContext);
+  eventLogger.Debug(Format('active handle:    %d',[Application.Handle]), kContext);
+  eventLogger.Debug(Format('foreground handle:%d',[GetForegroundWindow()]), kContext);
+
+
+
   oppBufferManager.OnClipboardChange(Sender);
 end;
 

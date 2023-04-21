@@ -14,25 +14,18 @@ uses
   OPP.Buffer.Manager.Settings.Data,
 
   OPP.Buffer.Clipboard,
+  OPP.Buffer.Manager.Dataset,
 
   System.Generics.Collections,
   System.Variants;
 
 type
 
-  IOPPBufferManagerDataset = interface
-    // ???
-  end;
-
-  TOPPBufferManagerDataset = class(TClientDataSet, IOPPBufferManagerDataset)
-    // ???
-  end;
-
   IOPPBufferManager = interface
     procedure OnClipboardChange(Sender: TObject);
     procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     procedure AddEmpty();
-    procedure AddRecord(const ARecord: TOPPBufferManagerRecord);
+    function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
 
     function GetDataset: IOPPBufferManagerDataset;
     function GetSettings: IOPPBufferManagerSettings;
@@ -51,13 +44,12 @@ type
     destructor Destroy; override;
     procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     procedure AddEmpty();
-    procedure AddRecord(const ARecord: TOPPBufferManagerRecord);
+    function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
   private
     fSettings: IOPPBufferManagerSettings;
     fDataset: TOPPBufferManagerDataset;
     fFormat: TOPPBufferManagerItemFormat;
 
-    procedure rebuildDataset;
     function GetDataset: IOPPBufferManagerDataset;
     function GetSettings: IOPPBufferManagerSettings;
 
@@ -66,11 +58,13 @@ type
     procedure LoadRecords();
     procedure SaveRecords();
     function GetRecordsStorageFileName(AFileName: String = ''): String;
+    procedure SaveClipboardToManagerRecord(AFormat: Word);
+    procedure OnClipboardChange(Sender: TObject);
+    function GetCanAcceptRecord: Boolean;
 
     property Dataset: IOPPBufferManagerDataset read GetDataset;
     property Settings: IOPPBufferManagerSettings read GetSettings;
-    procedure SaveClipboardToManagerRecord(AFormat: Word);
-    procedure OnClipboardChange(Sender: TObject);
+    property CanAcceptRecord: Boolean read GetCanAcceptRecord;
   end;
 
 function oppBufferManager: IOPPBufferManager;
@@ -85,6 +79,7 @@ uses
   OPP.Help.System.Str,
   OPP.Help.Log,
   Vcl.Dialogs,
+  Vcl.Forms,
   WinAPI.Windows;
 
 resourcestring
@@ -119,11 +114,14 @@ end;
 
 { TOPPBufferManager }
 
-procedure TOPPBufferManager.AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
-var
-  fFileName: String;
+function TOPPBufferManager.AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
 begin
-  self.AddRecord(ARecord);
+  result := fDataset.AddRecord(ARecord);
+end;
+
+procedure TOPPBufferManager.AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
+begin
+  AddRecord(ARecord);
   SaveRecords();
 end;
 
@@ -136,7 +134,7 @@ begin
   SetFormat(ifText);
 
   fDataset := TOPPBufferManagerDataset.Create(nil);
-  rebuildDataset;
+  fDataset.Rebuild;
 
   LoadRecords();
 end;
@@ -148,6 +146,15 @@ begin
   inherited;
 end;
 
+function TOPPBufferManager.GetCanAcceptRecord: Boolean;
+begin
+  result := true;
+  if not(Application.ActiveFormHandle = GetForegroundWindow()) then
+  begin
+    result := Settings.isExternalAllowed
+  end;
+end;
+
 function TOPPBufferManager.GetDataset: IOPPBufferManagerDataset;
 begin
   result := fDataset
@@ -157,13 +164,15 @@ function TOPPBufferManager.GetRecordsStorageFileName(AFileName: String): String;
 var
   fResult: String;
 begin
-  if TFile.Exists(AFileName) then begin
+  if TFile.Exists(AFileName) then
+  begin
     result := AFileName;
     exit;
   end;
 
   fResult := Settings.GetCurrentFilePath;
-  if TFile.Exists(fResult) then begin
+  if TFile.Exists(fResult) then
+  begin
     result := fResult;
     exit;
   end;
@@ -178,25 +187,28 @@ end;
 
 procedure TOPPBufferManager.LoadRecords();
 var
-  fFileName : String;
+  fFileName: String;
 begin
   fFileName := GetRecordsStorageFileName();
-  if not TFile.Exists(fFileName) then begin
-    eventLogger.Error(Format('File not found:[%s]',[fFileName]), kContext);
+  if not TFile.Exists(fFileName) then
+  begin
+    eventLogger.Error(Format('File not found:[%s]', [fFileName]), kContext);
     exit;
   end;
 
   try
     fDataset.LoadFromFile(fFileName);
   except
-    on E: EDBClient do begin
+    on E: EDBClient do
+    begin
       ShowMessage(SBufferManagerRecordsFileWasDamaged);
       try
         TFile.Delete(fFileName);
-        rebuildDataset;
+        fDataset.Rebuild;
       except
-        on E:Exception do begin
-          ShowMessage(Format(SNotAbleToDeleteDamagedFileTemplate,[E.Message]));
+        on E: Exception do
+        begin
+          ShowMessage(Format(SNotAbleToDeleteDamagedFileTemplate, [E.Message]));
         end;
       end;
     end;
@@ -209,6 +221,9 @@ end;
 
 procedure TOPPBufferManager.OnClipboardChange(Sender: TObject);
 begin
+  if not self.CanAcceptRecord then
+    exit;
+
   try
     SaveClipboardToManagerRecord(fFormat.WindowsClipboardFormat);
   except
@@ -219,21 +234,10 @@ begin
   end;
 end;
 
-procedure TOPPBufferManager.rebuildDataset;
-begin
-  fDataset.Close;
-  fDataset.FieldDefs.Clear;
-  fDataset.FieldDefs.Add('Data', ftString, 255);
-  fDataset.FieldDefs.Add('SortIndex', ftInteger);
-  fDataset.FieldDefs.Add('isFixed', ftBoolean);
-  fDataset.CreateDataSet;
-end;
-
 procedure TOPPBufferManager.SaveClipboardToManagerRecord(AFormat: Word);
 var
   fRecord: TOPPBufferManagerRecord;
 begin
-
   fRecord := Clipboard.CreateRecord(ifText);
   if fRecord = nil then
     exit;
@@ -246,7 +250,7 @@ end;
 
 procedure TOPPBufferManager.SaveRecords();
 var
-  fFileName : String;
+  fFileName: String;
 begin
   fFileName := GetRecordsStorageFileName();
 
@@ -273,18 +277,6 @@ begin
     fRecord.Free;
   end;
 
-end;
-
-procedure TOPPBufferManager.AddRecord(const ARecord: TOPPBufferManagerRecord);
-begin
-  if not assigned(ARecord) then
-    exit;
-
-  fDataset.Insert;
-  fDataset.Fields[0].AsVariant := ARecord.Data;
-  fDataset.Fields[1].AsInteger := fDataset.RecordCount;
-  fDataset.Fields[2].AsBoolean := false;
-  fDataset.Post;
 end;
 
 procedure TOPPBufferManager.SetFormat(AFormat: TOPPBufferManagerItemFormat);

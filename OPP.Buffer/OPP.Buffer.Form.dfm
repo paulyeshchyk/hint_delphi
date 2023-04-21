@@ -2,8 +2,8 @@ object OPPBufferForm: TOPPBufferForm
   Left = 0
   Top = 0
   BorderIcons = []
-  Caption = 'OPPBufferForm'
-  ClientHeight = 425
+  Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
+  ClientHeight = 385
   ClientWidth = 487
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,18 +13,21 @@ object OPPBufferForm: TOPPBufferForm
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid1: TcxGrid
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 481
-    Height = 419
+    Left = 0
+    Top = 0
+    Width = 487
+    Height = 385
     Align = alClient
     TabOrder = 0
+    LookAndFeel.Kind = lfFlat
+    LookAndFeel.NativeStyle = False
     object cxGrid1DBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource1
@@ -35,7 +38,6 @@ object OPPBufferForm: TOPPBufferForm
       OptionsCustomize.ColumnGrouping = False
       OptionsCustomize.ColumnMoving = False
       OptionsSelection.CellSelect = False
-      OptionsSelection.MultiSelect = True
       OptionsSelection.InvertSelect = False
       OptionsView.GroupByBox = False
       object cxGrid1DBTableView1Column1: TcxGridDBColumn
@@ -49,7 +51,8 @@ object OPPBufferForm: TOPPBufferForm
       object cxGrid1DBTableView1Column2: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'data'
-        Width = 147
+        MinWidth = 100
+        Width = 100
       end
       object cxGrid1DBTableView1Column3: TcxGridDBColumn
         Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103
@@ -98,6 +101,7 @@ object OPPBufferForm: TOPPBufferForm
     end
     object actionShowSettings: TAction
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
+      OnExecute = actionShowSettingsExecute
     end
     object actionLoadRecords: TAction
       Caption = 'actionLoadRecords'

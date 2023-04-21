@@ -11,6 +11,7 @@ type
 
     procedure SetCurrentFilePath(AFilePath: String);
     function GetCurrentFilePath: String;
+    function isExternalAllowed: Boolean;
   end;
 
   TOPPBufferManagerSettings = class(TInterfacedObject, IOPPBufferManagerSettings)
@@ -21,6 +22,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    function isExternalAllowed: Boolean;
     function GetDefaultFilePath: String;
 
     procedure SetCurrentFilePath(AFilePath: String);
@@ -60,6 +62,11 @@ end;
 function TOPPBufferManagerSettings.GetDefaultFilePath: String;
 begin
   result := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(SClipboardFileName);
+end;
+
+function TOPPBufferManagerSettings.isExternalAllowed: Boolean;
+begin
+  result := true;
 end;
 
 function TOPPBufferManagerSettings.LoadDataOrCreate: TOPPBufferManagerSettingsData;
