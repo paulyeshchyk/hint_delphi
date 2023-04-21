@@ -3,7 +3,7 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = []
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 365
+  ClientHeight = 345
   ClientWidth = 487
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object OPPBufferForm: TOPPBufferForm
     Left = 0
     Top = 0
     Width = 487
-    Height = 365
+    Height = 345
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
@@ -56,6 +56,8 @@ object OPPBufferForm: TOPPBufferForm
       object cxGrid1DBTableView1Column2: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'data'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.OnValidate = cxGrid1DBTableView1Column2PropertiesValidate
         MinWidth = 100
         Width = 100
       end
@@ -155,7 +157,8 @@ object OPPBufferForm: TOPPBufferForm
         Caption = '-'
       end
       object actionClose1: TMenuItem
-        Action = actionClose
+        Caption = #1047#1072#1082#1088#1099#1090#1100
+        OnClick = actionClose1Click
       end
     end
     object N8: TMenuItem

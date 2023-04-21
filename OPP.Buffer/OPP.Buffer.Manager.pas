@@ -40,33 +40,30 @@ type
   end;
 
   TOPPBufferManager = class(TInterfacedObject, IOPPBufferManager)
+  private
+    fDataset: TOPPBufferManagerDataset;
+    fFormat: TOPPBufferManagerItemFormat;
+    fSettings: IOPPBufferManagerSettings;
+    procedure AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
+    function GetCanAcceptRecord: Boolean;
+    function GetDataset: IOPPBufferManagerDataset;
+    function GetRecordsStorageFileName(AFileName: String = ''): String;
+    function GetSettings: IOPPBufferManagerSettings;
+    procedure LoadRecords();
+    procedure OnClipboardChange(Sender: TObject);
+    procedure SaveClipboardToManagerRecord(AFormat: Word);
+    procedure SaveRecords();
+    procedure SetRecordsStorageFileName(AFileName: String = '');
+    property CanAcceptRecord: Boolean read GetCanAcceptRecord;
+    property Dataset: IOPPBufferManagerDataset read GetDataset;
+    property Settings: IOPPBufferManagerSettings read GetSettings;
   public
     constructor Create;
     destructor Destroy; override;
-    procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
-  private
-    fSettings: IOPPBufferManagerSettings;
-    fDataset: TOPPBufferManagerDataset;
-    fFormat: TOPPBufferManagerItemFormat;
-
-    function GetDataset: IOPPBufferManagerDataset;
-    function GetSettings: IOPPBufferManagerSettings;
-
-    procedure AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
-    procedure SetRecordsStorageFileName(AFileName: String = '');
-    procedure LoadRecords();
-    procedure SaveRecords();
-    function GetRecordsStorageFileName(AFileName: String = ''): String;
-    procedure SaveClipboardToManagerRecord(AFormat: Word);
-    procedure OnClipboardChange(Sender: TObject);
-    function GetCanAcceptRecord: Boolean;
-
-    property Dataset: IOPPBufferManagerDataset read GetDataset;
-    property Settings: IOPPBufferManagerSettings read GetSettings;
-    property CanAcceptRecord: Boolean read GetCanAcceptRecord;
+    procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
   end;
 
 function oppBufferManager: IOPPBufferManager;
@@ -114,19 +111,6 @@ begin
   end;
 end;
 
-{ TOPPBufferManager }
-
-function TOPPBufferManager.AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
-begin
-  result := fDataset.AddRecord(ARecord);
-end;
-
-procedure TOPPBufferManager.AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
-begin
-  if AddRecord(ARecord) then
-    SaveRecords();
-end;
-
 constructor TOPPBufferManager.Create;
 begin
   inherited;
@@ -139,6 +123,40 @@ begin
   fDataset.Rebuild;
 
   LoadRecords();
+end;
+
+destructor TOPPBufferManager.Destroy;
+begin
+  fSettings := nil;
+  fDataset.Free;
+  inherited;
+end;
+
+procedure TOPPBufferManager.AddEmpty;
+var
+  fRecord: TOPPBufferManagerRecord;
+begin
+
+  fRecord := TOPPBufferManagerRecord.Create;
+  try
+    self.AddRecord(fRecord);
+  finally
+    fRecord.Free;
+  end;
+
+end;
+
+{ TOPPBufferManager }
+
+function TOPPBufferManager.AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
+begin
+  result := fDataset.AddRecord(ARecord);
+end;
+
+procedure TOPPBufferManager.AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
+begin
+  if AddRecord(ARecord) then
+    SaveRecords();
 end;
 
 function TOPPBufferManager.DeleteFocused: Boolean;
@@ -154,13 +172,6 @@ begin
     end;
 
   end;
-end;
-
-destructor TOPPBufferManager.Destroy;
-begin
-  fSettings := nil;
-  fDataset.Free;
-  inherited;
 end;
 
 function TOPPBufferManager.GetCanAcceptRecord: Boolean;
@@ -278,20 +289,6 @@ begin
     begin
       eventLogger.Error(E, kContext);
     end;
-  end;
-
-end;
-
-procedure TOPPBufferManager.AddEmpty;
-var
-  fRecord: TOPPBufferManagerRecord;
-begin
-
-  fRecord := TOPPBufferManagerRecord.Create;
-  try
-    self.AddRecord(fRecord);
-  finally
-    fRecord.Free;
   end;
 
 end;

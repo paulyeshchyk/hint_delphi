@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 353
+  ClientHeight = 333
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 353
+    Height = 333
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -35,7 +35,7 @@ object SampleForm: TSampleForm
       Left = 530
       Top = 0
       Width = 6
-      Height = 353
+      Height = 333
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -46,7 +46,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 353
+      Height = 333
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -66,7 +66,7 @@ object SampleForm: TSampleForm
         Left = 6
         Top = 34
         Width = 518
-        Height = 313
+        Height = 293
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -106,7 +106,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 538
-      Height = 353
+      Height = 333
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -903,7 +903,6 @@ object SampleForm: TSampleForm
     end
     object actionShowBuffer: TAction
       Caption = #1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-      ShortCut = 24662
       OnExecute = actionShowBufferExecute
     end
   end

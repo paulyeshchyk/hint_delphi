@@ -3,63 +3,68 @@ unit OPP.Buffer.Form;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator,
+  Winapi.Windows, Winapi.Messages,
+  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  Datasnap.DBClient, Vcl.ActnList,
+  Vcl.Menus, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
+  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxGridLevel, cxClasses, cxGridCustomView, cxGrid,
+
   cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, Datasnap.DBClient, System.Actions, Vcl.ActnList, cxGridLevel, cxClasses, cxGridCustomView, cxGrid,
-  Vcl.Menus, JvComponentBase, JvClipboardMonitor,
-  OPP.Buffer.Manager;
+  cxGridDBTableView,
+  JvComponentBase, JvClipboardMonitor,
+
+  OPP.Buffer.Manager, cxTextEdit;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String);
 
   TOPPBufferForm = class(TForm)
-    cxGrid1DBTableView1: TcxGridDBTableView;
-    cxGrid1Level1: TcxGridLevel;
-    cxGrid1: TcxGrid;
-    ActionList1: TActionList;
+    actionApplySelection: TAction;
     actionClose: TAction;
-    DataSource1: TDataSource;
+    actionClose1: TMenuItem;
+    actionDeleteRecord: TAction;
+    actionExportBuffer: TAction;
+    actionExportSettings: TAction;
+    actionImportBuffer: TAction;
+    actionImportSettings: TAction;
+    ActionList1: TActionList;
+    actionLoadRecords: TAction;
+    actionMultiSelectMode: TAction;
+    actionNewRecord: TAction;
+    actionSaveRecords: TAction;
+    actionShowSettings: TAction;
+    actionTurnEditMode: TAction;
+    actionWipeRecords: TAction;
+    cxGrid1: TcxGrid;
+    cxGrid1DBTableView1: TcxGridDBTableView;
     cxGrid1DBTableView1Column1: TcxGridDBColumn;
     cxGrid1DBTableView1Column2: TcxGridDBColumn;
     cxGrid1DBTableView1Column3: TcxGridDBColumn;
+    cxGrid1Level1: TcxGridLevel;
+    DataSource1: TDataSource;
     MainMenu1: TMainMenu;
+    menuItemIsEditMode: TMenuItem;
+    menuMultiSelectMode: TMenuItem;
     N1: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
     N2: TMenuItem;
-    actionClose1: TMenuItem;
-    actionExportSettings: TAction;
-    actionImportSettings: TAction;
-    actionExportBuffer: TAction;
-    actionImportBuffer: TAction;
     N3: TMenuItem;
     N4: TMenuItem;
     N5: TMenuItem;
     N6: TMenuItem;
     N7: TMenuItem;
     N8: TMenuItem;
-    N10: TMenuItem;
-    actionNewRecord: TAction;
-    actionDeleteRecord: TAction;
-    actionWipeRecords: TAction;
-    N11: TMenuItem;
-    N12: TMenuItem;
-    N13: TMenuItem;
-    N14: TMenuItem;
-    actionShowSettings: TAction;
-    N15: TMenuItem;
-    actionLoadRecords: TAction;
-    actionSaveRecords: TAction;
+    N9: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
-    actionTurnEditMode: TAction;
-    N9: TMenuItem;
-    menuItemIsEditMode: TMenuItem;
-    actionApplySelection: TAction;
-    actionMultiSelectMode: TAction;
-    menuMultiSelectMode: TMenuItem;
     procedure actionApplySelectionExecute(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure actionClose1Click(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionExportBufferExecute(Sender: TObject);
@@ -73,28 +78,32 @@ type
     procedure actionTurnEditModeExecute(Sender: TObject);
     procedure actionWipeRecordsExecute(Sender: TObject);
     procedure ClientDataSet1CalcFields(DataSet: TDataSet);
+    procedure cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure JvClipboardMonitor1Change(Sender: TObject);
-    procedure cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
-  protected
+    procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant;
+      var ErrorText: TCaption; var Error: Boolean);
   private
     fIsEditMode: Boolean;
-    fOnApply: TOPPBufferFormOnApply;
     fIsMultiSelectMode: Boolean;
+    fOnApply: TOPPBufferFormOnApply;
+    function GetHasRecords: Boolean;
+    function GetHasSelectedRecord: Boolean;
+    procedure ReloadActionsVisibility;
     procedure setIsEditMode(const Value: Boolean);
     procedure SetIsMultiSelectMode(const Value: Boolean);
-    function GetHasRecords: Boolean;
-    function GetCanDeleteRecord: Boolean;
-    procedure ReloadActionsVisibility;
+    property HasRecords: Boolean read GetHasRecords;
+    property HasSelectedRecord: Boolean read GetHasSelectedRecord;
     { Private declarations }
 
     property IsEditMode: Boolean read fIsEditMode write setIsEditMode default false;
     property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
-    property CanDeleteRecord: Boolean read GetCanDeleteRecord;
-    property HasRecords: Boolean read GetHasRecords;
   public
+    class procedure ShowForm(AOwner: TControl); overload;
+    class procedure ShowForm(AOwner: TControl; AControl: TControl); overload;
     { Public declarations }
     property OnApply: TOPPBufferFormOnApply read fOnApply write fOnApply;
   end;
@@ -110,7 +119,12 @@ uses
   OPP.Buffer.Settings.Form,
   OPP.Help.System.Files,
   OPP.Help.System.Codable.FormSizeSettings,
-  OPP.Help.System.Clipboard;
+  OPP.Help.System.Clipboard,
+
+  System.TypInfo, System.Rtti;
+
+resourcestring
+  SDuplicatedRecord = 'Такая запись уже есть в списке';
 
 const
   kContext = 'TOPPBufferForm';
@@ -129,11 +143,9 @@ begin
   Close;
 end;
 
-procedure TOPPBufferForm.FormCreate(Sender: TObject);
+procedure TOPPBufferForm.actionClose1Click(Sender: TObject);
 begin
-  self.IsEditMode := false;
-  self.readFormState;
-  DataSource1.DataSet := TClientDataset(oppBufferManager.DataSet);
+  Close;
 end;
 
 procedure TOPPBufferForm.actionCloseExecute(Sender: TObject);
@@ -216,14 +228,12 @@ procedure TOPPBufferForm.actionShowSettingsExecute(Sender: TObject);
 var
   fSettingsForm: TOPPBufferSettingsForm;
 begin
-
   fSettingsForm := TOPPBufferSettingsForm.Create(self);
   try
     fSettingsForm.ShowModal;
   finally
-    fSettingsForm.Free;
+    FreeAndNil(fSettingsForm);
   end;
-
 end;
 
 procedure TOPPBufferForm.actionTurnEditModeExecute(Sender: TObject);
@@ -244,18 +254,24 @@ begin
   DataSet.FieldByName('order').AsInteger := DataSet.RecNo;
 end;
 
+procedure TOPPBufferForm.cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant;
+  var ErrorText: TCaption; var Error: Boolean);
+begin
+  error := false;
+  if oppBufferManager.DataSet.HasTheSameValue(DisplayValue) then begin
+    error := True;
+    errorText := SDuplicatedRecord;
+  end;
+end;
+
 procedure TOPPBufferForm.cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
 begin
-  self.reloadActionsVisibility;
+  self.ReloadActionsVisibility;
 end;
 
 procedure TOPPBufferForm.FormActivate(Sender: TObject);
-var
-  done: Boolean;
 begin
   cxGrid1.SetFocus;
-  // cxGrid1DBTableView1.DataController.FocusControl(0,done);
-  // self.ActiveControl := cxGrid1;
 end;
 
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -265,14 +281,16 @@ begin
   self.saveFormState;
 end;
 
+procedure TOPPBufferForm.FormCreate(Sender: TObject);
+begin
+  self.IsEditMode := false;
+  self.readFormState;
+  DataSource1.DataSet := TClientDataset(oppBufferManager.DataSet);
+end;
+
 procedure TOPPBufferForm.FormResize(Sender: TObject);
 begin
   cxGrid1DBTableView1.Columns[1].Width := cxGrid1.Width - cxGrid1DBTableView1.Columns[2].Width - cxGrid1DBTableView1.Columns[0].Width - 2;
-end;
-
-function TOPPBufferForm.GetCanDeleteRecord: Boolean;
-begin
-  result := (cxGrid1DBTableView1.DataController.RecordCount > 0) and (cxGrid1DBTableView1.DataController.RecNo >= 0);
 end;
 
 function TOPPBufferForm.GetHasRecords: Boolean;
@@ -280,15 +298,19 @@ begin
   result := (cxGrid1DBTableView1.DataController.RecordCount > 0);
 end;
 
+function TOPPBufferForm.GetHasSelectedRecord: Boolean;
+begin
+  result := (cxGrid1DBTableView1.DataController.RecordCount > 0) and (cxGrid1DBTableView1.DataController.RecNo >= 0);
+end;
+
 procedure TOPPBufferForm.JvClipboardMonitor1Change(Sender: TObject);
 var
   Data: THandle;
   Buffer: Pointer;
   Size: LongInt;
-  Stream: TStream;
+  fStream: TStream;
 begin
-  Stream := TStream.Create;
-
+  fStream := TStream.Create;
   try
     Clipboard.Open;
     try
@@ -297,11 +319,10 @@ begin
       begin
         Buffer := GlobalLock(Data);
         try
-          // (rom) added handling of Format and Size!
           Size := GlobalSize(Data);
-          Stream.Write(Format, SizeOf(Word));
-          Stream.Write(Size, SizeOf(LongInt));
-          Stream.Write(Buffer^, Size);
+          fStream.Write(Format, SizeOf(Word));
+          fStream.Write(Size, SizeOf(LongInt));
+          fStream.Write(Buffer^, Size);
         finally
           GlobalUnlock(Data);
         end;
@@ -310,7 +331,7 @@ begin
       Clipboard.Close;
     end;
   finally
-    Stream.Free;
+    fStream.Free;
   end;
 end;
 
@@ -325,8 +346,10 @@ begin
   actionMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
   menuMultiSelectMode.Checked := fIsMultiSelectMode and self.HasRecords;
   actionNewRecord.Enabled := fIsEditMode;
-  actionDeleteRecord.Enabled := fIsEditMode and self.CanDeleteRecord;
+  actionDeleteRecord.Enabled := fIsEditMode and self.HasSelectedRecord;
   actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords;
+  actionApplySelection.Enabled := (not fIsEditMode) and self.HasSelectedRecord and Assigned(OnApply);
+  actionClose.Enabled := (not fIsEditMode);
 end;
 
 procedure TOPPBufferForm.setIsEditMode(const Value: Boolean);
@@ -340,6 +363,62 @@ begin
   fIsMultiSelectMode := Value;
   cxGrid1DBTableView1.OptionsSelection.MultiSelect := fIsMultiSelectMode;
   ReloadActionsVisibility;
+end;
+
+class procedure TOPPBufferForm.ShowForm(AOwner: TControl);
+var
+  fForm: TOPPBufferForm;
+begin
+  fForm := TOPPBufferForm.Create(AOwner);
+  try
+    fForm.ShowModal;
+  finally
+    FreeAndNil(fForm);
+  end;
+end;
+
+class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TControl);
+var
+  fForm: TOPPBufferForm;
+  fControl: TWinControl;
+
+  function HasTextProp(AControl: TControl): Boolean;
+  var
+    Ctx: TRttiContext;
+    Prop: TRttiProperty;
+  begin
+    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
+    result := (Prop <> nil) and (Prop.Visibility in [mvPublic, mvPublished]);
+  end;
+
+  procedure SetTextProp(AControl: TControl; AText: String);
+  var
+    Ctx: TRttiContext;
+    Prop: TRttiProperty;
+  begin
+    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
+    Prop.SetValue(AControl, AText);
+  end;
+
+begin
+  if not HasTextProp(AControl) then
+    exit;
+
+  fForm := TOPPBufferForm.Create(AOwner);
+  try
+    fForm.OnApply := procedure(AData: String)
+      var
+        Ctx: TRttiContext;
+        Prop: TRttiProperty;
+      begin
+        Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
+        Prop.SetValue(AControl, AData);
+      end;
+    fForm.ShowModal;
+  finally
+    fForm.Free;
+  end;
+
 end;
 
 end.
