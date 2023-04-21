@@ -1,4 +1,4 @@
-unit OPP.Buffer.Form;
+﻿unit OPP.Buffer.Form;
 
 interface
 
@@ -237,7 +237,12 @@ begin
 end;
 
 procedure TOPPBufferForm.actionTurnEditModeExecute(Sender: TObject);
+var fEditingController: TcxGridTableEditingController;
 begin
+  fEditingController := cxGrid1DBTableView1.Controller.EditingController;
+  if self.IsEditMode and (fEditingController <> nil) then begin
+    fEditingController.HideEdit(true);
+  end;
   self.IsEditMode := not self.IsEditMode;
 end;
 
