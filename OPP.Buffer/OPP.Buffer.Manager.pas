@@ -26,6 +26,7 @@ type
     procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
+    function DeleteFocused(): Boolean;
 
     function GetDataset: IOPPBufferManagerDataset;
     function GetSettings: IOPPBufferManagerSettings;
@@ -45,6 +46,7 @@ type
     procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
+    function DeleteFocused(): Boolean;
   private
     fSettings: IOPPBufferManagerSettings;
     fDataset: TOPPBufferManagerDataset;
@@ -121,8 +123,8 @@ end;
 
 procedure TOPPBufferManager.AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
 begin
-  AddRecord(ARecord);
-  SaveRecords();
+  if AddRecord(ARecord) then
+    SaveRecords();
 end;
 
 constructor TOPPBufferManager.Create;
@@ -137,6 +139,21 @@ begin
   fDataset.Rebuild;
 
   LoadRecords();
+end;
+
+function TOPPBufferManager.DeleteFocused: Boolean;
+begin
+  result := false;
+  if fDataset.RecNo = -1 then exit;
+  try
+    fDataset.Delete;
+    result := true;
+  except
+    on E: Exception do begin
+      eventLogger.Error(E, kContext);
+    end;
+
+  end;
 end;
 
 destructor TOPPBufferManager.Destroy;

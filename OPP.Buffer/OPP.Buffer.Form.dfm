@@ -3,7 +3,7 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = []
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 385
+  ClientHeight = 365
   ClientWidth = 487
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object OPPBufferForm: TOPPBufferForm
     Left = 0
     Top = 0
     Width = 487
-    Height = 385
+    Height = 365
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
@@ -34,17 +34,22 @@ object OPPBufferForm: TOPPBufferForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
-      OptionsCustomize.ColumnFiltering = False
-      OptionsCustomize.ColumnGrouping = False
-      OptionsCustomize.ColumnMoving = False
-      OptionsSelection.CellSelect = False
+      DataController.OnDataChanged = cxGrid1DBTableView1DataControllerDataChanged
       OptionsSelection.InvertSelect = False
+      OptionsView.NoDataToDisplayInfoText = 
+        #1057#1087#1080#1089#1086#1082' '#1087#1091#1089#1090'. '#1044#1083#1103' '#1090#1086#1075#1086' '#1095#1090#1086#1073#1099' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100', '#1089#1082#1086#1087#1080#1088#1091#1081#1090#1077' '#1090#1077#1082#1089#1090' '#1074' ' +
+        #1073#1091#1092#1077#1088'.'
       OptionsView.GroupByBox = False
       object cxGrid1DBTableView1Column1: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'SortIndex'
         Options.Editing = False
+        Options.Filtering = False
         Options.Focusing = False
+        Options.FilteringAddValueItems = False
+        Options.FilteringFilteredItemsList = False
+        Options.FilteringMRUItemsList = False
+        Options.FilteringPopup = False
         VisibleForEditForm = bFalse
         Width = 46
       end
@@ -89,15 +94,15 @@ object OPPBufferForm: TOPPBufferForm
     end
     object actionNewRecord: TAction
       Caption = #1053#1086#1074#1072#1103' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 45
       OnExecute = actionNewRecordExecute
     end
     object actionDeleteRecord: TAction
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 46
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      OnExecute = actionDeleteRecordExecute
     end
     object actionWipeRecords: TAction
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1087#1080#1089#1080
+      OnExecute = actionWipeRecordsExecute
     end
     object actionShowSettings: TAction
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
@@ -119,6 +124,10 @@ object OPPBufferForm: TOPPBufferForm
       Caption = 'actionApplySelection'
       ShortCut = 13
       OnExecute = actionApplySelectionExecute
+    end
+    object actionMultiSelectMode: TAction
+      Caption = #1042#1099#1073#1086#1088' '#1085#1077#1089#1082#1086#1083#1100#1082#1080#1093' '#1079#1072#1087#1080#1089#1077#1081
+      OnExecute = actionMultiSelectModeExecute
     end
   end
   object DataSource1: TDataSource
@@ -153,6 +162,9 @@ object OPPBufferForm: TOPPBufferForm
       Caption = #1047#1072#1087#1080#1089#1080
       object menuItemIsEditMode: TMenuItem
         Action = actionTurnEditMode
+      end
+      object menuMultiSelectMode: TMenuItem
+        Action = actionMultiSelectMode
       end
       object N9: TMenuItem
         Caption = '-'

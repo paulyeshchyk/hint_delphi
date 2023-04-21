@@ -56,30 +56,44 @@ type
     N9: TMenuItem;
     menuItemIsEditMode: TMenuItem;
     actionApplySelection: TAction;
+    actionMultiSelectMode: TAction;
+    menuMultiSelectMode: TMenuItem;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
+    procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionExportBufferExecute(Sender: TObject);
     procedure actionExportSettingsExecute(Sender: TObject);
     procedure actionImportBufferExecute(Sender: TObject);
     procedure actionLoadRecordsExecute(Sender: TObject);
+    procedure actionMultiSelectModeExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionSaveRecordsExecute(Sender: TObject);
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionTurnEditModeExecute(Sender: TObject);
+    procedure actionWipeRecordsExecute(Sender: TObject);
     procedure ClientDataSet1CalcFields(DataSet: TDataSet);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormResize(Sender: TObject);
     procedure JvClipboardMonitor1Change(Sender: TObject);
+    procedure cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
   protected
   private
     fIsEditMode: Boolean;
     fOnApply: TOPPBufferFormOnApply;
+    fIsMultiSelectMode: Boolean;
     procedure setIsEditMode(const Value: Boolean);
+    procedure SetIsMultiSelectMode(const Value: Boolean);
+    function GetHasRecords: Boolean;
+    function GetCanDeleteRecord: Boolean;
+    procedure ReloadActionsVisibility;
     { Private declarations }
 
     property IsEditMode: Boolean read fIsEditMode write setIsEditMode default false;
+    property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
+    property CanDeleteRecord: Boolean read GetCanDeleteRecord;
+    property HasRecords: Boolean read GetHasRecords;
   public
     { Public declarations }
     property OnApply: TOPPBufferFormOnApply read fOnApply write fOnApply;
@@ -92,10 +106,14 @@ implementation
 
 uses
   Vcl.Clipbrd,
+  OPP.Help.Log,
   OPP.Buffer.Settings.Form,
   OPP.Help.System.Files,
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard;
+
+const
+  kContext = 'TOPPBufferForm';
 
 {$R *.dfm}
 
@@ -121,6 +139,21 @@ end;
 procedure TOPPBufferForm.actionCloseExecute(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TOPPBufferForm.actionDeleteRecordExecute(Sender: TObject);
+begin
+  try
+    cxGrid1DBTableView1.DataController.BeginFullUpdate;
+    cxGrid1DBTableView1.DataController.DeleteSelection;
+    cxGrid1DBTableView1.DataController.EndFullUpdate;
+
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
 end;
 
 procedure TOPPBufferForm.actionExportBufferExecute(Sender: TObject);
@@ -164,6 +197,11 @@ begin
   //
 end;
 
+procedure TOPPBufferForm.actionMultiSelectModeExecute(Sender: TObject);
+begin
+  self.IsMultiSelectMode := not self.IsMultiSelectMode;
+end;
+
 procedure TOPPBufferForm.actionNewRecordExecute(Sender: TObject);
 begin
   oppBufferManager.AddEmpty();
@@ -193,9 +231,22 @@ begin
   self.IsEditMode := not self.IsEditMode;
 end;
 
+procedure TOPPBufferForm.actionWipeRecordsExecute(Sender: TObject);
+begin
+  cxGrid1DBTableView1.DataController.BeginFullUpdate;
+  cxGrid1DBTableView1.DataController.SelectAll;
+  cxGrid1DBTableView1.DataController.DeleteSelection;
+  cxGrid1DBTableView1.DataController.EndFullUpdate;
+end;
+
 procedure TOPPBufferForm.ClientDataSet1CalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('order').AsInteger := DataSet.RecNo;
+end;
+
+procedure TOPPBufferForm.cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
+begin
+  self.reloadActionsVisibility;
 end;
 
 procedure TOPPBufferForm.FormActivate(Sender: TObject);
@@ -217,6 +268,16 @@ end;
 procedure TOPPBufferForm.FormResize(Sender: TObject);
 begin
   cxGrid1DBTableView1.Columns[1].Width := cxGrid1.Width - cxGrid1DBTableView1.Columns[2].Width - cxGrid1DBTableView1.Columns[0].Width - 2;
+end;
+
+function TOPPBufferForm.GetCanDeleteRecord: Boolean;
+begin
+  result := (cxGrid1DBTableView1.DataController.RecordCount > 0) and (cxGrid1DBTableView1.DataController.RecNo >= 0);
+end;
+
+function TOPPBufferForm.GetHasRecords: Boolean;
+begin
+  result := (cxGrid1DBTableView1.DataController.RecordCount > 0);
 end;
 
 procedure TOPPBufferForm.JvClipboardMonitor1Change(Sender: TObject);
@@ -253,12 +314,32 @@ begin
   end;
 end;
 
+procedure TOPPBufferForm.ReloadActionsVisibility;
+begin
+  menuItemIsEditMode.Checked := fIsEditMode;
+  cxGrid1DBTableView1.OptionsData.Deleting := fIsEditMode;
+  cxGrid1DBTableView1.OptionsData.Editing := fIsEditMode;
+  cxGrid1DBTableView1.OptionsData.Inserting := fIsEditMode;
+  cxGrid1DBTableView1.OptionsSelection.CellSelect := fIsEditMode;
+  menuMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
+  actionMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
+  menuMultiSelectMode.Checked := fIsMultiSelectMode and self.HasRecords;
+  actionNewRecord.Enabled := fIsEditMode;
+  actionDeleteRecord.Enabled := fIsEditMode and self.CanDeleteRecord;
+  actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords;
+end;
+
 procedure TOPPBufferForm.setIsEditMode(const Value: Boolean);
 begin
   fIsEditMode := Value;
-  menuItemIsEditMode.Checked := fIsEditMode;
-  cxGrid1DBTableView1.Columns[1].Options.Editing := fIsEditMode;
-  cxGrid1DBTableView1.Columns[2].Options.Editing := fIsEditMode;
+  self.IsMultiSelectMode := false;
+end;
+
+procedure TOPPBufferForm.SetIsMultiSelectMode(const Value: Boolean);
+begin
+  fIsMultiSelectMode := Value;
+  cxGrid1DBTableView1.OptionsSelection.MultiSelect := fIsMultiSelectMode;
+  ReloadActionsVisibility;
 end;
 
 end.
