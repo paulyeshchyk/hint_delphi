@@ -222,6 +222,7 @@ uses
   SampleOnly.Help.Shortcut.Setup,
   OPP.Help.Settings.Form,
   OPP.Help.System.Codable.FormSizeSettings,
+  OPP.Keyboard.Shortcut.Manager,
 
   OPPClient.TdxScreenTip.Helper,
 
@@ -470,47 +471,12 @@ begin
 end;
 
 procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
-var
-  fForm: TOPPBufferForm;
-  fControl: TWinControl;
-
-  function HasTextProp(AControl: TControl): Boolean;
-  var
-    Ctx: TRttiContext;
-    Prop: TRttiProperty;
-  begin
-    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
-    Result := (Prop <> nil) and (Prop.Visibility in [mvPublic, mvPublished]);
-  end;
-
-  procedure SetTextProp(AControl: TControl; AText: String);
-  var
-    Ctx: TRttiContext;
-    Prop: TRttiProperty;
-  begin
-    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
-    Prop.SetValue(AControl, AText);
-  end;
-
 begin
-  fControl := Screen.ActiveControl;
-  if not HasTextProp(fControl) then
-    exit;
-
-  fForm := TOPPBufferForm.Create(self);
-  try
-    fForm.OnApply := procedure(AData: String)
-      var
-        Ctx: TRttiContext;
-        Prop: TRttiProperty;
-      begin
-        Prop := Ctx.GetType(fControl.ClassType).GetProperty('Text');
-        Prop.SetValue(fControl, AData);
-      end;
-    fForm.ShowModal;
-  finally
-    fForm.Free;
-  end;
+  // TOPPBufferForm.ShowForm(Self, Screen.ActiveControl);
+  if FindWindow('TOPPBufferForm', nil) = 0 then
+    TOPPBufferForm.ShowForm(self)
+  else
+    eventLogger.Debug('Cant run second instance');
 end;
 
 procedure TSampleForm.actionShowSchemeEditorExecute(Sender: TObject);
@@ -779,6 +745,11 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
+  keyboardShortcutManager.registerHook(Shortcut(Ord('V'), [ssCtrl, ssShift]),
+    procedure
+    begin
+      actionShowBuffer.Execute;
+    end);
 
   oppBufferManager.SetFormat(ifText);
 
@@ -840,14 +811,6 @@ end;
 
 procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
 begin
-  eventLogger.Debug(Format('clipboard viewer: %d',[GetClipboardViewer]), kContext);
-  eventLogger.Debug(Format('clipboard owner:  %d',[GetClipboardOwner]), kContext);
-  eventLogger.Debug(Format('active form:      %d',[Application.ActiveFormHandle]), kContext);
-  eventLogger.Debug(Format('active handle:    %d',[Application.Handle]), kContext);
-  eventLogger.Debug(Format('foreground handle:%d',[GetForegroundWindow()]), kContext);
-
-
-
   oppBufferManager.OnClipboardChange(Sender);
 end;
 

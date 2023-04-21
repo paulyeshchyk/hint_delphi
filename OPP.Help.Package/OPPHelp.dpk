@@ -95,7 +95,8 @@ contains
   OPP.Buffer.Clipboard in '..\OPP.Buffer\OPP.Buffer.Clipboard.pas',
   OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
   OPP.Buffer.Form in '..\OPP.Buffer\OPP.Buffer.Form.pas' {OPPBufferForm},
-  OPP.Buffer.Manager.Dataset in '..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas';
+  OPP.Buffer.Manager.Dataset in '..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas',
+  OPP.Keyboard.Shortcut.Manager in '..\OPP.Keyboard\OPP.Keyboard.Shortcut.Manager.pas';
 
 end.
 
