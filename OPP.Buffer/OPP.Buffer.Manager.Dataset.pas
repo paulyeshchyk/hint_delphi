@@ -71,24 +71,23 @@ end;
 
 function TOPPBufferManagerDataset.HasTheSameValue(const AValue: Variant): Boolean;
 var
-  currentPos: Integer;
+  cloned: TOPPBufferManagerDataset;
 begin
-  currentPos := self.RecNo;
+  cloned := TOPPBufferManagerDataset.Create(nil);
   try
     try
-      self.Filter := Format('%s LIKE %s', ['Data', QuotedStr(AValue)]);
-      self.Filtered := true;
-      result := self.FindFirst;
-      self.Filtered := false;
-      self.Filter := '';
+    cloned.CloneCursor(self, false);
+    cloned.Filter := Format('%s LIKE %s', ['Data', QuotedStr(AValue)]);
+    cloned.Filtered := true;
+    result := cloned.FindFirst;
     except
-      on E: Exception do
-      begin
+      on E: Exception do begin
         eventLogger.Error(E, kContext);
       end;
     end;
+
   finally
-    self.RecNo := currentPos;
+    cloned.Free;
   end;
 end;
 
