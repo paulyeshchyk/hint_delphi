@@ -70,8 +70,6 @@ begin
       fPredicate.predicates.Add(fChild);
       helpShortcutServer.showHelp(fPredicate, vmExternal,
         procedure(error: Exception)
-        var
-          strmessage: String;
         begin
           if error = nil then
           begin

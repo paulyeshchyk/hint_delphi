@@ -56,7 +56,6 @@ var
   isLCtrlDown: Boolean;
   isLShiftDown: Boolean;
   isLAltDown: Boolean;
-  isF12Down: Boolean;
   fShortcut: TShortcut;
   fShiftState: TShiftState;
   p: PKBDLLHOOKSTRUCT;
@@ -106,7 +105,6 @@ end;
 
 class function TShortcutHelper.GetShortcutFromKeyboard: TShortcut;
 var
-  sc: TShortcut;
   Mods: Byte;
   vkKey, i: word;
 begin
@@ -137,8 +135,7 @@ end;
 
 class function TOPPHotKeyHelper.GetHotKey(AHotKey: THotKey): TOPPHotKey;
 var
-  shift, ctrl, alt: Boolean;
-  vkKey, bMod: Byte;
+  bMod: Byte;
 begin
   bMod := AHotKey.HotKey shr 8;
   result.vkKey := AHotKey.HotKey and $00FF;

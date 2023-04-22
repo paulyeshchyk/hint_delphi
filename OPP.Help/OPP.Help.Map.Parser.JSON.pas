@@ -247,8 +247,6 @@ end;
 
 class function TOPPHelpMapRESTParser.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
-  serializer: TJSONMarshal;
-  jsonObj: TJSONObject;
   jsonString: String;
 
   function createDirectoryIfNeed(AFileName: String): Boolean;
@@ -284,6 +282,7 @@ var
 
 begin
   //
+  result := 0;
 
   if not createDirectoryIfNeed(AFileName) then begin
     exit;
@@ -303,7 +302,6 @@ begin
     end;
   end;
 
-  result := 0;
 end;
 
 end.

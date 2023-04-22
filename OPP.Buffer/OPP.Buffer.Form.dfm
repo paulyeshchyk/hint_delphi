@@ -3,7 +3,7 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = []
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 345
+  ClientHeight = 305
   ClientWidth = 487
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object OPPBufferForm: TOPPBufferForm
     Left = 0
     Top = 0
     Width = 487
-    Height = 345
+    Height = 305
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
@@ -51,6 +51,7 @@ object OPPBufferForm: TOPPBufferForm
         Options.FilteringFilteredItemsList = False
         Options.FilteringMRUItemsList = False
         Options.FilteringPopup = False
+        Styles.Content = cxStyle1
         VisibleForEditForm = bFalse
         Width = 46
       end
@@ -248,6 +249,15 @@ object OPPBufferForm: TOPPBufferForm
     end
     object N25: TMenuItem
       Action = actionMarkAsNonFixed
+    end
+  end
+  object cxStyleRepository1: TcxStyleRepository
+    Left = 104
+    Top = 24
+    PixelsPerInch = 96
+    object cxStyle1: TcxStyle
+      AssignedValues = [svColor]
+      Color = clBtnFace
     end
   end
 end

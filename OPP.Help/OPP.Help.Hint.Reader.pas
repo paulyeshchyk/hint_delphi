@@ -83,7 +83,7 @@ begin
         result.rtf := self.GetRichText(paragraph);
         if result.isEmpty then
         begin
-          eventLogger.error(Format('hint is empty for search: %s in %s', [APredicate.value, APredicate.fileName]));
+          //eventLogger.error(Format('hint is empty for search: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
     ktPage:
@@ -94,7 +94,7 @@ begin
         result.rtf := self.GetRichText(paragraph);
         if result.isEmpty then
         begin
-          eventLogger.error(Format('hint is empty for page: %s in %s', [APredicate.value, APredicate.fileName]));
+          //eventLogger.error(Format('hint is empty for page: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
     ktBookmark:
@@ -105,7 +105,7 @@ begin
         result.rtf := self.GetRichText(paragraph);
         if result.isEmpty then
         begin
-          eventLogger.error(Format('hint is empty for bookmark: %s in %s', [APredicate.value, APredicate.fileName]));
+          //eventLogger.error(Format('hint is empty for bookmark: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
     ktAny:
@@ -116,7 +116,7 @@ begin
         result.rtf := self.GetRichText(paragraph);
         if result.isEmpty then
         begin
-          eventLogger.error(Format('hint is empty for any: %s in %s', [APredicate.value, APredicate.fileName]));
+          //eventLogger.error(Format('hint is empty for any: %s in %s', [APredicate.value, APredicate.fileName]));
         end;
       end;
   end;

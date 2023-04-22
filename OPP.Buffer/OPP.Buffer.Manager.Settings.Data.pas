@@ -20,7 +20,7 @@ type
     class procedure Save(AFileName: String; AData: TOPPBufferManagerSettingsData);
     class procedure Load(AFileName: String; out AData: TOPPBufferManagerSettingsData);
 
-    constructor Create;
+    constructor Create;override;
     property CurrentFileName: String read fCurrentFileName write fCurrentFileName;
 
     property Shortcut: Word read fShortcut write fShortcut;
@@ -43,6 +43,7 @@ const
 
 constructor TOPPBufferManagerSettingsData.Create;
 begin
+  inherited Create;
   self.Shortcut := 0;
   self.RecordsCountLimit := 20;
   self.IsExternalAllowed := false;

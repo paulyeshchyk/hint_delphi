@@ -4,8 +4,8 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1073#1091#1092#1077#1088#1072' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 471
-  ClientWidth = 362
+  ClientHeight = 555
+  ClientWidth = 380
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,6 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   OldCreateOrder = False
   Position = poOwnerFormCenter
   OnActivate = FormActivate
-  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -23,8 +22,8 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     AlignWithMargins = True
     Left = 8
     Top = 3
-    Width = 346
-    Height = 105
+    Width = 364
+    Height = 150
     Margins.Left = 8
     Margins.Right = 8
     Align = alTop
@@ -40,7 +39,8 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     object recordsCountLimitEdit: TcxSpinEdit
       Left = 141
       Top = 63
-      Properties.AssignedValues.MaxValue = True
+      Properties.ImmediatePost = True
+      Properties.MaxValue = 32768.000000000000000000
       Properties.MinValue = 5.000000000000000000
       Properties.OnEditValueChanged = recordsCountLimitEditPropertiesEditValueChanged
       TabOrder = 1
@@ -52,18 +52,33 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Top = 64
       Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
     end
+    object cxLabel3: TcxLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 97
+      Margins.Left = 8
+      Margins.Top = 8
+      Margins.Right = 8
+      Margins.Bottom = 8
+      Align = alBottom
+      Caption = 
+        #1042#1085#1080#1084#1072#1085#1080#1077'! '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1074' '#1084#1077#1085#1100#1096#1091#1102' '#1089#1090#1086#1088#1086#1085#1091' '#1087#1088#1080#1074#1077#1076#1105#1090' '#1082' '#1091#1076#1072#1083#1077#1085 +
+        #1080#1102' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1093#1089#1103' '#1085#1077#1079#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1093' '#1079#1072#1087#1080#1089 +
+        #1077#1081'.'
+      Properties.WordWrap = True
+    end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 430
-    Width = 362
+    Top = 514
+    Width = 380
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
     object cxButton1: TcxButton
       AlignWithMargins = True
-      Left = 271
+      Left = 289
       Top = 8
       Width = 75
       Height = 25
@@ -78,14 +93,25 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   object GroupBox2: TGroupBox
     AlignWithMargins = True
     Left = 8
-    Top = 114
-    Width = 346
+    Top = 159
+    Width = 364
     Height = 127
     Margins.Left = 8
     Margins.Right = 8
     Align = alTop
     Caption = #1042#1086#1079#1084#1086#1078#1085#1086#1089#1090#1080
     TabOrder = 2
+    object SpeedButton1: TSpeedButton
+      Left = 285
+      Top = 86
+      Width = 63
+      Height = 22
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100
+      Action = actionWipeShortcut
+      Flat = True
+      ParentShowHint = False
+      ShowHint = True
+    end
     object AllowExternalsCheckBox: TcxCheckBox
       Left = 8
       Top = 24
@@ -106,9 +132,9 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
     end
     object clipboardManagerShortcut: THotKey
-      Left = 206
+      Left = 185
       Top = 88
-      Width = 121
+      Width = 91
       Height = 19
       HotKey = 24662
       Modifiers = [hkShift, hkCtrl]
@@ -119,20 +145,20 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   object GroupBox3: TGroupBox
     AlignWithMargins = True
     Left = 8
-    Top = 247
-    Width = 346
-    Height = 160
+    Top = 292
+    Width = 364
+    Height = 219
     Margins.Left = 8
     Margins.Right = 8
-    Align = alTop
+    Align = alClient
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1087#1080#1089#1077#1081' '#1087#1086' '#1082#1086#1083#1086#1085#1082#1072#1084
     TabOrder = 3
     object cxGrid1: TcxGrid
       AlignWithMargins = True
       Left = 10
       Top = 23
-      Width = 326
-      Height = 127
+      Width = 344
+      Height = 186
       Margins.Left = 8
       Margins.Top = 8
       Margins.Right = 8
@@ -142,6 +168,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       LookAndFeel.Kind = lfFlat
       LookAndFeel.NativeStyle = False
       object cxGrid1DBTableView1: TcxGridDBTableView
+        OnMouseUp = cxGrid1DBTableView1MouseUp
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource1
         DataController.Summary.DefaultGroupSummaryItems = <>
@@ -235,6 +262,10 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     object actionSaveSettings: TAction
       Caption = #1047#1072#1082#1088#1099#1090#1100
       OnExecute = actionSaveSettingsExecute
+    end
+    object actionWipeShortcut: TAction
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      OnExecute = actionWipeShortcutExecute
     end
   end
   object DataSource1: TDataSource

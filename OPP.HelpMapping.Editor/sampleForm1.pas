@@ -159,8 +159,6 @@ type
     function GetWinControlHelpKeyword(AControl: TControl): String;
     procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
     procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
-    procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
-    procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
     function preferableIndexToJump(from: Integer): Integer;
     procedure RefreshPreviewButtonAction;
@@ -397,11 +395,8 @@ begin
       point: TPoint;
       fHint: TOPPHelpHint;
       fMeta: TOPPHelpMeta;
-      fScreenTip: TdxScreenTip;
       fScreenTipLink: TdxScreenTipLink;
-
     begin
-
       fMeta.propertyName := '';
       fMeta.identifier := AMap.ComponentIdentifier;
       fHint := helpHintServer.GetHint(fMeta);
@@ -538,11 +533,13 @@ var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
+  result := nil;
   if not(AComponent is TControl) then
   begin
     eventLogger.Error(SErrorPassedNotTControl, kContext);
     exit;
   end;
+
   TControl(AComponent).ShowHint := true;
 
   fScreenTip := tipsRepo.Items.Add;
@@ -744,8 +741,11 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
+  fShortcut: Word;
 begin
-  keyboardShortcutManager.registerHook(Shortcut(Ord('V'), [ssCtrl, ssShift]),
+  //fShortcut := Shortcut(Ord('V'), [ssCtrl, ssShift]);
+  fShortcut := oppBufferManager.Settings.GetShortCut;
+  keyboardShortcutManager.registerHook(fShortcut,
     procedure
     begin
       actionShowBuffer.Execute;
@@ -858,43 +858,11 @@ begin
   //
 end;
 
-procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
-var
-  fHint: TOPPHelpHint;
-  fControl: TComponent;
-  fScreenTip: TdxScreenTip;
-  fScreenTipLink: TdxScreenTipLink;
-begin
-
-  for fHint in hints do
-  begin
-
-    fControl := self.FindSubControl(fHint.Meta);
-    if not assigned(fControl) then
-      exit;
-    CreateScreenTip(fHint, fControl);
-  end;
-end;
-
 procedure TSampleForm.OncxControlValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 begin
   if fCanChangeModificationFlag then
   begin
     self.isModified := true;
-  end;
-end;
-
-procedure TSampleForm.onHintViewsCreate(hints: TList<TOPPHelpHint>);
-var
-  fHint: TOPPHelpHint;
-  fControl: TComponent;
-begin
-  for fHint in hints do
-  begin
-    fControl := self.FindSubControl(fHint.Meta);
-    if not assigned(fControl) then
-      exit;
-    CreateScreenTip(fHint, fControl);
   end;
 end;
 

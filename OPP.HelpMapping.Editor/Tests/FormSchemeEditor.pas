@@ -48,7 +48,6 @@ type
     function GetRTTIXMLFilePath: String;
     { Private declarations }
     property SchemeXMLFilePath: String read GetSchemeXMLFilePath;
-    property RTTIXMLFilePath: String read GetRTTIXMLFilePath;
   public
     { Public declarations }
   end;
@@ -95,9 +94,6 @@ begin
 end;
 
 procedure TOPPHintAttributeSchemeEditorForm.actionReloadDatasetExecute(Sender: TObject);
-var
-  fField: TField;
-  col: TcxGridDBColumn;
 begin
   SchemeDataSet.Active := false;
   SchemeDataSet.LoadFromFile(self.SchemeXMLFilePath);

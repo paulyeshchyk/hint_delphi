@@ -144,6 +144,7 @@ procedure TOPPBufferManagerSettings.Save;
 var
   fFilePath: String;
 begin
+
   fFilePath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(SOPPBufferManagerSettingsFileName);
   if TFile.Exists(fFilePath) then begin
     try
@@ -156,7 +157,7 @@ begin
     end;
   end;
 
-  TOPPBufferManagerSettingsData.Save(fFilePath, fData);
+  TOPPBufferManagerSettingsData.Save(SOPPBufferManagerSettingsFileName, fData);
 end;
 
 procedure TOPPBufferManagerSettings.SetCanSaveFormFrame(AValue: Boolean);

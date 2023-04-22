@@ -9,12 +9,13 @@ uses
   cxLabel, cxTextEdit, cxMaskEdit, cxSpinEdit, cxCheckBox, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ComCtrls, Datasnap.DBClient,
-  OPP.Buffer.Manager.Settings;
+  OPP.Buffer.Manager.Settings, Vcl.Buttons;
 
 type
 
   TOPPBufferManagerSettingsOnLoad = reference to function(): IOPPBufferManagerSettings;
   TOPPBufferManagerSettingsOnSave = reference to procedure(AValue: IOPPBufferManagerSettings);
+  TOPPBufferManagerSettingsOnLeaveRecordsCount = reference to procedure(ACount: Integer);
 
   TOPPBufferSettingsForm = class(TForm)
     GroupBox1: TGroupBox;
@@ -53,20 +54,26 @@ type
     ClientDataSet1SortOrder: TSmallintField;
     ClientDataSet1FieldNameID: TSmallintField;
     ClientDataSet1FieldNameCaption: TStringField;
+    SpeedButton1: TSpeedButton;
+    actionWipeShortcut: TAction;
+    cxLabel3: TcxLabel;
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionSaveSettingsExecute(Sender: TObject);
+    procedure actionWipeShortcutExecute(Sender: TObject);
     procedure clipboardManagerShortcutChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure recordsCountLimitCheckboxPropertiesEditValueChanged(Sender: TObject);
     procedure recordsCountLimitEditPropertiesEditValueChanged(Sender: TObject);
     procedure CanSaveFormFrameCheckboxPropertiesEditValueChanged(Sender: TObject);
     procedure AllowExternalsCheckBoxPropertiesEditValueChanged(Sender: TObject);
+    procedure cxGrid1DBTableView1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   private
     fSettings: IOPPBufferManagerSettings;
+    fInitialShortcut: Word;
     fOnBufferSettingsLoad: TOPPBufferManagerSettingsOnLoad;
     fOnBufferSettingsSave: TOPPBufferManagerSettingsOnSave;
+    fOnLeaveRecordsCount: TOPPBufferManagerSettingsOnLeaveRecordsCount;
     procedure DoReloadUI;
     procedure DoUpdateUI;
     procedure SetSettings(Value: IOPPBufferManagerSettings);
@@ -76,6 +83,7 @@ type
     { Public declarations }
     property onBufferSettingsLoad: TOPPBufferManagerSettingsOnLoad read fOnBufferSettingsLoad write fOnBufferSettingsLoad;
     property onBufferSettingsSave: TOPPBufferManagerSettingsOnSave read fOnBufferSettingsSave write fOnBufferSettingsSave;
+    property onLeaveRecordsCount: TOPPBufferManagerSettingsOnLeaveRecordsCount read fOnLeaveRecordsCount write fOnLeaveRecordsCount;
   end;
 
 var
@@ -83,7 +91,11 @@ var
 
 implementation
 
-uses OPP.Help.System.Files, OPP.Help.Log, VarUtils;
+uses
+  OPP.Help.System.Files,
+  OPP.Help.Log,
+  OPP.Keyboard.Shortcut.Manager,
+  VarUtils;
 
 {$R *.dfm}
 
@@ -107,6 +119,11 @@ end;
 procedure TOPPBufferSettingsForm.SetSettings(Value: IOPPBufferManagerSettings);
 begin
   fSettings := Value;
+
+  // save shortcut for further re-registration
+  if assigned(fSettings) then
+    fInitialShortcut := fSettings.GetShortCut;
+
   DoReloadUI;
 end;
 
@@ -124,11 +141,25 @@ begin
   if assigned(fOnBufferSettingsSave) then
   begin
     fOnBufferSettingsSave(fSettings);
+
+    keyboardShortcutManager.replaceHookShortcut(fInitialShortcut, fSettings.GetShortCut);
+
+    if fSettings.GetUseRecordsCountLimit() = true then begin
+        if assigned(fOnLeaveRecordsCount) then begin
+          fOnLeaveRecordsCount(fSettings.GetRecordsCountLimit);
+        end;
+    end;
+
   end else begin
     eventLogger.Error('OnBufferSettingsSave is not assigned', 'TOPPBufferSettingsForm');
   end;
 
-  Close;
+  actionClose.Execute;
+end;
+
+procedure TOPPBufferSettingsForm.actionWipeShortcutExecute(Sender: TObject);
+begin
+  clipboardManagerShortcut.HotKey := 0;
 end;
 
 procedure TOPPBufferSettingsForm.AllowExternalsCheckBoxPropertiesEditValueChanged(Sender: TObject);
@@ -163,6 +194,11 @@ begin
   fSettings.SetShortCut(clipboardManagerShortcut.HotKey);
 end;
 
+procedure TOPPBufferSettingsForm.cxGrid1DBTableView1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  //
+end;
+
 procedure TOPPBufferSettingsForm.FormActivate(Sender: TObject);
 var
   fLoadedSettings: IOPPBufferManagerSettings;
@@ -172,6 +208,7 @@ begin
     eventLogger.Error('fOnBufferSettingsLoad is not assigned');
     exit;
   end;
+
   fLoadedSettings := fOnBufferSettingsLoad();
   if not assigned(fLoadedSettings) then
   begin
@@ -179,14 +216,6 @@ begin
     exit;
   end;
   self.Settings := fLoadedSettings
-end;
-
-procedure TOPPBufferSettingsForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  if assigned(fOnBufferSettingsSave) then
-  begin
-    fOnBufferSettingsSave(fSettings);
-  end;
 end;
 
 end.

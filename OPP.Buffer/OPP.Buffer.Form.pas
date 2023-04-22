@@ -14,7 +14,7 @@ uses
   cxGridDBTableView,
   JvComponentBase, JvClipboardMonitor,
 
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxTextEdit;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxTextEdit, cxContainer, Vcl.StdCtrls, cxButtons;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String);
@@ -76,6 +76,8 @@ type
     actionMarkAsNonFixed: TAction;
     N24: TMenuItem;
     N25: TMenuItem;
+    cxStyleRepository1: TcxStyleRepository;
+    cxStyle1: TcxStyle;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
@@ -289,6 +291,10 @@ var
 begin
   fSettingsForm := TOPPBufferSettingsForm.Create(self);
   try
+    fSettingsForm.onLeaveRecordsCount := procedure(ARecordsCountToLeave: Integer)
+      begin
+        oppBufferManager.RemoveRecordsAfter(ARecordsCountToLeave);
+      end;
     fSettingsForm.onBufferSettingsLoad := function(): IOPPBufferManagerSettings
       begin
         result := oppBufferManager.Settings;
@@ -483,7 +489,6 @@ end;
 class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TControl);
 var
   fForm: TOPPBufferForm;
-  fControl: TWinControl;
 
   function HasTextProp(AControl: TControl): Boolean;
   var

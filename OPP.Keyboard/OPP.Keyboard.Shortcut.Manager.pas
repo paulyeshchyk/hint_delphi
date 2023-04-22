@@ -16,12 +16,12 @@ type
   IOPPKeyboardShortcutManager = interface
     procedure registerHook(AShortcut: TShortcut; callback: THookCallback);
     procedure unregisterHook(AShortcut: TShortcut);
+    procedure replaceHookShortcut(AInitialShortcut, AFinalShortcut: TShortcut);
     procedure run(AShortcut: TShortcut);
   end;
 
   TOPPKeyboardShortcutManager = class(TInterfacedObject, IOPPKeyboardShortcutManager)
   private
-    hhk: HHOOK;
     fHooks: TDictionary<TShortcut, THookCallback>;
   public
     constructor Create;
@@ -29,6 +29,7 @@ type
 
     procedure registerHook(AShortcut: TShortcut; callback: THookCallback);
     procedure unregisterHook(AShortcut: TShortcut);
+    procedure replaceHookShortcut(AInitialShortcut, AFinalShortcut: TShortcut);
     procedure run(AShortcut: TShortcut);
   end;
 
@@ -59,7 +60,37 @@ end;
 
 procedure TOPPKeyboardShortcutManager.registerHook(AShortcut: TShortcut; callback: THookCallback);
 begin
+  if AShortcut <= 0 then
+  begin
+    eventLogger.Warning('Shortcut is equal to zero', kContext);
+    exit;
+  end;
   fHooks.Add(AShortcut, callback);
+end;
+
+procedure TOPPKeyboardShortcutManager.replaceHookShortcut(AInitialShortcut, AFinalShortcut: TShortcut);
+var
+  fCallback: THookCallback;
+begin
+  if AInitialShortcut = AFinalShortcut then
+  begin
+    eventLogger.Debug('Nothing to replace', kContext);
+    exit;
+  end;
+
+  try
+    fHooks.TryGetValue(AInitialShortcut, fCallback);
+    if Assigned(fCallback) then
+    begin
+      self.unregisterHook(AInitialShortcut);
+      self.registerHook(AFinalShortcut, fCallback);
+    end;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
 end;
 
 procedure TOPPKeyboardShortcutManager.run(AShortcut: TShortcut);
@@ -67,19 +98,16 @@ var
   callback: THookCallback;
 begin
   try
-    try
-      eventLogger.Debug(Format('shortcut %d',[AShortcut]));
-      fHooks.TryGetValue(AShortcut, callback);
-      if assigned(callback) then
-        callback();
-    except
-      on E: Exception do
-      begin
-        eventLogger.Error(E, kContext);
-      end;
+    fHooks.TryGetValue(AShortcut, callback);
+    if Assigned(callback) then begin
+      eventLogger.Flow(Format('executed shortcut %d', [AShortcut]), kContext);
+      callback();
     end;
-  finally
-
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
   end;
 end;
 
@@ -96,7 +124,7 @@ function keyboardShortcutManager: IOPPKeyboardShortcutManager;
 begin
   fKeyboardHookLock.Acquire;
   try
-    if not assigned(fKeyboardShortcutManager) then
+    if not Assigned(fKeyboardShortcutManager) then
     begin
       fKeyboardShortcutManager := TOPPKeyboardShortcutManager.Create();
     end;

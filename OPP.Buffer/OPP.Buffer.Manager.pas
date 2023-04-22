@@ -34,6 +34,9 @@ type
     procedure LoadRecords();
     procedure SaveRecords();
     procedure SetRecordsStorageFileName(AFileName: String = '');
+    procedure RemoveRecordsAfter(AAfter: Integer);
+
+    procedure setCustomFilter(AFilter: String);
 
     property Dataset: IOPPBufferManagerDataset read GetDataset;
     property Settings: IOPPBufferManagerSettings read GetSettings;
@@ -55,15 +58,16 @@ type
     procedure SaveRecords();
     procedure SetRecordsStorageFileName(AFileName: String = '');
     property CanAcceptRecord: Boolean read GetCanAcceptRecord;
-    property Dataset: IOPPBufferManagerDataset read GetDataset;
   public
     constructor Create;
     destructor Destroy; override;
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
+    procedure RemoveRecordsAfter(AAfter: Integer);
     procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     property Settings: IOPPBufferManagerSettings read GetSettings;
+    procedure setCustomFilter(AFilter: String);
   end;
 
 function oppBufferManager: IOPPBufferManager;
@@ -136,7 +140,6 @@ procedure TOPPBufferManager.AddEmpty;
 var
   fRecord: TOPPBufferManagerRecord;
 begin
-
   fRecord := TOPPBufferManagerRecord.Create;
   try
     self.AddRecord(fRecord);
@@ -149,8 +152,14 @@ end;
 { TOPPBufferManager }
 
 function TOPPBufferManager.AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
+var
+  fMaxAllowed: Integer;
 begin
-  result := fDataset.AddRecord(ARecord);
+  fMaxAllowed := fSettings.GetRecordsCountLimit;
+  if not fSettings.GetUseRecordsCountLimit then
+    fMaxAllowed := Integer.MaxValue;
+
+  result := fDataset.AddRecord(ARecord, fMaxAllowed);
 end;
 
 procedure TOPPBufferManager.AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
@@ -264,6 +273,11 @@ begin
   end;
 end;
 
+procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);
+begin
+  fDataset.RemoveRecordsAfter(AAfter);
+end;
+
 procedure TOPPBufferManager.SaveClipboardToManagerRecord(AFormat: Word);
 var
   fRecord: TOPPBufferManagerRecord;
@@ -293,6 +307,11 @@ begin
     end;
   end;
 
+end;
+
+procedure TOPPBufferManager.setCustomFilter(AFilter: String);
+begin
+  fDataset.setCustomFilter(AFilter);
 end;
 
 procedure TOPPBufferManager.SetFormat(AFormat: TOPPBufferManagerItemFormat);
