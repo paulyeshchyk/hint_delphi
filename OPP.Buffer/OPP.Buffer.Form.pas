@@ -14,7 +14,7 @@ uses
   cxGridDBTableView,
   JvComponentBase, JvClipboardMonitor,
 
-  OPP.Buffer.Manager, cxTextEdit;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxTextEdit;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String);
@@ -63,6 +63,19 @@ type
     N9: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
+    PopupMenu1: TPopupMenu;
+    N16: TMenuItem;
+    N17: TMenuItem;
+    N18: TMenuItem;
+    N19: TMenuItem;
+    N20: TMenuItem;
+    actionMarkAsFixed: TAction;
+    N21: TMenuItem;
+    N22: TMenuItem;
+    N23: TMenuItem;
+    actionMarkAsNonFixed: TAction;
+    N24: TMenuItem;
+    N25: TMenuItem;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
@@ -71,6 +84,8 @@ type
     procedure actionExportSettingsExecute(Sender: TObject);
     procedure actionImportBufferExecute(Sender: TObject);
     procedure actionLoadRecordsExecute(Sender: TObject);
+    procedure actionMarkAsFixedExecute(Sender: TObject);
+    procedure actionMarkAsNonFixedExecute(Sender: TObject);
     procedure actionMultiSelectModeExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionSaveRecordsExecute(Sender: TObject);
@@ -84,9 +99,10 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure JvClipboardMonitor1Change(Sender: TObject);
-    procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant;
-      var ErrorText: TCaption; var Error: Boolean);
+    procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
   private
+    fSettings: IOPPBufferManagerSettings;
+
     fIsEditMode: Boolean;
     fIsMultiSelectMode: Boolean;
     fOnApply: TOPPBufferFormOnApply;
@@ -209,6 +225,49 @@ begin
   //
 end;
 
+procedure TOPPBufferForm.actionMarkAsFixedExecute(Sender: TObject);
+var
+  i: Integer;
+  rowIndex: Integer;
+begin
+  try
+    cxGrid1DBTableView1.DataController.BeginFullUpdate;
+    for i := 0 to cxGrid1DBTableView1.DataController.GetSelectedCount - 1 do
+    begin
+      rowIndex := cxGrid1DBTableView1.DataController.GetSelectedRowIndex(i);
+      cxGrid1DBTableView1.DataController.SetValue(rowIndex, 2, true);
+    end;
+    cxGrid1DBTableView1.DataController.EndFullUpdate;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
+
+end;
+
+procedure TOPPBufferForm.actionMarkAsNonFixedExecute(Sender: TObject);
+var
+  i: Integer;
+  rowIndex: Integer;
+begin
+  try
+    cxGrid1DBTableView1.DataController.BeginFullUpdate;
+    for i := 0 to cxGrid1DBTableView1.DataController.GetSelectedCount - 1 do
+    begin
+      rowIndex := cxGrid1DBTableView1.DataController.GetSelectedRowIndex(i);
+      cxGrid1DBTableView1.DataController.SetValue(rowIndex, 2, false);
+    end;
+    cxGrid1DBTableView1.DataController.EndFullUpdate;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
+end;
+
 procedure TOPPBufferForm.actionMultiSelectModeExecute(Sender: TObject);
 begin
   self.IsMultiSelectMode := not self.IsMultiSelectMode;
@@ -230,6 +289,27 @@ var
 begin
   fSettingsForm := TOPPBufferSettingsForm.Create(self);
   try
+    fSettingsForm.onBufferSettingsLoad := function(): IOPPBufferManagerSettings
+      begin
+        result := oppBufferManager.Settings;
+      end;
+
+    fSettingsForm.onBufferSettingsSave := procedure(AValue: IOPPBufferManagerSettings)
+      var
+        fFilePath: String;
+      begin
+        try
+          AValue.Save;
+        except
+          on E: Exception do
+          begin
+            fFilePath := AValue.GetDefaultFilePath;
+            ShowMessage(Format('Невозможно сохранить настройки. Файл %s заблокирован. Обратитесь к администратору.', [fFilePath]));
+          end;
+
+        end;
+      end;
+
     fSettingsForm.ShowModal;
   finally
     FreeAndNil(fSettingsForm);
@@ -237,10 +317,12 @@ begin
 end;
 
 procedure TOPPBufferForm.actionTurnEditModeExecute(Sender: TObject);
-var fEditingController: TcxGridTableEditingController;
+var
+  fEditingController: TcxGridTableEditingController;
 begin
   fEditingController := cxGrid1DBTableView1.Controller.EditingController;
-  if self.IsEditMode and (fEditingController <> nil) then begin
+  if self.IsEditMode and (fEditingController <> nil) then
+  begin
     fEditingController.HideEdit(true);
   end;
   self.IsEditMode := not self.IsEditMode;
@@ -248,10 +330,17 @@ end;
 
 procedure TOPPBufferForm.actionWipeRecordsExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.DataController.BeginFullUpdate;
-  cxGrid1DBTableView1.DataController.SelectAll;
-  cxGrid1DBTableView1.DataController.DeleteSelection;
-  cxGrid1DBTableView1.DataController.EndFullUpdate;
+  try
+    cxGrid1DBTableView1.DataController.BeginFullUpdate;
+    cxGrid1DBTableView1.DataController.SelectAll;
+    cxGrid1DBTableView1.DataController.DeleteSelection;
+    cxGrid1DBTableView1.DataController.EndFullUpdate;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
 end;
 
 procedure TOPPBufferForm.ClientDataSet1CalcFields(DataSet: TDataSet);
@@ -259,13 +348,13 @@ begin
   DataSet.FieldByName('order').AsInteger := DataSet.RecNo;
 end;
 
-procedure TOPPBufferForm.cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant;
-  var ErrorText: TCaption; var Error: Boolean);
+procedure TOPPBufferForm.cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 begin
-  error := false;
-  if oppBufferManager.DataSet.HasTheSameValue(DisplayValue) then begin
-    error := True;
-    errorText := SDuplicatedRecord;
+  Error := false;
+  if oppBufferManager.DataSet.HasTheSameValue(DisplayValue) then
+  begin
+    Error := true;
+    ErrorText := SDuplicatedRecord;
   end;
 end;
 
@@ -281,13 +370,20 @@ end;
 
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  if fSettings.GetCanSaveFormFrame then
+  begin
+    self.saveFormState;
+  end;
+
   oppBufferManager.SaveRecords();
   DataSource1.DataSet := nil;
-  self.saveFormState;
+
 end;
 
 procedure TOPPBufferForm.FormCreate(Sender: TObject);
 begin
+  fSettings := oppBufferManager.Settings;
+
   self.IsEditMode := false;
   self.readFormState;
   DataSource1.DataSet := TClientDataset(oppBufferManager.DataSet);
@@ -350,6 +446,8 @@ begin
   menuMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
   actionMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
   menuMultiSelectMode.Checked := fIsMultiSelectMode and self.HasRecords;
+  actionMarkAsFixed.Enabled := fIsEditMode and self.HasRecords;
+  actionMarkAsNonFixed.Enabled := fIsEditMode and self.HasRecords;
   actionNewRecord.Enabled := fIsEditMode;
   actionDeleteRecord.Enabled := fIsEditMode and self.HasSelectedRecord;
   actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords;

@@ -14,6 +14,8 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
+  OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -28,19 +30,21 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alTop
     Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
     TabOrder = 0
-    object cxCheckBox1: TcxCheckBox
+    object recordsCountLimitCheckbox: TcxCheckBox
       Left = 8
       Top = 24
-      Caption = #1053#1077#1086#1075#1088#1072#1085#1080#1095#1077#1085#1085#1086#1077' '#1095#1080#1089#1083#1086' '#1079#1072#1087#1080#1089#1077#1081
-      Properties.OnChange = cxCheckBox1PropertiesChange
+      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1086#1077' '#1095#1080#1089#1083#1086' '#1079#1072#1087#1080#1089#1077#1081
+      Properties.OnEditValueChanged = recordsCountLimitCheckboxPropertiesEditValueChanged
       TabOrder = 0
     end
-    object cxSpinEdit1: TcxSpinEdit
+    object recordsCountLimitEdit: TcxSpinEdit
       Left = 141
       Top = 63
+      Properties.AssignedValues.MaxValue = True
       Properties.MinValue = 5.000000000000000000
+      Properties.OnEditValueChanged = recordsCountLimitEditPropertiesEditValueChanged
       TabOrder = 1
-      Value = 5
+      Value = 20
       Width = 112
     end
     object cxLabel1: TcxLabel
@@ -82,16 +86,18 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alTop
     Caption = #1042#1086#1079#1084#1086#1078#1085#1086#1089#1090#1080
     TabOrder = 2
-    object cxCheckBox2: TcxCheckBox
+    object AllowExternalsCheckBox: TcxCheckBox
       Left = 8
       Top = 24
-      Action = actionAddRecordsFromOtherApps
+      Caption = #1044#1086#1073#1072#1074#1083#1103#1090#1100' '#1079#1072#1087#1080#1089#1080' '#1080#1079' '#1076#1088#1091#1075#1080#1093' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1081
+      Properties.OnEditValueChanged = AllowExternalsCheckBoxPropertiesEditValueChanged
       TabOrder = 0
     end
-    object cxCheckBox3: TcxCheckBox
+    object CanSaveFormFrameCheckbox: TcxCheckBox
       Left = 8
       Top = 51
       Caption = #1057#1086#1093#1088#1072#1085#1103#1090#1100' '#1088#1072#1079#1084#1077#1088#1099' '#1080' '#1087#1086#1083#1086#1078#1077#1085#1080#1077' '#1086#1082#1085#1072
+      Properties.OnEditValueChanged = CanSaveFormFrameCheckboxPropertiesEditValueChanged
       TabOrder = 1
     end
     object cxLabel2: TcxLabel
@@ -99,7 +105,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Top = 88
       Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
     end
-    object HotKey1: THotKey
+    object clipboardManagerShortcut: THotKey
       Left = 206
       Top = 88
       Width = 121
@@ -107,7 +113,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       HotKey = 24662
       Modifiers = [hkShift, hkCtrl]
       TabOrder = 3
-      OnChange = HotKey1Change
+      OnChange = clipboardManagerShortcutChange
     end
   end
   object GroupBox3: TGroupBox

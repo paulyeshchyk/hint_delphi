@@ -56,7 +56,6 @@ type
     procedure SetRecordsStorageFileName(AFileName: String = '');
     property CanAcceptRecord: Boolean read GetCanAcceptRecord;
     property Dataset: IOPPBufferManagerDataset read GetDataset;
-    property Settings: IOPPBufferManagerSettings read GetSettings;
   public
     constructor Create;
     destructor Destroy; override;
@@ -64,6 +63,7 @@ type
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
     procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
+    property Settings: IOPPBufferManagerSettings read GetSettings;
   end;
 
 function oppBufferManager: IOPPBufferManager;
@@ -162,12 +162,14 @@ end;
 function TOPPBufferManager.DeleteFocused: Boolean;
 begin
   result := false;
-  if fDataset.RecNo = -1 then exit;
+  if fDataset.RecNo = -1 then
+    exit;
   try
     fDataset.Delete;
     result := true;
   except
-    on E: Exception do begin
+    on E: Exception do
+    begin
       eventLogger.Error(E, kContext);
     end;
 
@@ -179,7 +181,7 @@ begin
   result := true;
   if not(Application.ActiveFormHandle = GetForegroundWindow()) then
   begin
-    result := Settings.isExternalAllowed
+    result := Settings.GetIsExternalAllowed
   end;
 end;
 

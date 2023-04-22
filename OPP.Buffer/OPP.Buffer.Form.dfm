@@ -29,6 +29,7 @@ object OPPBufferForm: TOPPBufferForm
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
     object cxGrid1DBTableView1: TcxGridDBTableView
+      PopupMenu = PopupMenu1
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource1
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -99,11 +100,11 @@ object OPPBufferForm: TOPPBufferForm
       OnExecute = actionNewRecordExecute
     end
     object actionDeleteRecord: TAction
-      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077
       OnExecute = actionDeleteRecordExecute
     end
     object actionWipeRecords: TAction
-      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1087#1080#1089#1080
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1079#1072#1087#1080#1089#1080
       OnExecute = actionWipeRecordsExecute
     end
     object actionShowSettings: TAction
@@ -130,6 +131,14 @@ object OPPBufferForm: TOPPBufferForm
     object actionMultiSelectMode: TAction
       Caption = #1042#1099#1073#1086#1088' '#1085#1077#1089#1082#1086#1083#1100#1082#1080#1093' '#1079#1072#1087#1080#1089#1077#1081
       OnExecute = actionMultiSelectModeExecute
+    end
+    object actionMarkAsFixed: TAction
+      Caption = #1055#1086#1084#1077#1090#1080#1090#1100' '#1082#1072#1082' '#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1077
+      OnExecute = actionMarkAsFixedExecute
+    end
+    object actionMarkAsNonFixed: TAction
+      Caption = #1057#1085#1103#1090#1100' '#1087#1086#1084#1077#1090#1082#1091' '#1092#1080#1082#1089#1072#1094#1080#1080
+      OnExecute = actionMarkAsNonFixedExecute
     end
   end
   object DataSource1: TDataSource
@@ -187,6 +196,15 @@ object OPPBufferForm: TOPPBufferForm
       object N10: TMenuItem
         Caption = '-'
       end
+      object N23: TMenuItem
+        Action = actionMarkAsFixed
+      end
+      object N24: TMenuItem
+        Action = actionMarkAsNonFixed
+      end
+      object N22: TMenuItem
+        Caption = '-'
+      end
       object N4: TMenuItem
         Action = actionExportBuffer
       end
@@ -206,5 +224,30 @@ object OPPBufferForm: TOPPBufferForm
     Filter = 'oppclipboarddata|*.oppclipboarddata'
     Left = 296
     Top = 168
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 272
+    Top = 72
+    object N17: TMenuItem
+      Action = actionNewRecord
+    end
+    object N18: TMenuItem
+      Caption = '-'
+    end
+    object N16: TMenuItem
+      Action = actionDeleteRecord
+    end
+    object N19: TMenuItem
+      Action = actionWipeRecords
+    end
+    object N20: TMenuItem
+      Caption = '-'
+    end
+    object N21: TMenuItem
+      Action = actionMarkAsFixed
+    end
+    object N25: TMenuItem
+      Action = actionMarkAsNonFixed
+    end
   end
 end
