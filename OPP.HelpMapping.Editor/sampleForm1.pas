@@ -160,7 +160,7 @@ type
     function GetWinControlHelpKeyword(AControl: TControl): String;
     procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
     procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
-    procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
+    procedure onMapsLoaded(AList: TOPPHelpMapSetList; completion: TOPPHelpCompletion);
     function preferableIndexToJump(from: Integer): Integer;
     procedure RefreshPreviewButtonAction;
     procedure ReloadListView(completion: TOPPHelpCompletion);
@@ -871,7 +871,7 @@ begin
   end;
 end;
 
-procedure TSampleForm.onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
+procedure TSampleForm.onMapsLoaded(AList: TOPPHelpMapSetList; completion: TOPPHelpCompletion);
 var
   Map: TOPPHelpMap;
 begin
@@ -934,7 +934,7 @@ end;
 
 procedure TSampleForm.ReloadListView(completion: TOPPHelpCompletion);
 var
-  maps: TList<TOPPHelpMap>;
+  maps: TOPPHelpMapSetList;
 begin
   cxListView1.Items.Clear;
 
