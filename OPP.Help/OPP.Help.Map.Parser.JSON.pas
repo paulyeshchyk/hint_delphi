@@ -18,7 +18,7 @@ type
     class procedure deserializeExtendedJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
   public
     class procedure readExtendedJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
-    class function saveExtendedJSON(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    class function saveExtendedJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
   TOPPHelpMapRESTParser = class
@@ -27,7 +27,7 @@ type
     class procedure deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
   public
     class procedure readJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
-    class function saveJSON(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    class function saveJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
 implementation
@@ -39,7 +39,7 @@ uses
 
 class procedure TOPPHelpMapRESTParserExtended.deserializeExtendedJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
 var
-  mapList: TOPPHelpMapSet;
+  mapList: TOPPHelpMapList;
   deSerializer: TJSONUnMarshal;
   Error: Exception;
 begin
@@ -60,7 +60,7 @@ begin
   deSerializer := TJSONUnMarshal.Create;
   try
     try
-      mapList := deSerializer.unmarshal(AJSON) as TOPPHelpMapSet;
+      mapList := deSerializer.unmarshal(AJSON) as TOPPHelpMapList;
       try
         if assigned(callback) then
         begin
@@ -86,7 +86,7 @@ end;
 
 class procedure TOPPHelpMapRESTParser.deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
 var
-  mapList: TOPPHelpMapSet;
+  mapList: TOPPHelpMapList;
   Error: Exception;
 begin
   if not assigned(AJSON) then
@@ -104,15 +104,15 @@ begin
   end;
 
   try
-    mapList := TJson.JsonToObject<TOPPHelpMapSet>(AJSON);
+    mapList := TJson.JsonToObject<TOPPHelpMapList>(AJSON);
     try
       if assigned(callback) then
       begin
         callback(mapList, nil);
       end;
     finally
-      mapList.list.Clear;
-      mapList.list.Pack;
+      mapList.Clear;
+      mapList.Pack;
       FreeAndNil(mapList);
     end;
   except
@@ -211,7 +211,7 @@ begin
   end;
 end;
 
-class function TOPPHelpMapRESTParserExtended.saveExtendedJSON(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+class function TOPPHelpMapRESTParserExtended.saveExtendedJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -219,7 +219,7 @@ var
 begin
   serializer := TJSONMarshal.Create;
   try
-    jsonObj := serializer.marshal(TOPPHelpMapSet.Create(AList)) as TJSONObject;
+    jsonObj := serializer.marshal(TOPPHelpMapList.Create(AList)) as TJSONObject;
     try
       jsonString := TJson.JsonEncode(jsonObj);
       try
@@ -245,7 +245,7 @@ begin
 
 end;
 
-class function TOPPHelpMapRESTParser.saveJSON(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+class function TOPPHelpMapRESTParser.saveJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   jsonString: String;
 
@@ -288,7 +288,7 @@ begin
     exit;
   end;
 
-  jsonString := TJson.ObjectToJsonString(TOPPHelpMapSet.Create(AList));
+  jsonString := TJson.ObjectToJsonString(TOPPHelpMapList.Create(AList));
   try
     TFile.WriteAllText(AFileName, jsonString);
     if assigned(callback) then

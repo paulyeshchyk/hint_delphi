@@ -36,7 +36,7 @@ type
     procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
-    function SaveCustomList(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    function SaveCustomList(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     function RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
@@ -70,7 +70,7 @@ type
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
-    function SaveCustomList(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    function SaveCustomList(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 
     procedure NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
 
@@ -213,11 +213,11 @@ begin
   fHelpMap := TOPPHelpMap.Create(fID);
   try
     if Assigned(onApplyDefaults) then
-      onApplyDefaults(@fHelpMap);
+      onApplyDefaults(fHelpMap);
     fShortcutDataset.AddMap(fHelpMap);
     completion(fHelpMap);
   finally
-    // fHelpMap.Free;
+    //FreeAndNil(fHelpMap);
   end;
 end;
 
@@ -383,7 +383,7 @@ begin
   end;
 end;
 
-function TOPPHelpShortcutServer.SaveCustomList(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+function TOPPHelpShortcutServer.SaveCustomList(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 begin
   result := TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
@@ -392,7 +392,7 @@ function TOPPHelpShortcutServer.SaveMaps(AFileName: String; callback: TOPPHelpEr
 var
   fFileName: String;
   fFileNameFullPath: String;
-  fList: TOPPHelpMapSetList;
+  fList: TOPPHelpMapList;
 begin
   if Length(AFileName) = 0 then
     fFileName := kShortcutMappingDefaultFileName

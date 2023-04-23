@@ -21,10 +21,10 @@ uses
 
 type
   TOPPHelpHintLoadCompletion = reference to procedure(HintTexts: TList<TOPPHelpHint>);
-  TOPPHelpMapGenerationCompletion = reference to procedure(AList: TOPPHelpMapSetList);
+  TOPPHelpMapGenerationCompletion = reference to procedure(AList: TOPPHelpMapList);
   TOPPHelpHintServerOnGetMetaFactory = reference to function(AComponent: TComponent): TList<TOPPHelpMeta>;
   TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpMap): IOPPHelpHintDataReader;
-  TOPPHelpMapsCompletion = reference to procedure(AList: TOPPHelpMapSetList);
+  TOPPHelpMapsCompletion = reference to procedure(AList: TOPPHelpMapList);
 
   TOPPHelpHintMappingRequest = class
   private
@@ -57,12 +57,12 @@ type
     procedure RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
     procedure CreateHelpMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
     function AddHelpMap(AMap: TOPPHelpMap): Boolean;
-    function GetAvailableMaps(): TOPPHelpMapSetList;
+    function GetAvailableMaps(): TOPPHelpMapList;
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
-    procedure MergeHelpMaps(AList: TOPPHelpMapSetList);
+    procedure MergeHelpMaps(AList: TOPPHelpMapList);
     procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion); overload;
-    procedure SaveHelpMaps(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion); overload;
+    procedure SaveHelpMaps(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion); overload;
     procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpBooleanCompletion);
   end;
 
@@ -79,7 +79,7 @@ type
   private
     fDefaultOnHintReaderCreator: TOPPHelpHintViewCreator;
     fHintDataReaders: TDictionary<String, IOPPHelpHintDataReader>;
-    fHintMapSet: TOPPHelpMapSet;
+    fHintMapSet: TOPPHelpMapList;
     fHintMetaDict: TDictionary<TSymbolName, String>;
     fLoaded: Boolean;
     function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
@@ -92,15 +92,15 @@ type
     destructor Destroy; override;
     function AddHelpMap(AMap: TOPPHelpMap): Boolean;
     procedure AvailableMaps(completion: TOPPHelpMapsCompletion);
-    function GetAvailableMaps: TOPPHelpMapSetList;
+    function GetAvailableMaps: TOPPHelpMapList;
     function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
     procedure CreateHelpMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     procedure LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion); overload;
-    procedure MergeHelpMaps(AList: TOPPHelpMapSetList);
+    procedure MergeHelpMaps(AList: TOPPHelpMapList);
     procedure RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
     procedure SaveHelpMaps(AFileName: String; callback: TOPPHelpErrorCompletion); overload;
-    procedure SaveHelpMaps(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion); overload;
+    procedure SaveHelpMaps(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion); overload;
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
     procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
     procedure ValidateHelpMapIdentifier(AIdentificator, ANewIdentifier: String; completion: TOPPHelpBooleanCompletion);
@@ -160,7 +160,7 @@ end;
 constructor TOPPHelpHintServer.Create;
 begin
   fHintDataReaders := TDictionary<String, IOPPHelpHintDataReader>.Create();
-  fHintMapSet := TOPPHelpMapSet.Create();
+  fHintMapSet := TOPPHelpMapList.Create();
   fHintMetaDict := TDictionary<TSymbolName, String>.Create();
 end;
 
@@ -185,7 +185,7 @@ begin
     exit;
   end;
 
-  fIndex := fHintMapSet.list.Add(AMap);
+  fIndex := fHintMapSet.Add(AMap);
   result := (fIndex >= 0);
 end;
 
@@ -193,7 +193,7 @@ procedure TOPPHelpHintServer.AvailableMaps(completion: TOPPHelpMapsCompletion);
 begin
   if not Assigned(completion) then
     exit;
-  completion(fHintMapSet.list);
+  completion(fHintMapSet);
 end;
 
 procedure TOPPHelpHintServer.CreateHelpMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
@@ -212,13 +212,14 @@ begin
   fHelpMap := TOPPHelpMap.Create(fID);
   try
 
-    if Assigned(onApplyDefaults) then
-      onApplyDefaults(@fHelpMap);
+    if Assigned(onApplyDefaults) then begin
+      onApplyDefaults(fHelpMap);
+    end;
 
-    fHintMapSet.AddMap(fHelpMap);
+    fHintMapSet.Add(fHelpMap);
     completion(fHelpMap);
   finally
-    // fHelpMap.Free;
+    //FreeAndNil(fHelpMap);
   end;
 end;
 
@@ -234,7 +235,7 @@ begin
     exit;
   end;
 
-  for fMap in fHintMapSet.list do
+  for fMap in fHintMapSet do
   begin
     if fMap = nil then
       continue;
@@ -261,7 +262,7 @@ var
 begin
   result := nil;
 
-  if fHintMapSet.list.Count = 0 then
+  if fHintMapSet.Count = 0 then
   begin
     eventLogger.Warning(Format('maps list is empty; skipping search for [%s]', [AMetaIdentifier]));
     exit;
@@ -306,9 +307,9 @@ begin
   fHintDataReaders.Add(fMap.Predicate.filename, result);
 end;
 
-function TOPPHelpHintServer.GetAvailableMaps: TOPPHelpMapSetList;
+function TOPPHelpHintServer.GetAvailableMaps: TOPPHelpMapList;
 begin
-  result := fHintMapSet.list;
+  result := fHintMapSet;
 end;
 
 function TOPPHelpHintServer.GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
@@ -439,7 +440,7 @@ begin
   end;
 end;
 
-procedure TOPPHelpHintServer.MergeHelpMaps(AList: TOPPHelpMapSetList);
+procedure TOPPHelpHintServer.MergeHelpMaps(AList: TOPPHelpMapList);
 begin
   fHintMapSet.MergeMaps(AList);
 end;
@@ -456,7 +457,7 @@ begin
     exit;
   end;
 
-  fOPPHelpHintMapJSONReadCallback := procedure(Mapset: TOPPHelpMapSet; Error: Exception)
+  fOPPHelpHintMapJSONReadCallback := procedure(Mapset: TOPPHelpMapList; Error: Exception)
     var
       fMap: TOPPHelpMap;
 
@@ -474,12 +475,9 @@ begin
         exit;
       end;
 
-      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [Mapset.list.Count]), kContext);
+      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [Mapset.Count]), kContext);
 
-      for fMap in Mapset.list do
-      begin
-        fHintMapSet.AddMap(fMap);
-      end;
+      fHintMapSet.AddRange(Mapset);
 
       self.fLoaded := true;
 
@@ -492,12 +490,12 @@ end;
 procedure TOPPHelpHintServer.RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion);
 var
   fMap: TOPPHelpMap;
-  itemsToRemove: TOPPHelpMapSetList;
+  itemsToRemove: TOPPHelpMapList;
 begin
 
-  itemsToRemove := TOPPHelpMapSetList.Create();
+  itemsToRemove := TOPPHelpMapList.Create();
   try
-    for fMap in self.fHintMapSet.list do
+    for fMap in self.fHintMapSet do
     begin
       if fMap = nil then
         continue;
@@ -510,7 +508,7 @@ begin
       if fMap = nil then
         continue;
       eventLogger.Flow(Format('Removed record: [%s]', [fMap.Identifier]), kContext);
-      fHintMapSet.list.Remove(fMap);
+      fHintMapSet.Remove(fMap);
     end;
 
   finally
@@ -534,10 +532,10 @@ begin
 
   fFileNameFullPath := TOPPHelpSystemFilesHelper.AbsolutePath(fFileName);
 
-  SaveHelpMaps(fHintMapSet.list, fFileNameFullPath, callback);
+  SaveHelpMaps(fHintMapSet, fFileNameFullPath, callback);
 end;
 
-procedure TOPPHelpHintServer.SaveHelpMaps(AList: TOPPHelpMapSetList; AFileName: String; callback: TOPPHelpErrorCompletion);
+procedure TOPPHelpHintServer.SaveHelpMaps(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion);
 begin
   TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
@@ -547,7 +545,7 @@ var
   fList: TList<TOPPHelpMeta>;
   fListOfUniques: TList<String>;
   fMap: TOPPHelpMap;
-  fMapList: TOPPHelpMapSetList;
+  fMapList: TOPPHelpMapList;
   fMeta: TOPPHelpMeta;
 begin
 
@@ -559,7 +557,7 @@ begin
   end;
 
   fListOfUniques := TList<String>.Create();
-  fMapList := TOPPHelpMapSetList.Create();
+  fMapList := TOPPHelpMapList.Create();
   try
     fList := ARequest.OnGetHintFactory(ARequest.Control);
     try

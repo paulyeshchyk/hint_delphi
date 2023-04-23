@@ -111,8 +111,15 @@ type
     actionOnItemSelect: TAction;
     actionShowBuffer: TAction;
     actionShowBuffer1: TMenuItem;
+    dxBarButton11: TdxBarButton;
+    actionGenerateFakeItems: TAction;
+    N7: TMenuItem;
+    Generate1: TMenuItem;
+    actionNewRecordSilent: TAction;
     procedure actionDeleteRecordExecute(Sender: TObject);
+    procedure actionGenerateFakeItemsExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
+    procedure actionNewRecordSilentExecute(Sender: TObject);
     procedure actionOnItemSelectExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
     procedure actionPreviewShortcutExecute(Sender: TObject);
@@ -158,13 +165,13 @@ type
     procedure FindMapsById(ItemCaption: String);
     function GetHasRecords: Boolean;
     function GetWinControlHelpKeyword(AControl: TControl): String;
-    procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
-    procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
-    procedure onMapsLoaded(AList: TOPPHelpMapSetList; completion: TOPPHelpCompletion);
+    procedure onApplyHintMapDefaults(var AMap: TOPPHelpMap);
+    procedure onApplyShortcutMapDefaults(var AMap: TOPPHelpMap);
+    procedure onMapsLoaded(AList: TOPPHelpMapList; completion: TOPPHelpCompletion);
     function preferableIndexToJump(from: Integer): Integer;
     procedure RefreshPreviewButtonAction;
     procedure ReloadListView(completion: TOPPHelpCompletion);
-    procedure SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
+    procedure SaveChanges(ItemCaption: String; shouldReadDataFromUI: Boolean; completion: THelpMapSaveCompletion);
     procedure setIsIdentifierValid(AValue: Boolean);
     procedure setIsModified(AValue: Boolean);
     procedure SetSelectedHintMap(const AMap: TOPPHelpMap);
@@ -197,6 +204,7 @@ uses
   System.Generics.Defaults,
   System.UITypes,
   System.Types,
+  System.IOUtils,
   FormTest01,
   FormTest02,
   FormTest03,
@@ -315,6 +323,39 @@ begin
   end;
 end;
 
+procedure TSampleForm.actionGenerateFakeItemsExecute(Sender: TObject);
+begin
+  TTask.Run(
+    procedure
+    var
+      i: Integer;
+      arr: TArray<ITask>;
+    const
+      size: Integer = 1000;
+    begin
+      SetLength(arr, size);
+      for i := 0 to size - 1 do
+      begin
+        arr[i] := TTask.Run(
+          procedure
+          begin
+            TThread.Synchronize(nil,
+              procedure
+              begin
+                actionNewRecordSilent.Execute;
+              end);
+          end);
+      end;
+      TTask.WaitForAll(arr);
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          ShowMessage('Done');
+        end);
+
+    end);
+end;
+
 procedure TSampleForm.actionNewRecordExecute(Sender: TObject);
 var
   newGUID: TGUID;
@@ -336,11 +377,51 @@ begin
         cxEditIdentifierName.SetFocus;
         cxEditIdentifierName.SelectAll;
 
-        self.SaveChanges(self.fSelectedItem,
+        self.SaveChanges(self.fSelectedItem, true,
           procedure(ANewIdentifier: String)
           begin
             self.isModified := false;
             self.FindMapsById(ANewIdentifier);
+          end);
+      end;
+
+    CreateGUID(newGUID);
+
+    helpHintServer.CreateHelpMap(newGUID, onApplyHintMapDefaults,
+      procedure(const AHintMap: TOPPHelpMap)
+      begin
+        fState.hintWasUpdated := true;
+        fState.checkAndRunMapId(GUIDToString(newGUID));
+      end);
+
+    helpShortcutServer.NewMap(newGUID, onApplyShortcutMapDefaults,
+      procedure(const AShortcutMap: TOPPHelpMap)
+      begin
+        fState.shortcutWasUpdated := true;
+        fState.checkAndRunMapId(GUIDToString(newGUID));
+      end);
+
+  finally
+    fState.Free;
+  end;
+end;
+
+procedure TSampleForm.actionNewRecordSilentExecute(Sender: TObject);
+var
+  newGUID: TGUID;
+  fState: TSampleFormSaveState;
+begin
+  fState := TSampleFormSaveState.Create;
+  try
+    fState.shortcutWasUpdated := false;
+    fState.hintWasUpdated := false;
+    fState.completion := procedure(ANewIdentifier: String)
+      begin
+
+        self.SaveChanges(ANewIdentifier, false,
+          procedure(ANewIdentifier: String)
+          begin
+            eventLogger.Debug(Format('Created new id: %s',[ANewIdentifier]),'Generator');
           end);
       end;
 
@@ -452,7 +533,7 @@ end;
 
 procedure TSampleForm.actionSaveExecute(Sender: TObject);
 begin
-  SaveChanges(fSelectedItem,
+  SaveChanges(fSelectedItem, true,
     procedure(ANewIdentifier: String)
     var
       listItem: TListItem;
@@ -471,7 +552,7 @@ begin
 
   if FindWindow('TOPPBufferForm', nil) = 0 then
   begin
-    TOPPBufferForm.ShowForm(self,Screen.ActiveControl);
+    TOPPBufferForm.ShowForm(self, Screen.ActiveControl);
   end
   else
     eventLogger.Debug('Cant run second instance');
@@ -687,7 +768,7 @@ begin
     exit;
   end;
 
-  self.SaveChanges(self.fSelectedItem,
+  self.SaveChanges(self.fSelectedItem, true,
     procedure(ANewIdentifier: String)
     begin
       self.isModified := false;
@@ -841,25 +922,25 @@ begin
   TFormTest4.Create(self).ShowModal;
 end;
 
-procedure TSampleForm.onApplyHintMapDefaults(const AMap: POPPHelpMap);
+procedure TSampleForm.onApplyHintMapDefaults(var AMap: TOPPHelpMap);
 begin
   if not assigned(fDefaultSettings) then
   begin
     eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
     exit;
   end;
-  AMap^.Predicate.filename := fDefaultSettings.HintsFilePath;
+  AMap.Predicate.filename := fDefaultSettings.HintsFilePath;
   //
 end;
 
-procedure TSampleForm.onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
+procedure TSampleForm.onApplyShortcutMapDefaults(var AMap: TOPPHelpMap);
 begin
   if not assigned(fDefaultSettings) then
   begin
     eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
     exit;
   end;
-  AMap^.Predicate.filename := fDefaultSettings.ShortcutFilePath;
+  AMap.Predicate.filename := fDefaultSettings.ShortcutFilePath;
   //
 end;
 
@@ -871,7 +952,7 @@ begin
   end;
 end;
 
-procedure TSampleForm.onMapsLoaded(AList: TOPPHelpMapSetList; completion: TOPPHelpCompletion);
+procedure TSampleForm.onMapsLoaded(AList: TOPPHelpMapList; completion: TOPPHelpCompletion);
 var
   Map: TOPPHelpMap;
 begin
@@ -934,7 +1015,7 @@ end;
 
 procedure TSampleForm.ReloadListView(completion: TOPPHelpCompletion);
 var
-  maps: TOPPHelpMapSetList;
+  maps: TOPPHelpMapList;
 begin
   cxListView1.Items.Clear;
 
@@ -949,7 +1030,7 @@ begin
   onMapsLoaded(maps, completion);
 end;
 
-procedure TSampleForm.SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
+procedure TSampleForm.SaveChanges(ItemCaption: String; shouldReadDataFromUI: Boolean; completion: THelpMapSaveCompletion);
 var
   oldIdentifier: String;
   fState: TSampleFormSaveState;
@@ -981,7 +1062,9 @@ begin
           exit;
         end;
 
+        if shouldReadDataFromUI then
         updateMap(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
+
         helpHintServer.SaveHelpMaps('',
           procedure(AError: Exception)
           begin
@@ -1000,7 +1083,10 @@ begin
           fState.checkAndRunMap(AMap);
           exit;
         end;
+
+        if shouldReadDataFromUI then
         updateMap(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
+
         helpShortcutServer.SaveMaps('',
           procedure(AError: Exception)
           begin
@@ -1186,9 +1272,15 @@ begin
 end;
 
 function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
+var fFileName: String;
 begin
   Result := TOPPHelpRichtextHintReader.Create;
-  Result.loadData(AMap.Predicate.filename);
+  fFileName := AMap.Predicate.filename;
+  if not TFile.Exists(fFileName) then begin
+    eventLogger.Error(Format('File not found: %s',[fFileName]), kContext);
+    exit;
+  end;
+  Result.loadData(fFileName);
 end;
 
 initialization
