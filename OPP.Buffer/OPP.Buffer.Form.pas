@@ -5,16 +5,14 @@ interface
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions,
-  Datasnap.DBClient, Vcl.ActnList,
-  Vcl.Menus, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Datasnap.DBClient, Vcl.ActnList, Vcl.Menus, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB,
+
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxGridLevel, cxClasses, cxGridCustomView, cxGrid,
+  dxScrollbarAnnotations, cxTextEdit, cxContainer, cxButtons, dxDateRanges, cxGridDBTableView,
+  cxDataControllerConditionalFormattingRulesManagerDialog, cxDBData, cxGridCustomTableView, cxGridTableView,
 
-  cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView,
-  JvComponentBase, JvClipboardMonitor,
-
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxTextEdit, cxContainer, Vcl.StdCtrls, cxButtons;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String);
@@ -95,6 +93,9 @@ type
     procedure actionTurnEditModeExecute(Sender: TObject);
     procedure actionWipeRecordsExecute(Sender: TObject);
     procedure ClientDataSet1CalcFields(DataSet: TDataSet);
+    procedure cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView;
+        ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift:
+        TShiftState; var AHandled: Boolean);
     procedure cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -102,6 +103,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure JvClipboardMonitor1Change(Sender: TObject);
     procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure DataSource1DataChange(Sender: TObject; Field: TField);
   private
     fSettings: IOPPBufferManagerSettings;
 
@@ -354,6 +356,14 @@ begin
   DataSet.FieldByName('order').AsInteger := DataSet.RecNo;
 end;
 
+procedure TOPPBufferForm.cxGrid1DBTableView1CellDblClick(Sender:
+    TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
+    AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+begin
+  if actionApplySelection.Enabled then
+    actionApplySelection.Execute;
+end;
+
 procedure TOPPBufferForm.cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 begin
   Error := false;
@@ -367,6 +377,11 @@ end;
 procedure TOPPBufferForm.cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
 begin
   self.ReloadActionsVisibility;
+end;
+
+procedure TOPPBufferForm.DataSource1DataChange(Sender: TObject; Field: TField);
+begin
+  ReloadActionsVisibility;
 end;
 
 procedure TOPPBufferForm.FormActivate(Sender: TObject);

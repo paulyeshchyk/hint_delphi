@@ -111,7 +111,6 @@ type
     actionOnItemSelect: TAction;
     actionShowBuffer: TAction;
     actionShowBuffer1: TMenuItem;
-    JvClipboardMonitor1: TJvClipboardMonitor;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionOnItemSelectExecute(Sender: TObject);
@@ -140,6 +139,8 @@ type
     procedure JvClipboardMonitor1Change(Sender: TObject);
     procedure OncxControlValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
   private
+    JvClipboardMonitor1: TJvClipboardMonitor;
+
     fCanChangeModificationFlag: Boolean;
 
     fDefaultSettings: TOPPHelpHintTunningEditorDefaultSettings;
@@ -467,9 +468,11 @@ end;
 
 procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
 begin
-  // TOPPBufferForm.ShowForm(Self, Screen.ActiveControl);
+
   if FindWindow('TOPPBufferForm', nil) = 0 then
-    TOPPBufferForm.ShowForm(self)
+  begin
+    TOPPBufferForm.ShowForm(self,Screen.ActiveControl);
+  end
   else
     eventLogger.Debug('Cant run second instance');
 end;
@@ -743,7 +746,9 @@ var
   dropdownItem: String;
   fShortcut: Word;
 begin
-  //fShortcut := Shortcut(Ord('V'), [ssCtrl, ssShift]);
+  JvClipboardMonitor1 := TJvClipboardMonitor.Create(self);
+  JvClipboardMonitor1.OnChange := self.JvClipboardMonitor1Change;
+
   fShortcut := oppBufferManager.Settings.GetShortCut;
   keyboardShortcutManager.registerHook(fShortcut,
     procedure

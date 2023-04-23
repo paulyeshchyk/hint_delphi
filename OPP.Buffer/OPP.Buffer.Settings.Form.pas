@@ -8,7 +8,8 @@ uses
   Vcl.ActnList, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxControls, cxContainer, cxEdit, cxCustomListBox, cxCheckListBox,
   cxLabel, cxTextEdit, cxMaskEdit, cxSpinEdit, cxCheckBox, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData, cxGridLevel, cxClasses,
-  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ComCtrls, Datasnap.DBClient,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, dxDateRanges, dxScrollbarAnnotations,
+  Vcl.ComCtrls, Datasnap.DBClient,
   OPP.Buffer.Manager.Settings, Vcl.Buttons;
 
 type
@@ -93,6 +94,7 @@ implementation
 
 uses
   OPP.Help.System.Files,
+  System.IOUtils,
   OPP.Help.Log,
   OPP.Keyboard.Shortcut.Manager,
   VarUtils;
@@ -100,9 +102,21 @@ uses
 {$R *.dfm}
 
 procedure TOPPBufferSettingsForm.FormCreate(Sender: TObject);
+var
+  sortSettingsPath: String;
+  columnSettingsPath: String;
 begin
-  ClientDataSet1.LoadFromFile(TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Sort.Settings'));
-  ClientDataSet3.LoadFromFile(TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Column.Settings'));
+  sortSettingsPath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Sort.Settings');
+  if TFile.Exists(sortSettingsPath) then
+  begin
+    ClientDataSet1.LoadFromFile(sortSettingsPath);
+  end;
+
+  columnSettingsPath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Column.Settings');
+  if TFile.Exists(columnSettingsPath) then
+  begin
+    ClientDataSet3.LoadFromFile(columnSettingsPath);
+  end;
 end;
 
 procedure TOPPBufferSettingsForm.recordsCountLimitCheckboxPropertiesEditValueChanged(Sender: TObject);
@@ -144,10 +158,12 @@ begin
 
     keyboardShortcutManager.replaceHookShortcut(fInitialShortcut, fSettings.GetShortCut);
 
-    if fSettings.GetUseRecordsCountLimit() = true then begin
-        if assigned(fOnLeaveRecordsCount) then begin
-          fOnLeaveRecordsCount(fSettings.GetRecordsCountLimit);
-        end;
+    if fSettings.GetUseRecordsCountLimit() = true then
+    begin
+      if assigned(fOnLeaveRecordsCount) then
+      begin
+        fOnLeaveRecordsCount(fSettings.GetRecordsCountLimit);
+      end;
     end;
 
   end else begin

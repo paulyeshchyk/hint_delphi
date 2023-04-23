@@ -1,7 +1,7 @@
 object OPPBufferForm: TOPPBufferForm
   Left = 0
   Top = 0
-  BorderIcons = []
+  BorderIcons = [biSystemMenu]
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
   ClientHeight = 305
   ClientWidth = 487
@@ -31,6 +31,7 @@ object OPPBufferForm: TOPPBufferForm
     object cxGrid1DBTableView1: TcxGridDBTableView
       PopupMenu = PopupMenu1
       Navigator.Buttons.CustomButtons = <>
+      OnCellDblClick = cxGrid1DBTableView1CellDblClick
       DataController.DataSource = DataSource1
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -143,6 +144,7 @@ object OPPBufferForm: TOPPBufferForm
     end
   end
   object DataSource1: TDataSource
+    OnDataChange = DataSource1DataChange
     Left = 320
     Top = 248
   end
