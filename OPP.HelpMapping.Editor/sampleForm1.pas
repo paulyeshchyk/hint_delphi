@@ -421,7 +421,7 @@ begin
         self.SaveChanges(ANewIdentifier, false,
           procedure(ANewIdentifier: String)
           begin
-            eventLogger.Debug(Format('Created new id: %s',[ANewIdentifier]),'Generator');
+            eventLogger.Debug(Format('Created new id: %s', [ANewIdentifier]), 'Generator');
           end);
       end;
 
@@ -837,6 +837,13 @@ begin
       actionShowBuffer.Execute;
     end);
 
+  fShortCut := ShortCut(Ord('H'), [ssShift, ssCtrl]);
+  keyboardShortcutManager.registerHook(fShortcut,
+    procedure
+    begin
+      PostMessage(GetForegroundWindow, WM_OPPHook, 0, 0);
+    end);
+
   oppBufferManager.SetFormat(ifText);
 
   // settings
@@ -1063,7 +1070,7 @@ begin
         end;
 
         if shouldReadDataFromUI then
-        updateMap(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
+          updateMap(AMap, cxEditIdentifierName, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
 
         helpHintServer.SaveHelpMaps('',
           procedure(AError: Exception)
@@ -1085,7 +1092,7 @@ begin
         end;
 
         if shouldReadDataFromUI then
-        updateMap(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
+          updateMap(AMap, cxEditIdentifierName, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
 
         helpShortcutServer.SaveMaps('',
           procedure(AError: Exception)
@@ -1272,12 +1279,14 @@ begin
 end;
 
 function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
-var fFileName: String;
+var
+  fFileName: String;
 begin
   Result := TOPPHelpRichtextHintReader.Create;
   fFileName := AMap.Predicate.filename;
-  if not TFile.Exists(fFileName) then begin
-    eventLogger.Error(Format('File not found: %s',[fFileName]), kContext);
+  if not TFile.Exists(fFileName) then
+  begin
+    eventLogger.Error(Format('File not found: %s', [fFileName]), kContext);
     exit;
   end;
   Result.loadData(fFileName);

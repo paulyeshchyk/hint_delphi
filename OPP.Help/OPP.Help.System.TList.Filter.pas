@@ -18,7 +18,6 @@ type
   TFilteredList<T> = class(TList<T>)
   private
     FFilterFunction: TFilterFunction<T>;
-
   public
 
     type

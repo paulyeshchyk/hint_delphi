@@ -1,4 +1,4 @@
-unit OPP.Help.Map;
+﻿unit OPP.Help.Map;
 
 interface
 
@@ -6,8 +6,10 @@ uses
   System.SysUtils,
   System.Generics.Collections, System.Generics.Defaults,
 
+  OPP.Help.System.TList.Filter,
+
   OPP.Help.System.References,
-  OPP.Help.Predicate, OPP.Help.System.TList.Filter;
+  OPP.Help.Predicate;
 
 type
 

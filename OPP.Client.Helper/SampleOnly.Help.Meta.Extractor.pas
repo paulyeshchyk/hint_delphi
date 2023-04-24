@@ -70,6 +70,10 @@ begin
     for child in list do
     begin
       fMeta := self.GetHintMeta(child);
+      if not fMeta.isValid then begin
+        eventLogger.Error('invalid meta received', 'TSampleOnlyHelpMetaExtractor');
+        continue;
+      end;
       result.Add(fMeta)
     end;
   finally

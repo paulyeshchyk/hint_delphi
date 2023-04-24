@@ -373,7 +373,7 @@ begin
 
   if fHintDataReaders.Count = 0 then
   begin
-    eventLogger.Debug(Format('Found no reader for file: %s', [AFileName]));
+    eventLogger.Debug(Format('Found no reader for file: %s', [AFileName]), kContext);
     exit;
   end;
 

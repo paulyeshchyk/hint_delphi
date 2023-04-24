@@ -1,4 +1,4 @@
-unit OPP.Keyboard.Shortcut.Manager;
+﻿unit OPP.Keyboard.Shortcut.Manager;
 
 interface
 

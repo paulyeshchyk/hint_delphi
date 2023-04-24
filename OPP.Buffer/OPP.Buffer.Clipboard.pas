@@ -3,6 +3,7 @@ unit OPP.Buffer.Clipboard;
 interface
 
 uses
+  System.SysUtils,
   WinAPI.Windows,
   Vcl.Clipbrd;
 
@@ -37,6 +38,9 @@ type
 
 implementation
 
+uses
+  OPP.Help.Log;
+
 { TOPPBufferManagerRecord }
 
 procedure TOPPBufferManagerRecord.SetText(AText: String);
@@ -57,14 +61,21 @@ begin
   Clipboard.Open;
 
   try
-    if Clipboard.HasFormat(fWindowsClipboardType) then
-    begin
-      case fWindowsClipboardType of
-        CF_TEXT:
-          begin
-            result := TOPPBufferManagerRecord.Create;
-            result.SetText(Clipboard.AsText);
-          end;
+    try
+      if Clipboard.HasFormat(fWindowsClipboardType) then
+      begin
+        case fWindowsClipboardType of
+          CF_TEXT:
+            begin
+              result := TOPPBufferManagerRecord.Create;
+              result.SetText(Clipboard.AsText);
+            end;
+        end;
+      end;
+    except
+      on E: Exception do
+      begin
+        eventLogger.Error(E, 'Cliboard');
       end;
     end;
   finally
