@@ -3,10 +3,19 @@ unit OPP.Buffer.Manager.Settings.Data;
 interface
 
 uses
+  System.Types,
   OPP.Help.System.Codable,
-  OPP.Help.System.Codable.Helper;
+  OPP.Help.System.Codable.Helper,
+  System.Generics.Collections;
 
 type
+
+  TOPPBufferManagerSettingsColumnSort = record
+    FieldName: String;
+    SortIndex: Integer;
+    SortType: Integer;
+  end;
+
   TOPPBufferManagerSettingsData = class(TOPPCodable)
   private
     fCurrentFileName: String;
@@ -15,19 +24,25 @@ type
     fIsExternalAllowed: Boolean;
     fCanSaveFormFrame: Boolean;
     fUseRecordsCountLimit: Boolean;
+    fColumnSort: TList<TOPPBufferManagerSettingsColumnSort>;
+    fFormFrame: TRect;
 
   public
     class procedure Save(AFileName: String; AData: TOPPBufferManagerSettingsData);
     class procedure Load(AFileName: String; out AData: TOPPBufferManagerSettingsData);
 
     constructor Create;override;
-    property CurrentFileName: String read fCurrentFileName write fCurrentFileName;
+    destructor Destroy;override;
 
+    procedure SetColumnSortArray(AArray:TArray<TOPPBufferManagerSettingsColumnSort>);
+    property CurrentFileName: String read fCurrentFileName write fCurrentFileName;
     property Shortcut: Word read fShortcut write fShortcut;
     property RecordsCountLimit: Integer read fRecordsCountLimit write fRecordsCountLimit;
     property IsExternalAllowed: Boolean read fIsExternalAllowed write fIsExternalAllowed;
     property CanSaveFormFrame: Boolean read fCanSaveFormFrame write fCanSaveFormFrame;
     property UseRecordsCountLimit: Boolean read fUseRecordsCountLimit write fUseRecordsCountLimit;
+    property ColumnSort: TList<TOPPBufferManagerSettingsColumnSort> read fColumnSort write fColumnSort;
+    property FormFrame: TRect read fFormFrame write fFormFrame;
   end;
 
 implementation
@@ -49,6 +64,13 @@ begin
   self.IsExternalAllowed := false;
   self.CanSaveFormFrame := true;
   self.UseRecordsCountLimit := true;
+  self.ColumnSort := TList<TOPPBufferManagerSettingsColumnSort>.Create;
+end;
+
+destructor TOPPBufferManagerSettingsData.Destroy;
+begin
+  fColumnSort.Free;
+  inherited;
 end;
 
 class procedure TOPPBufferManagerSettingsData.Load(AFileName: String; out AData: TOPPBufferManagerSettingsData);
@@ -74,6 +96,12 @@ begin
       eventLogger.Error(E);
     end;
   end;
+end;
+
+procedure TOPPBufferManagerSettingsData.SetColumnSortArray(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
+begin
+  self.ColumnSort.Clear;
+  self.ColumnSort.AddRange(AArray);
 end;
 
 end.

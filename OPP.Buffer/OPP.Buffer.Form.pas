@@ -93,9 +93,7 @@ type
     procedure actionTurnEditModeExecute(Sender: TObject);
     procedure actionWipeRecordsExecute(Sender: TObject);
     procedure ClientDataSet1CalcFields(DataSet: TDataSet);
-    procedure cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView;
-        ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift:
-        TShiftState; var AHandled: Boolean);
+    procedure cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
     procedure cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -104,6 +102,7 @@ type
     procedure JvClipboardMonitor1Change(Sender: TObject);
     procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
+    procedure cxGrid1DBTableView1DataControllerSortingChanged(Sender: TObject);
   private
     fSettings: IOPPBufferManagerSettings;
 
@@ -117,6 +116,10 @@ type
     procedure SetIsMultiSelectMode(const Value: Boolean);
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
+
+    procedure ColumnSortSave;
+    procedure ColumnSortRead;
+
     { Private declarations }
 
     property IsEditMode: Boolean read fIsEditMode write setIsEditMode default false;
@@ -140,6 +143,8 @@ uses
   OPP.Help.System.Files,
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard,
+
+  OPP.Buffer.Manager.Settings.Data,
 
   System.TypInfo, System.Rtti;
 
@@ -356,9 +361,51 @@ begin
   DataSet.FieldByName('order').AsInteger := DataSet.RecNo;
 end;
 
-procedure TOPPBufferForm.cxGrid1DBTableView1CellDblClick(Sender:
-    TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
-    AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+procedure TOPPBufferForm.ColumnSortRead;
+var
+  fColumnSort: TArray<TOPPBufferManagerSettingsColumnSort>;
+  i: integer;
+  fItem: TcxCustomGridTableItem;
+begin
+  fColumnSort := fSettings.GetColumnSort;
+  for i := 0 to Length(fColumnSort) - 1 do
+  begin
+    fItem := cxGrid1DBTableView1.DataController.GetItemByFieldName(fColumnSort[i].FieldName);
+    fItem.SortIndex := fColumnSort[i].SortIndex;
+    fItem.SortOrder := TcxDataSortOrder(fColumnSort[i].SortType);
+  end;
+end;
+
+procedure TOPPBufferForm.ColumnSortSave;
+var
+  cnt: Integer;
+  i: Integer;
+  sortIndex: Integer;
+  sortType: TcxDataSortOrder;
+  str: String;
+  sortRecords: TArray<TOPPBufferManagerSettingsColumnSort>;
+begin
+  cnt := cxGrid1DBTableView1.DataController.ItemCount;
+
+  SetLength(SortRecords, cnt);
+  try
+
+    for i := 0 to cnt - 1 do
+    begin
+      sortRecords[i].FieldName := cxGrid1DBTableView1.DataController.GetItemField(i).FieldName;
+      sortRecords[i].SortIndex := cxGrid1DBTableView1.DataController.GetItemSortingIndex(i);
+      sortRecords[i].SortType := Integer(cxGrid1DBTableView1.DataController.GetItemSortOrder(i));
+    end;
+
+    fSettings.SetColumnSort(sortRecords);
+
+  finally
+    SetLength(SortRecords, 0);
+  end;
+
+end;
+
+procedure TOPPBufferForm.cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
 begin
   if actionApplySelection.Enabled then
     actionApplySelection.Execute;
@@ -379,6 +426,11 @@ begin
   self.ReloadActionsVisibility;
 end;
 
+procedure TOPPBufferForm.cxGrid1DBTableView1DataControllerSortingChanged(Sender: TObject);
+begin
+  ColumnSortSave;
+end;
+
 procedure TOPPBufferForm.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
   ReloadActionsVisibility;
@@ -391,23 +443,24 @@ end;
 
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if fSettings.GetCanSaveFormFrame then
-  begin
-    self.saveFormState;
-  end;
-
+  fSettings.SetFormFrame(self.frame);
   oppBufferManager.SaveRecords();
   DataSource1.DataSet := nil;
-
 end;
 
 procedure TOPPBufferForm.FormCreate(Sender: TObject);
+var ffFrame: TRect;
 begin
   fSettings := oppBufferManager.Settings;
+  ffFrame := fSettings.GetFormFrame;
+  if not ffFrame.isEmpty then
+    self.frame := ffFrame;
+
 
   self.IsEditMode := false;
-  self.readFormState;
   DataSource1.DataSet := TClientDataset(oppBufferManager.DataSet);
+
+  ColumnSortRead;
 end;
 
 procedure TOPPBufferForm.FormResize(Sender: TObject);

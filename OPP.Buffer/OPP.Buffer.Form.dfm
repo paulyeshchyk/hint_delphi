@@ -3,48 +3,63 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 305
-  ClientWidth = 487
+  ClientHeight = 610
+  ClientWidth = 1002
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
-  OldCreateOrder = False
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 192
+  TextHeight = 27
   object cxGrid1: TcxGrid
     Left = 0
     Top = 0
-    Width = 487
-    Height = 305
+    Width = 1002
+    Height = 610
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 988
+    ExplicitHeight = 609
     object cxGrid1DBTableView1: TcxGridDBTableView
       PopupMenu = PopupMenu1
       Navigator.Buttons.CustomButtons = <>
+      ScrollbarAnnotations.CustomAnnotations = <>
       OnCellDblClick = cxGrid1DBTableView1CellDblClick
       DataController.DataSource = DataSource1
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       DataController.OnDataChanged = cxGrid1DBTableView1DataControllerDataChanged
+      DataController.OnSortingChanged = cxGrid1DBTableView1DataControllerSortingChanged
+      FilterRow.SeparatorWidth = 12
+      FixedDataRows.SeparatorWidth = 12
+      NewItemRow.SeparatorWidth = 12
       OptionsSelection.InvertSelect = False
+      OptionsView.NavigatorOffset = 100
       OptionsView.NoDataToDisplayInfoText = 
         #1057#1087#1080#1089#1086#1082' '#1087#1091#1089#1090'. '#1044#1083#1103' '#1090#1086#1075#1086' '#1095#1090#1086#1073#1099' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100', '#1089#1082#1086#1087#1080#1088#1091#1081#1090#1077' '#1090#1077#1082#1089#1090' '#1074' ' +
         #1073#1091#1092#1077#1088'.'
       OptionsView.GroupByBox = False
+      OptionsView.IndicatorWidth = 24
+      Preview.LeftIndent = 40
+      Preview.RightIndent = 10
       object cxGrid1DBTableView1Column1: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'SortIndex'
+        MinWidth = 40
         Options.Editing = False
         Options.Filtering = False
         Options.Focusing = False
@@ -54,20 +69,21 @@ object OPPBufferForm: TOPPBufferForm
         Options.FilteringPopup = False
         Styles.Content = cxStyle1
         VisibleForEditForm = bFalse
-        Width = 46
+        Width = 92
       end
       object cxGrid1DBTableView1Column2: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'data'
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.OnValidate = cxGrid1DBTableView1Column2PropertiesValidate
-        MinWidth = 100
-        Width = 100
+        MinWidth = 200
+        Width = 400
       end
       object cxGrid1DBTableView1Column3: TcxGridDBColumn
         Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103
         DataBinding.FieldName = 'isFixed'
-        Width = 85
+        MinWidth = 40
+        Width = 170
       end
     end
     object cxGrid1Level1: TcxGridLevel
@@ -256,7 +272,7 @@ object OPPBufferForm: TOPPBufferForm
   object cxStyleRepository1: TcxStyleRepository
     Left = 104
     Top = 24
-    PixelsPerInch = 96
+    PixelsPerInch = 192
     object cxStyle1: TcxStyle
       AssignedValues = [svColor]
       Color = clBtnFace

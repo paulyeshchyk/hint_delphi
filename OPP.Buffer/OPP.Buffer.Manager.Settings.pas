@@ -3,12 +3,17 @@ unit OPP.Buffer.Manager.Settings;
 interface
 
 uses
-  OPP.Buffer.Manager.Settings.Data;
+  System.Types,
+  OPP.Buffer.Manager.Settings.Data,
+  OPP.Help.System.Codable.FormSizeSettings;
 
 type
 
   IOPPBufferManagerSettings = interface
     function GetDefaultFilePath: String;
+
+    procedure SetColumnSort(AValue: TArray<TOPPBufferManagerSettingsColumnSort>);
+    function GetColumnSort: TArray<TOPPBufferManagerSettingsColumnSort>;
 
     procedure SetShortCut(AValue: Word);
     function GetShortCut: Word;
@@ -27,6 +32,9 @@ type
 
     procedure SetIsExternalAllowed(AValue: Boolean);
     function GetIsExternalAllowed: Boolean;
+
+    procedure SetFormFrame(AFrame: TRect);
+    function GetFormFrame: TRect;
 
     procedure Save;
   end;
@@ -34,10 +42,14 @@ type
   TOPPBufferManagerSettings = class(TInterfacedObject, IOPPBufferManagerSettings)
   private
     fData: TOPPBufferManagerSettingsData;
+
     function LoadDataOrCreate: TOPPBufferManagerSettingsData;
   public
     constructor Create;
     destructor Destroy; override;
+
+    procedure SetColumnSort(AValue: TArray<TOPPBufferManagerSettingsColumnSort>);
+    function GetColumnSort: TArray<TOPPBufferManagerSettingsColumnSort>;
 
     procedure SetShortCut(AValue: Word);
     function GetShortCut: Word;
@@ -58,6 +70,9 @@ type
 
     procedure SetCurrentFilePath(AFilePath: String);
     function GetCurrentFilePath: String;
+
+    procedure SetFormFrame(AFrame: TRect);
+    function GetFormFrame: TRect;
 
     procedure Save;
   end;
@@ -94,6 +109,11 @@ begin
   result := fData.CanSaveFormFrame;
 end;
 
+function TOPPBufferManagerSettings.GetColumnSort: TArray<TOPPBufferManagerSettingsColumnSort>;
+begin
+  result := fData.ColumnSort.ToArray;
+end;
+
 function TOPPBufferManagerSettings.GetCurrentFilePath: String;
 begin
   result := fData.CurrentFileName;
@@ -102,6 +122,11 @@ end;
 function TOPPBufferManagerSettings.GetDefaultFilePath: String;
 begin
   result := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(SClipboardFileName);
+end;
+
+function TOPPBufferManagerSettings.GetFormFrame: TRect;
+begin
+  result := fData.FormFrame;
 end;
 
 function TOPPBufferManagerSettings.GetIsExternalAllowed: Boolean;
@@ -144,7 +169,6 @@ procedure TOPPBufferManagerSettings.Save;
 var
   fFilePath: String;
 begin
-
   fFilePath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(SOPPBufferManagerSettingsFileName);
   if TFile.Exists(fFilePath) then begin
     try
@@ -165,10 +189,25 @@ begin
   fData.CanSaveFormFrame := AValue;
 end;
 
+procedure TOPPBufferManagerSettings.SetColumnSort(AValue: TArray<TOPPBufferManagerSettingsColumnSort>);
+begin
+  fData.SetColumnSortArray(AValue);
+  //Run save
+  Save;
+end;
+
 procedure TOPPBufferManagerSettings.SetCurrentFilePath(AFilePath: String);
 begin
   fData.CurrentFileName := AFilePath;
   TOPPBufferManagerSettingsData.Save(SOPPBufferManagerSettingsFileName, fData);
+end;
+
+procedure TOPPBufferManagerSettings.SetFormFrame(AFrame: TRect);
+begin
+  if fData.CanSaveFormFrame then begin
+    fData.FormFrame := AFrame;
+    Save;
+  end;
 end;
 
 procedure TOPPBufferManagerSettings.SetIsExternalAllowed(AValue: Boolean);

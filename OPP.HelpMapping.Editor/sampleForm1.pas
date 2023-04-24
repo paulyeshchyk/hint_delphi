@@ -116,6 +116,7 @@ type
     N7: TMenuItem;
     Generate1: TMenuItem;
     actionNewRecordSilent: TAction;
+    actionShowBufferForControl: TAction;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionGenerateFakeItemsExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
@@ -126,6 +127,7 @@ type
     procedure actionReloadExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
     procedure actionShowBufferExecute(Sender: TObject);
+    procedure actionShowBufferForControlExecute(Sender: TObject);
     procedure actionShowSchemeEditorExecute(Sender: TObject);
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionUndoExecute(Sender: TObject);
@@ -552,6 +554,16 @@ begin
 
   if FindWindow('TOPPBufferForm', nil) = 0 then
   begin
+    TOPPBufferForm.ShowForm(self);
+  end
+  else
+    eventLogger.Debug('Cant run second instance');
+end;
+
+procedure TSampleForm.actionShowBufferForControlExecute(Sender: TObject);
+begin
+  if FindWindow('TOPPBufferForm', nil) = 0 then
+  begin
     TOPPBufferForm.ShowForm(self, Screen.ActiveControl);
   end
   else
@@ -568,7 +580,6 @@ begin
   finally
     schemeEditor.Free;
   end;
-
 end;
 
 procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);

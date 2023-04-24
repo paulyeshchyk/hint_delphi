@@ -1,4 +1,4 @@
-unit OPP.Buffer.Settings.Form;
+﻿unit OPP.Buffer.Settings.Form;
 
 interface
 
@@ -33,28 +33,8 @@ type
     actionAddRecordsFromOtherApps: TAction;
     actionSaveSettings: TAction;
     CanSaveFormFrameCheckbox: TcxCheckBox;
-    GroupBox3: TGroupBox;
-    cxGrid1DBTableView1: TcxGridDBTableView;
-    cxGrid1Level1: TcxGridLevel;
-    cxGrid1: TcxGrid;
     cxLabel2: TcxLabel;
     clipboardManagerShortcut: THotKey;
-    DataSource1: TDataSource;
-    ClientDataSet1: TClientDataSet;
-    ClientDataSet2: TClientDataSet;
-    ClientDataSet2SortTypeID: TSmallintField;
-    ClientDataSet2SortTypeName: TStringField;
-    cxGrid1DBTableView1Column1: TcxGridDBColumn;
-    cxGrid1DBTableView1Column2: TcxGridDBColumn;
-    cxGrid1DBTableView1Column3: TcxGridDBColumn;
-    ClientDataSet3: TClientDataSet;
-    ClientDataSet3FieldNameID: TSmallintField;
-    ClientDataSet3FieldNameCaption: TStringField;
-    ClientDataSet1SortTypeID: TSmallintField;
-    ClientDataSet1SortTypeCaption: TStringField;
-    ClientDataSet1SortOrder: TSmallintField;
-    ClientDataSet1FieldNameID: TSmallintField;
-    ClientDataSet1FieldNameCaption: TStringField;
     SpeedButton1: TSpeedButton;
     actionWipeShortcut: TAction;
     cxLabel3: TcxLabel;
@@ -102,21 +82,8 @@ uses
 {$R *.dfm}
 
 procedure TOPPBufferSettingsForm.FormCreate(Sender: TObject);
-var
-  sortSettingsPath: String;
-  columnSettingsPath: String;
 begin
-  sortSettingsPath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Sort.Settings');
-  if TFile.Exists(sortSettingsPath) then
-  begin
-    ClientDataSet1.LoadFromFile(sortSettingsPath);
-  end;
-
-  columnSettingsPath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Column.Settings');
-  if TFile.Exists(columnSettingsPath) then
-  begin
-    ClientDataSet3.LoadFromFile(columnSettingsPath);
-  end;
+//
 end;
 
 procedure TOPPBufferSettingsForm.recordsCountLimitCheckboxPropertiesEditValueChanged(Sender: TObject);
@@ -148,9 +115,6 @@ end;
 
 procedure TOPPBufferSettingsForm.actionSaveSettingsExecute(Sender: TObject);
 begin
-
-  ClientDataSet3.SaveToFile(TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Column.settings'));
-  ClientDataSet1.SaveToFile(TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.Sort.settings'));
 
   if assigned(fOnBufferSettingsSave) then
   begin

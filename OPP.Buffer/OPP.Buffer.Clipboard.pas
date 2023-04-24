@@ -58,28 +58,24 @@ begin
   result := nil;
   fWindowsClipboardType := AFormat.WindowsClipboardFormat;
 
-  Clipboard.Open;
-
   try
-    try
-      if Clipboard.HasFormat(fWindowsClipboardType) then
-      begin
-        case fWindowsClipboardType of
-          CF_TEXT:
-            begin
-              result := TOPPBufferManagerRecord.Create;
-              result.SetText(Clipboard.AsText);
-            end;
-        end;
-      end;
-    except
-      on E: Exception do
-      begin
-        eventLogger.Error(E, 'Cliboard');
+    Clipboard.Open;
+    if Clipboard.HasFormat(fWindowsClipboardType) then
+    begin
+      case fWindowsClipboardType of
+        CF_TEXT:
+          begin
+            result := TOPPBufferManagerRecord.Create;
+            result.SetText(Clipboard.AsText);
+          end;
       end;
     end;
-  finally
     Clipboard.Close;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, 'Cliboard');
+    end;
   end;
 
 end;

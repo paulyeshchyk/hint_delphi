@@ -30,7 +30,6 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 293
     object Splitter1: TSplitter
       Left = 530
       Top = 0
@@ -61,7 +60,6 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitHeight = 373
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
@@ -89,6 +87,7 @@ object SampleForm: TSampleForm
         OnCustomDrawItem = cxListView1CustomDrawItem
         OnInfoTip = cxListView1InfoTip
         OnSelectItem = cxListView1SelectItem
+        ExplicitHeight = 336
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
@@ -115,11 +114,10 @@ object SampleForm: TSampleForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 293
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
-        Top = 123
+        Top = 119
         Width = 526
         Height = 245
         Margins.Left = 6
@@ -131,7 +129,7 @@ object SampleForm: TSampleForm
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
-        ExplicitTop = 103
+        ExplicitWidth = 512
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -150,6 +148,7 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitWidth = 504
             object cxLabel6: TcxLabel
               Left = 0
               Top = 9
@@ -421,7 +420,7 @@ object SampleForm: TSampleForm
       end
       object PanelIDContainer: TPanel
         Left = 0
-        Top = 48
+        Top = 44
         Width = 538
         Height = 69
         Margins.Left = 6
@@ -431,7 +430,7 @@ object SampleForm: TSampleForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 28
+        ExplicitWidth = 524
         object cxLabel5: TcxLabel
           Left = 8
           Top = 8
@@ -459,7 +458,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 538
-        Height = 48
+        Height = 44
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -470,9 +469,9 @@ object SampleForm: TSampleForm
       object PanelPreview: TPanel
         AlignWithMargins = True
         Left = 6
-        Top = 380
+        Top = 376
         Width = 526
-        Height = 7
+        Height = 11
         Hint = 'Wrong hint'
         HelpType = htKeyword
         HelpKeyword = 'Kod_OKWED'
@@ -493,7 +492,8 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
-        ExplicitTop = 360
+        ExplicitWidth = 512
+        ExplicitHeight = 10
       end
     end
   end
@@ -569,7 +569,7 @@ object SampleForm: TSampleForm
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -958,6 +958,10 @@ object SampleForm: TSampleForm
     object actionNewRecordSilent: TAction
       Caption = 'actionNewRecordSilent'
       OnExecute = actionNewRecordSilentExecute
+    end
+    object actionShowBufferForControl: TAction
+      Caption = 'actionShowBufferForControl'
+      OnExecute = actionShowBufferForControlExecute
     end
   end
 end

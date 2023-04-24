@@ -58,8 +58,11 @@ var
 begin
   try
     TOPPCodableHelper<TOPPHelpSystemCodableFormSizeSettings>.Decode(SizeSettingFileName, fResult);
-    self.frame := fResult.Frame;
-    self.WindowState := fResult.WindowState;
+    if Assigned(fResult) then begin
+      self.frame := fResult.frame;
+      self.windowState := fResult.windowState;
+    end;
+    fResult.free;
   except
     on E: Exception do
     begin
@@ -81,7 +84,7 @@ begin
     except
       on E: Exception do
       begin
-        eventLogger.Error(E);
+        eventLogger.Error(E, 'TForm');
       end;
     end;
   finally
