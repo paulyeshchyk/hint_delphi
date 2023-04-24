@@ -12,6 +12,10 @@ uses
   dxScrollbarAnnotations, cxTextEdit, cxContainer, cxButtons, dxDateRanges, cxGridDBTableView,
   cxDataControllerConditionalFormattingRulesManagerDialog, cxDBData, cxGridCustomTableView, cxGridTableView,
 
+  cxGridDBDataDefinitions,
+
+  OPP.Buffer.Manager.Settings.Data,
+
   OPP.Buffer.Manager, OPP.Buffer.Manager.Settings;
 
 type
@@ -99,10 +103,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure JvClipboardMonitor1Change(Sender: TObject);
     procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
-    procedure cxGrid1DBTableView1DataControllerSortingChanged(Sender: TObject);
   private
     fSettings: IOPPBufferManagerSettings;
 
@@ -131,6 +133,13 @@ type
     property OnApply: TOPPBufferFormOnApply read fOnApply write fOnApply;
   end;
 
+  TOPPDataControllerSortHelper = class helper for TcxGridDBDataController
+    procedure OPPSetColumnsSort(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
+    function OPPGetColumnsSort: TArray<TOPPBufferManagerSettingsColumnSort>;
+    procedure OPPSetFixedMark(AColumnIndex: Integer; AMark: Boolean);
+    procedure OPPDeleteSelected;
+  end;
+
 var
   OPPBufferForm: TOPPBufferForm;
 
@@ -143,15 +152,15 @@ uses
   OPP.Help.System.Files,
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard,
-
-  OPP.Buffer.Manager.Settings.Data,
-
-  System.TypInfo, System.Rtti;
+  OPP.Help.System.Control;
 
 resourcestring
   SDuplicatedRecord = 'Такая запись уже есть в списке';
-
+  SErrotCantSaveSettingsTemplate = 'Невозможно сохранить настройки. Файл %s заблокирован. Обратитесь к администратору.';
 const
+  kFieldNameOrder = 'order';
+  kFieldNameData = 'data';
+  kFileNameOPPBufferManagerOppclipboarddata = 'OPPBufferManager.oppclipboarddata';
   kContext = 'TOPPBufferForm';
 
 {$R *.dfm}
@@ -162,7 +171,7 @@ var
 begin
   if Assigned(fOnApply) then
   begin
-    fData := DataSource1.DataSet.FieldByName('data').AsString;
+    fData := DataSource1.DataSet.FieldByName(kFieldNameData).AsString;
     fOnApply(fData);
   end;
   Close;
@@ -180,17 +189,7 @@ end;
 
 procedure TOPPBufferForm.actionDeleteRecordExecute(Sender: TObject);
 begin
-  try
-    cxGrid1DBTableView1.DataController.BeginFullUpdate;
-    cxGrid1DBTableView1.DataController.DeleteSelection;
-    cxGrid1DBTableView1.DataController.EndFullUpdate;
-
-  except
-    on E: Exception do
-    begin
-      eventLogger.Error(E, kContext);
-    end;
-  end;
+  cxGrid1DBTableView1.DataController.OPPDeleteSelected;
 end;
 
 procedure TOPPBufferForm.actionExportBufferExecute(Sender: TObject);
@@ -220,7 +219,7 @@ procedure TOPPBufferForm.actionImportBufferExecute(Sender: TObject);
 var
   fDefaultFilePath: String;
 begin
-  fDefaultFilePath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath('OPPBufferManager.oppclipboarddata');
+  fDefaultFilePath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(kFileNameOPPBufferManagerOppclipboarddata);
   OpenDialog1.FileName := fDefaultFilePath;
   if OpenDialog1.Execute(self.Handle) then
   begin
@@ -235,46 +234,13 @@ begin
 end;
 
 procedure TOPPBufferForm.actionMarkAsFixedExecute(Sender: TObject);
-var
-  i: Integer;
-  rowIndex: Integer;
 begin
-  try
-    cxGrid1DBTableView1.DataController.BeginFullUpdate;
-    for i := 0 to cxGrid1DBTableView1.DataController.GetSelectedCount - 1 do
-    begin
-      rowIndex := cxGrid1DBTableView1.DataController.GetSelectedRowIndex(i);
-      cxGrid1DBTableView1.DataController.SetValue(rowIndex, 2, true);
-    end;
-    cxGrid1DBTableView1.DataController.EndFullUpdate;
-  except
-    on E: Exception do
-    begin
-      eventLogger.Error(E, kContext);
-    end;
-  end;
-
+  cxGrid1DBTableView1.DataController.OPPSetFixedMark(2, true);
 end;
 
 procedure TOPPBufferForm.actionMarkAsNonFixedExecute(Sender: TObject);
-var
-  i: Integer;
-  rowIndex: Integer;
 begin
-  try
-    cxGrid1DBTableView1.DataController.BeginFullUpdate;
-    for i := 0 to cxGrid1DBTableView1.DataController.GetSelectedCount - 1 do
-    begin
-      rowIndex := cxGrid1DBTableView1.DataController.GetSelectedRowIndex(i);
-      cxGrid1DBTableView1.DataController.SetValue(rowIndex, 2, false);
-    end;
-    cxGrid1DBTableView1.DataController.EndFullUpdate;
-  except
-    on E: Exception do
-    begin
-      eventLogger.Error(E, kContext);
-    end;
-  end;
+  cxGrid1DBTableView1.DataController.OPPSetFixedMark(2, false);
 end;
 
 procedure TOPPBufferForm.actionMultiSelectModeExecute(Sender: TObject);
@@ -317,7 +283,7 @@ begin
           on E: Exception do
           begin
             fFilePath := AValue.GetDefaultFilePath;
-            ShowMessage(Format('Невозможно сохранить настройки. Файл %s заблокирован. Обратитесь к администратору.', [fFilePath]));
+            ShowMessage(Format(SErrotCantSaveSettingsTemplate, [fFilePath]));
           end;
 
         end;
@@ -343,66 +309,30 @@ end;
 
 procedure TOPPBufferForm.actionWipeRecordsExecute(Sender: TObject);
 begin
-  try
-    cxGrid1DBTableView1.DataController.BeginFullUpdate;
-    cxGrid1DBTableView1.DataController.SelectAll;
-    cxGrid1DBTableView1.DataController.DeleteSelection;
-    cxGrid1DBTableView1.DataController.EndFullUpdate;
-  except
-    on E: Exception do
-    begin
-      eventLogger.Error(E, kContext);
-    end;
-  end;
+  cxGrid1DBTableView1.DataController.SelectAll;
+  cxGrid1DBTableView1.DataController.OPPDeleteSelected;
 end;
 
 procedure TOPPBufferForm.ClientDataSet1CalcFields(DataSet: TDataSet);
 begin
-  DataSet.FieldByName('order').AsInteger := DataSet.RecNo;
+  DataSet.FieldByName(kFieldNameOrder).AsInteger := DataSet.RecNo;
 end;
 
 procedure TOPPBufferForm.ColumnSortRead;
-var
-  fColumnSort: TArray<TOPPBufferManagerSettingsColumnSort>;
-  i: integer;
-  fItem: TcxCustomGridTableItem;
 begin
-  fColumnSort := fSettings.GetColumnSort;
-  for i := 0 to Length(fColumnSort) - 1 do
-  begin
-    fItem := cxGrid1DBTableView1.DataController.GetItemByFieldName(fColumnSort[i].FieldName);
-    fItem.SortIndex := fColumnSort[i].SortIndex;
-    fItem.SortOrder := TcxDataSortOrder(fColumnSort[i].SortType);
-  end;
+  cxGrid1DBTableView1.DataController.OPPSetColumnsSort(fSettings.GetColumnSort);
 end;
 
 procedure TOPPBufferForm.ColumnSortSave;
 var
-  cnt: Integer;
-  i: Integer;
-  sortIndex: Integer;
-  sortType: TcxDataSortOrder;
-  str: String;
   sortRecords: TArray<TOPPBufferManagerSettingsColumnSort>;
 begin
-  cnt := cxGrid1DBTableView1.DataController.ItemCount;
-
-  SetLength(SortRecords, cnt);
+  sortRecords := cxGrid1DBTableView1.DataController.OPPGetColumnsSort;
   try
-
-    for i := 0 to cnt - 1 do
-    begin
-      sortRecords[i].FieldName := cxGrid1DBTableView1.DataController.GetItemField(i).FieldName;
-      sortRecords[i].SortIndex := cxGrid1DBTableView1.DataController.GetItemSortingIndex(i);
-      sortRecords[i].SortType := Integer(cxGrid1DBTableView1.DataController.GetItemSortOrder(i));
-    end;
-
     fSettings.SetColumnSort(sortRecords);
-
   finally
     SetLength(SortRecords, 0);
   end;
-
 end;
 
 procedure TOPPBufferForm.cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
@@ -426,11 +356,6 @@ begin
   self.ReloadActionsVisibility;
 end;
 
-procedure TOPPBufferForm.cxGrid1DBTableView1DataControllerSortingChanged(Sender: TObject);
-begin
-  ColumnSortSave;
-end;
-
 procedure TOPPBufferForm.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
   ReloadActionsVisibility;
@@ -439,28 +364,28 @@ end;
 procedure TOPPBufferForm.FormActivate(Sender: TObject);
 begin
   cxGrid1.SetFocus;
+  ColumnSortRead;
 end;
 
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  ColumnSortSave;
   fSettings.SetFormFrame(self.frame);
   oppBufferManager.SaveRecords();
   DataSource1.DataSet := nil;
 end;
 
 procedure TOPPBufferForm.FormCreate(Sender: TObject);
-var ffFrame: TRect;
+var
+  ffFrame: TRect;
 begin
   fSettings := oppBufferManager.Settings;
   ffFrame := fSettings.GetFormFrame;
   if not ffFrame.isEmpty then
     self.frame := ffFrame;
 
-
   self.IsEditMode := false;
   DataSource1.DataSet := TClientDataset(oppBufferManager.DataSet);
-
-  ColumnSortRead;
 end;
 
 procedure TOPPBufferForm.FormResize(Sender: TObject);
@@ -476,38 +401,6 @@ end;
 function TOPPBufferForm.GetHasSelectedRecord: Boolean;
 begin
   result := (cxGrid1DBTableView1.DataController.RecordCount > 0) and (cxGrid1DBTableView1.DataController.RecNo >= 0);
-end;
-
-procedure TOPPBufferForm.JvClipboardMonitor1Change(Sender: TObject);
-var
-  Data: THandle;
-  Buffer: Pointer;
-  Size: LongInt;
-  fStream: TStream;
-begin
-  fStream := TStream.Create;
-  try
-    Clipboard.Open;
-    try
-      Data := GetClipboardData(CF_TEXT);
-      if Data <> 0 then
-      begin
-        Buffer := GlobalLock(Data);
-        try
-          Size := GlobalSize(Data);
-          fStream.Write(Format, SizeOf(Word));
-          fStream.Write(Size, SizeOf(LongInt));
-          fStream.Write(Buffer^, Size);
-        finally
-          GlobalUnlock(Data);
-        end;
-      end;
-    finally
-      Clipboard.Close;
-    end;
-  finally
-    fStream.Free;
-  end;
 end;
 
 procedure TOPPBufferForm.ReloadActionsVisibility;
@@ -558,43 +451,96 @@ class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TControl);
 var
   fForm: TOPPBufferForm;
 
-  function HasTextProp(AControl: TControl): Boolean;
-  var
-    Ctx: TRttiContext;
-    Prop: TRttiProperty;
-  begin
-    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
-    result := (Prop <> nil) and (Prop.Visibility in [mvPublic, mvPublished]);
-  end;
-
-  procedure SetTextProp(AControl: TControl; AText: String);
-  var
-    Ctx: TRttiContext;
-    Prop: TRttiProperty;
-  begin
-    Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
-    Prop.SetValue(AControl, AText);
-  end;
-
 begin
-  if not HasTextProp(AControl) then
+  if not AControl.HasTextProp() then
     exit;
 
   fForm := TOPPBufferForm.Create(AOwner);
   try
     fForm.OnApply := procedure(AData: String)
-      var
-        Ctx: TRttiContext;
-        Prop: TRttiProperty;
       begin
-        Prop := Ctx.GetType(AControl.ClassType).GetProperty('Text');
-        Prop.SetValue(AControl, AData);
+      AControl.SetTextProp(AData);
       end;
     fForm.ShowModal;
   finally
     fForm.Free;
   end;
 
+end;
+
+{ TOPPDataControllerSortHelper }
+
+procedure TOPPDataControllerSortHelper.OPPSetFixedMark(AColumnIndex: Integer; AMark: Boolean);
+var
+  i: Integer;
+  rowIndex: Integer;
+begin
+  try
+    self.BeginFullUpdate;
+    for i := 0 to self.GetSelectedCount - 1 do
+    begin
+      rowIndex := self.GetSelectedRowIndex(i);
+      self.SetValue(rowIndex, AColumnIndex, AMark);
+    end;
+    self.EndFullUpdate;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, 'SetFixedMark');
+    end;
+  end;
+end;
+
+procedure TOPPDataControllerSortHelper.OPPSetColumnsSort(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
+var
+  fColumnSort: TArray<TOPPBufferManagerSettingsColumnSort>;
+  i: integer;
+  fItem: TcxCustomGridTableItem;
+begin
+  self.BeginFullUpdate;
+  for i := 0 to Length(AArray) - 1 do
+  begin
+    fItem := self.GetItemByFieldName(AArray[i].FieldName);
+    fItem.SortIndex := AArray[i].SortIndex;
+    fItem.SortOrder := TcxDataSortOrder(AArray[i].SortOrder);
+  end;
+  self.EndFullUpdate;
+end;
+
+procedure TOPPDataControllerSortHelper.OPPDeleteSelected;
+begin
+  try
+    self.BeginFullUpdate;
+    self.DeleteSelection;
+    self.EndFullUpdate;
+
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, 'DeleteSelected');
+    end;
+  end;
+end;
+
+function TOPPDataControllerSortHelper.OPPGetColumnsSort: TArray<TOPPBufferManagerSettingsColumnSort>;
+var
+  cnt: Integer;
+  i: Integer;
+  fItem: TcxCustomGridTableItem;
+  fFieldName: String;
+begin
+
+  cnt := self.ItemCount;
+  SetLength(result, cnt);
+
+  for i := 0 to cnt - 1 do
+  begin
+    fFieldName := self.GetItemField(i).FieldName;
+    fItem := self.GetItemByFieldName(fFieldName);
+    result[i].FieldName := fFieldName;
+    result[i].SortIndex := fItem.SortIndex;
+    result[i].SortOrder := Integer(fItem.SortOrder);
+  end;
 end;
 
 end.

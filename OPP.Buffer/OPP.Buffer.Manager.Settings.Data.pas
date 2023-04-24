@@ -13,7 +13,7 @@ type
   TOPPBufferManagerSettingsColumnSort = record
     FieldName: String;
     SortIndex: Integer;
-    SortType: Integer;
+    SortOrder: Integer;
   end;
 
   TOPPBufferManagerSettingsData = class(TOPPCodable)

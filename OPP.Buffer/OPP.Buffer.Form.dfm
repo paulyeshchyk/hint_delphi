@@ -43,7 +43,6 @@ object OPPBufferForm: TOPPBufferForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       DataController.OnDataChanged = cxGrid1DBTableView1DataControllerDataChanged
-      DataController.OnSortingChanged = cxGrid1DBTableView1DataControllerSortingChanged
       FilterRow.SeparatorWidth = 12
       FixedDataRows.SeparatorWidth = 12
       NewItemRow.SeparatorWidth = 12

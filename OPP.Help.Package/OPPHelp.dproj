@@ -204,6 +204,7 @@
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.TList.Filter.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Control.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
