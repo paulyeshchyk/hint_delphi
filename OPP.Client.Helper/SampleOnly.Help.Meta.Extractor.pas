@@ -4,7 +4,7 @@ interface
 
 uses
   System.Generics.Collections,
-  System.Classes,
+  System.Classes, System.SysUtils,
   OPP.Help.Meta;
 
 type
@@ -62,6 +62,7 @@ var
   list: TList<TComponent>;
   child: TComponent;
   fMeta: TOPPHelpMeta;
+  errorText: String;
 begin
   result := TList<TOPPHelpMeta>.Create();
 
@@ -71,7 +72,8 @@ begin
     begin
       fMeta := self.GetHintMeta(child);
       if not fMeta.isValid then begin
-        eventLogger.Error('invalid meta received', 'TSampleOnlyHelpMetaExtractor');
+        errorText := Format('invalid meta received for component: %s - %s',[child.ClassName, child.Name]);
+        eventLogger.Warning(errorText, 'TSampleOnlyHelpMetaExtractor');
         continue;
       end;
       result.Add(fMeta)

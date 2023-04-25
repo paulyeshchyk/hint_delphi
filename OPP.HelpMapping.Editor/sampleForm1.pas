@@ -512,6 +512,10 @@ begin
   helpShortcutServer.FindHelpMap(fSelectedItem,
     procedure(const AMap: TOPPHelpMap)
     begin
+      if not Assigned(AMap) then begin
+        eventLogger.Error('HelpMap is nil','Action Preview');
+        exit;
+      end;
       helpShortcutServer.showHelp(AMap.Predicate, vmExternal,
         procedure(Error: Exception)
         begin

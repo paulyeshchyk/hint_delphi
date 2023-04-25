@@ -99,6 +99,7 @@ Procedure KillHook();
 begin
   if (hhk <> 0) then
     UnhookWindowsHookEx(hhk);
+  hhk := 0;
 end;
 
 { TShortcutHelper }
