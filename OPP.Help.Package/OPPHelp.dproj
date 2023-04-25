@@ -136,23 +136,33 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="cxGridRS28.dcp"/>
-        <DCCReference Include="cxLibraryRS28.dcp"/>
-        <DCCReference Include="dxBarRS28.dcp"/>
-        <DCCReference Include="dxComnRS28.dcp"/>
-        <DCCReference Include="dxCoreRS28.dcp"/>
-        <DCCReference Include="dxDockingRS28.dcp"/>
-        <DCCReference Include="dxGDIPlusRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlRS28.dcp"/>
-        <DCCReference Include="dxRichEditCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditDocumentModelRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreRS28.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
-        <DCCReference Include="cxTreeListRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreConditionalFormattingDialogsRS28.dcp"/>
-        <DCCReference Include="dsnap.dcp"/>
+        <DCCReference Include="cxGridRS25.dcp"/>
+        <DCCReference Include="cxLibraryRS25.dcp"/>
+        <DCCReference Include="dxBarRS25.dcp"/>
+        <DCCReference Include="dxComnRS25.dcp"/>
+        <DCCReference Include="dxCoreRS25.dcp"/>
+        <DCCReference Include="dxDockingRS25.dcp"/>
+        <DCCReference Include="dxGDIPlusRS25.dcp"/>
+        <DCCReference Include="dxRichEditControlCoreRS25.dcp"/>
+        <DCCReference Include="dxRichEditControlRS25.dcp"/>
+        <DCCReference Include="dxRichEditCoreRS25.dcp"/>
+        <DCCReference Include="dxRichEditDocumentModelRS25.dcp"/>
+        <DCCReference Include="dxSpreadSheetCoreRS25.dcp"/>
+        <DCCReference Include="dxSkinsCoreRS25.dcp"/>
+        <DCCReference Include="cxTreeListRS25.dcp"/>
+        <DCCReference Include="dxSpreadSheetCoreConditionalFormattingDialogsRS25.dcp"/>
+        <DCCReference Include="Jcl.dcp"/>
+        <DCCReference Include="JvCore.dcp"/>
+        <DCCReference Include="JvSystem.dcp"/>
         <DCCReference Include="RESTComponents.dcp"/>
+        <DCCReference Include="dbrtl.dcp"/>
+        <DCCReference Include="DbxCommonDriver.dcp"/>
+        <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="IndyProtocols.dcp"/>
+        <DCCReference Include="IndySystem.dcp"/>
+        <DCCReference Include="rtl.dcp"/>
+        <DCCReference Include="vcl.dcp"/>
+        <DCCReference Include="dsnap.dcp"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Map.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
@@ -199,12 +209,12 @@
         </DCCReference>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas"/>
         <DCCReference Include="..\OPP.Keyboard\OPP.Keyboard.Shortcut.Manager.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.TList.Filter.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Control.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.TList.Filter.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Control.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

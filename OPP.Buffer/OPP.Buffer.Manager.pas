@@ -17,7 +17,7 @@ uses
   OPP.Buffer.Manager.Dataset,
 
   System.Generics.Collections,
-  System.Variants;
+  System.Variants, System.StrUtils;
 
 type
 
@@ -296,8 +296,8 @@ procedure TOPPBufferManager.SaveRecords(AFileName: String);
 var
   fFileName: String;
 begin
-  if Length(AFileName) = 0 then fFileName := GetRecordsStorageFileName()
-  else fFileName := AFileName;
+
+  fFileName := IfThen(Length(AFileName) = 0,GetRecordsStorageFileName(),AFileName);
 
   try
     fDataset.SaveToFile(fFileName);

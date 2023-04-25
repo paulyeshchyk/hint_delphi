@@ -1,8 +1,6 @@
 ﻿program OPPHelpPreview;
 
-{$IFDEF OPP_RELEASE}
 {$R '..\..\Rus\devexlocalization.res'}
-{$ENDIF}
 
 {$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
 

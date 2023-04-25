@@ -3,26 +3,27 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 610
+  ClientHeight = 530
   ClientWidth = 1002
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
+  OldCreateOrder = True
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 13
   object cxGrid1: TcxGrid
     Left = 0
     Top = 0
     Width = 1002
-    Height = 610
+    Height = 530
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -31,13 +32,11 @@ object OPPBufferForm: TOPPBufferForm
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 988
-    ExplicitHeight = 609
     object cxGrid1DBTableView1: TcxGridDBTableView
       PopupMenu = PopupMenu1
       Navigator.Buttons.CustomButtons = <>
-      ScrollbarAnnotations.CustomAnnotations = <>
       OnCellDblClick = cxGrid1DBTableView1CellDblClick
+      OnSelectionChanged = cxGrid1DBTableView1SelectionChanged
       DataController.DataSource = DataSource1
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -93,8 +92,8 @@ object OPPBufferForm: TOPPBufferForm
     end
   end
   object ActionList1: TActionList
-    Left = 16
-    Top = 104
+    Left = 32
+    Top = 40
     object actionClose: TAction
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ShortCut = 27
@@ -167,12 +166,12 @@ object OPPBufferForm: TOPPBufferForm
   end
   object DataSource1: TDataSource
     OnDataChange = DataSource1DataChange
-    Left = 320
-    Top = 248
+    Left = 312
+    Top = 64
   end
   object MainMenu1: TMainMenu
-    Left = 80
-    Top = 104
+    Left = 104
+    Top = 40
     object N1: TMenuItem
       Caption = #1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
       object N15: TMenuItem
@@ -212,23 +211,24 @@ object OPPBufferForm: TOPPBufferForm
       object N12: TMenuItem
         Action = actionDeleteRecord
       end
-      object N13: TMenuItem
-        Caption = '-'
-      end
       object N14: TMenuItem
         Action = actionWipeRecords
       end
       object N10: TMenuItem
         Caption = '-'
+        Visible = False
       end
       object N23: TMenuItem
         Action = actionMarkAsFixed
+        Visible = False
       end
       object N26: TMenuItem
         Action = actionMarkAsInverted
+        Visible = False
       end
       object N24: TMenuItem
         Action = actionMarkAsNonFixed
+        Visible = False
       end
       object N22: TMenuItem
         Caption = '-'
@@ -244,18 +244,18 @@ object OPPBufferForm: TOPPBufferForm
   object OpenDialog1: TOpenDialog
     DefaultExt = '*.oppclipboarddata'
     Filter = 'oppclipboarddata|*.oppclipboarddata'
-    Left = 240
-    Top = 248
+    Left = 32
+    Top = 112
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = '*.oppclipboarddata'
     Filter = 'oppclipboarddata|*.oppclipboarddata'
-    Left = 296
-    Top = 168
+    Left = 104
+    Top = 112
   end
   object PopupMenu1: TPopupMenu
-    Left = 272
-    Top = 72
+    Left = 168
+    Top = 40
     object N17: TMenuItem
       Action = actionNewRecord
     end
@@ -279,9 +279,9 @@ object OPPBufferForm: TOPPBufferForm
     end
   end
   object cxStyleRepository1: TcxStyleRepository
-    Left = 104
-    Top = 24
-    PixelsPerInch = 192
+    Left = 208
+    Top = 136
+    PixelsPerInch = 96
     object cxStyle1: TcxStyle
       AssignedValues = [svColor]
       Color = clBtnFace

@@ -840,20 +840,14 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
-  fShortcut: Word;
 begin
+
+  TOPPBufferFormHelper.injectionShowForm;
+
   JvClipboardMonitor1 := TJvClipboardMonitor.Create(self);
   JvClipboardMonitor1.OnChange := self.JvClipboardMonitor1Change;
 
-  fShortcut := oppBufferManager.Settings.GetShortCut;
-  keyboardShortcutManager.registerHook(fShortcut,
-    procedure
-    begin
-      actionShowBuffer.Execute;
-    end);
-
-  fShortCut := ShortCut(Ord('H'), [ssShift, ssCtrl]);
-  keyboardShortcutManager.registerHook(fShortcut,
+  keyboardShortcutManager.registerHook(ShortCut(Ord('H'), [ssShift, ssCtrl]),
     procedure
     begin
       PostMessage(GetForegroundWindow, WM_OPPHook, 0, 0);

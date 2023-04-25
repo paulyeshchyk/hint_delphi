@@ -20,6 +20,7 @@ uses
   OPPClient.TdxScreenTip.Helper in '..\OPP.Client.Helper\OPPClient.TdxScreenTip.Helper.pas';
 
 {$R *.res}
+{$R '..\..\Rus\devexlocalization.res'}
 
 begin
   Application.Title := 'Настройка индексов системы помощи';

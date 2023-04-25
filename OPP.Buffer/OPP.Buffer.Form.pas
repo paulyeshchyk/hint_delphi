@@ -9,7 +9,7 @@ uses
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxGridLevel, cxClasses, cxGridCustomView, cxGrid,
-  dxScrollbarAnnotations, cxTextEdit, cxContainer, cxButtons, dxDateRanges, cxGridDBTableView,
+  cxTextEdit, cxContainer, cxButtons, cxGridDBTableView,
   cxDataControllerConditionalFormattingRulesManagerDialog, cxDBData, cxGridCustomTableView, cxGridTableView,
 
   cxGridDBDataDefinitions,
@@ -52,7 +52,6 @@ type
     N10: TMenuItem;
     N11: TMenuItem;
     N12: TMenuItem;
-    N13: TMenuItem;
     N14: TMenuItem;
     N15: TMenuItem;
     N2: TMenuItem;
@@ -107,6 +106,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure cxGrid1DBTableView1SelectionChanged(Sender: TcxCustomGridTableView);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
   private
     fSettings: IOPPBufferManagerSettings;
@@ -119,15 +119,18 @@ type
     procedure ReloadActionsVisibility;
     procedure setIsEditMode(const Value: Boolean);
     procedure SetIsMultiSelectMode(const Value: Boolean);
+    function GetHasSelectedFewRecords: Boolean;
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
+    property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
 
     procedure ColumnSortSave;
     procedure ColumnSortRead;
+    procedure ColumnSizeChange;
 
     { Private declarations }
 
-    property IsEditMode: Boolean read fIsEditMode write SetIsEditMode default false;
+    property IsEditMode: Boolean read fIsEditMode write setIsEditMode default false;
     property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
   public
     class procedure ShowForm(AOwner: TControl); overload;
@@ -144,23 +147,32 @@ type
     procedure OPPDeleteSelected;
   end;
 
+  TOPPBufferFormHelper = class
+    class procedure injectionShowForm;
+  end;
+
 var
   OPPBufferForm: TOPPBufferForm;
 
 implementation
 
 uses
-  Vcl.Clipbrd,
+  Vcl.Clipbrd, System.StrUtils,
   OPP.Help.Log,
   OPP.Buffer.Settings.Form,
   OPP.Help.System.Files,
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard,
-  OPP.Help.System.Control;
+  OPP.Help.System.Control,
+
+  OPP.Keyboard.Shortcut.Manager;
 
 resourcestring
   SDuplicatedRecord = 'Такая запись уже есть в списке';
   SErrotCantSaveSettingsTemplate = 'Невозможно сохранить настройки. Файл %s заблокирован. Обратитесь к администратору.';
+  SDeleteRecord = 'Удалить текущую';
+  SDeleteSelectedRecords = 'Удалить выбранные';
+
 const
   kFieldNameOrder = 'order';
   kFieldNameData = 'data';
@@ -198,11 +210,11 @@ end;
 
 procedure TOPPBufferForm.actionExportBufferExecute(Sender: TObject);
 begin
-    SaveDialog1.FileName := oppBufferManager.Settings.GetDefaultFilePath;
-    if SaveDialog1.Execute(self.Handle) then
-    begin
-      oppBufferManager.SaveRecords(SaveDialog1.FileName);
-    end;
+  SaveDialog1.FileName := oppBufferManager.Settings.GetDefaultFilePath;
+  if SaveDialog1.Execute(self.Handle) then
+  begin
+    oppBufferManager.SaveRecords(SaveDialog1.FileName);
+  end;
 end;
 
 procedure TOPPBufferForm.actionExportSettingsExecute(Sender: TObject);
@@ -235,7 +247,7 @@ end;
 
 procedure TOPPBufferForm.actionMarkAsInvertedExecute(Sender: TObject);
 begin
-    cxGrid1DBTableView1.OPPSetInvertedFixedMark(2);
+  cxGrid1DBTableView1.OPPSetInvertedFixedMark(2);
 end;
 
 procedure TOPPBufferForm.actionMarkAsNonFixedExecute(Sender: TObject);
@@ -318,6 +330,13 @@ begin
   DataSet.FieldByName(kFieldNameOrder).AsInteger := DataSet.RecNo;
 end;
 
+procedure TOPPBufferForm.ColumnSizeChange;
+begin
+  cxGrid1DBTableView1.Columns[0].ApplyBestFit(true);
+  cxGrid1DBTableView1.Columns[2].ApplyBestFit(true);
+  cxGrid1DBTableView1.Columns[1].Width := cxGrid1.Width - cxGrid1DBTableView1.Columns[2].Width - cxGrid1DBTableView1.Columns[0].Width - 2;
+end;
+
 procedure TOPPBufferForm.ColumnSortRead;
 begin
   cxGrid1DBTableView1.OPPSetColumnsSort(fSettings.GetColumnSort);
@@ -331,7 +350,7 @@ begin
   try
     fSettings.SetColumnSort(sortRecords);
   finally
-    SetLength(SortRecords, 0);
+    SetLength(sortRecords, 0);
   end;
 end;
 
@@ -356,6 +375,11 @@ begin
   self.ReloadActionsVisibility;
 end;
 
+procedure TOPPBufferForm.cxGrid1DBTableView1SelectionChanged(Sender: TcxCustomGridTableView);
+begin
+  ReloadActionsVisibility;
+end;
+
 procedure TOPPBufferForm.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
   ReloadActionsVisibility;
@@ -365,6 +389,7 @@ procedure TOPPBufferForm.FormActivate(Sender: TObject);
 begin
   cxGrid1.SetFocus;
   ColumnSortRead;
+  ColumnSizeChange;
 end;
 
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -390,7 +415,7 @@ end;
 
 procedure TOPPBufferForm.FormResize(Sender: TObject);
 begin
-  cxGrid1DBTableView1.Columns[1].Width := cxGrid1.Width - cxGrid1DBTableView1.Columns[2].Width - cxGrid1DBTableView1.Columns[0].Width - 2;
+  ColumnSizeChange;
 end;
 
 function TOPPBufferForm.GetHasRecords: Boolean;
@@ -401,6 +426,11 @@ end;
 function TOPPBufferForm.GetHasSelectedRecord: Boolean;
 begin
   result := (cxGrid1DBTableView1.DataController.RecordCount > 0) and (cxGrid1DBTableView1.DataController.RecNo >= 0);
+end;
+
+function TOPPBufferForm.GetHasSelectedFewRecords: Boolean;
+begin
+  result := (cxGrid1DBTableView1.Controller.SelectedRowCount > 1);
 end;
 
 procedure TOPPBufferForm.ReloadActionsVisibility;
@@ -418,13 +448,15 @@ begin
   actionMarkAsInverted.Enabled := fIsEditMode and self.HasRecords;
   actionNewRecord.Enabled := fIsEditMode;
   actionDeleteRecord.Enabled := fIsEditMode and self.HasSelectedRecord;
-  actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords;
+  actionDeleteRecord.Caption := ifThen(self.HasSelectedFewRecords, SDeleteSelectedRecords, SDeleteRecord);
+  actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords and (not self.HasSelectedFewRecords);
   actionApplySelection.Enabled := (not fIsEditMode) and self.HasSelectedRecord and Assigned(OnApply);
   actionClose.Enabled := (not fIsEditMode);
 end;
 
 procedure TOPPBufferForm.setIsEditMode(const Value: Boolean);
-var style :TcxStyle;
+var
+  style: TcxStyle;
 begin
   fIsEditMode := Value;
   self.IsMultiSelectMode := false;
@@ -455,16 +487,30 @@ end;
 class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TControl);
 var
   fForm: TOPPBufferForm;
-
+  fCanApplyText: Boolean;
 begin
-  if not AControl.HasTextProp() then
-    exit;
+  fCanApplyText := AControl.HasTextProp();
+  if not fCanApplyText then
+    eventLogger.Warning('The control has no TEXT property', 'TOPPBufferForm');
 
   fForm := TOPPBufferForm.Create(AOwner);
   try
     fForm.OnApply := procedure(AData: String)
       begin
-      AControl.SetTextProp(AData);
+        if fCanApplyText then
+        begin
+          //AControl.SetTextProp(AData);
+          try
+            Clipboard.Open;
+            Clipboard.AsText := AData;
+            Clipboard.Close;
+            PostMessage(TWinControl(AControl).Handle, WM_PASTE,1,0);
+          except
+            on E:Exception do begin
+              //event
+            end;
+          end;
+        end;
       end;
     fForm.ShowModal;
   finally
@@ -483,14 +529,14 @@ var
   recordIndex: Integer;
 begin
   try
-    self.DataController.BeginFullUpdate;
+    self.DataController.Edit;
     for i := 0 to self.Controller.SelectedRowCount - 1 do
     begin
-      row := self.controller.SelectedRows[i];
-      recordIndex := row.RecordIndex;
+      row := self.Controller.SelectedRows[i];
+      recordIndex := row.recordIndex;
       self.DataController.SetValue(recordIndex, AColumnIndex, AMark);
     end;
-    self.DataController.EndFullUpdate;
+    self.DataController.PostEditingData;
   except
     on E: Exception do
     begin
@@ -505,19 +551,19 @@ var
   row: TcxCustomGridRow;
   rowIndex: Integer;
   recordIndex: Integer;
-  fMark : Boolean;
+  fMark: Boolean;
 begin
   try
-    self.DataController.BeginFullUpdate;
+    self.DataController.Edit;
     for i := 0 to self.Controller.SelectedRowCount - 1 do
     begin
-      row := self.controller.SelectedRows[i];
-      recordIndex := row.RecordIndex;
+      row := self.Controller.SelectedRows[i];
+      recordIndex := row.recordIndex;
       fMark := self.DataController.GetValue(recordIndex, AColumnIndex);
 
       self.DataController.SetValue(recordIndex, AColumnIndex, (not fMark));
     end;
-    self.DataController.EndFullUpdate;
+    self.DataController.PostEditingData;
   except
     on E: Exception do
     begin
@@ -529,17 +575,18 @@ end;
 procedure TOPPDataControllerSortHelper.OPPSetColumnsSort(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
 var
   fColumnSort: TArray<TOPPBufferManagerSettingsColumnSort>;
-  i: integer;
+  i: Integer;
   fItem: TcxCustomGridTableItem;
 begin
-  self.DataController.BeginFullUpdate;
+  // self.DataController.BeginFullUpdate;
   for i := 0 to Length(AArray) - 1 do
   begin
     fItem := self.DataController.GetItemByFieldName(AArray[i].FieldName);
     fItem.SortIndex := AArray[i].SortIndex;
     fItem.SortOrder := TcxDataSortOrder(AArray[i].SortOrder);
   end;
-  self.DataController.EndFullUpdate;
+  // self.DataController.EndFullUpdate;
+  self.DataController.PostEditingData;
 end;
 
 procedure TOPPDataControllerSortHelper.OPPDeleteSelected;
@@ -577,5 +624,25 @@ begin
     result[i].SortOrder := Integer(fItem.SortOrder);
   end;
 end;
+
+{ TOPPBufferFormHelper }
+
+class procedure TOPPBufferFormHelper.injectionShowForm;
+begin
+  keyboardShortcutManager.registerHook(oppBufferManager.Settings.GetShortCut,
+    procedure
+    begin
+      if FindWindow('TOPPBufferForm', nil) = 0 then
+      begin
+        TOPPBufferForm.ShowForm(nil, Screen.ActiveControl);
+      end
+      else
+        eventLogger.Debug('Cant run second instance');
+    end);
+end;
+
+initialization
+
+// TOPPBufferFormHelper.injectionShowForm;
 
 end.

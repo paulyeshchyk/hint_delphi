@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 393
+  ClientHeight = 373
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,6 +11,7 @@ object SampleForm: TSampleForm
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
+  OldCreateOrder = True
   Position = poDefault
   Visible = True
   OnClose = FormClose
@@ -22,7 +23,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 393
+    Height = 373
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -30,11 +31,12 @@ object SampleForm: TSampleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 333
     object Splitter1: TSplitter
       Left = 530
       Top = 0
       Width = 6
-      Height = 393
+      Height = 373
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -45,7 +47,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 393
+      Height = 373
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -60,12 +62,13 @@ object SampleForm: TSampleForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      ExplicitHeight = 333
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
-        Top = 50
+        Top = 34
         Width = 518
-        Height = 337
+        Height = 333
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -87,13 +90,13 @@ object SampleForm: TSampleForm
         OnCustomDrawItem = cxListView1CustomDrawItem
         OnInfoTip = cxListView1InfoTip
         OnSelectItem = cxListView1SelectItem
-        ExplicitHeight = 336
+        ExplicitHeight = 293
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
         Top = 0
         Width = 530
-        Height = 44
+        Height = 28
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -106,7 +109,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 538
-      Height = 393
+      Height = 373
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -114,10 +117,11 @@ object SampleForm: TSampleForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 333
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
-        Top = 119
+        Top = 103
         Width = 526
         Height = 245
         Margins.Left = 6
@@ -129,7 +133,6 @@ object SampleForm: TSampleForm
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
-        ExplicitWidth = 512
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -148,7 +151,6 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitWidth = 504
             object cxLabel6: TcxLabel
               Left = 0
               Top = 9
@@ -420,7 +422,7 @@ object SampleForm: TSampleForm
       end
       object PanelIDContainer: TPanel
         Left = 0
-        Top = 44
+        Top = 28
         Width = 538
         Height = 69
         Margins.Left = 6
@@ -430,7 +432,6 @@ object SampleForm: TSampleForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 524
         object cxLabel5: TcxLabel
           Left = 8
           Top = 8
@@ -458,7 +459,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 538
-        Height = 44
+        Height = 28
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -469,9 +470,9 @@ object SampleForm: TSampleForm
       object PanelPreview: TPanel
         AlignWithMargins = True
         Left = 6
-        Top = 376
+        Top = 360
         Width = 526
-        Height = 11
+        Height = 7
         Hint = 'Wrong hint'
         HelpType = htKeyword
         HelpKeyword = 'Kod_OKWED'
@@ -492,8 +493,6 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
-        ExplicitWidth = 512
-        ExplicitHeight = 10
       end
     end
   end
@@ -509,7 +508,7 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 368
     Top = 72
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
@@ -583,7 +582,7 @@ object SampleForm: TSampleForm
     UseSystemFont = True
     Left = 155
     Top = 73
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
       AllowCustomizing = False
