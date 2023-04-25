@@ -16,7 +16,7 @@ uses
 
   OPP.Buffer.Manager.Settings.Data,
 
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String);
@@ -80,6 +80,8 @@ type
     N25: TMenuItem;
     cxStyleRepository1: TcxStyleRepository;
     cxStyle1: TcxStyle;
+    actionMarkAsInverted: TAction;
+    N26: TMenuItem;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
@@ -89,6 +91,7 @@ type
     procedure actionImportBufferExecute(Sender: TObject);
     procedure actionLoadRecordsExecute(Sender: TObject);
     procedure actionMarkAsFixedExecute(Sender: TObject);
+    procedure actionMarkAsInvertedExecute(Sender: TObject);
     procedure actionMarkAsNonFixedExecute(Sender: TObject);
     procedure actionMultiSelectModeExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
@@ -124,7 +127,7 @@ type
 
     { Private declarations }
 
-    property IsEditMode: Boolean read fIsEditMode write setIsEditMode default false;
+    property IsEditMode: Boolean read fIsEditMode write SetIsEditMode default false;
     property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
   public
     class procedure ShowForm(AOwner: TControl); overload;
@@ -137,6 +140,7 @@ type
     procedure OPPSetColumnsSort(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
     function OPPGetColumnsSort: TArray<TOPPBufferManagerSettingsColumnSort>;
     procedure OPPSetFixedMark(AColumnIndex: Integer; AMark: Boolean);
+    procedure OPPSetInvertedFixedMark(AColumnIndex: Integer);
     procedure OPPDeleteSelected;
   end;
 
@@ -193,21 +197,12 @@ begin
 end;
 
 procedure TOPPBufferForm.actionExportBufferExecute(Sender: TObject);
-var
-  fDefaultFilePath: String;
 begin
-  fDefaultFilePath := oppBufferManager.Settings.GetCurrentFilePath;
-  if Length(fDefaultFilePath) = 0 then
-  begin
     SaveDialog1.FileName := oppBufferManager.Settings.GetDefaultFilePath;
     if SaveDialog1.Execute(self.Handle) then
     begin
-      oppBufferManager.SetRecordsStorageFileName(SaveDialog1.FileName);
-      oppBufferManager.SaveRecords();
+      oppBufferManager.SaveRecords(SaveDialog1.FileName);
     end;
-  end else begin
-    oppBufferManager.SaveRecords();
-  end;
 end;
 
 procedure TOPPBufferForm.actionExportSettingsExecute(Sender: TObject);
@@ -236,6 +231,11 @@ end;
 procedure TOPPBufferForm.actionMarkAsFixedExecute(Sender: TObject);
 begin
   cxGrid1DBTableView1.OPPSetFixedMark(2, true);
+end;
+
+procedure TOPPBufferForm.actionMarkAsInvertedExecute(Sender: TObject);
+begin
+    cxGrid1DBTableView1.OPPSetInvertedFixedMark(2);
 end;
 
 procedure TOPPBufferForm.actionMarkAsNonFixedExecute(Sender: TObject);
@@ -415,6 +415,7 @@ begin
   menuMultiSelectMode.Checked := fIsMultiSelectMode and self.HasRecords;
   actionMarkAsFixed.Enabled := fIsEditMode and self.HasRecords;
   actionMarkAsNonFixed.Enabled := fIsEditMode and self.HasRecords;
+  actionMarkAsInverted.Enabled := fIsEditMode and self.HasRecords;
   actionNewRecord.Enabled := fIsEditMode;
   actionDeleteRecord.Enabled := fIsEditMode and self.HasSelectedRecord;
   actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords;
@@ -423,9 +424,13 @@ begin
 end;
 
 procedure TOPPBufferForm.setIsEditMode(const Value: Boolean);
+var style :TcxStyle;
 begin
   fIsEditMode := Value;
   self.IsMultiSelectMode := false;
+
+  cxGrid1DBTableView1Column2.Properties.ReadOnly := not fIsEditMode;
+  cxGrid1DBTableView1Column3.Properties.ReadOnly := not fIsEditMode;
 end;
 
 procedure TOPPBufferForm.SetIsMultiSelectMode(const Value: Boolean);
@@ -484,6 +489,33 @@ begin
       row := self.controller.SelectedRows[i];
       recordIndex := row.RecordIndex;
       self.DataController.SetValue(recordIndex, AColumnIndex, AMark);
+    end;
+    self.DataController.EndFullUpdate;
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, 'SetFixedMark');
+    end;
+  end;
+end;
+
+procedure TOPPDataControllerSortHelper.OPPSetInvertedFixedMark(AColumnIndex: Integer);
+var
+  i: Integer;
+  row: TcxCustomGridRow;
+  rowIndex: Integer;
+  recordIndex: Integer;
+  fMark : Boolean;
+begin
+  try
+    self.DataController.BeginFullUpdate;
+    for i := 0 to self.Controller.SelectedRowCount - 1 do
+    begin
+      row := self.controller.SelectedRows[i];
+      recordIndex := row.RecordIndex;
+      fMark := self.DataController.GetValue(recordIndex, AColumnIndex);
+
+      self.DataController.SetValue(recordIndex, AColumnIndex, (not fMark));
     end;
     self.DataController.EndFullUpdate;
   except

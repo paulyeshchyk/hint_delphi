@@ -32,7 +32,7 @@ type
     function GetSettings: IOPPBufferManagerSettings;
 
     procedure LoadRecords();
-    procedure SaveRecords();
+    procedure SaveRecords(AFileName: String = '');
     procedure SetRecordsStorageFileName(AFileName: String = '');
     procedure RemoveRecordsAfter(AAfter: Integer);
 
@@ -55,7 +55,7 @@ type
     procedure LoadRecords();
     procedure OnClipboardChange(Sender: TObject);
     procedure SaveClipboardToManagerRecord(AFormat: Word);
-    procedure SaveRecords();
+    procedure SaveRecords(AFileName: String = '');
     procedure SetRecordsStorageFileName(AFileName: String = '');
     property CanAcceptRecord: Boolean read GetCanAcceptRecord;
   public
@@ -292,11 +292,12 @@ begin
   end;
 end;
 
-procedure TOPPBufferManager.SaveRecords();
+procedure TOPPBufferManager.SaveRecords(AFileName: String);
 var
   fFileName: String;
 begin
-  fFileName := GetRecordsStorageFileName();
+  if Length(AFileName) = 0 then fFileName := GetRecordsStorageFileName()
+  else fFileName := AFileName;
 
   try
     fDataset.SaveToFile(fFileName);

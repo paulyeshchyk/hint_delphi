@@ -74,15 +74,18 @@ object OPPBufferForm: TOPPBufferForm
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'data'
         PropertiesClassName = 'TcxTextEditProperties'
+        Properties.ReadOnly = True
         Properties.OnValidate = cxGrid1DBTableView1Column2PropertiesValidate
         MinWidth = 200
         Width = 400
       end
       object cxGrid1DBTableView1Column3: TcxGridDBColumn
-        Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103
+        Caption = #1060#1080#1082#1089'.'
         DataBinding.FieldName = 'isFixed'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Properties.ReadOnly = True
         MinWidth = 40
-        Width = 170
+        Width = 73
       end
     end
     object cxGrid1Level1: TcxGridLevel
@@ -157,6 +160,10 @@ object OPPBufferForm: TOPPBufferForm
       Caption = #1057#1085#1103#1090#1100' '#1087#1086#1084#1077#1090#1082#1091' '#1092#1080#1082#1089#1072#1094#1080#1080
       OnExecute = actionMarkAsNonFixedExecute
     end
+    object actionMarkAsInverted: TAction
+      Caption = #1048#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1087#1086#1084#1077#1090#1082#1091
+      OnExecute = actionMarkAsInvertedExecute
+    end
   end
   object DataSource1: TDataSource
     OnDataChange = DataSource1DataChange
@@ -216,6 +223,9 @@ object OPPBufferForm: TOPPBufferForm
       end
       object N23: TMenuItem
         Action = actionMarkAsFixed
+      end
+      object N26: TMenuItem
+        Action = actionMarkAsInverted
       end
       object N24: TMenuItem
         Action = actionMarkAsNonFixed
