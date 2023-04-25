@@ -133,7 +133,7 @@ type
     property OnApply: TOPPBufferFormOnApply read fOnApply write fOnApply;
   end;
 
-  TOPPDataControllerSortHelper = class helper for TcxGridDBDataController
+  TOPPDataControllerSortHelper = class helper for TcxGridDBTableView
     procedure OPPSetColumnsSort(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
     function OPPGetColumnsSort: TArray<TOPPBufferManagerSettingsColumnSort>;
     procedure OPPSetFixedMark(AColumnIndex: Integer; AMark: Boolean);
@@ -189,7 +189,7 @@ end;
 
 procedure TOPPBufferForm.actionDeleteRecordExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.DataController.OPPDeleteSelected;
+  cxGrid1DBTableView1.OPPDeleteSelected;
 end;
 
 procedure TOPPBufferForm.actionExportBufferExecute(Sender: TObject);
@@ -235,12 +235,12 @@ end;
 
 procedure TOPPBufferForm.actionMarkAsFixedExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.DataController.OPPSetFixedMark(2, true);
+  cxGrid1DBTableView1.OPPSetFixedMark(2, true);
 end;
 
 procedure TOPPBufferForm.actionMarkAsNonFixedExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.DataController.OPPSetFixedMark(2, false);
+  cxGrid1DBTableView1.OPPSetFixedMark(2, false);
 end;
 
 procedure TOPPBufferForm.actionMultiSelectModeExecute(Sender: TObject);
@@ -310,7 +310,7 @@ end;
 procedure TOPPBufferForm.actionWipeRecordsExecute(Sender: TObject);
 begin
   cxGrid1DBTableView1.DataController.SelectAll;
-  cxGrid1DBTableView1.DataController.OPPDeleteSelected;
+  cxGrid1DBTableView1.OPPDeleteSelected;
 end;
 
 procedure TOPPBufferForm.ClientDataSet1CalcFields(DataSet: TDataSet);
@@ -320,14 +320,14 @@ end;
 
 procedure TOPPBufferForm.ColumnSortRead;
 begin
-  cxGrid1DBTableView1.DataController.OPPSetColumnsSort(fSettings.GetColumnSort);
+  cxGrid1DBTableView1.OPPSetColumnsSort(fSettings.GetColumnSort);
 end;
 
 procedure TOPPBufferForm.ColumnSortSave;
 var
   sortRecords: TArray<TOPPBufferManagerSettingsColumnSort>;
 begin
-  sortRecords := cxGrid1DBTableView1.DataController.OPPGetColumnsSort;
+  sortRecords := cxGrid1DBTableView1.OPPGetColumnsSort;
   try
     fSettings.SetColumnSort(sortRecords);
   finally
@@ -473,16 +473,19 @@ end;
 procedure TOPPDataControllerSortHelper.OPPSetFixedMark(AColumnIndex: Integer; AMark: Boolean);
 var
   i: Integer;
+  row: TcxCustomGridRow;
   rowIndex: Integer;
+  recordIndex: Integer;
 begin
   try
-    self.BeginFullUpdate;
-    for i := 0 to self.GetSelectedCount - 1 do
+    self.DataController.BeginFullUpdate;
+    for i := 0 to self.Controller.SelectedRowCount - 1 do
     begin
-      rowIndex := self.GetSelectedRowIndex(i);
-      self.SetValue(rowIndex, AColumnIndex, AMark);
+      row := self.controller.SelectedRows[i];
+      recordIndex := row.RecordIndex;
+      self.DataController.SetValue(recordIndex, AColumnIndex, AMark);
     end;
-    self.EndFullUpdate;
+    self.DataController.EndFullUpdate;
   except
     on E: Exception do
     begin
@@ -497,22 +500,22 @@ var
   i: integer;
   fItem: TcxCustomGridTableItem;
 begin
-  self.BeginFullUpdate;
+  self.DataController.BeginFullUpdate;
   for i := 0 to Length(AArray) - 1 do
   begin
-    fItem := self.GetItemByFieldName(AArray[i].FieldName);
+    fItem := self.DataController.GetItemByFieldName(AArray[i].FieldName);
     fItem.SortIndex := AArray[i].SortIndex;
     fItem.SortOrder := TcxDataSortOrder(AArray[i].SortOrder);
   end;
-  self.EndFullUpdate;
+  self.DataController.EndFullUpdate;
 end;
 
 procedure TOPPDataControllerSortHelper.OPPDeleteSelected;
 begin
   try
-    self.BeginFullUpdate;
-    self.DeleteSelection;
-    self.EndFullUpdate;
+    self.DataController.BeginFullUpdate;
+    self.DataController.DeleteSelection;
+    self.DataController.EndFullUpdate;
 
   except
     on E: Exception do
@@ -535,8 +538,8 @@ begin
 
   for i := 0 to cnt - 1 do
   begin
-    fFieldName := self.GetItemField(i).FieldName;
-    fItem := self.GetItemByFieldName(fFieldName);
+    fFieldName := self.DataController.GetItemField(i).FieldName;
+    fItem := self.DataController.GetItemByFieldName(fFieldName);
     result[i].FieldName := fFieldName;
     result[i].SortIndex := fItem.SortIndex;
     result[i].SortOrder := Integer(fItem.SortOrder);
