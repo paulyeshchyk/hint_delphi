@@ -31,7 +31,8 @@ uses
 
   OPPClient.TdxScreenTip.Helper,
   OPP.Help.Hint.Server,
-  OPPClient.Help.Meta.Factory;
+  OPPClient.Help.Meta.Factory,
+  System.Threading;
 
 const
   kOPPHintHidePause: Integer = (MaxInt - 1);
@@ -44,6 +45,8 @@ resourcestring
 constructor TOPPClientHintHelper.Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
 begin
   fHintController := AHintController;
+  fHintController.HintHidePause := kOPPHintHidePause;
+
   fRepo := ARepo;
 end;
 
@@ -65,16 +68,12 @@ begin
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
     try
       //
-      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
+      fRequest.OnGetHintFactory := procedure(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion)
         begin
-          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
+          fMetaFactory.GetChildrenHelpMeta(AComponent, completion)
         end;
 
-      helpHintServer.LoadHints(fRequest,
-        procedure(HintTexts: TList<TOPPHelpHint>)
-        begin
-          self.CreateHintViews(AForm, HintTexts);
-        end);
+      helpHintServer.LoadHints(fRequest, CreateHintViews);
     finally
       fRequest.Free;
     end;
@@ -94,9 +93,9 @@ begin
     fRequest := TOPPHelpHintMappingSaveRequest.Create(AForm, AFilename);
     try
       fRequest.DefaultPredicateFileName := predicateFileName;
-      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
+      fRequest.OnGetHintFactory := procedure(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion)
         begin
-          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
+          fMetaFactory.GetChildrenHelpMeta(AComponent, completion)
         end;
 
       helpHintServer.SaveHints(fRequest, useGlobal, nil);
@@ -121,36 +120,26 @@ begin
     exit;
   end;
 
-  if not assigned(fHintController) then
-  begin
-    eventLogger.Warning(Format(SWarningHintControllerNotAvailableTemplate, [fFormName]));
-    exit;
-  end;
-
-  if not assigned(fRepo) then
-  begin
-    eventLogger.Warning(Format(SWarningTipsRepositoryNotAvailableTemplate, [fFormName]));
-    exit;
-  end;
-
-  fHintController.HintHidePause := kOPPHintHidePause;
-
   AForm.GetChildrenRecursive(nil,
     procedure(AComponent: TComponent)
-    var
-      fHint: TOPPHelpHint;
-      fIsHintSupported: Boolean;
     begin
-      for fHint in AHintList do
-      begin
-        fIsHintSupported := AComponent.isSupportingMeta(fHint.Meta);
-        if fIsHintSupported then
+      TTask.Run(
+        procedure
+        var
+          fHint: TOPPHelpHint;
+          fIsHintSupported: Boolean;
         begin
-          RecursiveApplyHint(AComponent, fHint);
-          AddDXScreenTip(AComponent, fHint);
-          break;
-        end;
-      end;
+          for fHint in AHintList do
+          begin
+            fIsHintSupported := AComponent.isSupportingMeta(fHint.Meta);
+            if fIsHintSupported then
+            begin
+              RecursiveApplyHint(AComponent, fHint);
+              AddDXScreenTip(AComponent, fHint);
+              break;
+            end;
+          end;
+        end);
     end);
 end;
 
@@ -175,25 +164,34 @@ var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
-  if not(AComponent is TControl) then
-    exit;
+  TThread.Synchronize(nil,
+    procedure
+    begin
 
+      if not assigned(AComponent) then
+        exit;
+      if not(AComponent is TControl) then
+        exit;
+      if not assigned(fRepo) then
+        exit;
+      if not assigned(fHintController) then
+        exit;
 
-  fControl := AComponent as TControl;
-  fControl.ShowHint := true;
+      fControl := AComponent as TControl;
+      fControl.ShowHint := true;
 
-  fScreenTip := fRepo.Items.Add;
-  fScreenTip.Header.PlainText := true;
-  fScreenTip.Header.Text := ''; // Заголовок
+      fScreenTip := fRepo.Items.Add;
+      fScreenTip.Header.PlainText := true;
+      fScreenTip.Header.Text := ''; // Заголовок
 
-  fScreenTip.Description.PlainText := false;
-  fScreenTip.Description.Text := AHint.Data.rtf; // rtf;
-  fScreenTip.setAspectRatio(3.0, AHint.Data.rtf);
+      fScreenTip.Description.PlainText := false;
+      fScreenTip.Description.Text := AHint.Data.rtf; // rtf;
+      fScreenTip.setAspectRatio(3.0, AHint.Data.rtf);
 
-  fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
-  fScreenTipLink.ScreenTip := fScreenTip;
-  fScreenTipLink.control := fControl;
-
+      fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
+      fScreenTipLink.ScreenTip := fScreenTip;
+      fScreenTipLink.control := fControl;
+    end);
 end;
 
 end.

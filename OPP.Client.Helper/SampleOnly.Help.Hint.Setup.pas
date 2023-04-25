@@ -78,9 +78,9 @@ begin
     fRequest := TOPPHelpHintMappingSaveRequest.Create(AForm, AFilename);
     try
       fRequest.DefaultPredicateFileName := predicateFileName;
-      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
+      fRequest.OnGetHintFactory := procedure(AComponent: TComponent; completion:TSampleOnlyHelpMetaExtractorListCompletion)
         begin
-          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
+          fMetaFactory.GetChildrenHelpMeta(AComponent, completion);
         end;
 
       helpHintServer.SaveHints(fRequest, false, nil);

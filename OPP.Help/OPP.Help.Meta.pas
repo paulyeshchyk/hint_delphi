@@ -20,6 +20,8 @@ type
     property isValid: Boolean read GetIsValid;
   end;
 
+  TSampleOnlyHelpMetaExtractorListCompletion = reference to procedure (AList:TList<TOPPHelpMeta>);
+
   IOPPHelpMetaFactory = interface
     /// <summary>
     /// Возворащает список TOPPHelpMeta, применимых для данного компонента.
@@ -30,7 +32,7 @@ type
     /// <remarks> значение propertyName по умолчанию равно 'name'</remarks>
 
     function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
-    function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
+    procedure GetChildrenHelpMeta(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
   end;
 
 

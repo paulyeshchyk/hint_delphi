@@ -17,12 +17,14 @@ uses
   OPP.Help.Interfaces,
   OPP.Help.Meta,
 
+  System.Threading,
+
   Datasnap.DBClient, Data.DB;
 
 type
-  TOPPHelpHintLoadCompletion = reference to procedure(HintTexts: TList<TOPPHelpHint>);
+  TOPPHelpHintLoadCompletion = reference to procedure(AControl:TControl; HintTexts: TList<TOPPHelpHint>);
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TOPPHelpMapList);
-  TOPPHelpHintServerOnGetMetaFactory = reference to function(AComponent: TComponent): TList<TOPPHelpMeta>;
+  TOPPHelpHintServerOnGetMetaFactory = reference to procedure(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
   TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpMap): IOPPHelpHintDataReader;
   TOPPHelpMapsCompletion = reference to procedure(AList: TOPPHelpMapList);
 
@@ -87,6 +89,8 @@ type
     procedure GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
     function getReader(AFileName: String): IOPPHelpHintDataReader;
     procedure reloadConfigurationIfNeed(filename: String);
+    procedure performListManipulations(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; fList: TList<TOPPHelpMeta>; completion: TOPPHelpMapGenerationCompletion);
+    procedure CreateReaders(const ARequest: TOPPHelpHintMappingLoadRequest; AList: TList<TOPPHelpMeta>; completion: TOPPHelpHintLoadCompletion);
   public
     constructor Create;
     destructor Destroy; override;
@@ -212,14 +216,15 @@ begin
   fHelpMap := TOPPHelpMap.Create(fID);
   try
 
-    if Assigned(onApplyDefaults) then begin
+    if Assigned(onApplyDefaults) then
+    begin
       onApplyDefaults(fHelpMap);
     end;
 
     fHintMapSet.Add(fHelpMap);
     completion(fHelpMap);
   finally
-    //FreeAndNil(fHelpMap);
+    // FreeAndNil(fHelpMap);
   end;
 end;
 
@@ -337,33 +342,51 @@ end;
 
 procedure TOPPHelpHintServer.GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion);
 var
-  fHint: TOPPHelpHint;
-  fHintMeta: TOPPHelpMeta;
-  fHintTexts: TList<TOPPHelpHint>;
+  mappingFile: String;
+  fHintsMetaList: TOPPHintIdList;
+  fControl : TControl;
 begin
+  mappingFile := ARequest.MappingFileName;
+  fControl := ARequest.Control;
 
-  self.reloadConfigurationIfNeed(ARequest.MappingFileName);
-  if not fLoaded then
-  begin
-    if Assigned(completion) then
-      completion(nil);
-    exit;
-  end;
+  fHintsMetaList := TOPPHintIdList.Create;
+  fHintsMetaList.AddRange(hintsMetaList);
 
-  fHintTexts := TList<TOPPHelpHint>.Create;
-  try
-    for fHintMeta in hintsMetaList do
+  TTask.Run(
+    procedure
+    var
+      fHint: TOPPHelpHint;
+      fHintMeta: TOPPHelpMeta;
+      fHintTexts: TList<TOPPHelpHint>;
     begin
-      fHint := GetHint(fHintMeta);
-      if not fHint.Data.isEmpty() then
+      reloadConfigurationIfNeed(mappingFile);
+      if not fLoaded then
       begin
-        fHintTexts.Add(fHint);
+        // TODO: Test for Thread safety
+        if Assigned(completion) then
+          completion(fControl, nil);
+        exit;
       end;
-    end;
-    completion(fHintTexts);
-  finally
-    fHintTexts.Free;
-  end;
+
+      fHintTexts := TList<TOPPHelpHint>.Create;
+      try
+        for fHintMeta in fHintsMetaList do
+        begin
+          fHint := GetHint(fHintMeta);
+          if not fHint.Data.isEmpty() then
+          begin
+            fHintTexts.Add(fHint);
+          end;
+        end;
+
+        // TODO: Test for Thread safety
+        if Assigned(completion) then
+          completion(fControl, fHintTexts);
+
+      finally
+        fHintTexts.Free;
+      end;
+    end);
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -378,52 +401,30 @@ begin
   end;
 
   try
-    try
-      fHintDataReaders.TryGetValue(AFileName, result);
-    except
-      on e: Exception do
-      begin
-        eventLogger.Error(e);
-      end;
+    fHintDataReaders.TryGetValue(AFileName, result);
+  except
+    on e: Exception do
+    begin
+      eventLogger.Error(e);
     end;
-
-  finally
-
   end;
 end;
 
-procedure TOPPHelpHintServer.LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion);
+procedure TOPPHelpHintServer.CreateReaders(const ARequest: TOPPHelpHintMappingLoadRequest; AList: TList<TOPPHelpMeta>; completion: TOPPHelpHintLoadCompletion);
 var
   fChildHelpMeta: TOPPHelpMeta;
-  fChildrenHelpMetaList: TList<TOPPHelpMeta>;
   fMetaIdentifier: TOPPHelpHintMapIdentifier;
+  fChildrenHelpMetaList: TList<TOPPHelpMeta>;
 begin
-  eventLogger.Flow(Format('Load hints from: [%s]; for [%s]', [ARequest.MappingFileName, ARequest.Control.ClassName]), kContext);
-
-  self.reloadConfigurationIfNeed(ARequest.MappingFileName);
-  if not fLoaded then
-  begin
-    if Assigned(completion) then
-      completion(nil);
-    exit;
-  end;
-
-  if not Assigned(ARequest.OnGetHintFactory) then
-  begin
-    eventLogger.Error('GetHints - OnGetHintFactory is not defined');
-    if Assigned(completion) then
-      completion(nil);
-    exit;
-  end;
-
-  fChildrenHelpMetaList := ARequest.OnGetHintFactory(ARequest.Control);
-  if (not Assigned(fChildrenHelpMetaList)) then
+  if (not Assigned(AList)) then
   begin
     eventLogger.Debug(Format('Class [%s] has no controls, that are suporting hints', [ARequest.Control.ClassName]));
-    completion(nil);
+    completion(ARequest.Control, nil);
     exit;
   end;
 
+  fChildrenHelpMetaList := TList<TOPPHelpMeta>.Create;
+  fChildrenHelpMetaList.AddRange(AList);
   try
 
     for fChildHelpMeta in fChildrenHelpMetaList do
@@ -438,6 +439,34 @@ begin
   finally
     fChildrenHelpMetaList.Free;
   end;
+
+end;
+
+procedure TOPPHelpHintServer.LoadHints(const ARequest: TOPPHelpHintMappingLoadRequest; completion: TOPPHelpHintLoadCompletion);
+begin
+  eventLogger.Flow(Format('Load hints from: [%s]; for [%s]', [ARequest.MappingFileName, ARequest.Control.ClassName]), kContext);
+
+  self.reloadConfigurationIfNeed(ARequest.MappingFileName);
+  if not fLoaded then
+  begin
+    if Assigned(completion) then
+      completion(ARequest.Control, nil);
+    exit;
+  end;
+
+  if not Assigned(ARequest.OnGetHintFactory) then
+  begin
+    eventLogger.Error('GetHints - OnGetHintFactory is not defined');
+    if Assigned(completion) then
+      completion(ARequest.Control,nil);
+    exit;
+  end;
+
+  ARequest.OnGetHintFactory(ARequest.Control,
+    procedure(AList: TList<TOPPHelpMeta>)
+    begin
+      self.CreateReaders(ARequest, AList, completion);
+    end);
 end;
 
 procedure TOPPHelpHintServer.MergeHelpMaps(AList: TOPPHelpMapList);
@@ -540,26 +569,18 @@ begin
   TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
 
-procedure TOPPHelpHintServer.SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
+procedure TOPPHelpHintServer.performListManipulations(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; fList: TList<TOPPHelpMeta>; completion: TOPPHelpMapGenerationCompletion);
 var
-  fList: TList<TOPPHelpMeta>;
+  fMeta: TOPPHelpMeta;
   fListOfUniques: TList<String>;
   fMap: TOPPHelpMap;
   fMapList: TOPPHelpMapList;
-  fMeta: TOPPHelpMeta;
+
 begin
-
-  if not Assigned(ARequest.OnGetHintFactory) then
-  begin
-    eventLogger.Error('GenerateMap - OnGetHintFactory is not defined');
-    completion(nil);
-    exit;
-  end;
-
-  fListOfUniques := TList<String>.Create();
   fMapList := TOPPHelpMapList.Create();
   try
-    fList := ARequest.OnGetHintFactory(ARequest.Control);
+
+    fListOfUniques := TList<String>.Create();
     try
       for fMeta in fList do
       begin
@@ -595,14 +616,31 @@ begin
             end;
           end);
       end;
-
     finally
-      fList.Free;
+      fListOfUniques.Free;
     end;
   finally
     fMapList.Free;
-    fListOfUniques.Free;
   end;
+end;
+
+procedure TOPPHelpHintServer.SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
+var
+  fList: TList<TOPPHelpMeta>;
+begin
+
+  if not Assigned(ARequest.OnGetHintFactory) then
+  begin
+    eventLogger.Error('GenerateMap - OnGetHintFactory is not defined');
+    completion(nil);
+    exit;
+  end;
+
+  ARequest.OnGetHintFactory(ARequest.Control,
+    procedure(AList: TList<TOPPHelpMeta>)
+    begin
+      performListManipulations(ARequest, useGlobal, AList, completion);
+    end);
 end;
 
 procedure TOPPHelpHintServer.setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);

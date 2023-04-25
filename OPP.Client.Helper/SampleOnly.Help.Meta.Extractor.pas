@@ -8,11 +8,10 @@ uses
   OPP.Help.Meta;
 
 type
-
   TSampleOnlyHelpMetaExtractor = class(TInterfacedObject, IOPPHelpMetaFactory)
   public
     function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
-    function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
+    procedure GetChildrenHelpMeta(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
   end;
 
 implementation
@@ -57,12 +56,13 @@ begin
 
 end;
 
-function TSampleOnlyHelpMetaExtractor.GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
+procedure TSampleOnlyHelpMetaExtractor.GetChildrenHelpMeta(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
 var
   list: TList<TComponent>;
   child: TComponent;
   fMeta: TOPPHelpMeta;
   errorText: String;
+  result : TList<TOPPHelpMeta>;
 begin
   result := TList<TOPPHelpMeta>.Create();
 
@@ -78,6 +78,10 @@ begin
       end;
       result.Add(fMeta)
     end;
+
+    if Assigned(completion) then
+      completion(result);
+
   finally
     list.Free;
   end;
