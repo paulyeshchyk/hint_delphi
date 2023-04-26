@@ -22,7 +22,7 @@ uses
   Datasnap.DBClient, Data.DB;
 
 type
-  TOPPHelpHintLoadCompletion = reference to procedure(AControl:TControl; HintTexts: TList<TOPPHelpHint>);
+  TOPPHelpHintLoadCompletion = reference to procedure(AControl: TControl; HintTexts: TList<TOPPHelpHint>);
   TOPPHelpMapGenerationCompletion = reference to procedure(AList: TOPPHelpMapList);
   TOPPHelpHintServerOnGetMetaFactory = reference to procedure(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
   TOPPHelpHintViewCreator = reference to function(AHintMap: TOPPHelpMap): IOPPHelpHintDataReader;
@@ -342,9 +342,12 @@ end;
 
 procedure TOPPHelpHintServer.GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion);
 var
+  fHint: TOPPHelpHint;
+  fHintMeta: TOPPHelpMeta;
+  fHintTexts: TList<TOPPHelpHint>;
   mappingFile: String;
   fHintsMetaList: TOPPHintIdList;
-  fControl : TControl;
+  fControl: TControl;
 begin
   mappingFile := ARequest.MappingFileName;
   fControl := ARequest.Control;
@@ -352,41 +355,33 @@ begin
   fHintsMetaList := TOPPHintIdList.Create;
   fHintsMetaList.AddRange(hintsMetaList);
 
-  TTask.Run(
-    procedure
-    var
-      fHint: TOPPHelpHint;
-      fHintMeta: TOPPHelpMeta;
-      fHintTexts: TList<TOPPHelpHint>;
+  reloadConfigurationIfNeed(mappingFile);
+  if not fLoaded then
+  begin
+    // TODO: Test for Thread safety
+    if Assigned(completion) then
+      completion(fControl, nil);
+    exit;
+  end;
+
+  fHintTexts := TList<TOPPHelpHint>.Create;
+  try
+    for fHintMeta in fHintsMetaList do
     begin
-      reloadConfigurationIfNeed(mappingFile);
-      if not fLoaded then
+      fHint := GetHint(fHintMeta);
+      if not fHint.Data.isEmpty() then
       begin
-        // TODO: Test for Thread safety
-        if Assigned(completion) then
-          completion(fControl, nil);
-        exit;
+        fHintTexts.Add(fHint);
       end;
+    end;
 
-      fHintTexts := TList<TOPPHelpHint>.Create;
-      try
-        for fHintMeta in fHintsMetaList do
-        begin
-          fHint := GetHint(fHintMeta);
-          if not fHint.Data.isEmpty() then
-          begin
-            fHintTexts.Add(fHint);
-          end;
-        end;
+    // TODO: Test for Thread safety
+    if Assigned(completion) then
+      completion(fControl, fHintTexts);
 
-        // TODO: Test for Thread safety
-        if Assigned(completion) then
-          completion(fControl, fHintTexts);
-
-      finally
-        fHintTexts.Free;
-      end;
-    end);
+  finally
+    fHintTexts.Free;
+  end;
 end;
 
 function TOPPHelpHintServer.getReader(AFileName: String): IOPPHelpHintDataReader;
@@ -458,7 +453,7 @@ begin
   begin
     eventLogger.Error('GetHints - OnGetHintFactory is not defined');
     if Assigned(completion) then
-      completion(ARequest.Control,nil);
+      completion(ARequest.Control, nil);
     exit;
   end;
 

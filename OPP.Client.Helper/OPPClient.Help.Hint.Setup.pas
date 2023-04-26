@@ -122,24 +122,20 @@ begin
 
   AForm.GetChildrenRecursive(nil,
     procedure(AComponent: TComponent)
+    var
+      fHint: TOPPHelpHint;
+      fIsHintSupported: Boolean;
     begin
-      TTask.Run(
-        procedure
-        var
-          fHint: TOPPHelpHint;
-          fIsHintSupported: Boolean;
+      for fHint in AHintList do
+      begin
+        fIsHintSupported := AComponent.isSupportingMeta(fHint.Meta);
+        if fIsHintSupported then
         begin
-          for fHint in AHintList do
-          begin
-            fIsHintSupported := AComponent.isSupportingMeta(fHint.Meta);
-            if fIsHintSupported then
-            begin
-              RecursiveApplyHint(AComponent, fHint);
-              AddDXScreenTip(AComponent, fHint);
-              break;
-            end;
-          end;
-        end);
+          RecursiveApplyHint(AComponent, fHint);
+          AddDXScreenTip(AComponent, fHint);
+          break;
+        end;
+      end;
     end);
 end;
 
@@ -164,34 +160,29 @@ var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
-  TThread.Synchronize(nil,
-    procedure
-    begin
+  if not assigned(AComponent) then
+    exit;
+  if not(AComponent is TControl) then
+    exit;
+  if not assigned(fRepo) then
+    exit;
+  if not assigned(fHintController) then
+    exit;
 
-      if not assigned(AComponent) then
-        exit;
-      if not(AComponent is TControl) then
-        exit;
-      if not assigned(fRepo) then
-        exit;
-      if not assigned(fHintController) then
-        exit;
+  fControl := AComponent as TControl;
+  fControl.ShowHint := true;
 
-      fControl := AComponent as TControl;
-      fControl.ShowHint := true;
+  fScreenTip := fRepo.Items.Add;
+  fScreenTip.Header.PlainText := true;
+  fScreenTip.Header.Text := ''; // Заголовок
 
-      fScreenTip := fRepo.Items.Add;
-      fScreenTip.Header.PlainText := true;
-      fScreenTip.Header.Text := ''; // Заголовок
+  fScreenTip.Description.PlainText := false;
+  fScreenTip.Description.Text := AHint.Data.rtf; // rtf;
+  fScreenTip.setAspectRatio(3.0, AHint.Data.rtf);
 
-      fScreenTip.Description.PlainText := false;
-      fScreenTip.Description.Text := AHint.Data.rtf; // rtf;
-      fScreenTip.setAspectRatio(3.0, AHint.Data.rtf);
-
-      fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
-      fScreenTipLink.ScreenTip := fScreenTip;
-      fScreenTipLink.control := fControl;
-    end);
+  fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
+  fScreenTipLink.ScreenTip := fScreenTip;
+  fScreenTipLink.control := fControl;
 end;
 
 end.
