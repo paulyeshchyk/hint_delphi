@@ -19,12 +19,12 @@ uses
 
   OPP.ContextMenu.Edit,
 
+  SampleFormSaveState,
   OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
   OPP.Help.System.Messaging,
   OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
-  OPP.Help.System.Codable.TunningEditorDefaultSettings,
-  SampleFormSaveState, JvComponentBase, JvClipboardMonitor;
+  OPP.Help.System.Codable.TunningEditorDefaultSettings;
 
 type
 

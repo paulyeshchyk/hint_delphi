@@ -59,14 +59,14 @@ var
 begin
   inherited Create(AOwner);
 
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Вырезать', TOPPContextMenuEdit.OnCutText, TOPPContextMenuEdit.OnValidateCutText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Копировать', TOPPContextMenuEdit.OnCopyText, TOPPContextMenuEdit.OnValidateCutText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Вставить', TOPPContextMenuEdit.OnPasteText, TOPPContextMenuEdit.OnValidatePasteText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Удалить', TOPPContextMenuEdit.OnDeleteText, TOPPContextMenuEdit.OnValidateCutText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Р’С‹СЂРµР·Р°С‚СЊ', TOPPContextMenuEdit.OnCutText, TOPPContextMenuEdit.OnValidateCutText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'РљРѕРїРёСЂРѕРІР°С‚СЊ', TOPPContextMenuEdit.OnCopyText, TOPPContextMenuEdit.OnValidateCutText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Р’СЃС‚Р°РІРёС‚СЊ', TOPPContextMenuEdit.OnPasteText, TOPPContextMenuEdit.OnValidatePasteText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'РЈРґР°Р»РёС‚СЊ', TOPPContextMenuEdit.OnDeleteText, TOPPContextMenuEdit.OnValidateCutText));
   self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, '-', nil, nil));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Выделить всё', TOPPContextMenuEdit.OnSelectAllText, TOPPContextMenuEdit.OnValidateSelectAllText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Р’С‹РґРµР»РёС‚СЊ РІСЃС‘', TOPPContextMenuEdit.OnSelectAllText, TOPPContextMenuEdit.OnValidateSelectAllText));
   self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, '-', nil, nil));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Буфер обмена ГС', TOPPContextMenuEdit.OnOPPBufferOpen, TOPPContextMenuEdit.OnValidateCutText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Р‘СѓС„РµСЂ РѕР±РјРµРЅР° Р“РЎ', TOPPContextMenuEdit.OnOPPBufferOpen, TOPPContextMenuEdit.OnValidateCutText));
 end;
 
 class function TOPPContextMenuEdit.CreateCustomMenuItem(AOwner: TComponent; Caption: String; onClick: TNotifyEvent; OnValidate: TOPPContextMenuItemOnValidate): TOPPContextMenuItem;
