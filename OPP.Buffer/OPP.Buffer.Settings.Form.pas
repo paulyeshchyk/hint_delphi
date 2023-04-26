@@ -21,23 +21,23 @@ type
   TOPPBufferSettingsForm = class(TForm)
     GroupBox1: TGroupBox;
     Panel1: TPanel;
-    cxButton1: TcxButton;
     ActionList1: TActionList;
     actionClose: TAction;
     recordsCountLimitCheckbox: TcxCheckBox;
     recordsCountLimitEdit: TcxSpinEdit;
-    cxLabel1: TcxLabel;
     GroupBox2: TGroupBox;
     AllowExternalsCheckBox: TcxCheckBox;
     actionUnlimitedRecordsCount: TAction;
     actionAddRecordsFromOtherApps: TAction;
     actionSaveSettings: TAction;
     CanSaveFormFrameCheckbox: TcxCheckBox;
-    cxLabel2: TcxLabel;
     clipboardManagerShortcut: THotKey;
     SpeedButton1: TSpeedButton;
     actionWipeShortcut: TAction;
-    cxLabel3: TcxLabel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Button1: TButton;
+    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionSaveSettingsExecute(Sender: TObject);
@@ -83,7 +83,7 @@ uses
 
 procedure TOPPBufferSettingsForm.FormCreate(Sender: TObject);
 begin
-//
+  //
 end;
 
 procedure TOPPBufferSettingsForm.recordsCountLimitCheckboxPropertiesEditValueChanged(Sender: TObject);
@@ -165,7 +165,7 @@ end;
 
 procedure TOPPBufferSettingsForm.DoUpdateUI;
 begin
-  cxLabel1.Enabled := fSettings.GetUseRecordsCountLimit;
+  label3.Enabled := fSettings.GetUseRecordsCountLimit;
   recordsCountLimitEdit.Enabled := fSettings.GetUseRecordsCountLimit;
 end;
 

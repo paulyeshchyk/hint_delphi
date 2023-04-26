@@ -31,7 +31,34 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alTop
     Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
     TabOrder = 0
-    ExplicitWidth = 717
+    ExplicitLeft = 11
+    object Label1: TLabel
+      AlignWithMargins = True
+      Left = 18
+      Top = 111
+      Width = 401
+      Height = 26
+      Margins.Left = 16
+      Margins.Top = 16
+      Margins.Right = 16
+      Margins.Bottom = 16
+      Align = alBottom
+      Caption = 
+        #1042#1085#1080#1084#1072#1085#1080#1077'! '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1074' '#1084#1077#1085#1100#1096#1091#1102' '#1089#1090#1086#1088#1086#1085#1091' '#1087#1088#1080#1074#1077#1076#1105#1090' '#1082' '#1091#1076#1072#1083#1077#1085 +
+        #1080#1102' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1093#1089#1103' '#1085#1077#1079#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1093' '#1079#1072#1087#1080#1089 +
+        #1077#1081'.'
+      WordWrap = True
+      ExplicitTop = 124
+      ExplicitWidth = 381
+    end
+    object Label3: TLabel
+      Left = 16
+      Top = 64
+      Width = 123
+      Height = 21
+      Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
+      Layout = tlCenter
+    end
     object recordsCountLimitCheckbox: TcxCheckBox
       Left = 8
       Top = 32
@@ -41,6 +68,10 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Margins.Bottom = 6
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1086#1077' '#1095#1080#1089#1083#1086' '#1079#1072#1087#1080#1089#1077#1081
       Properties.OnEditValueChanged = recordsCountLimitCheckboxPropertiesEditValueChanged
+      Style.LookAndFeel.NativeStyle = True
+      StyleDisabled.LookAndFeel.NativeStyle = True
+      StyleFocused.LookAndFeel.NativeStyle = True
+      StyleHot.LookAndFeel.NativeStyle = True
       TabOrder = 0
     end
     object recordsCountLimitEdit: TcxSpinEdit
@@ -54,35 +85,13 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Properties.MaxValue = 32768.000000000000000000
       Properties.MinValue = 5.000000000000000000
       Properties.OnEditValueChanged = recordsCountLimitEditPropertiesEditValueChanged
+      Style.LookAndFeel.NativeStyle = True
+      StyleDisabled.LookAndFeel.NativeStyle = True
+      StyleFocused.LookAndFeel.NativeStyle = True
+      StyleHot.LookAndFeel.NativeStyle = True
       TabOrder = 1
       Value = 20
       Width = 58
-    end
-    object cxLabel1: TcxLabel
-      Left = 8
-      Top = 65
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
-    end
-    object cxLabel3: TcxLabel
-      AlignWithMargins = True
-      Left = 18
-      Top = 107
-      Margins.Left = 16
-      Margins.Top = 16
-      Margins.Right = 16
-      Margins.Bottom = 16
-      Align = alBottom
-      Caption = 
-        #1042#1085#1080#1084#1072#1085#1080#1077'! '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1074' '#1084#1077#1085#1100#1096#1091#1102' '#1089#1090#1086#1088#1086#1085#1091' '#1087#1088#1080#1074#1077#1076#1105#1090' '#1082' '#1091#1076#1072#1083#1077#1085 +
-        #1080#1102' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1093#1089#1103' '#1085#1077#1079#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1093' '#1079#1072#1087#1080#1089 +
-        #1077#1081'.'
-      Properties.WordWrap = True
-      ExplicitLeft = 16
-      ExplicitWidth = 681
     end
   end
   object Panel1: TPanel
@@ -97,24 +106,13 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 578
-    ExplicitWidth = 788
-    ExplicitHeight = 81
-    object cxButton1: TcxButton
-      AlignWithMargins = True
-      Left = 361
+    object Button1: TButton
+      Left = 378
       Top = 16
-      Width = 76
+      Width = 75
       Height = 25
-      Margins.Left = 6
-      Margins.Top = 16
-      Margins.Right = 32
-      Margins.Bottom = 16
-      Align = alRight
       Action = actionSaveSettings
-      OptionsImage.Spacing = 8
       TabOrder = 0
-      ExplicitLeft = 357
     end
   end
   object GroupBox2: TGroupBox
@@ -130,12 +128,11 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alTop
     Caption = #1042#1086#1079#1084#1086#1078#1085#1086#1089#1090#1080
     TabOrder = 2
-    ExplicitWidth = 469
     object SpeedButton1: TSpeedButton
       Left = 341
-      Top = 92
+      Top = 93
       Width = 76
-      Height = 25
+      Height = 22
       Hint = #1054#1095#1080#1089#1090#1080#1090#1100
       Margins.Left = 6
       Margins.Top = 6
@@ -146,8 +143,16 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       ParentShowHint = False
       ShowHint = True
     end
-    object AllowExternalsCheckBox: TcxCheckBox
+    object Label2: TLabel
       Left = 16
+      Top = 93
+      Width = 170
+      Height = 19
+      Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
+      Layout = tlCenter
+    end
+    object AllowExternalsCheckBox: TcxCheckBox
+      Left = 8
       Top = 32
       Margins.Left = 6
       Margins.Top = 6
@@ -155,10 +160,14 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Margins.Bottom = 6
       Caption = #1044#1086#1073#1072#1074#1083#1103#1090#1100' '#1079#1072#1087#1080#1089#1080' '#1080#1079' '#1076#1088#1091#1075#1080#1093' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1081
       Properties.OnEditValueChanged = AllowExternalsCheckBoxPropertiesEditValueChanged
+      Style.LookAndFeel.NativeStyle = True
+      StyleDisabled.LookAndFeel.NativeStyle = True
+      StyleFocused.LookAndFeel.NativeStyle = True
+      StyleHot.LookAndFeel.NativeStyle = True
       TabOrder = 0
     end
     object CanSaveFormFrameCheckbox: TcxCheckBox
-      Left = 16
+      Left = 8
       Top = 60
       Margins.Left = 6
       Margins.Top = 6
@@ -166,16 +175,11 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Margins.Bottom = 6
       Caption = #1057#1086#1093#1088#1072#1085#1103#1090#1100' '#1088#1072#1079#1084#1077#1088#1099' '#1080' '#1087#1086#1083#1086#1078#1077#1085#1080#1077' '#1086#1082#1085#1072
       Properties.OnEditValueChanged = CanSaveFormFrameCheckboxPropertiesEditValueChanged
+      Style.LookAndFeel.NativeStyle = True
+      StyleDisabled.LookAndFeel.NativeStyle = True
+      StyleFocused.LookAndFeel.NativeStyle = True
+      StyleHot.LookAndFeel.NativeStyle = True
       TabOrder = 1
-    end
-    object cxLabel2: TcxLabel
-      Left = 18
-      Top = 93
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
     end
     object clipboardManagerShortcut: THotKey
       Left = 221
@@ -188,7 +192,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Margins.Bottom = 6
       HotKey = 24662
       Modifiers = [hkShift, hkCtrl]
-      TabOrder = 3
+      TabOrder = 2
       OnChange = clipboardManagerShortcutChange
     end
   end

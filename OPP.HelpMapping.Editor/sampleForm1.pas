@@ -17,6 +17,8 @@ uses
   Vcl.StdCtrls, Vcl.Themes,
   Winapi.CommCtrl, Winapi.Messages, Winapi.Windows,
 
+  OPP.ContextMenu.Edit,
+
   OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
   OPP.Help.System.Messaging,
   OPP.Help.System.References,
@@ -493,7 +495,7 @@ begin
         point := PanelPreview.ClientToScreen(point);
 
         TdxScreenTipStyle(cxHintController.HintStyle).ShowScreenTip(point.X, point.Y, fScreenTipLink.ScreenTip);
-        TTask.Run(
+        TThread.Synchronize(nil,
           procedure()
           begin
             Sleep(2500);
@@ -512,8 +514,9 @@ begin
   helpShortcutServer.FindHelpMap(fSelectedItem,
     procedure(const AMap: TOPPHelpMap)
     begin
-      if not Assigned(AMap) then begin
-        eventLogger.Error('HelpMap is nil','Action Preview');
+      if not assigned(AMap) then
+      begin
+        eventLogger.Error('HelpMap is nil', 'Action Preview');
         exit;
       end;
       helpShortcutServer.showHelp(AMap.Predicate, vmExternal,
@@ -653,7 +656,7 @@ begin
   fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
   fScreenTipLink.ScreenTip := fScreenTip;
   fScreenTipLink.Control := TControl(AComponent);
-  Result := fScreenTipLink;
+  result := fScreenTipLink;
 end;
 
 procedure TSampleForm.cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -759,7 +762,7 @@ end;
 
 procedure TSampleForm.doModificationCheck(ItemToSelect: TListItem; completion: TOPPHelpSaveReactionCompletion);
 var
-  Result: Integer;
+  result: Integer;
 begin
   if not assigned(completion) then
     exit;
@@ -770,8 +773,8 @@ begin
     exit;
   end;
 
-  Result := MessageDlg(SSaveChanges, mtwarning, [mbYes, mbNo], 0);
-  completion(ItemToSelect, (Result = mrYes));
+  result := MessageDlg(SSaveChanges, mtwarning, [mbYes, mbNo], 0);
+  completion(ItemToSelect, (result = mrYes));
 end;
 
 procedure TSampleForm.doSaveIfNeed(ItemToSelect: TListItem; AShouldSave: Boolean);
@@ -840,14 +843,18 @@ end;
 procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
+  popup : TOPPContextMenuEdit;
 begin
+
+  popup := TOPPContextMenuEdit.Create(self);
+  cxEditIdentifierName.PopupMenu := popup;
 
   TOPPBufferFormHelper.injectionShowForm;
 
   JvClipboardMonitor1 := TJvClipboardMonitor.Create(self);
   JvClipboardMonitor1.OnChange := self.JvClipboardMonitor1Change;
 
-  keyboardShortcutManager.registerHook(ShortCut(Ord('H'), [ssShift, ssCtrl]),
+  keyboardShortcutManager.registerHook(Shortcut(Ord('H'), [ssShift, ssCtrl]),
     procedure
     begin
       PostMessage(GetForegroundWindow, WM_OPPHook, 0, 0);
@@ -890,25 +897,25 @@ end;
 
 function TSampleForm.GetHasRecords: Boolean;
 begin
-  Result := cxListView1.Items.Count > 0;
+  result := cxListView1.Items.Count > 0;
 end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
 begin
   if not assigned(AControl) then
   begin
-    Result := '';
+    result := '';
     exit;
   end;
 
   eventLogger.Debug(AControl.ClassName);
   if Length(AControl.HelpKeyword) <> 0 then
   begin
-    Result := AControl.HelpKeyword;
+    result := AControl.HelpKeyword;
     exit;
   end;
 
-  Result := GetWinControlHelpKeyword(AControl.Parent);
+  result := GetWinControlHelpKeyword(AControl.Parent);
 end;
 
 procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
@@ -1004,15 +1011,15 @@ function TSampleForm.preferableIndexToJump(from: Integer): Integer;
 begin
   if cxListView1.Items.Count = 0 then
   begin
-    Result := -1;
+    result := -1;
     exit;
   end;
   if from < cxListView1.Items.Count then
   begin
-    Result := from;
+    result := from;
     exit;
   end;
-  Result := cxListView1.Items.Count - 1;
+  result := cxListView1.Items.Count - 1;
 end;
 
 procedure TSampleForm.RefreshPreviewButtonAction;
@@ -1040,7 +1047,7 @@ begin
   maps.Sort(TComparer<TOPPHelpMap>.Construct(
     function(const Left, Right: TOPPHelpMap): Integer
     begin
-      Result := CompareStr(Left.ComponentIdentifier, Right.ComponentIdentifier);
+      result := CompareStr(Left.ComponentIdentifier, Right.ComponentIdentifier);
     end));
 
   onMapsLoaded(maps, completion);
@@ -1260,7 +1267,7 @@ function GetWinControlHelpKeyword(AControl: TControl): String;
 begin
   if not assigned(AControl) then
   begin
-    Result := '';
+    result := '';
     exit;
   end;
 
@@ -1268,37 +1275,37 @@ begin
 
   if AControl.ClassType.InheritsFrom(TForm) then
   begin
-    Result := AControl.Name;
+    result := AControl.Name;
   end
   else if AControl.ClassType.InheritsFrom(TEdit) then
   begin
-    Result := AControl.HelpKeyword;
+    result := AControl.HelpKeyword;
   end
   else if Length(AControl.HelpKeyword) <> 0 then
   begin
-    Result := AControl.HelpKeyword;
+    result := AControl.HelpKeyword;
   end else begin
-    Result := GetWinControlHelpKeyword(AControl.Parent);
+    result := GetWinControlHelpKeyword(AControl.Parent);
   end;
 end;
 
 function ControlHelpIdentifier(AControl: TControl): String;
 begin
-  Result := GetWinControlHelpKeyword(AControl);
+  result := GetWinControlHelpKeyword(AControl);
 end;
 
 function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
 var
   fFileName: String;
 begin
-  Result := TOPPHelpRichtextHintReader.Create;
+  result := TOPPHelpRichtextHintReader.Create;
   fFileName := AMap.Predicate.filename;
   if not TFile.Exists(fFileName) then
   begin
     eventLogger.Error(Format('File not found: %s', [fFileName]), kContext);
     exit;
   end;
-  Result.loadData(fFileName);
+  result.loadData(fFileName);
 end;
 
 initialization

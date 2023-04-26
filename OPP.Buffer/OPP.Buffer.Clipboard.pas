@@ -28,6 +28,7 @@ type
   TOPPClipboardHelper = class helper for TClipboard
   public
     function CreateRecord(AFormat: TOPPBufferManagerItemFormat): TOPPBufferManagerRecord;
+    function HasClipboardFormat(AFormat: TOPPBufferManagerItemFormat = ifText): Boolean;
   end;
 
   TOPPBufferManagerItemFormatHelper = record helper for TOPPBufferManagerItemFormat
@@ -78,6 +79,17 @@ begin
     end;
   end;
 
+end;
+
+function TOPPClipboardHelper.HasClipboardFormat(AFormat: TOPPBufferManagerItemFormat): Boolean;
+begin
+  try
+    Clipboard.Open;
+    result := Clipboard.HasFormat(AFormat.WindowsClipboardFormat);
+    Clipboard.Close;
+  except
+    result := false;
+  end;
 end;
 
 { TOPPBufferManagerItemFormatHelper }

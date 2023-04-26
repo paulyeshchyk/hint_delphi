@@ -3,7 +3,7 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 530
+  ClientHeight = 490
   ClientWidth = 1002
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object OPPBufferForm: TOPPBufferForm
     Left = 0
     Top = 0
     Width = 1002
-    Height = 530
+    Height = 470
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -32,8 +32,8 @@ object OPPBufferForm: TOPPBufferForm
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 490
     object cxGrid1DBTableView1: TcxGridDBTableView
-      PopupMenu = PopupMenu1
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = cxGrid1DBTableView1CellDblClick
       OnSelectionChanged = cxGrid1DBTableView1SelectionChanged
@@ -90,6 +90,30 @@ object OPPBufferForm: TOPPBufferForm
     object cxGrid1Level1: TcxGridLevel
       GridView = cxGrid1DBTableView1
     end
+  end
+  object dxStatusBar1: TdxStatusBar
+    Left = 0
+    Top = 470
+    Width = 1002
+    Height = 20
+    Panels = <
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+        Fixed = False
+        Width = 200
+      end
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+        Fixed = False
+      end>
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ExplicitLeft = 512
+    ExplicitTop = 264
+    ExplicitWidth = 0
   end
   object ActionList1: TActionList
     Left = 32
@@ -173,18 +197,21 @@ object OPPBufferForm: TOPPBufferForm
     Left = 104
     Top = 40
     object N1: TMenuItem
-      Caption = #1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       object N15: TMenuItem
         Action = actionShowSettings
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       end
       object N3: TMenuItem
         Caption = '-'
       end
       object N6: TMenuItem
         Action = actionExportSettings
+        Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100
       end
       object N7: TMenuItem
         Action = actionImportSettings
+        Caption = #1048#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100
       end
       object N2: TMenuItem
         Caption = '-'
@@ -201,6 +228,7 @@ object OPPBufferForm: TOPPBufferForm
       end
       object menuMultiSelectMode: TMenuItem
         Action = actionMultiSelectMode
+        Caption = #1056#1077#1078#1080#1084' '#1074#1099#1073#1086#1088#1072' '#1085#1077#1089#1082#1086#1083#1100#1082#1080#1093' '#1079#1072#1087#1080#1089#1077#1081
       end
       object N9: TMenuItem
         Caption = '-'
@@ -213,6 +241,7 @@ object OPPBufferForm: TOPPBufferForm
       end
       object N14: TMenuItem
         Action = actionWipeRecords
+        Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077
       end
       object N10: TMenuItem
         Caption = '-'
@@ -235,9 +264,11 @@ object OPPBufferForm: TOPPBufferForm
       end
       object N4: TMenuItem
         Action = actionExportBuffer
+        Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100
       end
       object N5: TMenuItem
         Action = actionImportBuffer
+        Caption = #1048#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100
       end
     end
   end

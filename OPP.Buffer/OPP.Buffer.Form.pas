@@ -16,7 +16,7 @@ uses
 
   OPP.Buffer.Manager.Settings.Data,
 
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String);
@@ -81,6 +81,7 @@ type
     cxStyle1: TcxStyle;
     actionMarkAsInverted: TAction;
     N26: TMenuItem;
+    dxStatusBar1: TdxStatusBar;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
@@ -120,9 +121,11 @@ type
     procedure setIsEditMode(const Value: Boolean);
     procedure SetIsMultiSelectMode(const Value: Boolean);
     function GetHasSelectedFewRecords: Boolean;
+    function GetSelectedRecordsCountText: String;
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
     property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
+    property SelectedRecordsCountText: String read GetSelectedRecordsCountText;
 
     procedure ColumnSortSave;
     procedure ColumnSortRead;
@@ -172,6 +175,10 @@ resourcestring
   SErrotCantSaveSettingsTemplate = 'Невозможно сохранить настройки. Файл %s заблокирован. Обратитесь к администратору.';
   SDeleteRecord = 'Удалить текущую';
   SDeleteSelectedRecords = 'Удалить выбранные';
+  SEditMode = 'Режим редактирования';
+  SPreviewMode = '';
+  SEditMultirecordSelection = 'Режим выбора нескольких записей';
+  SSelectedRecordsTemplate = 'Выбрано: %d';
 
 const
   kFieldNameOrder = 'order';
@@ -407,7 +414,18 @@ begin
   fSettings := oppBufferManager.Settings;
   ffFrame := fSettings.GetFormFrame;
   if not ffFrame.isEmpty then
+  begin
+    if ffFrame.Left < 0 then
+    begin
+      ffFrame.Width := ffFrame.Width + Abs(ffFrame.Left);
+      ffFrame.Left := 0;
+    end;
+    if ffFrame.Left > Screen.WorkAreaWidth then
+    begin
+      ffFrame.Left := ffFrame.Left - 20;
+    end;
     self.frame := ffFrame;
+  end;
 
   self.IsEditMode := false;
   DataSource1.DataSet := TClientDataset(oppBufferManager.DataSet);
@@ -426,6 +444,17 @@ end;
 function TOPPBufferForm.GetHasSelectedRecord: Boolean;
 begin
   result := (cxGrid1DBTableView1.DataController.RecordCount > 0) and (cxGrid1DBTableView1.DataController.RecNo >= 0);
+end;
+
+function TOPPBufferForm.GetSelectedRecordsCountText: String;
+begin
+  result := '';
+  if not fIsMultiSelectMode then
+    exit;
+  if cxGrid1DBTableView1.Controller.SelectedRowCount <= 1 then
+    exit;
+
+  result := Format(SSelectedRecordsTemplate, [cxGrid1DBTableView1.Controller.SelectedRowCount]);
 end;
 
 function TOPPBufferForm.GetHasSelectedFewRecords: Boolean;
@@ -452,6 +481,8 @@ begin
   actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords and (not self.HasSelectedFewRecords);
   actionApplySelection.Enabled := (not fIsEditMode) and self.HasSelectedRecord and Assigned(OnApply);
   actionClose.Enabled := (not fIsEditMode);
+  dxStatusBar1.Panels[0].Text := ifThen(not fIsEditMode, SPreviewMode, ifThen(fIsMultiSelectMode, SEditMultirecordSelection, SEditMode));
+  dxStatusBar1.Panels[1].Text := ifThen(not fIsMultiSelectMode, '', self.SelectedRecordsCountText)
 end;
 
 procedure TOPPBufferForm.setIsEditMode(const Value: Boolean);
@@ -499,15 +530,16 @@ begin
       begin
         if fCanApplyText then
         begin
-          //AControl.SetTextProp(AData);
+          // AControl.SetTextProp(AData);
           try
             Clipboard.Open;
             Clipboard.AsText := AData;
             Clipboard.Close;
-            PostMessage(TWinControl(AControl).Handle, WM_PASTE,1,0);
+            PostMessage(TWinControl(AControl).Handle, WM_PASTE, 1, 0);
           except
-            on E:Exception do begin
-              //event
+            on E: Exception do
+            begin
+              // event
             end;
           end;
         end;

@@ -98,7 +98,8 @@ contains
   OPP.Buffer.Manager.Dataset in '..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas',
   OPP.Keyboard.Shortcut.Manager in '..\OPP.Keyboard\OPP.Keyboard.Shortcut.Manager.pas',
   OPP.Help.System.TList.Filter in '..\OPP.Help\OPP.Help.System.TList.Filter.pas',
-  OPP.Help.System.Control in '..\OPP.Help\OPP.Help.System.Control.pas';
+  OPP.Help.System.Control in '..\OPP.Help\OPP.Help.System.Control.pas',
+  OPP.ContextMenu.Edit in '..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas';
 
 end.
 

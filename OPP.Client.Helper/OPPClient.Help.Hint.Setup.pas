@@ -101,6 +101,7 @@ begin
       helpHintServer.SaveHints(fRequest, useGlobal, nil);
 
     finally
+    //
       fRequest.Free;
     end;
   finally

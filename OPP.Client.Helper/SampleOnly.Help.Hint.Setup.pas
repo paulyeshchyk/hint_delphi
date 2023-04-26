@@ -54,9 +54,9 @@ begin
       hintController.HintHidePause := kOPPHintHidePause;
       fRequest.OnGetHintFactory := fMetaFactory.GetChildrenHelpMeta;
       helpHintServer.LoadHints(fRequest,
-        procedure(hints: TList<TOPPHelpHint>)
+        procedure(AControl:TControl; hints: TList<TOPPHelpHint>)
         begin
-          TOPPClientHintHelper.CreateHintViews(AForm, hints, hintController, repo, completion);
+          TOPPClientHintHelper.CreateHintViews(AControl, hints, hintController, repo, completion);
         end);
     finally
       fRequest.OnGetHintFactory := nil;
