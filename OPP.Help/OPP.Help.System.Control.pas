@@ -8,6 +8,7 @@ type
   TOPPControlHelper = class helper for TControl
     function HasTextNonZeroLength: Boolean;
     function HasTextProp: Boolean;
+    function TextSelectionLength: Integer;
     function GetCustomProp(APropName: String): TValue;
     procedure SetTextProp(AText: String);
     function DLG_CODE: Cardinal;
@@ -39,7 +40,8 @@ var
 begin
   Prop := Ctx.GetType(self.ClassType).GetProperty('Text');
   result := (Prop <> nil) and (Prop.Visibility in [mvPublic, mvPublished]);
-  if result then begin
+  if result then
+  begin
     result := Length(Prop.GetValue(self).AsString) > 0;
   end;
 end;
@@ -60,6 +62,16 @@ var
 begin
   Prop := Ctx.GetType(self.ClassType).GetProperty('Text');
   Prop.SetValue(self, AText);
+end;
+
+function TOPPControlHelper.TextSelectionLength: Integer;
+var fDWORD: DWORD;
+begin
+  result := -1;
+  if not(self is TWinControl) then
+    exit;
+  fDWORD := SendMessage(TWinControl(self).Handle, EM_GETSEL, 0, 0);
+  result := hiword(fDWORD) - loword(fDWORD);
 end;
 
 end.

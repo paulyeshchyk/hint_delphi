@@ -1,4 +1,4 @@
-unit OPP.ContextMenu.Edit;
+﻿unit OPP.ContextMenu.Edit;
 
 interface
 
@@ -26,7 +26,8 @@ type
   private
     class function doCheckIfSenderIsEditable(Sender: TObject): Boolean;
   public
-    class function GetPopupComponentAsEditControl(Sender: TObject): TComponent;
+    class function GetPopupComponentAsEditControl(Sender: TObject): TWinControl;
+    class function GetPopupComponentAsEditControlForAction(Sender: TObject): TWinControl;
 
     class procedure OnCutText(Sender: TObject);
     class procedure OnCopyText(Sender: TObject);
@@ -60,9 +61,9 @@ begin
   inherited Create(AOwner);
 
   self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Вырезать', TOPPContextMenuEdit.OnCutText, TOPPContextMenuEdit.OnValidateCutText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Копировать', TOPPContextMenuEdit.OnCopyText, TOPPContextMenuEdit.OnValidateCutText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Копировать', TOPPContextMenuEdit.OnCopyText, TOPPContextMenuEdit.OnValidateCopyText));
   self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Вставить', TOPPContextMenuEdit.OnPasteText, TOPPContextMenuEdit.OnValidatePasteText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Удалить', TOPPContextMenuEdit.OnDeleteText, TOPPContextMenuEdit.OnValidateCutText));
+  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Удалить', TOPPContextMenuEdit.OnDeleteText, TOPPContextMenuEdit.OnValidateDeleteText));
   self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, '-', nil, nil));
   self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Выделить всё', TOPPContextMenuEdit.OnSelectAllText, TOPPContextMenuEdit.OnValidateSelectAllText));
   self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, '-', nil, nil));
@@ -111,21 +112,42 @@ begin
     result := true;
 end;
 
-class function TOPPContextMenuEditHelper.GetPopupComponentAsEditControl(Sender: TObject): TComponent;
+class function TOPPContextMenuEditHelper.GetPopupComponentAsEditControl(Sender: TObject): TWinControl;
 var
-  PopupComponent: TComponent;
-  fValue: TValue;
+  PopupComponent: TWinControl;
+  fComponent: TComponent;
 begin
   result := nil;
+  if not(Sender is TWinControl) then
+    exit;
+  PopupComponent := TWinControl(Sender);
+  if PopupComponent is TcxCustomEdit then
+  begin
+    result := TcxCustomEdit(PopupComponent).InnerControl;
+  end else begin
+    result := PopupComponent;
+  end
+end;
+
+class function TOPPContextMenuEditHelper.GetPopupComponentAsEditControlForAction(Sender: TObject): TWinControl;
+var
+  PopupComponent: TWinControl;
+  fComponent: TComponent;
+begin
+  result := nil;
+
   if not(Sender is TOPPContextMenuItem) then
     exit;
   if not(TOPPContextMenuItem(Sender).Owner is TOPPContextMenuEdit) then
     exit;
-  PopupComponent := TOPPContextMenuEdit(TOPPContextMenuItem(Sender).Owner).PopupComponent;
-  if not Assigned(PopupComponent) then
-  exit;
-
-  if PopupComponent is TcxCustomEdit then begin
+  fComponent := TOPPContextMenuEdit(TOPPContextMenuItem(Sender).Owner).PopupComponent;
+  if not Assigned(fComponent) then
+    exit;
+  if not(fComponent is TWinControl) then
+    exit;
+  PopupComponent := TWinControl(fComponent);
+  if PopupComponent is TcxCustomEdit then
+  begin
     result := TcxCustomEdit(PopupComponent).InnerControl;
   end else begin
     result := PopupComponent;
@@ -134,21 +156,30 @@ begin
 end;
 
 class procedure TOPPContextMenuEditHelper.OnCopyText(Sender: TObject);
+var
+  PopupComponent: TComponent;
 begin
-  if not doCheckIfSenderIsEditable(Sender) then
-    exit;
+  PopupComponent := GetPopupComponentAsEditControlForAction(Sender);
+  if assigned(PopupComponent) and (PopupComponent is TWinControl) then
+    SendMessage(TWinControl(PopupComponent).Handle, WM_COPY, 0, 0);
 end;
 
 class procedure TOPPContextMenuEditHelper.OnCutText(Sender: TObject);
+var
+  PopupComponent: TComponent;
 begin
-  if not doCheckIfSenderIsEditable(Sender) then
-    exit;
+  PopupComponent := GetPopupComponentAsEditControlForAction(Sender);
+  if assigned(PopupComponent) and (PopupComponent is TWinControl) then
+    SendMessage(TWinControl(PopupComponent).Handle, WM_CUT, 0, 0);
 end;
 
 class procedure TOPPContextMenuEditHelper.OnDeleteText(Sender: TObject);
+var
+  PopupComponent: TComponent;
 begin
-  if not doCheckIfSenderIsEditable(Sender) then
-    exit;
+  PopupComponent := GetPopupComponentAsEditControlForAction(Sender);
+  if assigned(PopupComponent) and (PopupComponent is TWinControl) then
+    SendMessage(TWinControl(PopupComponent).Handle, WM_CLEAR, 0, 0);
 end;
 
 class procedure TOPPContextMenuEditHelper.OnOPPBufferOpen(Sender: TObject);
@@ -158,42 +189,54 @@ begin
 end;
 
 class procedure TOPPContextMenuEditHelper.OnPasteText(Sender: TObject);
+var
+  PopupComponent: TComponent;
 begin
-  if not doCheckIfSenderIsEditable(Sender) then
-    exit;
+  PopupComponent := GetPopupComponentAsEditControlForAction(Sender);
+  if assigned(PopupComponent) and (PopupComponent is TWinControl) then
+    SendMessage(TWinControl(PopupComponent).Handle, WM_PASTE, 0, 0);
 end;
 
 class procedure TOPPContextMenuEditHelper.OnSelectAllText(Sender: TObject);
 var
-  PopupComponent : TComponent;
+  PopupComponent: TComponent;
 begin
-  PopupComponent := GetPopupComponentAsEditControl(Sender);
+  PopupComponent := GetPopupComponentAsEditControlForAction(Sender);
   if assigned(PopupComponent) and (PopupComponent is TWinControl) then
-  SendMessage(TWinControl(PopupComponent).Handle, EM_SETSEL, 0, -1);
+    SendMessage(TWinControl(PopupComponent).Handle, EM_SETSEL, 0, -1);
 end;
 
 class function TOPPContextMenuEditHelper.OnValidateCopyText(Sender: TWinControl): Boolean;
+var
+  PopupComponent: TWinControl;
 begin
   result := false;
-  if not Assigned(Sender) then
+  PopupComponent := GetPopupComponentAsEditControl(Sender);
+  if not Assigned(PopupComponent) then
     exit;
-  result := Sender.HasTextProp;
+  result := (PopupComponent.TextSelectionLength > 0);
 end;
 
 class function TOPPContextMenuEditHelper.OnValidateCutText(Sender: TWinControl): Boolean;
+var
+  PopupComponent: TWinControl;
 begin
   result := false;
-  if not Assigned(Sender) then
+  PopupComponent := GetPopupComponentAsEditControl(Sender);
+  if not Assigned(PopupComponent) then
     exit;
-  result := Sender.HasTextProp;
+  result := (PopupComponent.TextSelectionLength > 0);
 end;
 
 class function TOPPContextMenuEditHelper.OnValidateDeleteText(Sender: TWinControl): Boolean;
+var
+  PopupComponent: TWinControl;
 begin
   result := false;
-  if not Assigned(Sender) then
+  PopupComponent := GetPopupComponentAsEditControl(Sender);
+  if not Assigned(PopupComponent) then
     exit;
-  result := Sender.HasTextProp;
+  result := (PopupComponent.TextSelectionLength > 0);
 end;
 
 class function TOPPContextMenuEditHelper.OnValidateOPPBufferOpen(Sender: TWinControl): Boolean;
@@ -205,6 +248,8 @@ begin
 end;
 
 class function TOPPContextMenuEditHelper.OnValidatePasteText(Sender: TWinControl): Boolean;
+var
+  PopupComponent: TComponent;
 begin
   result := false;
   if not Assigned(Sender) then
@@ -214,11 +259,14 @@ begin
 end;
 
 class function TOPPContextMenuEditHelper.OnValidateSelectAllText(Sender: TWinControl): Boolean;
+var
+  PopupComponent: TWinControl;
 begin
   result := false;
-  if not Assigned(Sender) then
+  PopupComponent := GetPopupComponentAsEditControl(Sender);
+  if not Assigned(PopupComponent) then
     exit;
-  result := Sender.HasTextNonZeroLength;
+  result := PopupComponent.HasTextNonZeroLength;
 end;
 
 end.
