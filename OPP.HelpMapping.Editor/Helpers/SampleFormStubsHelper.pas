@@ -70,6 +70,8 @@ begin
       fPredicate.predicates.Add(fChild);
       helpShortcutServer.showHelp(fPredicate, vmExternal,
         procedure(error: Exception)
+        var
+          strmessage: String;
         begin
           if error = nil then
           begin
@@ -132,15 +134,15 @@ end;
 
 class procedure TSampleFormStubsHelper.readPredicateFromFile;
 var
-  fList: TOPPHelpMapList;
+  fList: TList<TOPPHelpMap>;
 begin
-  fList := TOPPHelpMapList.Create();
+  fList := TList<TOPPHelpMap>.Create();
   try
     TOPPHelpMapRESTParser.readJSON('.\help\tests\predicates.json',
-      procedure(Mapset: TOPPHelpMapList; error: Exception)
+      procedure(Mapset: TOPPHelpMapSet; error: Exception)
       var fMap: TOPPHelpMap;
       begin
-        for fMap in mapset do begin
+        for fMap in mapset.list do begin
           fList.Add(fMap)
         end;
       end);
@@ -153,10 +155,10 @@ class procedure TSampleFormStubsHelper.savePredicateToFile;
 var
   fMap: TOPPHelpMap;
   fPredicate, fChild: TOPPHelpPredicate;
-  fList: TOPPHelpMapList;
+  fList: TList<TOPPHelpMap>;
 begin
 
-  fList := TOPPHelpMapList.Create();
+  fList := TList<TOPPHelpMap>.Create();
   try
 
     fPredicate := TOPPHelpPredicate.Create;

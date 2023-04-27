@@ -1,7 +1,6 @@
 ﻿program OPPHelpPreview;
 
 {$R '..\..\Rus\devexlocalization.res'}
-
 {$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
 
 uses

@@ -63,7 +63,7 @@
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
-        <DCC_UnitSearchPath>..\OPP.Help;..\OPP.Buffer;..\OPP.Keyboard;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -72,9 +72,6 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;OPPHelp;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <Icon_MainIcon>..\OPP.Help\icons\dev-tool.ico</Icon_MainIcon>
-        <DCC_UnitSearchPath>..\OPP.ContextMenu;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;$(DCC_UsePackage)</DCC_UsePackage>
@@ -94,17 +91,18 @@
         <AppDPIAwarenessMode>system</AppDPIAwarenessMode>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <DCC_UNSAFE_CAST>true</DCC_UNSAFE_CAST>
+        <DCC_BpiOutput>.\$(Platform)\$(Config)\bpi</DCC_BpiOutput>
+        <DCC_HppOutput>.\$(Platform)\$(Config)\hpp</DCC_HppOutput>
+        <DCC_ObjOutput>.\$(Platform)\$(Config)\obj</DCC_ObjOutput>
         <BRCC_Verbose>true</BRCC_Verbose>
+        <BRCC_IncludePath>..\OPP.Help;$(BRCC_IncludePath)</BRCC_IncludePath>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\22.0\bin;D:\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBase2020\IDE_spoof;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Users\Paul\AppData\Local\Microsoft\WindowsApps;D:\Embarcadero\Studio\22.0;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
         <DCC_UsePackage>OPPHelp</DCC_UsePackage>
-        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Icon_MainIcon>..\OPP.Help\icons\dev-tool.ico</Icon_MainIcon>
-        <VerInfo_Build>94</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.94;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_UnitSearchPath>..\OPP.ContextMenu;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\OPP.Keyboard;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -117,8 +115,6 @@
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <Icon_MainIcon>..\OPP.Help\icons\dev-tool.ico</Icon_MainIcon>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -149,24 +145,15 @@
         <DCCReference Include="Settings\OPP.Help.Settings.Value.Editor.pas">
             <Form>OPPHelpSettingsValueEditor</Form>
         </DCCReference>
-        <DCCReference Include="Tests\FormTest04.pas">
-            <Form>FormTest4</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="Tests\FormSchemeEditor.pas">
-            <Form>OPPHintAttributeSchemeEditorForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\OPP.Client.Helper\OPPClient.TdxScreenTip.Helper.pas"/>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -193,13 +180,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHintTunning.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHintTunning.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
@@ -973,15 +960,6 @@
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <ModelSupport>False</ModelSupport>
-            <MMX>
-                <UsesClauseFormatter AutoFormat="0">
-                    <GroupNames>Winapi;System.Win;System;Data;REST;Xml;Vcl;FMX</GroupNames>
-                </UsesClauseFormatter>
-                <Parser>
-                    <Defines/>
-                    <IfExpressions/>
-                </Parser>
-            </MMX>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

@@ -48,7 +48,7 @@ resourcestring
 
 procedure TOPPHelpLog.Debug(AString: string; AFlowName: String = '');
 begin
-
+  exit;
   if Length(AFlowName) > 0 then
     self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmDebug)
   else

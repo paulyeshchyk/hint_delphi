@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 353
+  ClientHeight = 433
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,7 +11,6 @@ object SampleForm: TSampleForm
   Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
-  OldCreateOrder = True
   Position = poDefault
   Visible = True
   OnClose = FormClose
@@ -23,7 +22,7 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 353
+    Height = 433
     Margins.Left = 12
     Margins.Top = 12
     Margins.Right = 12
@@ -35,7 +34,7 @@ object SampleForm: TSampleForm
       Left = 530
       Top = 0
       Width = 6
-      Height = 353
+      Height = 433
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -46,7 +45,7 @@ object SampleForm: TSampleForm
       Left = 0
       Top = 0
       Width = 530
-      Height = 353
+      Height = 433
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -64,9 +63,9 @@ object SampleForm: TSampleForm
       object cxListView1: TcxListView
         AlignWithMargins = True
         Left = 6
-        Top = 34
+        Top = 50
         Width = 518
-        Height = 313
+        Height = 377
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -78,22 +77,18 @@ object SampleForm: TSampleForm
             Width = 100
           end>
         HideSelection = False
-        ParentShowHint = False
         ReadOnly = True
         RowSelect = True
         ShowColumnHeaders = False
-        ShowHint = True
         TabOrder = 0
         ViewStyle = vsReport
-        OnCustomDrawItem = cxListView1CustomDrawItem
-        OnInfoTip = cxListView1InfoTip
         OnSelectItem = cxListView1SelectItem
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
         Top = 0
         Width = 530
-        Height = 28
+        Height = 44
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -106,7 +101,7 @@ object SampleForm: TSampleForm
       Left = 536
       Top = 0
       Width = 538
-      Height = 353
+      Height = 433
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -117,18 +112,19 @@ object SampleForm: TSampleForm
       object PageControl1: TPageControl
         AlignWithMargins = True
         Left = 6
-        Top = 103
+        Top = 119
         Width = 526
         Height = 245
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
         Margins.Bottom = 6
-        ActivePage = TabSheet1
+        ActivePage = TabSheet2
         Align = alTop
         Style = tsFlatButtons
         TabOrder = 0
         OnChange = PageControl1Change
+        ExplicitWidth = 512
         object TabSheet1: TTabSheet
           Margins.Left = 6
           Margins.Top = 6
@@ -170,7 +166,7 @@ object SampleForm: TSampleForm
                 end>
               Properties.ReadOnly = True
               Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
-              Properties.OnValidate = OncxControlValidate
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 1
               Width = 377
             end
@@ -190,8 +186,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnValidate = OncxControlValidate
-              Style.PopupBorderStyle = epbsDefault
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 3
               Width = 218
             end
@@ -211,7 +206,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnValidate = OncxControlValidate
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 5
               Width = 377
             end
@@ -231,7 +226,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnValidate = OncxControlValidate
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 7
               Width = 218
             end
@@ -251,7 +246,7 @@ object SampleForm: TSampleForm
               Margins.Top = 6
               Margins.Right = 6
               Margins.Bottom = 6
-              Properties.OnValidate = OncxControlValidate
+              Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 9
               Width = 377
             end
@@ -285,6 +280,7 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitWidth = 504
             object Panel7: TPanel
               Left = 0
               Top = 0
@@ -297,6 +293,7 @@ object SampleForm: TSampleForm
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
+              ExplicitWidth = 504
               object cxComboBoxHintDetailsKeywordType: TcxComboBox
                 Left = 136
                 Top = 155
@@ -304,7 +301,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnValidate = OncxControlValidate
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 0
                 Width = 218
               end
@@ -324,7 +321,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnValidate = OncxControlValidate
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 2
                 Width = 377
               end
@@ -344,7 +341,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnValidate = OncxControlValidate
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 4
                 Width = 377
               end
@@ -364,7 +361,7 @@ object SampleForm: TSampleForm
                 Margins.Top = 6
                 Margins.Right = 6
                 Margins.Bottom = 6
-                Properties.OnValidate = OncxControlValidate
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 6
                 Width = 218
               end
@@ -391,7 +388,7 @@ object SampleForm: TSampleForm
                   end>
                 Properties.ReadOnly = True
                 Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
-                Properties.OnValidate = OncxControlValidate
+                Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 8
                 Width = 377
               end
@@ -419,7 +416,7 @@ object SampleForm: TSampleForm
       end
       object PanelIDContainer: TPanel
         Left = 0
-        Top = 28
+        Top = 44
         Width = 538
         Height = 69
         Margins.Left = 6
@@ -429,6 +426,7 @@ object SampleForm: TSampleForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 524
         object cxLabel5: TcxLabel
           Left = 8
           Top = 8
@@ -446,7 +444,7 @@ object SampleForm: TSampleForm
           Margins.Right = 6
           Margins.Bottom = 6
           ParentShowHint = False
-          Properties.OnValidate = cxEditIdentifierNamePropertiesValidate
+          Properties.OnEditValueChanged = OnIdentificatorChanged
           ShowHint = True
           TabOrder = 1
           Width = 521
@@ -456,7 +454,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 538
-        Height = 28
+        Height = 44
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -467,9 +465,9 @@ object SampleForm: TSampleForm
       object PanelPreview: TPanel
         AlignWithMargins = True
         Left = 6
-        Top = 360
+        Top = 376
         Width = 526
-        Height = 7
+        Height = 51
         Hint = 'Wrong hint'
         HelpType = htKeyword
         HelpKeyword = 'Kod_OKWED'
@@ -480,7 +478,7 @@ object SampleForm: TSampleForm
         Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvLowered
-        Constraints.MinHeight = 7
+        Constraints.MinHeight = 51
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -490,6 +488,7 @@ object SampleForm: TSampleForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
+        ExplicitWidth = 512
       end
     end
   end
@@ -497,7 +496,6 @@ object SampleForm: TSampleForm
     HintStyleClassName = 'TdxScreenTipStyle'
     HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
-    HintHidePause = 500
     UseHintControlLookAndFeel = True
     Left = 264
     Top = 72
@@ -505,7 +503,7 @@ object SampleForm: TSampleForm
   object tipsRepo: TdxScreenTipRepository
     Left = 368
     Top = 72
-    PixelsPerInch = 96
+    PixelsPerInch = 192
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
@@ -529,12 +527,6 @@ object SampleForm: TSampleForm
     end
     object N4: TMenuItem
       Caption = #1058#1077#1089#1090#1099
-      object actionShowSchemeEditor1: TMenuItem
-        Action = actionShowSchemeEditor
-      end
-      object N6: TMenuItem
-        Caption = '-'
-      end
       object N11: TMenuItem
         Caption = #1058#1077#1089#1090'1'
         OnClick = N11Click
@@ -546,19 +538,6 @@ object SampleForm: TSampleForm
       object N31: TMenuItem
         Caption = #1058#1077#1089#1090'3'
         OnClick = N31Click
-      end
-      object N41: TMenuItem
-        Caption = #1058#1077#1089#1090'4'
-        OnClick = N41Click
-      end
-      object Generate1: TMenuItem
-        Action = actionGenerateFakeItems
-      end
-      object N7: TMenuItem
-        Caption = '-'
-      end
-      object actionShowBuffer1: TMenuItem
-        Action = actionShowBuffer
       end
     end
   end
@@ -579,7 +558,7 @@ object SampleForm: TSampleForm
     UseSystemFont = True
     Left = 155
     Top = 73
-    PixelsPerInch = 96
+    PixelsPerInch = 192
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
       AllowCustomizing = False
@@ -854,41 +833,6 @@ object SampleForm: TSampleForm
       Hint = 'New Button'
       Visible = ivAlways
     end
-    object dxBarButton11: TdxBarButton
-      Action = actionGenerateFakeItems
-      Category = 0
-      Glyph.SourceDPI = 96
-      Glyph.Data = {
-        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
-        610000001974455874536F6674776172650041646F626520496D616765526561
-        647971C9653C0000000D744558745469746C65004E756D6265723B8AF3C8A500
-        00030D49444154785EA553EB4F1359149F3F450B540A7D514AB14069B1401F76
-        41582D74C11722AFA08BD9CD7EDAB844974D36C60F8A31D9A2F1831F7CEC038D
-        105053EDB434080479A46C44494CB63C16DB4ADBE9633AD3EED97B8647F8EE24
-        BFCCBDE7DEF33BBFF33B33D4FE279BCDFE964EA787789E7766B3FFF593FD0DB2
-        77A7522CBD0B96656972EE2667ED7B898AB2260A008A49F2C8C9CE9F988E8B57
-        83988817AB6C5D805068ED50AC7340A5B5037EBC32F80FC771637B04E49022AC
-        9D4F475F4F594E7CCB97D79C05B777FA2D1244A3318F8124E9AD9DB0E87F37FD
-        E8CFE77F6BF42D99442239CE711925E6637531CBA6E9816B77032F5F4F2E18C8
-        E5B69ECB21941C8F27E84ACB799069BE06A5F604E8CCED606AE8E59E8EB81679
-        3EF39740C06732FD34A9282B690465991DF4960E387CE414B8DC6FE65081CED4
-        0E524D23F89796A7869FB9FC65D5674063707084FC0995C9649D4C3CE1E9FDFE
-        D7D0E66670626B2BEA7DE1F22D5498CE41F7A55F42AB6B1BBE8ADA36282758F4
-        2F9316C697E4A50D506A70A40502227DC8D2D0C314A8EB89494D7C2CC68C9A8E
-        753292E27A90A8EA215F55B78DA2AFE01041496533A7D635710F1E8F2E1123FF
-        10141043E81813F7A0DC4824EA09853F7BF1BDBB0F86C2DEF58D7F7D81D5751F
-        2AFA140C4D2493A9616272A9E081445547A1E3AFDC53F3D6E31758AC44E479C4
-        4A1B51C80EDD723E5C29D236F2CA723B94569D84E3AD7D91E9D9C5199C9C4040
-        E451A8426B3C2D9827561C05F442ACB062FC8ED1D616CF935B6076CE3FD3D5F7
-        F3A7FC221BF4FD30B01A4F24BA0502B1C28693706F6C6C4E6005B1C22C109024
-        54E6C4F6B08D4060CD97233581546DE3C75ED0F3C954AA4B20C04A790A0B15FE
-        BCE5D5185A21576E065CE7CACC48701D7D70DEFBFD3D7E89376FDF5FF9B0F271
-        1209B16D81204F6E1214A04925FA1650EBBF015C638C61121EFBA9EFA22A9D03
-        A704AA8A66023B880A8D1089C43C0241AEAC9622FDD022692DE4486B40B40326
-        BE3D19516135ECE26081110E1490B7C428B449ED3EE4E719DC8A44BC280D816B
-        8CEDC583E189FDC016F18C02802FC2FF85437F526BBD33030000000049454E44
-        AE426082}
-    end
   end
   object ActionList1: TActionList
     Left = 24
@@ -934,30 +878,6 @@ object SampleForm: TSampleForm
     object actionShowSettings: TAction
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
       OnExecute = actionShowSettingsExecute
-    end
-    object actionShowSchemeEditor: TAction
-      Caption = #1057#1093#1077#1084#1072
-      OnExecute = actionShowSchemeEditorExecute
-    end
-    object actionOnItemSelect: TAction
-      Caption = 'actionOnItemSelect'
-      OnExecute = actionOnItemSelectExecute
-    end
-    object actionShowBuffer: TAction
-      Caption = #1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-      OnExecute = actionShowBufferExecute
-    end
-    object actionGenerateFakeItems: TAction
-      Caption = 'Generate'
-      OnExecute = actionGenerateFakeItemsExecute
-    end
-    object actionNewRecordSilent: TAction
-      Caption = 'actionNewRecordSilent'
-      OnExecute = actionNewRecordSilentExecute
-    end
-    object actionShowBufferForControl: TAction
-      Caption = 'actionShowBufferForControl'
-      OnExecute = actionShowBufferForControlExecute
     end
   end
 end

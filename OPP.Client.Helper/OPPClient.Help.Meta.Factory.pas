@@ -17,7 +17,7 @@ type
     constructor Create;
     destructor Destroy; override;
     function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
-    procedure GetChildrenHelpMeta(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
+    function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
   end;
 
 implementation
@@ -66,12 +66,6 @@ begin
     exit;
   end;
 
-  if not Assigned(fComponentPropertyMapping) then
-  begin
-    eventLogger.Warning('fComponentPropertyMapping is not assigned');
-    exit;
-  end;
-
   fComponentPropertyMapping.TryGetValue(AComponent.ClassName, mappedPropertyNames);
   if (Length(mappedPropertyNames) = 0) then
   begin
@@ -91,47 +85,40 @@ begin
 
 end;
 
-procedure TOPPHelpMetaHintFactory.GetChildrenHelpMeta(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
+function TOPPHelpMetaHintFactory.GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
 var
   list: TList<TComponent>;
   child: TComponent;
   fMeta: TOPPHelpMeta;
   fFilter: TList<String>;
-  result: TList<TOPPHelpMeta>;
 begin
   result := TList<TOPPHelpMeta>.Create();
+
+  fFilter := TList<String>.Create();
   try
-    fFilter := TList<String>.Create();
-    try
-      list := AComponent.GetChildrenRecursive(
-        function(AComponent: TComponent): Boolean
-        var
-          fMeta: TOPPHelpMeta;
-        begin
-          fMeta := self.GetHintMeta(AComponent);
-          result := (fMeta.isValid and (not fFilter.Contains(fMeta.identifier)));
-        end,
-        procedure(AComponent: TComponent)
-        var
-          fMeta: TOPPHelpMeta;
-        begin
-          fMeta := self.GetHintMeta(AComponent);
-          fFilter.Add(fMeta.identifier);
-        end);
-
-      for child in list do
+    list := AComponent.GetChildrenRecursive(
+      function(AComponent: TComponent): Boolean
+      var
+        fMeta: TOPPHelpMeta;
       begin
-        fMeta := self.GetHintMeta(child);
-        result.Add(fMeta);
-      end;
-    finally
-      if Assigned(completion) then
-        completion(result);
+        fMeta := self.GetHintMeta(AComponent);
+        result := (fMeta.isValid and (not fFilter.Contains(fMeta.identifier)));
+      end,
+      procedure(AComponent: TComponent)
+      var
+        fMeta: TOPPHelpMeta;
+      begin
+        fMeta := self.GetHintMeta(AComponent);
+        fFilter.Add(fMeta.identifier);
+      end);
 
-      fFilter.Free;
+    for child in list do
+    begin
+      fMeta := self.GetHintMeta(child);
+      result.Add(fMeta);
     end;
   finally
-    result.Free;
+    fFilter.Free;
   end;
 end;
 

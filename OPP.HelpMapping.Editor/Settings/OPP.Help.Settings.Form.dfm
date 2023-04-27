@@ -8,15 +8,14 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -12
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 13
+  TextHeight = 14
   object Panel1: TPanel
     Left = 0
     Top = 419
@@ -29,6 +28,8 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 421
+    ExplicitWidth = 485
     DesignSize = (
       457
       41)
@@ -44,6 +45,7 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
       Action = actionSave
       Anchors = [akTop, akRight]
       TabOrder = 0
+      ExplicitLeft = 380
     end
   end
   object cxListView1: TcxListView

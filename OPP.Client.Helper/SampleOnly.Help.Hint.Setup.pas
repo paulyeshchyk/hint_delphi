@@ -12,12 +12,11 @@ uses
   OPP.Help.Hint.Server;
 
 type
-  TOPPOnMapsLoadedEvent = reference to procedure(AList: TOPPHelpMapList; completion: TOPPHelpMapsCompletion);
+  TOPPOnMapsLoadedEvent = reference to procedure(AList: TList<TOPPHelpMap>; completion: TOPPHelpMapsCompletion);
 
   TOPPClientHintHelper = class
   private
     class procedure CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
-    class procedure ApplyHint(AForm: TControl; AHint: TOPPHelpHint; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
   public
     class procedure LoadHints(AForm: TControl; AFilename: String; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
     class procedure SaveHints(AForm: TControl; AFilename: String; predicateFileName: String);
@@ -30,7 +29,7 @@ uses
   OPP.Help.Log,
   OPP.Help.Tips.Factory,
   OPP.Help.Component.Enumerator,
-  System.Threading,
+
   SampleOnly.Help.Meta.Extractor;
 
 const
@@ -54,9 +53,9 @@ begin
       hintController.HintHidePause := kOPPHintHidePause;
       fRequest.OnGetHintFactory := fMetaFactory.GetChildrenHelpMeta;
       helpHintServer.LoadHints(fRequest,
-        procedure(AControl:TControl; hints: TList<TOPPHelpHint>)
+        procedure(hints: TList<TOPPHelpHint>)
         begin
-          TOPPClientHintHelper.CreateHintViews(AControl, hints, hintController, repo, completion);
+          TOPPClientHintHelper.CreateHintViews(AForm, hints, hintController, repo, completion);
         end);
     finally
       fRequest.OnGetHintFactory := nil;
@@ -78,9 +77,9 @@ begin
     fRequest := TOPPHelpHintMappingSaveRequest.Create(AForm, AFilename);
     try
       fRequest.DefaultPredicateFileName := predicateFileName;
-      fRequest.OnGetHintFactory := procedure(AComponent: TComponent; completion:TSampleOnlyHelpMetaExtractorListCompletion)
+      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
         begin
-          fMetaFactory.GetChildrenHelpMeta(AComponent, completion);
+          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
         end;
 
       helpHintServer.SaveHints(fRequest, false, nil);
@@ -93,29 +92,15 @@ begin
   end;
 end;
 
-class procedure TOPPClientHintHelper.ApplyHint(AForm: TControl; AHint: TOPPHelpHint; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
-var
-  fControl: TComponent;
-begin
-
-  fControl := AForm.FindSubControl(AHint.Meta);
-  if Assigned(fControl) then
-  begin
-    CreateHintView(AHint, TControl(fControl), AHintController, ARepository);
-  end;
-end;
-
 class procedure TOPPClientHintHelper.CreateHintView(AHint: TOPPHelpHint; AControl: TControl; AHintController: TcxHintStyleController; ARepository: TdxScreenTipRepository);
 begin
   TOPPHelpTipsFactory.AddTipsView(AHint, AControl, AHintController, ARepository);
 end;
 
-{
-***
-*** https://learndelphi.org/how-to-improve-gui-and-make-it-more-responsive-using-background-thread/
-***
-}
 class procedure TOPPClientHintHelper.CreateHintViews(AForm: TControl; hints: TList<TOPPHelpHint>; hintController: TcxHintStyleController; repo: TdxScreenTipRepository; completion: TOPPHelpCompletion);
+var
+  fHint: TOPPHelpHint;
+  fControl: TComponent;
 begin
   if not assigned(hints) or (hints.Count = 0) then
   begin
@@ -125,37 +110,14 @@ begin
     exit;
   end;
 
-  TTask.run(
-    procedure()
-    var
-      fHint: TOPPHelpHint;
-      fTasks: TArray<ITask>;
-      i: Integer;
-    begin
-      i := 0;
-      SetLength(fTasks, hints.count);
-      for fHint in hints do
-      begin
-        fTasks[i] := TTask.Run(
-          procedure()
-          begin
-            TThread.Synchronize(nil,
-              procedure()
-              begin
-                TOPPClientHintHelper.ApplyHint(AForm, fHint, hintController, repo);
-              end);
-          end);
-        inc(i);
-      end;
-      TTask.WaitForAll(fTasks);
+  for fHint in hints do
+  begin
+    fControl := AForm.FindSubControl(fHint.Meta);
+    CreateHintView(fHint, TControl(fControl), hintController, repo);
+  end;
 
-      TThread.Synchronize(nil,
-        procedure()
-        begin
-          if assigned(completion) then
-            completion();
-        end);
-    end);
+  if assigned(completion) then
+    completion();
 end;
 
 end.

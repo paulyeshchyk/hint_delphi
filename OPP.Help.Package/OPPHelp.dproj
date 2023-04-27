@@ -149,11 +149,6 @@
         <DCCReference Include="dxRichEditDocumentModelRS25.dcp"/>
         <DCCReference Include="dxSpreadSheetCoreRS25.dcp"/>
         <DCCReference Include="dxSkinsCoreRS25.dcp"/>
-        <DCCReference Include="cxTreeListRS25.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreConditionalFormattingDialogsRS25.dcp"/>
-        <DCCReference Include="Jcl.dcp"/>
-        <DCCReference Include="JvCore.dcp"/>
-        <DCCReference Include="JvSystem.dcp"/>
         <DCCReference Include="RESTComponents.dcp"/>
         <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="DbxCommonDriver.dcp"/>
@@ -194,24 +189,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Application.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Clipboard.pas"/>
-        <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.pas"/>
-        <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas"/>
-        <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas"/>
-        <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Clipboard.pas"/>
-        <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Settings.Form.pas">
-            <Form>OPPBufferSettingsForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Form.pas">
-            <Form>OPPBufferForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas"/>
         <DCCReference Include="..\OPP.Keyboard\OPP.Keyboard.Shortcut.Manager.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.TList.Filter.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Control.pas"/>
-        <DCCReference Include="..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

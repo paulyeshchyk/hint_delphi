@@ -14,13 +14,9 @@ uses
   SampleOnly.Help.Shortcut.Setup in '..\OPP.Client.Helper\SampleOnly.Help.Shortcut.Setup.pas',
   OPP.Help.Tips.Factory in '..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas',
   OPP.Help.Settings.Form in 'Settings\OPP.Help.Settings.Form.pas' {OPPHelpSettingsForm},
-  OPP.Help.Settings.Value.Editor in 'Settings\OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor},
-  FormTest04 in 'Tests\FormTest04.pas' {FormTest4},
-  FormSchemeEditor in 'Tests\FormSchemeEditor.pas' {OPPHintAttributeSchemeEditorForm},
-  OPPClient.TdxScreenTip.Helper in '..\OPP.Client.Helper\OPPClient.TdxScreenTip.Helper.pas';
+  OPP.Help.Settings.Value.Editor in 'Settings\OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor};
 
 {$R *.res}
-{$R '..\..\Rus\devexlocalization.res'}
 
 begin
   Application.Title := 'Настройка индексов системы помощи';

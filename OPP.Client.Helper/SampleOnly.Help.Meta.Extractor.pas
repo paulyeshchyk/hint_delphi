@@ -4,14 +4,15 @@ interface
 
 uses
   System.Generics.Collections,
-  System.Classes, System.SysUtils,
+  System.Classes,
   OPP.Help.Meta;
 
 type
+
   TSampleOnlyHelpMetaExtractor = class(TInterfacedObject, IOPPHelpMetaFactory)
   public
     function GetHintMeta(AComponent: TComponent): TOPPHelpMeta;
-    procedure GetChildrenHelpMeta(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
+    function GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
   end;
 
 implementation
@@ -56,13 +57,11 @@ begin
 
 end;
 
-procedure TSampleOnlyHelpMetaExtractor.GetChildrenHelpMeta(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion);
+function TSampleOnlyHelpMetaExtractor.GetChildrenHelpMeta(AComponent: TComponent): TList<TOPPHelpMeta>;
 var
   list: TList<TComponent>;
   child: TComponent;
   fMeta: TOPPHelpMeta;
-  errorText: String;
-  result : TList<TOPPHelpMeta>;
 begin
   result := TList<TOPPHelpMeta>.Create();
 
@@ -71,17 +70,8 @@ begin
     for child in list do
     begin
       fMeta := self.GetHintMeta(child);
-      if not fMeta.isValid then begin
-        errorText := Format('invalid meta received for component: %s - %s',[child.ClassName, child.Name]);
-        eventLogger.Warning(errorText, 'TSampleOnlyHelpMetaExtractor');
-        continue;
-      end;
       result.Add(fMeta)
     end;
-
-    if Assigned(completion) then
-      completion(result);
-
   finally
     list.Free;
   end;

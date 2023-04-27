@@ -31,8 +31,7 @@ uses
 
   OPPClient.TdxScreenTip.Helper,
   OPP.Help.Hint.Server,
-  OPPClient.Help.Meta.Factory,
-  System.Threading;
+  OPPClient.Help.Meta.Factory;
 
 const
   kOPPHintHidePause: Integer = (MaxInt - 1);
@@ -45,8 +44,6 @@ resourcestring
 constructor TOPPClientHintHelper.Create(AHintController: TcxHintStyleController; ARepo: TdxScreenTipRepository);
 begin
   fHintController := AHintController;
-  fHintController.HintHidePause := kOPPHintHidePause;
-
   fRepo := ARepo;
 end;
 
@@ -68,12 +65,16 @@ begin
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);
     try
       //
-      fRequest.OnGetHintFactory := procedure(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion)
+      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
         begin
-          fMetaFactory.GetChildrenHelpMeta(AComponent, completion)
+          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
         end;
 
-      helpHintServer.LoadHints(fRequest, CreateHintViews);
+      helpHintServer.LoadHints(fRequest,
+        procedure(HintTexts: TList<TOPPHelpHint>)
+        begin
+          self.CreateHintViews(AForm, HintTexts);
+        end);
     finally
       fRequest.Free;
     end;
@@ -93,15 +94,14 @@ begin
     fRequest := TOPPHelpHintMappingSaveRequest.Create(AForm, AFilename);
     try
       fRequest.DefaultPredicateFileName := predicateFileName;
-      fRequest.OnGetHintFactory := procedure(AComponent: TComponent; completion: TSampleOnlyHelpMetaExtractorListCompletion)
+      fRequest.OnGetHintFactory := function(AComponent: TComponent): TList<TOPPHelpMeta>
         begin
-          fMetaFactory.GetChildrenHelpMeta(AComponent, completion)
+          result := fMetaFactory.GetChildrenHelpMeta(AComponent)
         end;
 
       helpHintServer.SaveHints(fRequest, useGlobal, nil);
 
     finally
-    //
       fRequest.Free;
     end;
   finally
@@ -120,6 +120,20 @@ begin
     eventLogger.Warning(Format(SWarningHintsNotAvailableTemplate, [fFormName]));
     exit;
   end;
+
+  if not assigned(fHintController) then
+  begin
+    eventLogger.Warning(Format(SWarningHintControllerNotAvailableTemplate, [fFormName]));
+    exit;
+  end;
+
+  if not assigned(fRepo) then
+  begin
+    eventLogger.Warning(Format(SWarningTipsRepositoryNotAvailableTemplate, [fFormName]));
+    exit;
+  end;
+
+  fHintController.HintHidePause := kOPPHintHidePause;
 
   AForm.GetChildrenRecursive(nil,
     procedure(AComponent: TComponent)
@@ -161,14 +175,9 @@ var
   fScreenTip: TdxScreenTip;
   fScreenTipLink: TdxScreenTipLink;
 begin
-  if not assigned(AComponent) then
-    exit;
   if not(AComponent is TControl) then
     exit;
-  if not assigned(fRepo) then
-    exit;
-  if not assigned(fHintController) then
-    exit;
+
 
   fControl := AComponent as TControl;
   fControl.ShowHint := true;
@@ -184,6 +193,7 @@ begin
   fScreenTipLink := TdxScreenTipStyle(fHintController.HintStyle).ScreenTipLinks.Add;
   fScreenTipLink.ScreenTip := fScreenTip;
   fScreenTipLink.control := fControl;
+
 end;
 
 end.
