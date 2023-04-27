@@ -15,6 +15,7 @@ uses
   Vcl.ActnList, Vcl.Buttons, Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs,
   Vcl.ExtCtrls, Vcl.ExtDlgs, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.StdActns,
   Vcl.StdCtrls, Vcl.Themes,
+  JvComponentBase, JvClipboardMonitor,
   Winapi.CommCtrl, Winapi.Messages, Winapi.Windows,
 
   OPP.ContextMenu.Edit,
