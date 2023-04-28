@@ -691,6 +691,6 @@ end;
 
 initialization
 
-// TOPPBufferFormHelper.injectionShowForm;
+TOPPBufferFormHelper.injectionShowForm;
 
 end.
