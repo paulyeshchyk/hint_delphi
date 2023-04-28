@@ -16,7 +16,7 @@ uses
 
   OPP.Buffer.Manager.Settings.Data,
 
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String);
@@ -24,7 +24,6 @@ type
   TOPPBufferForm = class(TForm)
     actionApplySelection: TAction;
     actionClose: TAction;
-    actionClose1: TMenuItem;
     actionDeleteRecord: TAction;
     actionExportBuffer: TAction;
     actionExportSettings: TAction;
@@ -45,23 +44,6 @@ type
     cxGrid1DBTableView1Column3: TcxGridDBColumn;
     cxGrid1Level1: TcxGridLevel;
     DataSource1: TDataSource;
-    MainMenu1: TMainMenu;
-    menuItemIsEditMode: TMenuItem;
-    menuMultiSelectMode: TMenuItem;
-    N1: TMenuItem;
-    N10: TMenuItem;
-    N11: TMenuItem;
-    N12: TMenuItem;
-    N14: TMenuItem;
-    N15: TMenuItem;
-    N2: TMenuItem;
-    N3: TMenuItem;
-    N4: TMenuItem;
-    N5: TMenuItem;
-    N6: TMenuItem;
-    N7: TMenuItem;
-    N8: TMenuItem;
-    N9: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
     PopupMenu1: TPopupMenu;
@@ -72,16 +54,48 @@ type
     N20: TMenuItem;
     actionMarkAsFixed: TAction;
     N21: TMenuItem;
-    N22: TMenuItem;
-    N23: TMenuItem;
     actionMarkAsNonFixed: TAction;
-    N24: TMenuItem;
     N25: TMenuItem;
     cxStyleRepository1: TcxStyleRepository;
     cxStyle1: TcxStyle;
     actionMarkAsInverted: TAction;
-    N26: TMenuItem;
     dxStatusBar1: TdxStatusBar;
+    Panel1: TPanel;
+    dxBarDockControl1: TdxBarDockControl;
+    Panel2: TPanel;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    dxBarManager1: TdxBarManager;
+    dxBarManager1Bar1: TdxBar;
+    dxBarLargeButton1: TdxBarLargeButton;
+    dxBarLargeButton2: TdxBarLargeButton;
+    dxBarLargeButton3: TdxBarLargeButton;
+    dxBarLargeButton4: TdxBarLargeButton;
+    dxBarLargeButton5: TdxBarLargeButton;
+    dxBarManager1Bar2: TdxBar;
+    dxBarLargeButton6: TdxBarLargeButton;
+    dxBarManager1Bar3: TdxBar;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    dxBarSeparator2: TdxBarSeparator;
+    dxBarButton4: TdxBarButton;
+    dxBarSubItem2: TdxBarSubItem;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    dxBarSeparator3: TdxBarSeparator;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    dxBarSeparator4: TdxBarSeparator;
+    dxBarButton10: TdxBarButton;
+    dxBarButton11: TdxBarButton;
+    dxBarButton12: TdxBarButton;
+    dxBarSeparator5: TdxBarSeparator;
+    dxBarButton13: TdxBarButton;
+    dxBarButton14: TdxBarButton;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
@@ -464,14 +478,14 @@ end;
 
 procedure TOPPBufferForm.ReloadActionsVisibility;
 begin
-  menuItemIsEditMode.Checked := fIsEditMode;
+  dxBarButton5.Down := fIsEditMode;
   cxGrid1DBTableView1.OptionsData.Deleting := fIsEditMode;
   cxGrid1DBTableView1.OptionsData.Editing := fIsEditMode;
   cxGrid1DBTableView1.OptionsData.Inserting := fIsEditMode;
   cxGrid1DBTableView1.OptionsSelection.CellSelect := fIsEditMode;
-  menuMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
+  dxBarButton6.Enabled := fIsEditMode and self.HasRecords;
   actionMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
-  menuMultiSelectMode.Checked := fIsMultiSelectMode and self.HasRecords;
+  dxBarButton6.down := fIsMultiSelectMode and self.HasRecords;
   actionMarkAsFixed.Enabled := fIsEditMode and self.HasRecords;
   actionMarkAsNonFixed.Enabled := fIsEditMode and self.HasRecords;
   actionMarkAsInverted.Enabled := fIsEditMode and self.HasRecords;
@@ -480,7 +494,7 @@ begin
   actionDeleteRecord.Caption := ifThen(self.HasSelectedFewRecords, SDeleteSelectedRecords, SDeleteRecord);
   actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords and (not self.HasSelectedFewRecords);
   actionApplySelection.Enabled := (not fIsEditMode) and self.HasSelectedRecord and Assigned(OnApply);
-  actionClose.Enabled := (not fIsEditMode);
+  //actionClose.Enabled := (not fIsEditMode);
   dxStatusBar1.Panels[0].Text := ifThen(not fIsEditMode, SPreviewMode, ifThen(fIsMultiSelectMode, SEditMultirecordSelection, SEditMode));
   dxStatusBar1.Panels[1].Text := ifThen(not fIsMultiSelectMode, '', self.SelectedRecordsCountText)
 end;
@@ -491,6 +505,7 @@ var
 begin
   fIsEditMode := Value;
   self.IsMultiSelectMode := false;
+  dxBarLargeButton6.Down := fIsEditMode;
 
   cxGrid1DBTableView1Column2.Properties.ReadOnly := not fIsEditMode;
   cxGrid1DBTableView1Column3.Properties.ReadOnly := not fIsEditMode;
@@ -526,6 +541,7 @@ begin
 
   fForm := TOPPBufferForm.Create(AOwner);
   try
+    if fCanApplyText then
     fForm.OnApply := procedure(AData: String)
       begin
         if fCanApplyText then
