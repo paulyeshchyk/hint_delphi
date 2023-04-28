@@ -1,13 +1,8 @@
 ﻿.svn
-*.~*
+*.skincfg
+*.res
 *.local
 *.identcache
-__recovery/
-*.stat
-*.res
-*__recovery*
-*.tvsconfig
-*.skincfg
 *.dcu
-*.dsk
-*.gex
+*.stat
+*.tvsconfig
