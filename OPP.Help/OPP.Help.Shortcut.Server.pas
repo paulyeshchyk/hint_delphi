@@ -31,8 +31,7 @@ type
 
   IOPPHelpShortcutServer = interface
     function exportControl(AControl: TControl): Boolean;
-    procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
-    procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
+    procedure ShowHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
@@ -62,8 +61,7 @@ type
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 
-    procedure showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
-    procedure showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
+    procedure ShowHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 
     function RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
@@ -221,21 +219,12 @@ begin
   end;
 end;
 
-procedure TOPPHelpShortcutServer.showHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
-begin
-  case viewMode of
-    vmInternal:
-      openInternalViewer(APredicate, completion);
-    vmExternal:
-      openExternalViewer(APredicate, completion);
-  end;
-end;
-
-procedure TOPPHelpShortcutServer.showHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
+procedure TOPPHelpShortcutServer.ShowHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
 var
   fMapping: TOPPHelpMap;
   fOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier;
   fShortcutIdentifier: String;
+  fPredicate: TOPPHelpPredicate;
 begin
 
   fOnGetIdentifier := fDefaultOnGetIdentifier;
@@ -250,15 +239,22 @@ begin
 
   fShortcutIdentifier := fOnGetIdentifier(ARequest.ActiveControl);
 
+  fPredicate := nil;
   fMapping := fShortcutDataset.GetMapping(fShortcutIdentifier);
   if Assigned(fMapping) then
   begin
-    showHelp(fMapping.Predicate, viewMode, completion);
+    fPredicate := fMapping.Predicate;
+  end;
+  if not Assigned(fPredicate) then
+  begin
+    fPredicate := TOPPHelpPredicate.DefaultPredicate;
+  end;
 
-  end else begin
-    eventLogger.Warning(Format(SWarningMappingIsNotDefinedTemplate, [fShortcutIdentifier]), kContext);
-
-    showHelp(TOPPHelpPredicate.defaultPredicate, viewMode, completion)
+  case viewMode of
+    vmInternal:
+      openInternalViewer(fPredicate, completion);
+    vmExternal:
+      openExternalViewer(fPredicate, completion);
   end;
 
 end;
@@ -290,7 +286,6 @@ begin
     exit;
   end else begin
     clazzType := GetClass(kPreviewFormClassName); // ->TOPPHelpViewFullScreen
-    { clazzType := GetTypeData(AViewerClassInfo).ClassType };
     if not clazzType.InheritsFrom(TForm) then
     begin
       eventLogger.Error(SErrorViewerIsNotSupportingTFormClass, kContext);
@@ -324,6 +319,12 @@ end;
 
 procedure TOPPHelpShortcutServer.openExternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
 begin
+  if not Assigned(APredicate) then begin
+    if Assigned(completion) then
+      completion(nil);
+    exit;
+  end;
+
   TOPPHelpSystemAppExecutor.Execute(kPreviewFormProcessName,
     procedure(AList: TList<THandle>; executionResult: TOPPHelpSystemAppExecutionResultType)
     var
@@ -376,7 +377,7 @@ begin
     result := fMessagePipe.SendRecord(AProcessHandle, fSelfHandle, '',
       procedure(AStream: TStream)
       begin
-        Predicate.writeToStream(AStream);
+        Predicate.WriteToStream(AStream);
       end);
   finally
     fMessagePipe.Free;

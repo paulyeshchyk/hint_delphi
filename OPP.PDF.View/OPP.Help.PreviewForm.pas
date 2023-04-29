@@ -224,7 +224,7 @@ type
     { Public declarations }
     function GetContainerClassName: String;
     procedure PresentModal();
-    procedure RunPredicate(const APredicate: TOPPHelpPredicate);
+    function RunPredicate(const APredicate: TOPPHelpPredicate): TOPPHelpShortcutViewerExecutionResult;
   end;
 
 var
@@ -597,16 +597,16 @@ begin
 
   eventLogger.Flow(SEvebtPostedSuccessResult, kEventFlowName);
 
-  Msg.Result := SMessageResultSuccess;
+  Msg.Result := NativeInt(TOPPMessagePipeSendResult.psrSuccess);
 
 end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMOPPPredicate(var Msg: TMessage);
+var
+  fResult: TOPPHelpShortcutViewerExecutionResult;
 begin
-  Msg.Result := SMessageResultSuccess;
-
-  RunPredicate(fDefaultPredicate);
-
+  fResult := RunPredicate(fDefaultPredicate);
+  Msg.Result := NativeInt(fResult);
 end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMUserZoom(var Msg: TMessage);
@@ -644,8 +644,11 @@ end;
 procedure TOPPHelpPreviewForm.ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
 begin
   resultPredicate := TOPPHelpPredicate.Create();
-  resultPredicate.readFromStream(AStream, true);
-  eventLogger.Flow(Format(SEventParsedPredicateTemplate, [resultPredicate.asString]), OPP.Help.View.Fullscreen.kEventFlowName)
+  try
+    resultPredicate.readFromStream(AStream, true);
+    eventLogger.Flow(Format(SEventParsedPredicateTemplate, [resultPredicate.asString]), OPP.Help.View.Fullscreen.kEventFlowName);
+  finally
+  end;
 end;
 
 procedure TOPPHelpPreviewForm.PresentModal;
@@ -707,10 +710,12 @@ procedure TOPPHelpPreviewForm.RestoreFromBackground;
 begin
 end;
 
-procedure TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate);
+function TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate): TOPPHelpShortcutViewerExecutionResult;
 begin
+  Result := TOPPHelpShortcutViewerExecutionResult.erSuccess;
   if not assigned(APredicate) then
   begin
+    Result := TOPPHelpShortcutViewerExecutionResult.erFailed;
     eventLogger.Error(SErrorPredicateIsNotDefined, kContext);
     exit;
   end;

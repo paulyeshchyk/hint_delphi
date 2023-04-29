@@ -20,9 +20,10 @@ type
     function FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;
   end;
 
+  TOPPHelpShortcutViewerExecutionResult = (erSuccess = 10000, erFailed = 10005);
   IOPPHelpShortcutViewer = interface
     ['{097D4F69-916A-4CB4-AB5F-E88D9BA1BB76}']
-    procedure runPredicate(const APredicate: TOPPHelpPredicate);
+    function RunPredicate(const APredicate: TOPPHelpPredicate): TOPPHelpShortcutViewerExecutionResult;
     procedure PresentModal;
   end;
 

@@ -10,12 +10,12 @@ type
 
   TCopyDataType = (cdtString = 0, cdtImage = 1, cdtRecord = 2);
 
-  TOPPMessagePipeSendResult = (psrSuccess = 0, psrFail = 1, psrFailDueNilStream = 2, psrFailDueZeroSizeStream = 3, psrFailDueUnknownReceiver = 4);
+  TOPPMessagePipeSendResult = (psrSuccess = 10000, psrFail = 10001, psrFailDueNilStream = 10002, psrFailDueZeroSizeStream = 10003, psrFailDueUnknownReceiver = 10004, psrFailDueBrokenPredicate = 10005);
+
   TOPPMessagePipeSentResultHelper = record helper for TOPPMessagePipeSendResult
   public
     function asString(): String;
   end;
-
 
   TOPPMessagePipeStreamFullfillBlock = reference to procedure(AStream: TStream);
 
@@ -24,9 +24,6 @@ type
     function SendStreamData(AReceiverHandle: THandle; ASenderHandle: THandle; const AStream: TMemoryStream; const ADataType: TCopyDataType): TOPPMessagePipeSendResult;
     function SendCopyDataMessage(AReceiverHandle: THandle; ASenderHandle: THandle; const ADataToSend: TCopyDataStruct): TOPPMessagePipeSendResult;
   end;
-
-const
-  SMessageResultSuccess = 10000;
 
 implementation
 
@@ -74,6 +71,8 @@ begin
 end;
 
 function TOPPMessagePipe.SendCopyDataMessage(AReceiverHandle: THandle; ASenderHandle: THandle; const ADataToSend: TCopyDataStruct): TOPPMessagePipeSendResult;
+var
+  fResult: NativeInt;
 begin
   Result := psrFailDueUnknownReceiver;
 
@@ -84,12 +83,19 @@ begin
 
   // should always sendmessage be used;
   // see https://devblogs.microsoft.com/oldnewthing/20110916-00/?p=9623
-  if SendMessage(AReceiverHandle, WM_COPYDATA, Integer(ASenderHandle), LPARAM(@ADataToSend)) = SMessageResultSuccess then
-    result := psrSuccess
-  else
-    result := psrFail;
+  fResult := SendMessage(AReceiverHandle, WM_COPYDATA, Integer(ASenderHandle), LPARAM(@ADataToSend));
+  case TOPPMessagePipeSendResult(fResult) of
+    psrSuccess:
+      Result := psrSuccess;
+    psrFailDueNilStream:
+      Result := psrFail;
+    psrFailDueZeroSizeStream:
+      Result := psrFail;
+    psrFailDueUnknownReceiver:
+      Result := psrFail;
+  end;
 
-  eventLogger.Flow(Format(SEventReceivedMessageResultTemplate, [Integer(result)]), kEventFlowName);
+  eventLogger.Flow(Format(SEventReceivedMessageResultTemplate, [Integer(Result)]), kEventFlowName);
 
 end;
 
@@ -98,11 +104,16 @@ end;
 function TOPPMessagePipeSentResultHelper.asString: String;
 begin
   case self of
-    psrSuccess: result := 'Success';
-    psrFail: result := 'Fail';
-    psrFailDueNilStream: result := 'Stream is not defined';
-    psrFailDueZeroSizeStream: result := 'Stream size is zero';
-    psrFailDueUnknownReceiver: result := 'Unknown receiver';
+    psrSuccess:
+      Result := 'Success';
+    psrFail:
+      Result := 'Fail';
+    psrFailDueNilStream:
+      Result := 'Stream is not defined';
+    psrFailDueZeroSizeStream:
+      Result := 'Stream size is zero';
+    psrFailDueUnknownReceiver:
+      Result := 'Unknown receiver';
   end;
 end;
 
