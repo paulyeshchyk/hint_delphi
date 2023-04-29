@@ -22,7 +22,7 @@ uses
   OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
   OPP.Help.System.Codable.TunningEditorDefaultSettings,
-  SampleFormSaveState;
+  SampleFormSaveState, JvComponentBase, JvClipboardMonitor;
 
 type
 
@@ -104,12 +104,17 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     tipsRepo: TdxScreenTipRepository;
+    N6: TMenuItem;
+    actionShowBuffer: TAction;
+    N7: TMenuItem;
+    JvClipboardMonitor1: TJvClipboardMonitor;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
     procedure actionPreviewShortcutExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
+    procedure actionShowBufferExecute(Sender: TObject);
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionUndoExecute(Sender: TObject);
     procedure cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -118,6 +123,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
+    procedure JvClipboardMonitor1Change(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N21Click(Sender: TObject);
     procedure N31Click(Sender: TObject);
@@ -175,6 +181,7 @@ var
 implementation
 
 {$R *.dfm}
+
 {$IFDEF DEBUG}
 {$C +}
 {$ENDIF}
@@ -200,8 +207,14 @@ uses
   SampleOnly.Help.Hint.Setup,
   SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
+
+  OPP.ContextMenu.Edit,
+
   OPP.Help.Settings.Form,
-  OPP.Help.System.Codable.FormSizeSettings;
+  OPP.Help.System.Codable.FormSizeSettings,
+
+  OPP.Buffer.Manager,
+  OPP.Buffer.Form;
 
 resourcestring
   SSettingsReadErrorTemplate = 'Ошибка при чтении настроек: %s';
@@ -394,6 +407,16 @@ begin
       else
         eventLogger.Warning(SWarningListItemsIsNotSelectedNotAbleToS, kContext);
     end);
+end;
+
+procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
+begin
+  if FindWindow('TOPPBufferForm', nil) = 0 then
+  begin
+    TOPPBufferForm.ShowForm(nil, Screen.ActiveControl);
+  end
+  else
+    eventLogger.Debug('Cant run second instance');
 end;
 
 procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);
@@ -642,6 +665,9 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
+
+  cxEditIdentifierName.PopupMenu := TOPPContextMenuEdit.Create(self);
+
   // settings
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
 
@@ -697,6 +723,11 @@ begin
   end;
 
   result := GetWinControlHelpKeyword(AControl.Parent);
+end;
+
+procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
+begin
+  oppBufferManager.OnClipboardChange(sender);
 end;
 
 { ------------ }
