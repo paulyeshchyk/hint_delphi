@@ -9,36 +9,6 @@ uses
   Vcl.ComCtrls, Vcl.Menus;
 
 type
-
-  TOPPHotKey = record
-    vkKey: Byte;
-    shift: Boolean;
-    alt: Boolean;
-    ctrl: Boolean;
-  end;
-
-  TOPPHotKeyHelper = record helper for TOPPHotKey
-    class function GetHotKey(AHotKey: THotKey): TOPPHotKey; static;
-  end;
-
-  TShortcutHelper = record helper for TShortcut
-    class function GetShortcutFromKeyboard(): TShortcut; static;
-  end;
-
-implementation
-
-uses
-  Vcl.forms,
-  OPP.Keyboard.Shortcut.Manager,
-  OPP.Help.System.Messaging;
-
-var
-  hhk: HHOOK;
-
-function CBT_FUNC(nCode: Integer; AWParam: wParam; ALParam: lParam): LRESULT; stdcall;
-
-type
-
   PKBDLLHOOKSTRUCT = ^TKBDLLHOOKSTRUCT;
 
   TKBDLLHOOKSTRUCT = record
@@ -52,41 +22,78 @@ type
   PKeyboardLowLevelHookStruct = ^TKeyboardLowLevelHookStruct;
   TKeyboardLowLevelHookStruct = TKBDLLHOOKSTRUCT;
 
-var
-  isLCtrlDown: Boolean;
-  isLShiftDown: Boolean;
-  isLAltDown: Boolean;
-  fShortcut: TShortcut;
-  fShiftState: TShiftState;
-  p: PKBDLLHOOKSTRUCT;
-const
-  LLKHF_ALTDOWN = $20;
+  TShortcutHelper = record helper for TShortcut
+    class function GetShortcutFromHook(AHookStruct: PKBDLLHOOKSTRUCT): TShortcut; static;
+    class function GetKeyboardShiftState(AHookStruct: PKBDLLHOOKSTRUCT): TShiftState; static;
+  end;
 
+implementation
+
+uses
+  Vcl.forms,
+  OPP.Keyboard.Shortcut.Manager,
+  OPP.Help.System.Messaging;
+
+var
+  hhk: HHOOK;
+  { TShortcutHelper }
+
+class function TShortcutHelper.GetKeyboardShiftState(AHookStruct: PKBDLLHOOKSTRUCT): TShiftState;
+
+  function isAltDown: Boolean;
+  const
+    LLKHF_ALTDOWN = $20;
+  begin
+    result := (LongBool(AHookStruct^.flags and LLKHF_ALTDOWN));
+  end;
+  function isCtrlDown: Boolean;
+  begin
+    result := ((GetAsyncKeystate(VK_LCONTROL) <> 0) or (GetAsyncKeystate(VK_RCONTROL) <> 0));
+  end;
+  function isShiftDown: Boolean;
+  begin
+    result := ((GetAsyncKeystate(VK_LSHIFT) <> 0) or (GetAsyncKeystate(VK_RSHIFT) <> 0));
+  end;
+
+begin
+  result := [];
+  if isCtrlDown then
+    result := result + [ssCtrl];
+
+  if isShiftDown then
+    result := result + [ssShift];
+
+  if isAltDown then
+    result := result + [ssAlt];
+end;
+
+class function TShortcutHelper.GetShortcutFromHook(AHookStruct: PKBDLLHOOKSTRUCT): TShortcut;
+begin
+  result := Shortcut(AHookStruct^.vkCode, GetKeyboardShiftState(AHookStruct));
+end;
+
+{ CBT_FUNC }
+
+function CBT_FUNC(nCode: Integer; AWParam: wParam; ALParam: lParam): LRESULT; stdcall;
+var
+  fShortcut: TShortcut;
+  fHookStruct: PKBDLLHOOKSTRUCT;
 begin
   case nCode of
     HC_ACTION:
       begin
-
-        p := PKBDLLHOOKSTRUCT(Pointer(ALParam));
-        isLCtrlDown := GetAsyncKeystate(VK_CONTROL) and $8000 <> 0;
-        isLShiftDown := GetAsyncKeystate(VK_SHIFT) and $8000 <> 0;
-        isLAltDown := LongBool(p^.flags and LLKHF_ALTDOWN);
-
-        fShiftState := [];
-        if isLCtrlDown then
-          fShiftState := fShiftState + [ssCtrl];
-        if isLShiftDown then
-          fShiftState := fShiftState + [ssShift];
-        if isLAltDown then
-          fShiftState := fShiftState + [ssAlt];
-        fShortcut := Shortcut(p^.vkCode, fShiftState);
         if AWParam = WM_KEYDOWN then
+        begin
+          fHookStruct := PKBDLLHOOKSTRUCT(Pointer(ALParam));
+          fShortcut := TShortcut.GetShortcutFromHook(fHookStruct);
           keyboardShortcutManager.run(fShortcut);
-
+        end;
       end;
   end;
   result := CallNextHookEx(hhk, nCode, AWParam, ALParam);
 end;
+
+{ HOOK }
 
 Procedure InitHook();
 begin
@@ -100,49 +107,6 @@ begin
   if (hhk <> 0) then
     UnhookWindowsHookEx(hhk);
   hhk := 0;
-end;
-
-{ TShortcutHelper }
-
-class function TShortcutHelper.GetShortcutFromKeyboard: TShortcut;
-var
-  Mods: Byte;
-  vkKey, i: word;
-begin
-  // result := Shortcut(
-
-  // isLCtrlDown := GetAsyncKeystate(VK_CONTROL) and $8000 <> 0;
-  // isLShiftDown := GetAsyncKeystate(VK_SHIFT) and $8000 <> 0;
-  // isF12Down := GetAsyncKeystate(VK_F12) and $8000 <> 0;
-  // if (isLCtrlDown and isLShiftDown and isF12Down) then
-  // begin
-  // OutputDebugString('Hooked');
-  // PostMessage(GetForegroundWindow, WM_OPPHook, 0, 0);
-  // end;
-
-  Mods := (GetAsyncKeystate(VK_SHIFT) shr 31 shl 1) or (GetAsyncKeystate(VK_CONTROL) shr 31 shl 2) or (GetAsyncKeystate(VK_MENU) shr 31 shl 3);
-  i := 0;
-  vkKey := 0;
-  while i < 256 do
-  begin
-    if GetAsyncKeystate(i) <> 0 then
-      vkKey := i;
-    i := i + 1;
-  end;
-  result := Mods shl 8 or vkKey;
-end;
-
-{ TOPPHotKeyHelper }
-
-class function TOPPHotKeyHelper.GetHotKey(AHotKey: THotKey): TOPPHotKey;
-var
-  bMod: Byte;
-begin
-  bMod := AHotKey.HotKey shr 8;
-  result.vkKey := AHotKey.HotKey and $00FF;
-  result.shift := bMod and 2 > 0;
-  result.ctrl := bMod and 4 > 0;
-  result.alt := bMod and 8 > 0;
 end;
 
 initialization
