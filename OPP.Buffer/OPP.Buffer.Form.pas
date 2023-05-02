@@ -140,6 +140,7 @@ type
     procedure SetIsMultiSelectMode(const Value: Boolean);
     function GetHasSelectedFewRecords: Boolean;
     function GetSelectedRecordsCountText: String;
+    procedure SetOnApply(const Value: TOPPBufferFormOnApply);
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
     property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
@@ -160,7 +161,7 @@ type
     class procedure ShowForm(AOwner: TControl); overload;
     class procedure ShowForm(AOwner: TControl; AControl: TControl); overload;
     { Public declarations }
-    property OnApply: TOPPBufferFormOnApply read fOnApply write fOnApply;
+    property OnApply: TOPPBufferFormOnApply read fOnApply write SetOnApply;
     property ClipboardControl: TControl read fClipboardControl write fClipboardControl;
   end;
 
@@ -480,7 +481,7 @@ end;
 
 function TOPPBufferForm.GetHasSelectedRecord: Boolean;
 begin
-  result := (cxGrid1DBTableView1.DataController.RecordCount > 0) and (cxGrid1DBTableView1.DataController.RecNo >= 0);
+  result := (cxGrid1DBTableView1.DataController.FocusedRecordIndex >= 0);
 end;
 
 function TOPPBufferForm.GetSelectedRecordsCountText: String;
@@ -537,6 +538,12 @@ procedure TOPPBufferForm.SetIsMultiSelectMode(const Value: Boolean);
 begin
   fIsMultiSelectMode := Value;
   cxGrid1DBTableView1.OptionsSelection.MultiSelect := fIsMultiSelectMode;
+  ReloadActionsVisibility;
+end;
+
+procedure TOPPBufferForm.SetOnApply(const Value: TOPPBufferFormOnApply);
+begin
+  fOnApply := Value;
   ReloadActionsVisibility;
 end;
 
