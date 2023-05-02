@@ -181,7 +181,6 @@ var
 implementation
 
 {$R *.dfm}
-
 {$IFDEF DEBUG}
 {$C +}
 {$ENDIF}
@@ -423,7 +422,7 @@ procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);
 var
   formSettings: TOPPHelpSettingsForm;
 begin
-  if Assigned(fDefaultSettings) then
+  if assigned(fDefaultSettings) then
     FreeAndNil(fDefaultSettings);
 
   formSettings := TOPPHelpSettingsForm.Create(self);
@@ -635,7 +634,6 @@ begin
 
   self.SaveFormState;
 
-
   helpShortcutServer.killExternalViewer;
   if assigned(fDefaultSettings) then
     fDefaultSettings.Free;
@@ -672,7 +670,6 @@ begin
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
 
   self.ReadFormState;
-
 
   for dropdownItem in kShortcutDropdownItemsArray do
   begin
@@ -727,7 +724,7 @@ end;
 
 procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
 begin
-  oppBufferManager.OnClipboardChange(sender);
+  oppBufferManager.OnClipboardChange(Sender);
 end;
 
 { ------------ }
