@@ -96,8 +96,11 @@ end;
 { HOOK }
 
 Procedure InitHook();
+var
+  threadID: cardinal;
 begin
-  hhk := SetWindowsHookEx(WH_KEYBOARD_LL, @CBT_FUNC, 0, 0);
+  threadID := 0; //WinAPI.Windows.GetCurrentThreadId;
+  hhk := SetWindowsHookEx(WH_KEYBOARD_LL, @CBT_FUNC, HInstance, threadID);
   if hhk = 0 then
     RaiseLastOSError;
 end;
@@ -111,10 +114,10 @@ end;
 
 initialization
 
-InitHook();
+//InitHook();
 
 finalization
 
-KillHook();
+//KillHook();
 
 end.

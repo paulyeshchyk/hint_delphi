@@ -140,6 +140,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Flat = True
       ParentShowHint = False
       ShowHint = True
+      Visible = False
     end
     object Label2: TLabel
       Left = 16
@@ -148,6 +149,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Height = 13
       Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
       Layout = tlCenter
+      Visible = False
     end
     object AllowExternalsCheckBox: TcxCheckBox
       Left = 8
@@ -191,6 +193,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       HotKey = 24662
       Modifiers = [hkShift, hkCtrl]
       TabOrder = 2
+      Visible = False
       OnChange = clipboardManagerShortcutChange
     end
   end
