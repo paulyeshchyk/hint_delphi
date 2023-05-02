@@ -6,3 +6,6 @@
 *.dcu
 *.stat
 *.tvsconfig
+__history
+*.~*
+*.dsk
