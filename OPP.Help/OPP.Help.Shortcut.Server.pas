@@ -35,7 +35,7 @@ type
     procedure LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
-    function SaveCustomList(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     function RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
@@ -70,7 +70,7 @@ type
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
-    function SaveCustomList(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 
     procedure NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
 
@@ -382,7 +382,7 @@ begin
   end;
 end;
 
-function TOPPHelpShortcutServer.SaveCustomList(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 begin
   result := TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
@@ -391,7 +391,7 @@ function TOPPHelpShortcutServer.SaveMaps(AFileName: String; callback: TOPPHelpEr
 var
   fFileName: String;
   fFileNameFullPath: String;
-  fList: TObjectList<TOPPHelpMap>;
+  fList: TList<TOPPHelpMap>;
 begin
   if Length(AFileName) = 0 then
     fFileName := kShortcutMappingDefaultFileName

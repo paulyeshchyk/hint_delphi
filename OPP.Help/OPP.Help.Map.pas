@@ -36,15 +36,15 @@ type
 
   TOPPHelpMapSet = class(TObject)
   private
-    fList: TObjectList<TOPPHelpMap>;
+    fList: TList<TOPPHelpMap>;
   public
-    constructor Create(AList: TObjectList<OPP.Help.Map.TOPPHelpMap> = nil);
+    constructor Create(AList: TList<OPP.Help.Map.TOPPHelpMap> = nil);
     destructor Destroy; override;
     procedure AddMap(AMap: TOPPHelpMap);
     procedure AddMaps(AList: TList<TOPPHelpMap>);
     function GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpMap;
     procedure MergeMaps(AList: TList<TOPPHelpMap>);
-    property list: TObjectList<TOPPHelpMap> read fList;
+    property list: TList<TOPPHelpMap> read fList;
   end;
 
 implementation
@@ -78,10 +78,10 @@ begin
   result := Length(fComponentIdentifier) <> 0;
 end;
 
-constructor TOPPHelpMapSet.Create(AList: TObjectList<OPP.Help.Map.TOPPHelpMap> = nil);
+constructor TOPPHelpMapSet.Create(AList: TList<OPP.Help.Map.TOPPHelpMap> = nil);
 begin
   inherited Create;
-  fList := TObjectList<TOPPHelpMap>.Create;
+  fList := TList<TOPPHelpMap>.Create;
   if assigned(AList) then
   begin
     fList.AddRange(AList);

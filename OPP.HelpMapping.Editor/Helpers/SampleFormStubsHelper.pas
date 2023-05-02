@@ -122,10 +122,10 @@ class procedure TSampleFormStubsHelper.savePredicateToFile;
 var
   fMap: TOPPHelpMap;
   fPredicate, fChild: TOPPHelpPredicate;
-  fList: TObjectList<TOPPHelpMap>;
+  fList: TList<TOPPHelpMap>;
 begin
 
-  fList := TObjectList<TOPPHelpMap>.Create();
+  fList := TList<TOPPHelpMap>.Create();
   try
 
     fPredicate := TOPPHelpPredicate.Create;

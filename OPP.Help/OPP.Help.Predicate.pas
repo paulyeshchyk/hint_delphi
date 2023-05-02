@@ -14,7 +14,7 @@ type
     fValue: String;
     fKeywordType: TOPPKeywordType;
     fFileName: String;
-    fPredicates: TObjectList<TOPPHelpPredicate>;
+    fPredicates: TList<TOPPHelpPredicate>;
     procedure SetValue(AValue: String);
   public
     constructor Create;overload;
@@ -24,7 +24,7 @@ type
     property value: String read fValue write SetValue;
     property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
     property filename: String read fFileName write fFileName;
-    property predicates: TObjectList<TOPPHelpPredicate> read fPredicates;
+    property predicates: TList<TOPPHelpPredicate> read fPredicates;
   end;
 
   TOPPHelpPredicateStreamHelper = class helper for TOPPHelpPredicate
@@ -107,13 +107,13 @@ end;
 constructor TOPPHelpPredicate.Create;
 begin
   inherited Create;
-  fPredicates := TObjectList<TOPPHelpPredicate>.Create;
+  fPredicates := TList<TOPPHelpPredicate>.Create;
 end;
 
 constructor TOPPHelpPredicate.Create(AFileName: String; AKeywordType: TOPPKeywordType; AValue: String);
 begin
   inherited Create;
-  fPredicates := TObjectList<TOPPHelpPredicate>.Create;
+  fPredicates := TList<TOPPHelpPredicate>.Create;
   fFilename := AFileName;
   fKeywordType := AKeywordType;
   self.value := AValue;
