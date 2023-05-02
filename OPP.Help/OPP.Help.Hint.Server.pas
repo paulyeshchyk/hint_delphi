@@ -267,7 +267,8 @@ begin
     exit;
   end;
 
-  if Length(AMetaIdentifier) = 0 then begin
+  if Length(AMetaIdentifier) = 0 then
+  begin
     eventLogger.Warning(Format('MetaIdentifier is empty', [AMetaIdentifier]));
     exit;
   end;
@@ -480,11 +481,14 @@ begin
         exit;
       end;
 
-      eventLogger.Flow(Format('Load hints finished; added [%d] maps', [Mapset.list.Count]), kContext);
-
-      for fMap in Mapset.list do
+      if Assigned(Mapset.list) then
       begin
-        fHintMapSet.AddMap(fMap);
+        eventLogger.Flow(Format('Load hints finished; added [%d] maps', [Mapset.list.Count]), kContext);
+
+        for fMap in Mapset.list do
+        begin
+          fHintMapSet.AddMap(fMap);
+        end;
       end;
 
       self.fLoaded := true;
