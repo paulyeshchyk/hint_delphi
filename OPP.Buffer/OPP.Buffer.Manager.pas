@@ -296,9 +296,7 @@ procedure TOPPBufferManager.SaveRecords(AFileName: String);
 var
   fFileName: String;
 begin
-
-  fFileName := IfThen(Length(AFileName) = 0,GetRecordsStorageFileName(),AFileName);
-
+  fFileName := IfThen(Length(AFileName) = 0, GetRecordsStorageFileName(), AFileName);
   try
     fDataset.SaveToFile(fFileName);
   except

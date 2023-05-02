@@ -23,7 +23,7 @@ type
 
   TOPPBufferForm = class(TForm)
     actionApplySelection: TAction;
-    actionClose: TAction;
+    actionCloseByPressingEsc: TAction;
     actionDeleteRecord: TAction;
     actionExportBuffer: TAction;
     actionExportSettings: TAction;
@@ -96,8 +96,10 @@ type
     dxBarSeparator5: TdxBarSeparator;
     dxBarButton13: TdxBarButton;
     dxBarButton14: TdxBarButton;
+    actionClose: TAction;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
+    procedure actionCloseByPressingEscExecute(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionExportBufferExecute(Sender: TObject);
@@ -121,6 +123,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure cxGrid1DBTableView1Editing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
     procedure cxGrid1DBTableView1SelectionChanged(Sender: TcxCustomGridTableView);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
   private
@@ -219,9 +222,19 @@ begin
   Close;
 end;
 
+procedure TOPPBufferForm.actionCloseByPressingEscExecute(Sender: TObject);
+begin
+  if cxGrid1DBTableView1Column2.Editing then
+  begin
+    cxGrid1DBTableView1Column2.Editing := false;
+    exit;
+  end;
+  Close;
+end;
+
 procedure TOPPBufferForm.actionCloseExecute(Sender: TObject);
 begin
-  Close;
+close;
 end;
 
 procedure TOPPBufferForm.actionDeleteRecordExecute(Sender: TObject);
@@ -396,6 +409,11 @@ begin
   self.ReloadActionsVisibility;
 end;
 
+procedure TOPPBufferForm.cxGrid1DBTableView1Editing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
+begin
+  ReloadActionsVisibility;
+end;
+
 procedure TOPPBufferForm.cxGrid1DBTableView1SelectionChanged(Sender: TcxCustomGridTableView);
 begin
   ReloadActionsVisibility;
@@ -485,7 +503,7 @@ begin
   cxGrid1DBTableView1.OptionsSelection.CellSelect := fIsEditMode;
   dxBarButton6.Enabled := fIsEditMode and self.HasRecords;
   actionMultiSelectMode.Enabled := fIsEditMode and self.HasRecords;
-  dxBarButton6.down := fIsMultiSelectMode and self.HasRecords;
+  dxBarButton6.Down := fIsMultiSelectMode and self.HasRecords;
   actionMarkAsFixed.Enabled := fIsEditMode and self.HasRecords;
   actionMarkAsNonFixed.Enabled := fIsEditMode and self.HasRecords;
   actionMarkAsInverted.Enabled := fIsEditMode and self.HasRecords;
@@ -494,7 +512,6 @@ begin
   actionDeleteRecord.Caption := ifThen(self.HasSelectedFewRecords, SDeleteSelectedRecords, SDeleteRecord);
   actionWipeRecords.Enabled := fIsMultiSelectMode and self.HasRecords and (not self.HasSelectedFewRecords);
   actionApplySelection.Enabled := (not fIsEditMode) and self.HasSelectedRecord and Assigned(OnApply);
-  //actionClose.Enabled := (not fIsEditMode);
   dxStatusBar1.Panels[0].Text := ifThen(not fIsEditMode, SPreviewMode, ifThen(fIsMultiSelectMode, SEditMultirecordSelection, SEditMode));
   dxStatusBar1.Panels[1].Text := ifThen(not fIsMultiSelectMode, '', self.SelectedRecordsCountText)
 end;
@@ -542,28 +559,28 @@ begin
   fForm := TOPPBufferForm.Create(AOwner);
   try
     if fCanApplyText then
-    fForm.OnApply := procedure(AData: String)
-      begin
-        if fCanApplyText then
+      fForm.OnApply :=
+      procedure(AData: String)begin
+    if fCanApplyText then
+    begin
+      // AControl.SetTextProp(AData);
+      try
+        Clipboard.Open;
+        Clipboard.AsText := AData;
+        Clipboard.Close;
+        PostMessage(TWinControl(AControl).Handle, WM_PASTE, 1, 0);
+      except
+        on E: Exception do
         begin
-          // AControl.SetTextProp(AData);
-          try
-            Clipboard.Open;
-            Clipboard.AsText := AData;
-            Clipboard.Close;
-            PostMessage(TWinControl(AControl).Handle, WM_PASTE, 1, 0);
-          except
-            on E: Exception do
-            begin
-              // event
-            end;
-          end;
+          // event
         end;
       end;
-    fForm.ShowModal;
-  finally
-    fForm.Free;
+    end;
   end;
+  fForm.ShowModal;
+finally
+  fForm.Free;
+end;
 
 end;
 

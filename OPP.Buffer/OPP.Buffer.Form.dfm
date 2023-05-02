@@ -32,12 +32,10 @@ object OPPBufferForm: TOPPBufferForm
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 224
-    ExplicitTop = 11
-    ExplicitHeight = 450
     object cxGrid1DBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = cxGrid1DBTableView1CellDblClick
+      OnEditing = cxGrid1DBTableView1Editing
       OnSelectionChanged = cxGrid1DBTableView1SelectionChanged
       DataController.DataSource = DataSource1
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -114,7 +112,6 @@ object OPPBufferForm: TOPPBufferForm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 417
   end
   object Panel1: TPanel
     Left = 0
@@ -124,7 +121,6 @@ object OPPBufferForm: TOPPBufferForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 348
     object Panel2: TPanel
       Left = 820
       Top = 0
@@ -170,8 +166,6 @@ object OPPBufferForm: TOPPBufferForm
           1EA8A1D51115828B1E50D3A6FCE1E2EA859004F691AC4956F5FA504A1D961751
           27885F4D7737607FE4F0B80000000049454E44AE426082}
         TabOrder = 0
-        ExplicitLeft = 784
-        ExplicitTop = 9
       end
       object cxButton2: TcxButton
         AlignWithMargins = True
@@ -213,8 +207,6 @@ object OPPBufferForm: TOPPBufferForm
           813313D3E54C1488661E4CC6563131E4AF10FD02565C244ECB4C567C00000000
           49454E44AE426082}
         TabOrder = 1
-        ExplicitLeft = 920
-        ExplicitTop = 9
       end
     end
   end
@@ -227,10 +219,10 @@ object OPPBufferForm: TOPPBufferForm
   object ActionList1: TActionList
     Left = 32
     Top = 40
-    object actionClose: TAction
+    object actionCloseByPressingEsc: TAction
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ShortCut = 27
-      OnExecute = actionCloseExecute
+      OnExecute = actionCloseByPressingEscExecute
     end
     object actionExportSettings: TAction
       Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
@@ -296,6 +288,10 @@ object OPPBufferForm: TOPPBufferForm
       Caption = #1048#1085#1074#1077#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1087#1086#1084#1077#1090#1082#1091
       OnExecute = actionMarkAsInvertedExecute
     end
+    object actionClose: TAction
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      OnExecute = actionCloseExecute
+    end
   end
   object DataSource1: TDataSource
     OnDataChange = DataSource1DataChange
@@ -315,8 +311,8 @@ object OPPBufferForm: TOPPBufferForm
     Top = 112
   end
   object PopupMenu1: TPopupMenu
-    Left = 168
-    Top = 40
+    Left = 104
+    Top = 176
     object N17: TMenuItem
       Action = actionNewRecord
     end

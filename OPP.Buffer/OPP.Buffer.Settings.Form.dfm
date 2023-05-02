@@ -31,7 +31,6 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alTop
     Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077
     TabOrder = 0
-    ExplicitLeft = 11
     object Label1: TLabel
       AlignWithMargins = True
       Left = 18
@@ -48,14 +47,13 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
         #1080#1102' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1093#1089#1103' '#1085#1077#1079#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1093' '#1079#1072#1087#1080#1089 +
         #1077#1081'.'
       WordWrap = True
-      ExplicitTop = 124
       ExplicitWidth = 381
     end
     object Label3: TLabel
       Left = 16
       Top = 64
       Width = 123
-      Height = 21
+      Height = 13
       Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
       Layout = tlCenter
     end
@@ -147,7 +145,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       Left = 16
       Top = 93
       Width = 170
-      Height = 19
+      Height = 13
       Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
       Layout = tlCenter
     end
@@ -182,9 +180,9 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       TabOrder = 1
     end
     object clipboardManagerShortcut: THotKey
-      Left = 221
+      Left = 195
       Top = 93
-      Width = 108
+      Width = 142
       Height = 19
       Margins.Left = 6
       Margins.Top = 6
