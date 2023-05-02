@@ -19,7 +19,7 @@ uses
   OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls;
 
 type
-  TOPPBufferFormOnApply = reference to procedure(AText: String);
+  TOPPBufferFormOnApply = reference to procedure(AText: String; AClipboardControl: TControl);
 
   TOPPBufferForm = class(TForm)
     actionApplySelection: TAction;
@@ -132,6 +132,7 @@ type
     fIsEditMode: Boolean;
     fIsMultiSelectMode: Boolean;
     fOnApply: TOPPBufferFormOnApply;
+    fClipboardControl: TControl;
     function GetHasRecords: Boolean;
     function GetHasSelectedRecord: Boolean;
     procedure ReloadActionsVisibility;
@@ -148,15 +149,19 @@ type
     procedure ColumnSortRead;
     procedure ColumnSizeChange;
 
+    class procedure OnApplyData(AData: String; AClipboardControl: TControl);
+
     { Private declarations }
 
     property IsEditMode: Boolean read fIsEditMode write setIsEditMode default false;
     property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
+
   public
     class procedure ShowForm(AOwner: TControl); overload;
     class procedure ShowForm(AOwner: TControl; AControl: TControl); overload;
     { Public declarations }
     property OnApply: TOPPBufferFormOnApply read fOnApply write fOnApply;
+    property ClipboardControl: TControl read fClipboardControl write fClipboardControl;
   end;
 
   TOPPDataControllerSortHelper = class helper for TcxGridDBTableView
@@ -212,7 +217,7 @@ begin
   if Assigned(fOnApply) then
   begin
     fData := DataSource1.DataSet.FieldByName(kFieldNameData).AsString;
-    fOnApply(fData);
+    fOnApply(fData, fClipboardControl);
   end;
   Close;
 end;
@@ -234,7 +239,7 @@ end;
 
 procedure TOPPBufferForm.actionCloseExecute(Sender: TObject);
 begin
-close;
+  Close;
 end;
 
 procedure TOPPBufferForm.actionDeleteRecordExecute(Sender: TObject);
@@ -547,41 +552,55 @@ begin
   end;
 end;
 
+class procedure TOPPBufferForm.OnApplyData(AData: String; AClipboardControl: TControl);
+begin
+  if not Assigned(AClipboardControl) then
+  begin
+    eventLogger.Warning('Not assigned clipboard control', 'TOPPBufferForm');
+    exit;
+  end;
+  // AControl.SetTextProp(AData);
+  try
+    Clipboard.Open;
+    Clipboard.AsText := AData;
+    Clipboard.Close;
+    PostMessage(TWinControl(AClipboardControl).Handle, WM_PASTE, 1, 0);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, 'TOPPBufferForm');
+    end;
+  end;
+end;
+
 class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TControl);
 var
   fForm: TOPPBufferForm;
   fCanApplyText: Boolean;
+  mrResult: TModalResult;
 begin
-  fCanApplyText := AControl.HasTextProp();
-  if not fCanApplyText then
-    eventLogger.Warning('The control has no TEXT property', 'TOPPBufferForm');
 
   fForm := TOPPBufferForm.Create(AOwner);
   try
-    if fCanApplyText then
-      fForm.OnApply :=
-      procedure(AData: String)begin
+    fCanApplyText := false;
+    if Assigned(AControl) then
+      fCanApplyText := AControl.HasTextProp();
     if fCanApplyText then
     begin
-      // AControl.SetTextProp(AData);
-      try
-        Clipboard.Open;
-        Clipboard.AsText := AData;
-        Clipboard.Close;
-        PostMessage(TWinControl(AControl).Handle, WM_PASTE, 1, 0);
-      except
-        on E: Exception do
-        begin
-          // event
-        end;
+      fForm.ClipboardControl := AControl;
+      fForm.OnApply := TOPPBufferForm.OnApplyData;
+    end;
+    try
+      mrResult := fForm.ShowModal;
+    except
+      on E: Exception do
+      begin
+        eventLogger.Error(E, 'TOPPBufferForm');
       end;
     end;
+  finally
+    fForm.Free;
   end;
-  fForm.ShowModal;
-finally
-  fForm.Free;
-end;
-
 end;
 
 { TOPPDataControllerSortHelper }
@@ -697,12 +716,16 @@ begin
   keyboardShortcutManager.registerHook(oppBufferManager.Settings.GetShortCut,
     procedure
     begin
-      if FindWindow('TOPPBufferForm', nil) = 0 then
-      begin
-        TOPPBufferForm.ShowForm(nil, Screen.ActiveControl);
-      end
-      else
-        eventLogger.Debug('Cant run second instance');
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          if FindWindow('TOPPBufferForm', nil) = 0 then
+          begin
+            TOPPBufferForm.ShowForm(nil, Screen.ActiveControl);
+          end
+          else
+            eventLogger.Debug('Cant run second instance');
+        end);
     end);
 end;
 
