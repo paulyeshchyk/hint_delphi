@@ -52,40 +52,7 @@ begin
 end;
 
 class procedure TSampleFormStubsHelper.openExternalHelp;
-var
-  fPredicate: TOPPHelpPredicate;
-  fChild: TOPPHelpPredicate;
 begin
-
-  fChild := TOPPHelpPredicate.Create;
-  try
-    fChild.value := 'начальник цеха, табельщик';
-    fChild.keywordType := TOPPKeywordType.ktSearch;
-
-    fPredicate := TOPPHelpPredicate.Create();
-    try
-      fPredicate.keywordType := ktPage;
-      fPredicate.value := '800';
-      fPredicate.fileName := 'D:\GulfStream\Compiled\Executable\help\shortcuts\huge_readme.pdf';
-      fPredicate.predicates.Add(fChild);
-      helpShortcutServer.showHelp(fPredicate, vmExternal,
-        procedure(error: Exception)
-        var
-          strmessage: String;
-        begin
-          if error = nil then
-          begin
-            eventLogger.Flow('show help finished','SampleStub');
-          end else begin
-            eventLogger.Error(error);
-          end;
-        end);
-    finally
-      fPredicate.Free;
-    end;
-  finally
-    fChild.Free;
-  end;
 end;
 
 class procedure TSampleFormStubsHelper.generateHintMapping;
@@ -155,10 +122,10 @@ class procedure TSampleFormStubsHelper.savePredicateToFile;
 var
   fMap: TOPPHelpMap;
   fPredicate, fChild: TOPPHelpPredicate;
-  fList: TList<TOPPHelpMap>;
+  fList: TObjectList<TOPPHelpMap>;
 begin
 
-  fList := TList<TOPPHelpMap>.Create();
+  fList := TObjectList<TOPPHelpMap>.Create();
   try
 
     fPredicate := TOPPHelpPredicate.Create;
@@ -184,6 +151,7 @@ begin
       fPredicate.Free;
     end;
   finally
+    fList.Clear;
     fList.Free;
   end;
   //

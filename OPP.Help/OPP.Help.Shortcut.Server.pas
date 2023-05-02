@@ -30,12 +30,12 @@ type
   TOPPHelpShortcutServerLoadStreamCompletion = reference to procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus);
 
   IOPPHelpShortcutServer = interface
-    function exportControl(AControl: TControl): Boolean;
     procedure ShowHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
-    procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
+    procedure ShowHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
+    procedure LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
-    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    function SaveCustomList(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
     function RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
@@ -56,19 +56,21 @@ type
     /// <remarks> copyright https://stackoverflow.com/a/12949757 </remarks>
     function ForceForegroundWindow(hwnd: THandle): Boolean;
   public
-    procedure loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
+    procedure LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     function exportControl(AControl: TControl): Boolean;
     procedure killExternalViewer();
     procedure setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 
     procedure ShowHelp(ARequest: TOPPHelpShortcutRequest; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
+    procedure ShowHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion); overload;
+
     procedure FindHelpMap(const AIdentifier: TOPPHelpMetaIdentifierType; completion: TOPPHelpMapCompletion);
 
     function RemoveHelpMap(AIdentifier: TOPPHelpMetaIdentifierType; callback: TOPPHelpErrorCompletion): Integer;
 
     function AddShortcutMap(AMap: TOPPHelpMap): Integer;
     function SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
-    function SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    function SaveCustomList(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 
     procedure NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
 
@@ -160,7 +162,7 @@ begin
   completion(fMap);
 end;
 
-procedure TOPPHelpShortcutServer.loadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
+procedure TOPPHelpShortcutServer.LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
 var
   fFileNameHash: String;
   fStream: TMemoryStream;
@@ -250,13 +252,7 @@ begin
     fPredicate := TOPPHelpPredicate.DefaultPredicate;
   end;
 
-  case viewMode of
-    vmInternal:
-      openInternalViewer(fPredicate, completion);
-    vmExternal:
-      openExternalViewer(fPredicate, completion);
-  end;
-
+  ShowHelp(fPredicate, viewMode, completion);
 end;
 
 function TOPPHelpShortcutServer.exportControl(AControl: TControl): Boolean;
@@ -284,42 +280,44 @@ begin
       end;
     end;
     exit;
-  end else begin
-    clazzType := GetClass(kPreviewFormClassName); // ->TOPPHelpViewFullScreen
-    if not clazzType.InheritsFrom(TForm) then
-    begin
-      eventLogger.Error(SErrorViewerIsNotSupportingTFormClass, kContext);
-      exit;
-    end;
-
-    if not Supports(clazzType, IOPPHelpShortcutViewer) then
-    begin
-      eventLogger.Error(SErrorViewerIsNotSupportingIOPPHelpSho, kContext);
-      exit;
-    end;
-
-    fViewer := TFormClass(clazzType).Create(nil);
-    if not Assigned(fViewer) then
-    begin
-      eventLogger.Error(SErrorViewerWasNotCreated, kContext);
-      exit;
-    end;
-
-    try
-      (fViewer as IOPPHelpShortcutViewer).RunPredicate(APredicate);
-      (fViewer as IOPPHelpShortcutViewer).PresentModal;
-    finally
-      FreeAndNil(fViewer);
-    end;
-
-    if Assigned(completion) then
-      completion(nil);
   end;
+
+  clazzType := GetClass(kPreviewFormClassName); // ->TOPPHelpViewFullScreen
+  if not clazzType.InheritsFrom(TForm) then
+  begin
+    eventLogger.Error(SErrorViewerIsNotSupportingTFormClass, kContext);
+    exit;
+  end;
+
+  if not Supports(clazzType, IOPPHelpShortcutViewer) then
+  begin
+    eventLogger.Error(SErrorViewerIsNotSupportingIOPPHelpSho, kContext);
+    exit;
+  end;
+
+  fViewer := TFormClass(clazzType).Create(nil);
+  if not Assigned(fViewer) then
+  begin
+    eventLogger.Error(SErrorViewerWasNotCreated, kContext);
+    exit;
+  end;
+
+  try
+    (fViewer as IOPPHelpShortcutViewer).RunPredicate(APredicate);
+    (fViewer as IOPPHelpShortcutViewer).PresentModal;
+  finally
+    FreeAndNil(fViewer);
+  end;
+
+  if Assigned(completion) then
+    completion(nil);
+
 end;
 
 procedure TOPPHelpShortcutServer.openExternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
 begin
-  if not Assigned(APredicate) then begin
+  if not Assigned(APredicate) then
+  begin
     if Assigned(completion) then
       completion(nil);
     exit;
@@ -384,7 +382,7 @@ begin
   end;
 end;
 
-function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+function TOPPHelpShortcutServer.SaveCustomList(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 begin
   result := TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
@@ -393,7 +391,7 @@ function TOPPHelpShortcutServer.SaveMaps(AFileName: String; callback: TOPPHelpEr
 var
   fFileName: String;
   fFileNameFullPath: String;
-  fList: TList<TOPPHelpMap>;
+  fList: TObjectList<TOPPHelpMap>;
 begin
   if Length(AFileName) = 0 then
     fFileName := kShortcutMappingDefaultFileName
@@ -408,6 +406,7 @@ begin
   try
     result := SaveCustomList(fList, fFileNameFullPath, callback);
   finally
+    fList.Clear;
     fList.Free;
   end;
 end;
@@ -415,6 +414,16 @@ end;
 procedure TOPPHelpShortcutServer.setDefaultOnGetIdentifier(AOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier);
 begin
   fDefaultOnGetIdentifier := AOnGetIdentifier;
+end;
+
+procedure TOPPHelpShortcutServer.ShowHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
+begin
+  case viewMode of
+    vmInternal:
+      openInternalViewer(APredicate, completion);
+    vmExternal:
+      openExternalViewer(APredicate, completion);
+  end;
 end;
 
 function TOPPHelpShortcutServer.ForceForegroundWindow(hwnd: THandle): Boolean;

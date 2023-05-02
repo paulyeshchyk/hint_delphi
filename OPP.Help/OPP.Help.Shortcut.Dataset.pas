@@ -13,8 +13,9 @@ type
   TOPPHelpShortcutDataset = class
   private
     fShortcutHelpMatrix: TOPPHelpShortcutDatasetType;
-    procedure Merge(AList: TList<TOPPHelpMap>);
+    procedure Merge(AList: TObjectList<TOPPHelpMap>);
     procedure SetNewList(Mapset: TOPPHelpMapSet; error: Exception);
+    procedure wipeIndicies();
   public
     constructor Create;
     destructor Destroy; override;
@@ -22,7 +23,7 @@ type
     function GetMapping(const key: String): TOPPHelpMap;
     function AddMap(const AMap: TOPPHelpMap): Integer;
     procedure RemoveMap(const AIdentifier: String);
-    function List(): TList<TOPPHelpMap>;
+    function List(): TObjectList<TOPPHelpMap>;
   end;
 
 implementation
@@ -40,8 +41,8 @@ end;
 
 destructor TOPPHelpShortcutDataset.Destroy;
 begin
-  fShortcutHelpMatrix.Clear;
-  fShortcutHelpMatrix.Free;
+  wipeIndicies;
+  FreeAndNil(fShortcutHelpMatrix);
   inherited;
 end;
 
@@ -60,24 +61,33 @@ begin
     exit;
   end;
 
-  fShortcutHelpMatrix.Clear;
+  wipeIndicies;
   self.Merge(Mapset.List);
 end;
 
-procedure TOPPHelpShortcutDataset.Merge(AList: TList<TOPPHelpMap>);
+procedure TOPPHelpShortcutDataset.wipeIndicies;
+var key: string;
+begin
+  for key in fShortcutHelpMatrix.Keys do begin
+    fShortcutHelpMatrix.Remove(key);
+  end;
+  fShortcutHelpMatrix.Clear;
+end;
+
+procedure TOPPHelpShortcutDataset.Merge(AList: TObjectList<TOPPHelpMap>);
 var
-  Map: TOPPHelpMap;
+  fMap: TOPPHelpMap;
 begin
   if (not assigned(AList)) or (AList.Count = 0) then
   begin
     exit;
   end;
 
-  for Map in AList do
+  for fMap in AList do
   begin
-    if not assigned(Map) then
+    if not assigned(fMap) then
       continue;
-    self.AddMap(Map);
+    self.AddMap(fMap);
   end;
 end;
 
@@ -117,11 +127,11 @@ begin
   end;
 end;
 
-function TOPPHelpShortcutDataset.List: TList<TOPPHelpMap>;
+function TOPPHelpShortcutDataset.List: TObjectList<TOPPHelpMap>;
 var
   pair: TPair<String, TOPPHelpMap>;
 begin
-  result := TList<TOPPHelpMap>.Create();
+  result := TObjectList<TOPPHelpMap>.Create();
   for pair in fShortcutHelpMatrix.ToArray do
   begin
     result.Add(pair.Value)

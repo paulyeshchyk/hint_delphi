@@ -36,16 +36,15 @@ type
 
   TOPPHelpMapSet = class(TObject)
   private
-    fList: TList<TOPPHelpMap>;
-    function GetList(): TList<TOPPHelpMap>;
+    fList: TObjectList<TOPPHelpMap>;
   public
-    constructor Create(AList: TList<OPP.Help.Map.TOPPHelpMap> = nil);
+    constructor Create(AList: TObjectList<OPP.Help.Map.TOPPHelpMap> = nil);
     destructor Destroy; override;
     procedure AddMap(AMap: TOPPHelpMap);
     procedure AddMaps(AList: TList<TOPPHelpMap>);
     function GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpMap;
     procedure MergeMaps(AList: TList<TOPPHelpMap>);
-    property list: TList<TOPPHelpMap> read GetList;
+    property list: TObjectList<TOPPHelpMap> read fList;
   end;
 
 implementation
@@ -68,6 +67,8 @@ end;
 
 destructor TOPPHelpMap.Destroy;
 begin
+  fComponentIdentifier := '';
+  fIdentifier := '';
   FreeAndNil(fPredicate);
   inherited;
 end;
@@ -77,10 +78,10 @@ begin
   result := Length(fComponentIdentifier) <> 0;
 end;
 
-constructor TOPPHelpMapSet.Create(AList: TList<OPP.Help.Map.TOPPHelpMap> = nil);
+constructor TOPPHelpMapSet.Create(AList: TObjectList<OPP.Help.Map.TOPPHelpMap> = nil);
 begin
   inherited Create;
-  fList := TList<TOPPHelpMap>.Create;
+  fList := TObjectList<TOPPHelpMap>.Create;
   if assigned(AList) then
   begin
     fList.AddRange(AList);
@@ -89,11 +90,7 @@ end;
 
 destructor TOPPHelpMapSet.Destroy;
 begin
-
-  fList.Clear;
-  fList.Pack;
-  fList.Free;
-
+  FreeAndNil(fList);
   inherited;
 end;
 
@@ -119,11 +116,6 @@ begin
     fList.Add(fItem);
   end;
 
-end;
-
-function TOPPHelpMapSet.GetList: TList<TOPPHelpMap>;
-begin
-  result := fList;
 end;
 
 function TOPPHelpMapSet.GetMap(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpMap;

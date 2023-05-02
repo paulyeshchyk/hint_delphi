@@ -14,20 +14,20 @@ type
 
   TOPPHelpMapRESTParserExtended = class
   private
-    class procedure parseExtendedJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpMapParserJSONCallback = nil);
+    class procedure parseExtendedJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = false; callback: TOPPHelpMapParserJSONCallback = nil);
     class procedure deserializeExtendedJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
   public
     class procedure readExtendedJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
-    class function saveExtendedJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    class function saveExtendedJSON(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
   TOPPHelpMapRESTParser = class
   private
-    class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = true; callback: TOPPHelpMapParserJSONCallback = nil);
+    class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = false; callback: TOPPHelpMapParserJSONCallback = nil);
     class procedure deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
   public
     class procedure readJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
-    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    class function saveJSON(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
 implementation
@@ -86,7 +86,7 @@ end;
 
 class procedure TOPPHelpMapRESTParser.deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
 var
-  mapList: TOPPHelpMapSet;
+  fMapList: TOPPHelpMapSet;
   Error: Exception;
 begin
   if not assigned(AJSON) then
@@ -104,16 +104,14 @@ begin
   end;
 
   try
-    mapList := TJson.JsonToObject<TOPPHelpMapSet>(AJSON);
+    fMapList := TJson.JsonToObject<TOPPHelpMapSet>(AJSON);
     try
       if assigned(callback) then
       begin
-        callback(mapList, nil);
+        callback(fMapList, nil);
       end;
     finally
-      mapList.list.Clear;
-      mapList.list.Pack;
-      FreeAndNil(mapList);
+      FreeAndNil(fMapList);
     end;
   except
     on E: Exception do
@@ -199,7 +197,7 @@ begin
   try
     bytes := TFile.ReadAllBytes(AFileName);
     try
-      parseJSONBytes(bytes, true, callback);
+      parseJSONBytes(bytes, false, callback);
     finally
       SetLength(bytes, 0);
     end;
@@ -211,7 +209,7 @@ begin
   end;
 end;
 
-class function TOPPHelpMapRESTParserExtended.saveExtendedJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+class function TOPPHelpMapRESTParserExtended.saveExtendedJSON(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -245,7 +243,7 @@ begin
 
 end;
 
-class function TOPPHelpMapRESTParser.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+class function TOPPHelpMapRESTParser.saveJSON(AList: TObjectList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
