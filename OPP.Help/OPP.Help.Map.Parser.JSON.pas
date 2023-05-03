@@ -281,7 +281,7 @@ var
   end;
 
 begin
-  //
+  result := -1;
 
   if not createDirectoryIfNeed(AFileName) then begin
     exit;
@@ -292,6 +292,7 @@ begin
     TFile.WriteAllText(AFileName, jsonString);
     if assigned(callback) then
       callback(nil);
+    result := 0;
   except
     on Error: Exception do
     begin
@@ -301,7 +302,6 @@ begin
     end;
   end;
 
-  result := 0;
 end;
 
 end.

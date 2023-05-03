@@ -456,7 +456,9 @@ begin
     self.SelectedShortcutMap := nil;
     exit;
   end;
+  cxListView1.Items.BeginUpdate;
   cxListView1.ItemIndex := AItemIndex;
+  cxListView1.Items.EndUpdate;
 end;
 
 procedure TSampleForm.CreateScreenTip(fHint: TOPPHelpHint; AComponent: TComponent);
@@ -763,6 +765,7 @@ begin
     exit;
   end;
   AMap^.Predicate.filename := fDefaultSettings.ShortcutFilePath;
+  AMap^.Predicate.keywordType := ktPage;
   //
 end;
 

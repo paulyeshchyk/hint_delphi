@@ -384,7 +384,11 @@ end;
 
 function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 begin
+  AList.Pack;
   result := TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
+  if result = 0 then begin
+    fShortcutDataset.load(AFileName);
+  end;
 end;
 
 function TOPPHelpShortcutServer.SaveMaps(AFileName: String; callback: TOPPHelpErrorCompletion): Integer;

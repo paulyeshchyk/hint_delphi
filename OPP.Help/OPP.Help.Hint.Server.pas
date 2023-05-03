@@ -549,6 +549,7 @@ end;
 
 procedure TOPPHelpHintServer.SaveHelpMaps(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion);
 begin
+  AList.Pack;
   TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
 end;
 
