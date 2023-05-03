@@ -11,8 +11,8 @@ uses
 type
   TOPPClientHelpShortcutHelper = class
   public
-    class procedure showHelp(AControl: TControl; AMessage: TWMHelp);overload;
-    class procedure showHelp(AControl: TControl);overload;
+    class procedure showHelp(AControl: TControl; AMessage: TWMHelp); overload;
+    class procedure showHelp(AControl: TControl); overload;
   end;
 
 implementation
@@ -30,9 +30,9 @@ uses
   OPP.Help.Map,
   OPP.Help.Hint.Reader,
 
-  System.SysUtils,
+  system.SysUtils,
   OPP.Help.Log,
-  OPP.Help.System.Error,
+  OPP.Help.system.Error,
   OPPClientChild;
 
 const
@@ -45,11 +45,11 @@ begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(AControl);
   try
     helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-      procedure(error: Exception)
+      procedure(Error: Exception)
       begin
-        if error = nil then
+        if Error = nil then
           exit;
-        eventLogger.Error(error, kContext);
+        eventLogger.Error(Error, kContext);
       end);
   finally
     fShortcutRequest.Free;
@@ -63,11 +63,11 @@ begin
   fShortcutRequest := TOPPHelpShortcutRequest.Create(AControl, AMessage);
   try
     helpShortcutServer.showHelp(fShortcutRequest, vmExternal,
-      procedure(error: Exception)
+      procedure(Error: Exception)
       begin
-        if error = nil then
+        if Error = nil then
           exit;
-        eventLogger.Error(error, kContext);
+        eventLogger.Error(Error, kContext);
       end);
   finally
     fShortcutRequest.Free;
@@ -100,7 +100,12 @@ begin
   end
   else if AControl.ClassType.InheritsFrom(TForm) then
   begin
-    result := AControl.Name;
+    if Length(AControl.HelpKeyword) <> 0 then
+    begin
+      result := AControl.HelpKeyword;
+    end else begin
+      result := AControl.Name;
+    end;
   end
   else if Length(AControl.HelpKeyword) <> 0 then
   begin

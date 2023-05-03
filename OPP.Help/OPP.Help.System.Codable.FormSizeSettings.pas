@@ -22,12 +22,15 @@ type
     function GetFrame: TRect;
     procedure SetFrame(const Value: TRect);
     function GetSizeSettingFileName: String;
+    function GetFormSettings: TOPPHelpSystemCodableFormSizeSettings;
+    procedure SetFormSettings(const Value: TOPPHelpSystemCodableFormSizeSettings);
   public
     procedure ReadFormState();
     procedure SaveFormState();
 
     property SizeSettingFileName: String read GetSizeSettingFileName;
-    property frame: TRect read GetFrame write SetFrame;
+    property Frame: TRect read GetFrame write SetFrame;
+    property FormSettings: TOPPHelpSystemCodableFormSizeSettings read GetFormSettings write SetFormSettings;
   end;
 
 implementation
@@ -39,6 +42,16 @@ uses
 
 { TFormSizeHelper }
 
+function TFormSizeHelper.GetFormSettings: TOPPHelpSystemCodableFormSizeSettings;
+var
+  fResult: TOPPHelpSystemCodableFormSizeSettings;
+begin
+  fResult := TOPPHelpSystemCodableFormSizeSettings.Create;
+  fResult.Frame := self.Frame;
+  fResult.WindowState := self.WindowState;
+  result := fResult;
+end;
+
 function TFormSizeHelper.GetFrame: TRect;
 begin
   result.Left := self.Left;
@@ -49,7 +62,7 @@ end;
 
 function TFormSizeHelper.GetSizeSettingFileName: String;
 begin
-  result := Self.ClassName + 'FormSize.settings';
+  result := self.ClassName + 'FormSize.settings';
 end;
 
 procedure TFormSizeHelper.ReadFormState;
@@ -58,15 +71,15 @@ var
 begin
   try
     TOPPCodableHelper<TOPPHelpSystemCodableFormSizeSettings>.Decode(SizeSettingFileName, fResult);
-    if Assigned(fResult) then begin
-      self.frame := fResult.frame;
-      self.windowState := fResult.windowState;
+    try
+      self.FormSettings := fResult;
+    finally
+      fResult.free;
     end;
-    fResult.free;
   except
     on E: Exception do
     begin
-      eventLogger.Error(E);
+      eventLogger.Error(E, 'TForm');
     end;
   end;
 end;
@@ -75,10 +88,8 @@ procedure TFormSizeHelper.SaveFormState;
 var
   fResult: TOPPHelpSystemCodableFormSizeSettings;
 begin
-  fResult := TOPPHelpSystemCodableFormSizeSettings.Create;
+  fResult := self.FormSettings;
   try
-    fResult.Frame := self.frame;
-    fResult.WindowState := self.WindowState;
     try
       TOPPCodableHelper<TOPPHelpSystemCodableFormSizeSettings>.Encode(SizeSettingFileName, fResult);
     except
@@ -88,16 +99,23 @@ begin
       end;
     end;
   finally
-    fResult.Free;
+    fResult.free;
   end;
+end;
+
+procedure TFormSizeHelper.SetFormSettings(const Value: TOPPHelpSystemCodableFormSizeSettings);
+begin
+  if not Assigned(Value) then exit;
+  self.Frame := Value.Frame;
+  self.WindowState := Value.WindowState;
 end;
 
 procedure TFormSizeHelper.SetFrame(const Value: TRect);
 begin
-  self.Left := value.Left;
-  self.Top := value.Top;
-  self.Width := value.Right - value.Left;
-  self.Height := value.Bottom - value.Top;
+  self.Left := Value.Left;
+  self.Top := Value.Top;
+  self.Width := Value.Right - Value.Left;
+  self.Height := Value.Bottom - Value.Top;
 end;
 
 { TOPPHelpSystemCodableFormSizeSettings }

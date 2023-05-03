@@ -13,6 +13,7 @@ uses
   OPP.Help.View.Fullscreen,
   OPP.Help.System.Stream,
   OPP.Help.System.Messaging,
+  OPP.Help.System.Codable.FormSizeSettings,
 
   System.Classes, System.SysUtils, System.Variants,
   Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls, Vcl.AppEvnts,
@@ -241,7 +242,6 @@ uses
   OPP.Help.Log, OPP.Help.System.Error,
   OPP.Help.System.Messaging.Pipe,
   OPP.Help.System.Types,
-  OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Application,
   AsyncCalls;
 
