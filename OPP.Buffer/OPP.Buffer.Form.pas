@@ -16,7 +16,7 @@ uses
 
   OPP.Buffer.Manager.Settings.Data,
 
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls, cxBlobEdit, cxImage;
 
 type
   TOPPBufferFormOnApply = reference to procedure(AText: String; AClipboardControl: TControl);
@@ -97,6 +97,7 @@ type
     dxBarButton13: TdxBarButton;
     dxBarButton14: TdxBarButton;
     actionClose: TAction;
+    cxGrid1DBTableView1Column4: TcxGridDBColumn;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseByPressingEscExecute(Sender: TObject);
@@ -168,7 +169,7 @@ type
   TOPPDataControllerSortHelper = class helper for TcxGridDBTableView
     procedure OPPSetColumnsSort(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
     function OPPGetColumnsSort: TArray<TOPPBufferManagerSettingsColumnSort>;
-    procedure OPPSetFixedMark(AColumnIndex: Integer; AMark: Boolean);
+    procedure OPPSetFixedMark(AFieldName: String; AMark: Boolean);
     procedure OPPSetInvertedFixedMark(AColumnIndex: Integer);
     procedure OPPDeleteSelected;
   end;
@@ -204,10 +205,10 @@ resourcestring
   SSelectedRecordsTemplate = 'Выбрано: %d';
 
 const
+  kContext = 'TOPPBufferForm';
   kFieldNameOrder = 'order';
   kFieldNameData = 'data';
   kFileNameOPPBufferManagerOppclipboarddata = 'OPPBufferManager.oppclipboarddata';
-  kContext = 'TOPPBufferForm';
 
 {$R *.dfm}
 
@@ -282,7 +283,7 @@ end;
 
 procedure TOPPBufferForm.actionMarkAsFixedExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.OPPSetFixedMark(2, true);
+  cxGrid1DBTableView1.OPPSetFixedMark('isFixed', true);
 end;
 
 procedure TOPPBufferForm.actionMarkAsInvertedExecute(Sender: TObject);
@@ -292,7 +293,7 @@ end;
 
 procedure TOPPBufferForm.actionMarkAsNonFixedExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.OPPSetFixedMark(2, false);
+  cxGrid1DBTableView1.OPPSetFixedMark('isFixed', false);
 end;
 
 procedure TOPPBufferForm.actionMultiSelectModeExecute(Sender: TObject);
@@ -563,7 +564,7 @@ class procedure TOPPBufferForm.OnApplyData(AData: String; AClipboardControl: TCo
 begin
   if not Assigned(AClipboardControl) then
   begin
-    eventLogger.Warning('Not assigned clipboard control', 'TOPPBufferForm');
+    eventLogger.Warning('Not assigned clipboard control', kContext);
     exit;
   end;
   // AControl.SetTextProp(AData);
@@ -575,7 +576,7 @@ begin
   except
     on E: Exception do
     begin
-      eventLogger.Error(E, 'TOPPBufferForm');
+      eventLogger.Error(E, kContext);
     end;
   end;
 end;
@@ -612,13 +613,14 @@ end;
 
 { TOPPDataControllerSortHelper }
 
-procedure TOPPDataControllerSortHelper.OPPSetFixedMark(AColumnIndex: Integer; AMark: Boolean);
+procedure TOPPDataControllerSortHelper.OPPSetFixedMark(AFieldName: String; AMark: Boolean);
 var
-  i: Integer;
+  i, AColumnIndex: Integer;
   row: TcxCustomGridRow;
   rowIndex: Integer;
   recordIndex: Integer;
 begin
+  AColumnIndex := self.GetColumnByFieldName(AFieldName).Index;
   try
     self.DataController.Edit;
     for i := 0 to self.Controller.SelectedRowCount - 1 do
@@ -701,6 +703,7 @@ var
   i: Integer;
   fItem: TcxCustomGridTableItem;
   fFieldName: String;
+  fField: TField;
 begin
 
   cnt := self.ItemCount;
@@ -708,8 +711,10 @@ begin
 
   for i := 0 to cnt - 1 do
   begin
-    fFieldName := self.DataController.GetItemField(i).FieldName;
-    fItem := self.DataController.GetItemByFieldName(fFieldName);
+    fItem := self.Items[i];
+    if not(Assigned(fItem.DataBinding) and (fItem.DataBinding is TcxGridItemDBDataBinding)) then
+      continue;
+    fFieldName := TcxGridItemDBDataBinding(fItem.DataBinding).FieldName;
     result[i].FieldName := fFieldName;
     result[i].SortIndex := fItem.SortIndex;
     result[i].SortOrder := Integer(fItem.SortOrder);

@@ -3,7 +3,7 @@ unit OPP.Buffer.Clipboard;
 interface
 
 uses
-  System.SysUtils,
+  System.SysUtils, System.Classes,
   WinAPI.Windows,
   Vcl.Clipbrd;
 
@@ -23,6 +23,11 @@ type
     property Data: Variant read fData;
     property IsFixed: Boolean read fIsFixed write fIsFixed;
     property SortIndex: Integer read fSortIndex write fSortIndex;
+  end;
+
+  TSLYKHelper = class helper for TStringList
+  public
+    function CreateRecord(AFormat: TOPPBufferManagerItemFormat): TOPPBufferManagerRecord;
   end;
 
   TOPPClipboardHelper = class helper for TClipboard
@@ -116,6 +121,13 @@ begin
   else
     result := CF_TEXT;
   end;
+end;
+
+{ TSLYKHelper }
+
+function TSLYKHelper.CreateRecord(AFormat: TOPPBufferManagerItemFormat): TOPPBufferManagerRecord;
+begin
+//
 end;
 
 end.

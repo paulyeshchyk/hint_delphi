@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes,
-  Vcl.Clipbrd,
+  Vcl.Clipbrd, Vcl.Controls,
   Datasnap.dbclient, Data.DB,
 
   OPP.Help.System.Codable,
@@ -15,6 +15,7 @@ uses
 
   OPP.Buffer.Clipboard,
   OPP.Buffer.Manager.Dataset,
+  OPP.Buffer.SLYK,
 
   System.Generics.Collections,
   System.Variants, System.StrUtils;
@@ -54,9 +55,11 @@ type
     function GetSettings: IOPPBufferManagerSettings;
     procedure LoadRecords();
     procedure OnClipboardChange(Sender: TObject);
-    procedure SaveClipboardToManagerRecord(AFormat: Word);
+    procedure SaveClipboardToManagerRecord(SLYK: TOPPBufferSLYKObject);
+    procedure SaveSLYKToManagerRecord(SLYK: TStringList);
     procedure SaveRecords(AFileName: String = '');
     procedure SetRecordsStorageFileName(AFileName: String = '');
+    procedure OnCalcFields(ADataset: TDataset);
     property CanAcceptRecord: Boolean read GetCanAcceptRecord;
   public
     constructor Create;
@@ -83,6 +86,9 @@ uses
   OPP.Help.Log,
   Vcl.Dialogs,
   Vcl.Forms,
+
+  OPP.Buffer.SLYK.Extractor,
+
   WinAPI.Windows;
 
 resourcestring
@@ -124,6 +130,7 @@ begin
   SetFormat(ifText);
 
   fDataset := TOPPBufferManagerDataset.Create(nil);
+  fDataset.OnCalcFields := self.OnCalcFields;
   fDataset.Rebuild;
 
   LoadRecords();
@@ -181,7 +188,6 @@ begin
     begin
       eventLogger.Error(E, kContext);
     end;
-
   end;
 end;
 
@@ -237,6 +243,7 @@ begin
 
   try
     fDataset.LoadFromFile(fFileName);
+
   except
     on E: EDBClient do
     begin
@@ -258,19 +265,31 @@ begin
   end;
 end;
 
+procedure TOPPBufferManager.OnCalcFields(ADataset: TDataset);
+begin
+
+end;
+
 procedure TOPPBufferManager.OnClipboardChange(Sender: TObject);
+var
+  SLYK: TOPPBufferSLYKObject;
 begin
   if not self.CanAcceptRecord then
     exit;
 
-  try
-    SaveClipboardToManagerRecord(fFormat.WindowsClipboardFormat);
-  except
-    on E: Exception do
-    begin
-      eventLogger.Error(E, kContext);
-    end;
+  SLYK := TOPPBufferSLYKExtractor.GetSLYK(Sender);
+  if not assigned(SLYK) then
+  begin
+    eventLogger.warning('Clipboard changed, but nothing copied', kContext);
+    exit;
   end;
+
+  try
+    SaveClipboardToManagerRecord(SLYK);
+  finally
+    SLYK.Free;
+  end;
+
 end;
 
 procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);
@@ -278,15 +297,41 @@ begin
   fDataset.RemoveRecordsAfter(AAfter);
 end;
 
-procedure TOPPBufferManager.SaveClipboardToManagerRecord(AFormat: Word);
+procedure TOPPBufferManager.SaveSLYKToManagerRecord(SLYK: TStringList);
 var
   fRecord: TOPPBufferManagerRecord;
 begin
-  fRecord := Clipboard.CreateRecord(ifText);
+
+  fRecord := SLYK.CreateRecord(ifText);
+
   if fRecord = nil then
     exit;
   try
     self.AddRecordAndSave(fRecord);
+  finally
+    FreeAndNil(fRecord);
+  end;
+end;
+
+procedure TOPPBufferManager.SaveClipboardToManagerRecord(SLYK: TOPPBufferSLYKObject);
+var
+  fRecord: TOPPBufferManagerRecord;
+begin
+
+  fRecord := Clipboard.CreateRecord(ifText);
+
+  if fRecord = nil then
+    exit;
+  try
+    try
+      self.AddRecordAndSave(fRecord);
+    except
+      on E: Exception do
+      begin
+        eventLogger.Error(E, kContext);
+      end;
+    end;
+
   finally
     FreeAndNil(fRecord);
   end;
@@ -305,7 +350,6 @@ begin
       eventLogger.Error(E, kContext);
     end;
   end;
-
 end;
 
 procedure TOPPBufferManager.setCustomFilter(AFilter: String);

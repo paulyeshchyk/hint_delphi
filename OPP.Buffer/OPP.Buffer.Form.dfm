@@ -86,6 +86,11 @@ object OPPBufferForm: TOPPBufferForm
         MinWidth = 40
         Width = 73
       end
+      object cxGrid1DBTableView1Column4: TcxGridDBColumn
+        DataBinding.FieldName = 'OPPObject'
+        PropertiesClassName = 'TcxImageProperties'
+        Properties.GraphicClassName = 'TIcon'
+      end
     end
     object cxGrid1Level1: TcxGridLevel
       GridView = cxGrid1DBTableView1

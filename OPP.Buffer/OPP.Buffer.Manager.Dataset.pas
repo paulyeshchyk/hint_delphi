@@ -33,7 +33,10 @@ type
 implementation
 
 uses
-  OPP.Help.log;
+  System.Classes,
+  OPP.Help.log, OPP.Help.System.Str,
+
+  Vcl.Forms;
 
 const
   kContext = 'IOPPBufferManagerDataset';
@@ -47,6 +50,7 @@ begin
   self.FieldDefs.Add('Data', ftString, 255);
   self.FieldDefs.Add('SortIndex', ftInteger);
   self.FieldDefs.Add('isFixed', ftBoolean);
+  self.FieldDefs.Add('OPPObject', ftBlob);
   self.CreateDataSet;
 end;
 
@@ -88,6 +92,9 @@ begin
 end;
 
 function TOPPBufferManagerDataset.AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer): Boolean;
+var
+  fStream: TClientBlobStream;
+  f: TMemoryStream;
 begin
   result := false;
   if not assigned(ARecord) then
@@ -98,15 +105,24 @@ begin
     exit;
   end;
 
-  if self.RecordCount >= AMaxAllowed then begin
-    RemoveRecordsAfter( (AMaxAllowed - 1) );
+  if self.RecordCount >= AMaxAllowed then
+  begin
+    RemoveRecordsAfter((AMaxAllowed - 1));
   end;
 
   try
+    //buff := TEncoding.UTF8.GetBytes('Test21');
+
     self.Append;
     self.FieldByName('Data').AsVariant := ARecord.Data;
     self.FieldByName('SortIndex').AsInteger := self.RecordCount;
     self.FieldByName('isFixed').AsBoolean := false;
+
+    f := TMemoryStream.Create;
+    Application.Icon.SaveToStream(f);
+    f.Position := 0;
+    (self.FieldByName('OPPObject') as TBlobField).LoadFromStream(f);
+
     self.Post;
 
     RebuildSortIndex;

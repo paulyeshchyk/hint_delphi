@@ -357,6 +357,7 @@ begin
 
   fHintTexts := TList<TOPPHelpHint>.Create;
   try
+    //TODO: PY Performance
     for fHintMeta in hintsMetaList do
     begin
       fHint := GetHint(fHintMeta);
@@ -432,6 +433,7 @@ begin
 
   try
 
+    //TODO: PY Performance
     for fChildHelpMeta in fChildrenHelpMetaList do
     begin
       fMetaIdentifier := fChildHelpMeta.Identifier;
