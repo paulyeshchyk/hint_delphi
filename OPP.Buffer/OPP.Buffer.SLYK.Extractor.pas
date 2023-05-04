@@ -21,7 +21,7 @@ implementation
 uses
   OppObjControl,
   OppAttrControl,
-  OPPRTTIUtils;
+  OPPRTTIUtils, OPPHelpers;
 
 type
   TOPPBufferObjControlHelper = class helper for TOppObjControl
@@ -35,6 +35,12 @@ type
   TOPPBufferWinControlHelper = class helper for TWinControl
     function slykObject: TOPPBufferSLYKObject;
   end;
+
+  TAttrKindHelper = record helper for TAttrKind
+    function fromIntValue(AValue: Integer): TAttrKind;
+    function IntValue: Integer;
+  end;
+
   { TOPPBufferSLYKExtractor }
 
 class function TOPPBufferSLYKExtractor.GetSLYK(Sender: TObject): TOPPBufferSLYKObject;
@@ -122,8 +128,7 @@ end;
 function TOPPBufferAttrControlHelper.slykObject: TOPPBufferSLYKObject;
 begin
   result := TOPPBufferSLYKObject.Create(otAttrControl);
-  result.loodsmanType := Format('%d', [self.TypeAttribute]);
-  result.loodsmanId := Format('%d', [self.CurValue]);
+  result.loodsmanType := Format('%d', [self.AttrKind.IntValue]);
 end;
 
 { TOPPBufferWinControlHelper }
@@ -132,7 +137,51 @@ function TOPPBufferWinControlHelper.slykObject: TOPPBufferSLYKObject;
 begin
   result := TOPPBufferSLYKObject.Create(otWinControl);
   result.loodsmanType := '';
-  result.loodsmanId := OPPRTTIUtils.OPPObjectDOTPropertyValueGet(self, 'InnerControl.Text');
+  result.loodsmanId := OPPRTTIUtils.OPPObjectDOTPropertyValueGet(self, 'EditValue');
+end;
+
+{ TAttrKindHelper }
+
+function TAttrKindHelper.fromIntValue(AValue: Integer): TAttrKind;
+begin
+  case AValue of
+    1:
+      result := akString;
+    2:
+      result := akInteger;
+    3:
+      result := akFloat;
+    4:
+      result := akDateTime;
+    5:
+      result := akText;
+    6:
+      result := akImage;
+  else
+    result := akUndefined;
+  end;
+end;
+
+function TAttrKindHelper.IntValue: Integer;
+begin
+  // (akUndefined, akString, akInteger, akFloat, akDateTime, akText, akImage);
+
+  case self of
+    akUndefined:
+      result := 0;
+    akString:
+      result := 1;
+    akInteger:
+      result := 2;
+    akFloat:
+      result := 3;
+    akDateTime:
+      result := 4;
+    akText:
+      result := 5;
+    akImage:
+      result := 6;
+  end;
 end;
 
 end.

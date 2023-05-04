@@ -24,7 +24,6 @@ type
 
   IOPPBufferManager = interface
     procedure OnClipboardChange(Sender: TObject);
-    procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
@@ -46,7 +45,6 @@ type
   TOPPBufferManager = class(TInterfacedObject, IOPPBufferManager)
   private
     fDataset: TOPPBufferManagerDataset;
-    fFormat: TOPPBufferManagerItemFormat;
     fSettings: IOPPBufferManagerSettings;
     procedure AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
     function GetCanAcceptRecord: Boolean;
@@ -56,7 +54,7 @@ type
     procedure LoadRecords();
     procedure OnClipboardChange(Sender: TObject);
     procedure SaveClipboardToManagerRecord(SLYK: TOPPBufferSLYKObject);
-    procedure SaveSLYKToManagerRecord(SLYK: TStringList);
+    procedure SaveSLYKToManagerRecord(SLYK: TOPPBufferSLYKObject);
     procedure SaveRecords(AFileName: String = '');
     procedure SetRecordsStorageFileName(AFileName: String = '');
     procedure OnCalcFields(ADataset: TDataset);
@@ -68,7 +66,6 @@ type
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
     procedure RemoveRecordsAfter(AAfter: Integer);
-    procedure SetFormat(AFormat: TOPPBufferManagerItemFormat);
     property Settings: IOPPBufferManagerSettings read GetSettings;
     procedure setCustomFilter(AFilter: String);
   end;
@@ -100,7 +97,7 @@ const
 
 type
   TOPPBufferManagerRecordStreamHelper = class helper for TStream
-    function GetBufferManagerRecord(ASortIndex: Integer; AFormat: TOPPBufferManagerItemFormat): TOPPBufferManagerRecord;
+    function GetBufferManagerRecord(ASortIndex: Integer): TOPPBufferManagerRecord;
   end;
 
 var
@@ -126,8 +123,6 @@ begin
   inherited;
 
   fSettings := TOPPBufferManagerSettings.Create;
-
-  SetFormat(ifText);
 
   fDataset := TOPPBufferManagerDataset.Create(nil);
   fDataset.OnCalcFields := self.OnCalcFields;
@@ -297,15 +292,14 @@ begin
   fDataset.RemoveRecordsAfter(AAfter);
 end;
 
-procedure TOPPBufferManager.SaveSLYKToManagerRecord(SLYK: TStringList);
+procedure TOPPBufferManager.SaveSLYKToManagerRecord(SLYK: TOPPBufferSLYKObject);
 var
   fRecord: TOPPBufferManagerRecord;
 begin
 
-  fRecord := SLYK.CreateRecord(ifText);
+  fRecord := TOPPBufferManagerRecord.Create;
+  fRecord.SLYK := SLYK;
 
-  if fRecord = nil then
-    exit;
   try
     self.AddRecordAndSave(fRecord);
   finally
@@ -318,7 +312,7 @@ var
   fRecord: TOPPBufferManagerRecord;
 begin
 
-  fRecord := Clipboard.CreateRecord(ifText);
+  fRecord := Clipboard.CreateRecord(SLYK);
 
   if fRecord = nil then
     exit;
@@ -357,11 +351,6 @@ begin
   fDataset.setCustomFilter(AFilter);
 end;
 
-procedure TOPPBufferManager.SetFormat(AFormat: TOPPBufferManagerItemFormat);
-begin
-  //
-end;
-
 procedure TOPPBufferManager.SetRecordsStorageFileName(AFileName: String);
 begin
   self.Settings.SetCurrentFilePath(AFileName);
@@ -369,7 +358,7 @@ end;
 
 { TOPPBufferManagerRecordStreamHelper }
 
-function TOPPBufferManagerRecordStreamHelper.GetBufferManagerRecord(ASortIndex: Integer; AFormat: TOPPBufferManagerItemFormat): TOPPBufferManagerRecord;
+function TOPPBufferManagerRecordStreamHelper.GetBufferManagerRecord(ASortIndex: Integer): TOPPBufferManagerRecord;
 begin
   result.SortIndex := ASortIndex;
   result.IsFixed := false;
