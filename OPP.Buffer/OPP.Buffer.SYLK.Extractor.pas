@@ -21,6 +21,7 @@ uses
   OPPRTTIUtils, OPPHelpers;
 
 type
+
   TOPPBufferObjControlHelper = class helper for TOppObjControl
   private
     function GetLoodsmanType: String;
@@ -87,7 +88,7 @@ begin
 
   if Assigned(foppObjControl) then
   begin
-    if (ASYLK.oppBufferType = otObjControl) then
+    if (CompareStr(Uppercase(ASYLK.loodsmanType), Uppercase(foppObjControl.TypeObject)) = 0) then
     begin
       try
         foppObjControl.ObjectID := StrToInt(ASYLK.loodsmanId);
@@ -95,6 +96,7 @@ begin
         foppObjControl.ObjectID := 0;
       end;
     end else begin
+      foppObjControl.DataInControl := ASYLK.text;
     end;
     exit;
   end;
@@ -106,10 +108,8 @@ begin
     begin
       foppAttrControl.DataInControl := ASYLK.loodsmanId;
     end else begin
+      foppObjControl.DataInControl := ASYLK.text;
     end;
-    // if foppAttrControl.isTypeAcceptable(TAttrKind.FromIntValue(StrToInt(ASYLK.loodsmanType))) then
-    // begin
-    // end;
     exit;
   end;
 
@@ -124,12 +124,12 @@ end;
 
 function TOPPBufferObjControlHelper.isTypeAcceptable(AType: String): Boolean;
 begin
-  result := (CompareStr(UpperCase(self.loodsmanType), UpperCase(AType)) = 0);
+  result := (CompareStr(Uppercase(self.loodsmanType), Uppercase(AType)) = 0);
 end;
 
 function TOPPBufferObjControlHelper.sylkObject: TOPPBufferSYLKObject;
 begin
-  result := TOPPBufferSYLKObject.Create(otObjControl);
+  result := TOPPBufferSYLKObject.Create(otObjControl, self.DataInControl);
   result.loodsmanType := self.loodsmanType;
   result.loodsmanId := Format('%d', [self.ObjectID]);
 end;
@@ -143,7 +143,7 @@ end;
 
 function TOPPBufferAttrControlHelper.sylkObject: TOPPBufferSYLKObject;
 begin
-  result := TOPPBufferSYLKObject.Create(otAttrControl);
+  result := TOPPBufferSYLKObject.Create(otAttrControl, self.DataInControl);
   result.loodsmanType := Format('%d', [TAttrKind.IntValue(self.AttrKind)]);
   result.loodsmanId := self.DataInControl;
 end;
@@ -151,10 +151,14 @@ end;
 { TOPPBufferWinControlHelper }
 
 function TOPPBufferWinControlHelper.sylkObject: TOPPBufferSYLKObject;
+var
+  fText: String;
 begin
-  result := TOPPBufferSYLKObject.Create(otWinControl);
+  fText := OPPRTTIUtils.OPPObjectDOTPropertyValueGet(self, 'EditValue');
+
+  result := TOPPBufferSYLKObject.Create(otWinControl, fText);
   result.loodsmanType := '';
-  result.loodsmanId := OPPRTTIUtils.OPPObjectDOTPropertyValueGet(self, 'EditValue');
+  result.loodsmanId := fText;
 end;
 
 { TAttrKindHelper }

@@ -10,10 +10,13 @@ type
     fOPPBufferType: TOPPBufferSYLKObjectType;
     fLoodsmanId: String;
     fLoodsmanType: String;
+    fText: String;
   public
-    constructor Create(AType: TOPPBufferSYLKObjectType);
+    constructor Create(AType: TOPPBufferSYLKObjectType; AText: String);
     procedure LoadFromBytes(bytes: TArray<Byte>; isUTF8: Boolean = false);
     function SaveToBytes: TArray<Byte>;
+    //
+    property text: String read fText;
     property oppBufferType: TOPPBufferSYLKObjectType read fOPPBufferType write fOPPBufferType;
     property loodsmanType: String read fLoodsmanType write fLoodsmanType;
     property loodsmanId: String read fLoodsmanId write fLoodsmanId;
@@ -27,9 +30,10 @@ uses
 
 { TOPPBufferSYLKObject }
 
-constructor TOPPBufferSYLKObject.Create(AType: TOPPBufferSYLKObjectType);
+constructor TOPPBufferSYLKObject.Create(AType: TOPPBufferSYLKObjectType; AText: String);
 begin
-  self.oppBufferType := AType;
+  fOPPBufferType := AType;
+  fText := AText;
 end;
 
 procedure TOPPBufferSYLKObject.LoadFromBytes(bytes: TArray<Byte>; isUTF8: Boolean);
