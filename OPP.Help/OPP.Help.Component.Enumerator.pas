@@ -20,6 +20,10 @@ type
     function canApplyHintsRecursively(): Boolean;
   end;
 
+  TOPPHelpWinControlExtractor<T: class> = class
+    class function GetParent(Sender: TWinControl): T;
+  end;
+
 implementation
 
 uses OPP.Help.Log;
@@ -133,7 +137,28 @@ begin
 
   end;
 
-  //fChildren.Free;
+  // fChildren.Free;
+end;
+
+{ TParentExtractor<T> }
+
+class function TOPPHelpWinControlExtractor<T>.GetParent(Sender: TWinControl): T;
+var
+  pTypeInfo: system.TypInfo.pTypeInfo;
+begin
+  result := nil;
+  if not assigned(Sender) then
+    exit;
+
+  pTypeInfo := system.TypeInfo(T);
+
+  if pTypeInfo^.Name = Sender.ClassName then
+  begin
+    result := Sender as T;
+    exit;
+  end;
+
+  result := self.GetParent(Sender.parent);
 end;
 
 end.

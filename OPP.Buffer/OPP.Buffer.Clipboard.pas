@@ -6,19 +6,19 @@ uses
   System.SysUtils, System.Classes,
   WinAPI.Windows,
   Vcl.Clipbrd,
-  OPP.Buffer.SLYK;
+  OPP.Buffer.SYLK;
 
 type
 
   TOPPBufferManagerRecord = class
   private
-    fSLYK: TOPPBufferSLYKObject;
+    fSYLK: TOPPBufferSYLKObject;
     fData: Variant;
     fIsFixed: Boolean;
     fSortIndex: Integer;
   public
     procedure SetText(AText: String);
-    property SLYK: TOPPBufferSLYKObject read fSLYK write fSLYK;
+    property SYLK: TOPPBufferSYLKObject read fSYLK write fSYLK;
     property Data: Variant read fData;
     property IsFixed: Boolean read fIsFixed write fIsFixed;
     property SortIndex: Integer read fSortIndex write fSortIndex;
@@ -26,7 +26,7 @@ type
 
   TOPPClipboardHelper = class helper for TClipboard
   public
-    function CreateRecord(SLYK: TOPPBufferSLYKObject): TOPPBufferManagerRecord;
+    function CreateRecord(SYLK: TOPPBufferSYLKObject): TOPPBufferManagerRecord;
     function HasClipboardFormat(): Boolean;
   end;
 
@@ -44,7 +44,7 @@ end;
 
 { TOPPClipboardHelper }
 
-function TOPPClipboardHelper.CreateRecord(SLYK: TOPPBufferSLYKObject): TOPPBufferManagerRecord;
+function TOPPClipboardHelper.CreateRecord(SYLK: TOPPBufferSYLKObject): TOPPBufferManagerRecord;
 begin
   result := nil;
 
@@ -53,7 +53,7 @@ begin
     if Clipboard.HasFormat(CF_TEXT) then
     begin
       result := TOPPBufferManagerRecord.Create;
-      result.SLYK := SLYK;
+      result.SYLK := SYLK;
       result.SetText(Clipboard.AsText);
     end;
     Clipboard.Close;

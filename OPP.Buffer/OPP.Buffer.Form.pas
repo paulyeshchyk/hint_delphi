@@ -14,12 +14,13 @@ uses
 
   cxGridDBDataDefinitions,
 
+  OPP.Buffer.Manager.DataSet,
   OPP.Buffer.Manager.Settings.Data,
-
+  OPP.Buffer.Clipboard,
   OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls, cxBlobEdit, cxImage;
 
 type
-  TOPPBufferFormOnApply = reference to procedure(AText: String; AClipboardControl: TControl);
+  TOPPBufferFormOnApply = reference to procedure(ARecord: TOPPBufferManagerRecord; AClipboardControl: TControl);
 
   TOPPBufferForm = class(TForm)
     actionApplySelection: TAction;
@@ -127,6 +128,7 @@ type
     procedure cxGrid1DBTableView1Editing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
     procedure cxGrid1DBTableView1SelectionChanged(Sender: TcxCustomGridTableView);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
+    procedure DataSource1StateChange(Sender: TObject);
   private
     fSettings: IOPPBufferManagerSettings;
 
@@ -142,16 +144,18 @@ type
     function GetHasSelectedFewRecords: Boolean;
     function GetSelectedRecordsCountText: String;
     procedure SetOnApply(const Value: TOPPBufferFormOnApply);
+    function GetDataset: IOPPBufferManagerDataset;
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
     property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
     property SelectedRecordsCountText: String read GetSelectedRecordsCountText;
+    property Dataset:IOPPBufferManagerDataset read GetDataset;
 
     procedure ColumnSortSave;
     procedure ColumnSortRead;
     procedure ColumnSizeChange;
 
-    class procedure OnApplyData(AData: String; AClipboardControl: TControl);
+    class procedure OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TControl);
 
     { Private declarations }
 
@@ -178,6 +182,10 @@ type
     class procedure injectionShowForm;
   end;
 
+  TOPPcxGridDBColumnHelper = class helper for TcxGridDBColumn
+    procedure FillRestOfTheSpace;
+  end;
+
 var
   OPPBufferForm: TOPPBufferForm;
 
@@ -191,6 +199,8 @@ uses
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard,
   OPP.Help.System.Control,
+
+  OPPConfiguration,
 
   OPP.Keyboard.Shortcut.Manager;
 
@@ -214,14 +224,24 @@ const
 
 procedure TOPPBufferForm.actionApplySelectionExecute(Sender: TObject);
 var
-  fData: String;
+  fBytes: TArray<Byte>;
 begin
-  if Assigned(fOnApply) then
+  if not Assigned(fOnApply) then
   begin
-    fData := DataSource1.DataSet.FieldByName(kFieldNameData).AsString;
-    fOnApply(fData, fClipboardControl);
+    Close;
+    exit;
   end;
-  Close;
+
+
+  Dataset.ExtractRecord(
+    procedure(theRecord: TOPPBufferManagerRecord)
+    begin
+      if Assigned(theRecord) then
+      begin
+        fOnApply(theRecord, fClipboardControl);
+        Close;
+      end;
+    end);
 end;
 
 procedure TOPPBufferForm.actionClose1Click(Sender: TObject);
@@ -372,10 +392,34 @@ begin
 end;
 
 procedure TOPPBufferForm.ColumnSizeChange;
+var
+  i: Integer;
+  fColumn: TcxGridDBColumn;
+const
+  columnDataBindingNames: array [0 .. 3] of String = ('SortIndex', '_TYPE', 'data', 'isFixed');
 begin
-  cxGrid1DBTableView1.Columns[0].ApplyBestFit(true);
-  cxGrid1DBTableView1.Columns[2].ApplyBestFit(true);
-  cxGrid1DBTableView1.Columns[1].Width := cxGrid1.Width - cxGrid1DBTableView1.Columns[2].Width - cxGrid1DBTableView1.Columns[0].Width - 2;
+  for i := 0 to cxGrid1DBTableView1.ColumnCount - 1 do
+  begin
+    fColumn := cxGrid1DBTableView1.Columns[i];
+    case IndexStr(fColumn.DataBinding.FieldName, columnDataBindingNames) of
+      0: // SortIndex
+        begin
+          fColumn.ApplyBestFit(true);
+        end;
+      1: // _TYPE
+        begin
+          fColumn.Width := 22;
+        end;
+      2: // data
+        begin
+          fColumn.FillRestOfTheSpace;
+        end;
+      3: // isFixed
+        begin
+          fColumn.ApplyBestFit(true);
+        end;
+    end;
+  end;
 end;
 
 procedure TOPPBufferForm.ColumnSortRead;
@@ -428,7 +472,14 @@ end;
 
 procedure TOPPBufferForm.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
+  // ReloadActionsVisibility;
+  // ColumnSizeChange;
+end;
+
+procedure TOPPBufferForm.DataSource1StateChange(Sender: TObject);
+begin
   ReloadActionsVisibility;
+  // ColumnSizeChange;
 end;
 
 procedure TOPPBufferForm.FormActivate(Sender: TObject);
@@ -467,12 +518,20 @@ begin
   end;
 
   self.IsEditMode := false;
-  DataSource1.DataSet := TClientDataset(oppBufferManager.DataSet);
+  DataSource1.DataSet := TClientDataset(self.Dataset);
+
+  cxGrid1DBTableView1Column4.RepositoryItem := Config.TypesNamesRepository;
+
 end;
 
 procedure TOPPBufferForm.FormResize(Sender: TObject);
 begin
   ColumnSizeChange;
+end;
+
+function TOPPBufferForm.GetDataset: IOPPBufferManagerDataset;
+begin
+  result := oppBufferManager.Dataset;
 end;
 
 function TOPPBufferForm.GetHasRecords: Boolean;
@@ -560,19 +619,16 @@ begin
   end;
 end;
 
-class procedure TOPPBufferForm.OnApplyData(AData: String; AClipboardControl: TControl);
+class procedure TOPPBufferForm.OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TControl);
 begin
   if not Assigned(AClipboardControl) then
   begin
     eventLogger.Warning('Not assigned clipboard control', kContext);
     exit;
   end;
-  // AControl.SetTextProp(AData);
+
   try
-    Clipboard.Open;
-    Clipboard.AsText := AData;
-    Clipboard.Close;
-    PostMessage(TWinControl(AClipboardControl).Handle, WM_PASTE, 1, 0);
+    oppBufferManager.WriteDataIntoControl(AClipboardControl, ARecord);
   except
     on E: Exception do
     begin
@@ -739,6 +795,30 @@ begin
             eventLogger.Debug('Cant run second instance');
         end);
     end);
+end;
+
+{ TOPPcxGridDBColumnHelper }
+
+procedure TOPPcxGridDBColumnHelper.FillRestOfTheSpace;
+var
+  i: Integer;
+  fColumn: TcxGridColumn;
+  theWidth: Integer;
+  thwWidthScrollBar: Integer;
+begin
+  thwWidthScrollBar := 0;
+  if self.GridView.Site.VScrollBar.Visible then
+    thwWidthScrollBar := self.GridView.Site.VScrollBar.Width;
+  theWidth := self.GridView.Site.Width;
+  theWidth := theWidth - thwWidthScrollBar;
+  for i := 0 to self.GridView.ColumnCount - 1 do
+  begin
+    fColumn := self.GridView.Columns[i];
+    if not Assigned(fColumn) or not(fColumn.Visible) or (fColumn = self) then
+      continue;
+    theWidth := theWidth - fColumn.Width;
+  end;
+  self.Width := theWidth;
 end;
 
 initialization

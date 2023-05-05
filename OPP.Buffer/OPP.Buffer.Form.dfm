@@ -60,14 +60,25 @@ object OPPBufferForm: TOPPBufferForm
         MinWidth = 40
         Options.Editing = False
         Options.Filtering = False
+        Options.FilteringWithFindPanel = False
         Options.Focusing = False
         Options.FilteringAddValueItems = False
         Options.FilteringFilteredItemsList = False
         Options.FilteringMRUItemsList = False
         Options.FilteringPopup = False
+        Options.FilteringPopupMultiSelect = False
         Styles.Content = cxStyle1
         VisibleForEditForm = bFalse
         Width = 92
+      end
+      object cxGrid1DBTableView1Column4: TcxGridDBColumn
+        DataBinding.FieldName = '_TYPE'
+        PropertiesClassName = 'TcxImageProperties'
+        Properties.GraphicClassName = 'TIcon'
+        Options.AutoWidthSizable = False
+        Options.HorzSizing = False
+        Width = 20
+        IsCaptionAssigned = True
       end
       object cxGrid1DBTableView1Column2: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -75,21 +86,20 @@ object OPPBufferForm: TOPPBufferForm
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.ReadOnly = True
         Properties.OnValidate = cxGrid1DBTableView1Column2PropertiesValidate
-        MinWidth = 200
-        Width = 400
+        MinWidth = 296
+        Options.AutoWidthSizable = False
+        Options.HorzSizing = False
+        Width = 296
       end
       object cxGrid1DBTableView1Column3: TcxGridDBColumn
         Caption = #1060#1080#1082#1089'.'
         DataBinding.FieldName = 'isFixed'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Properties.ReadOnly = True
-        MinWidth = 40
+        MinWidth = 73
+        Options.AutoWidthSizable = False
+        Options.HorzSizing = False
         Width = 73
-      end
-      object cxGrid1DBTableView1Column4: TcxGridDBColumn
-        DataBinding.FieldName = 'OPPObject'
-        PropertiesClassName = 'TcxImageProperties'
-        Properties.GraphicClassName = 'TIcon'
       end
     end
     object cxGrid1Level1: TcxGridLevel
@@ -299,6 +309,7 @@ object OPPBufferForm: TOPPBufferForm
     end
   end
   object DataSource1: TDataSource
+    OnStateChange = DataSource1StateChange
     OnDataChange = DataSource1DataChange
     Left = 312
     Top = 64

@@ -10,20 +10,21 @@ function PathCanonicalize(lpszDst: PChar; lpszSrc: PChar): LongBool; stdcall; ex
 function AbsToRel(const AbsPath, BasePath: string): string;
 function RelToAbs(const RelPath, BasePath: string): string;
 
-
 type
   TOPPHelpSystemFilesHelper = class
   public
     class function RelativePath(APath: String): String;
     class function AbsolutePath(APath: String): String;
     class function GetOPPSettingsPath(AFileName: String): String;
+    class function CreateDirectoryIfNeed(AFileName: String): Boolean;
   end;
 
 implementation
 
 uses System.SysUtils,
   System.IOUtils,
-  vcl.forms;
+  OPP.Help.Log,
+  vcl.forms, vcl.dialogs;
 
 class function TOPPHelpSystemFilesHelper.RelativePath(APath: String): String;
 begin
@@ -51,14 +52,46 @@ begin
   result := Dst;
 end;
 
-class function TOPPHelpSystemFilesHelper.GetOPPSettingsPath(AFilename: String): String;
+class function TOPPHelpSystemFilesHelper.CreateDirectoryIfNeed(AFileName: String): Boolean;
+var
+  fDirectoryPath: String;
+begin
+  result := false;
+  if Length(AFileName) = 0 then
+  begin
+    eventLogger.Error('Path is empty');
+    exit;
+  end;
+
+  fDirectoryPath := System.SysUtils.ExtractFilePath(AFileName);
+
+  if System.IOUtils.TDirectory.Exists(fDirectoryPath) then
+  begin
+    result := true;
+    exit;
+  end;
+
+  try
+    System.IOUtils.TDirectory.CreateDirectory(fDirectoryPath);
+    result := true;
+  except
+    on e: Exception do
+    begin
+      eventLogger.Error(e);
+      ShowMessage(Format('Not able to save file: %s, because %s', [AFileName, e.Message]));
+      result := false;
+    end;
+  end;
+end;
+
+class function TOPPHelpSystemFilesHelper.GetOPPSettingsPath(AFileName: String): String;
 var
   fSettingsPath: String;
 begin
   try
     fSettingsPath := TPath.Combine(TPath.GetHomePath, 'Ascon\Gulfstream\Settings');
     TDirectory.CreateDirectory(fSettingsPath);
-    result := fSettingsPath + TPath.DirectorySeparatorChar + AFilename;
+    result := fSettingsPath + TPath.DirectorySeparatorChar + AFileName;
   except
     result := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
   end;

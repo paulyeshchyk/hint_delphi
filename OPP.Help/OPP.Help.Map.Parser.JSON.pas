@@ -248,42 +248,10 @@ var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
   jsonString: String;
-
-  function createDirectoryIfNeed(AFileName: String): Boolean;
-  var
-    fDirectoryPath: String;
-  begin
-    result := false;
-    if Length(AFileName) = 0 then begin
-      eventLogger.Error('Path is empty');
-      exit;
-    end;
-
-    fDirectoryPath := System.SysUtils.ExtractFilePath(AFileName);
-
-    if System.IOUtils.TDirectory.Exists(fDirectoryPath) then
-    begin
-      result := true;
-      exit;
-    end;
-
-    try
-      System.IOUtils.TDirectory.CreateDirectory(fDirectoryPath);
-      result := true;
-    except
-      on e: Exception do
-      begin
-        eventLogger.Error(e);
-        ShowMessage(Format('Not able to save file: %s, because %s',[AFileName, e.Message]));
-        result := false;
-      end;
-    end;
-  end;
-
 begin
   result := -1;
 
-  if not createDirectoryIfNeed(AFileName) then begin
+  if not TOPPHelpSystemFilesHelper.CreateDirectoryIfNeed(AFileName) then begin
     exit;
   end;
 

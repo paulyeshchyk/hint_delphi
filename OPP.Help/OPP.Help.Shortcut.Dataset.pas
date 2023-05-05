@@ -32,6 +32,7 @@ uses
   Winapi.Windows,
   OPP.Help.Log,
   OPP.Help.System.error,
+  OPP.Help.System.JSON,
   OPP.Help.Map.Parser.JSON;
 
 constructor TOPPHelpShortcutDataset.Create;
@@ -48,8 +49,8 @@ end;
 
 function TOPPHelpShortcutDataset.load(const AFilename: String): Integer;
 begin
-
-  TOPPHelpMapRESTParser.readJSON(AFilename, SetNewList);
+  //TOPPHelpMapRESTParser.readJSON(AFilename, SetNewList);
+  TOPPJSONParser.deserialize<TOPPHelpMapSet>(AFilename, SetNewList);
   result := 0;
 end;
 

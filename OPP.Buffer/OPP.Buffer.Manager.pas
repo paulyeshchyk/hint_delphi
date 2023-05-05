@@ -15,7 +15,7 @@ uses
 
   OPP.Buffer.Clipboard,
   OPP.Buffer.Manager.Dataset,
-  OPP.Buffer.SLYK,
+  OPP.Buffer.SYLK,
 
   System.Generics.Collections,
   System.Variants, System.StrUtils;
@@ -23,7 +23,8 @@ uses
 type
 
   IOPPBufferManager = interface
-    procedure OnClipboardChange(Sender: TObject);
+    procedure ReadDataFromControl(Sender: TObject);
+    procedure WriteDataIntoControl(Sender: TObject; AData: TOPPBufferManagerRecord);
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
@@ -36,7 +37,7 @@ type
     procedure SetRecordsStorageFileName(AFileName: String = '');
     procedure RemoveRecordsAfter(AAfter: Integer);
 
-    procedure setCustomFilter(AFilter: String);
+    procedure SetCustomFilter(AFilter: String);
 
     property Dataset: IOPPBufferManagerDataset read GetDataset;
     property Settings: IOPPBufferManagerSettings read GetSettings;
@@ -52,9 +53,8 @@ type
     function GetRecordsStorageFileName(AFileName: String = ''): String;
     function GetSettings: IOPPBufferManagerSettings;
     procedure LoadRecords();
-    procedure OnClipboardChange(Sender: TObject);
-    procedure SaveClipboardToManagerRecord(SLYK: TOPPBufferSLYKObject);
-    procedure SaveSLYKToManagerRecord(SLYK: TOPPBufferSLYKObject);
+    procedure SaveClipboardToManagerRecord(SYLK: TOPPBufferSYLKObject);
+    procedure SaveSYLKToManagerRecord(SYLK: TOPPBufferSYLKObject);
     procedure SaveRecords(AFileName: String = '');
     procedure SetRecordsStorageFileName(AFileName: String = '');
     procedure OnCalcFields(ADataset: TDataset);
@@ -62,12 +62,16 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+
+    procedure ReadDataFromControl(Sender: TObject);
+    procedure WriteDataIntoControl(Sender: TObject; AData: TOPPBufferManagerRecord);
+
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
     procedure RemoveRecordsAfter(AAfter: Integer);
     property Settings: IOPPBufferManagerSettings read GetSettings;
-    procedure setCustomFilter(AFilter: String);
+    procedure SetCustomFilter(AFilter: String);
   end;
 
 function oppBufferManager: IOPPBufferManager;
@@ -84,7 +88,7 @@ uses
   Vcl.Dialogs,
   Vcl.Forms,
 
-  OPP.Buffer.SLYK.Extractor,
+  OPP.Buffer.SYLK.Extractor,
 
   WinAPI.Windows;
 
@@ -238,7 +242,6 @@ begin
 
   try
     fDataset.LoadFromFile(fFileName);
-
   except
     on E: EDBClient do
     begin
@@ -265,40 +268,47 @@ begin
 
 end;
 
-procedure TOPPBufferManager.OnClipboardChange(Sender: TObject);
+procedure TOPPBufferManager.ReadDataFromControl(Sender: TObject);
 var
-  SLYK: TOPPBufferSLYKObject;
+  fSYLK: TOPPBufferSYLKObject;
 begin
   if not self.CanAcceptRecord then
     exit;
 
-  SLYK := TOPPBufferSLYKExtractor.GetSLYK(Sender);
-  if not assigned(SLYK) then
+  fSYLK := TOPPBufferSYLKExtractor.GetSYLK(Sender);
+  if not assigned(fSYLK) then
   begin
     eventLogger.warning('Clipboard changed, but nothing copied', kContext);
     exit;
   end;
 
   try
-    SaveClipboardToManagerRecord(SLYK);
+    SaveClipboardToManagerRecord(fSYLK);
   finally
-    SLYK.Free;
+    fSYLK.Free;
   end;
-
 end;
+
+procedure TOPPBufferManager.WriteDataIntoControl(Sender: TObject; AData: TOPPBufferManagerRecord);
+begin
+  if ((not Assigned(AData)) or (not Assigned(Sender))) then
+    exit;
+  TOPPBufferSYLKExtractor.SetSYLK(AData.SYLK, Sender);
+end;
+
 
 procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);
 begin
   fDataset.RemoveRecordsAfter(AAfter);
 end;
 
-procedure TOPPBufferManager.SaveSLYKToManagerRecord(SLYK: TOPPBufferSLYKObject);
+procedure TOPPBufferManager.SaveSYLKToManagerRecord(SYLK: TOPPBufferSYLKObject);
 var
   fRecord: TOPPBufferManagerRecord;
 begin
 
   fRecord := TOPPBufferManagerRecord.Create;
-  fRecord.SLYK := SLYK;
+  fRecord.SYLK := SYLK;
 
   try
     self.AddRecordAndSave(fRecord);
@@ -307,12 +317,12 @@ begin
   end;
 end;
 
-procedure TOPPBufferManager.SaveClipboardToManagerRecord(SLYK: TOPPBufferSLYKObject);
+procedure TOPPBufferManager.SaveClipboardToManagerRecord(SYLK: TOPPBufferSYLKObject);
 var
   fRecord: TOPPBufferManagerRecord;
 begin
 
-  fRecord := Clipboard.CreateRecord(SLYK);
+  fRecord := Clipboard.CreateRecord(SYLK);
 
   if fRecord = nil then
     exit;
@@ -346,9 +356,9 @@ begin
   end;
 end;
 
-procedure TOPPBufferManager.setCustomFilter(AFilter: String);
+procedure TOPPBufferManager.SetCustomFilter(AFilter: String);
 begin
-  fDataset.setCustomFilter(AFilter);
+  fDataset.SetCustomFilter(AFilter);
 end;
 
 procedure TOPPBufferManager.SetRecordsStorageFileName(AFileName: String);
