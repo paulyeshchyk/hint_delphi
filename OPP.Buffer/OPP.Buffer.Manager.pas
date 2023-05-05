@@ -23,8 +23,8 @@ uses
 type
 
   IOPPBufferManager = interface
-    procedure ReadDataFromControl(Sender: TObject);
-    procedure WriteDataIntoControl(Sender: TObject; AData: TOPPBufferManagerRecord);
+    procedure ReadDataFromControl(Sender: TWinControl);
+    procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
@@ -63,8 +63,8 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure ReadDataFromControl(Sender: TObject);
-    procedure WriteDataIntoControl(Sender: TObject; AData: TOPPBufferManagerRecord);
+    procedure ReadDataFromControl(Sender: TWinControl);
+    procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
 
     procedure AddEmpty();
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
@@ -268,7 +268,7 @@ begin
 
 end;
 
-procedure TOPPBufferManager.ReadDataFromControl(Sender: TObject);
+procedure TOPPBufferManager.ReadDataFromControl(Sender: TWinControl);
 var
   fSYLK: TOPPBufferSYLKObject;
 begin
@@ -289,7 +289,7 @@ begin
   end;
 end;
 
-procedure TOPPBufferManager.WriteDataIntoControl(Sender: TObject; AData: TOPPBufferManagerRecord);
+procedure TOPPBufferManager.WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
 begin
   if ((not Assigned(AData)) or (not Assigned(Sender))) then
     exit;

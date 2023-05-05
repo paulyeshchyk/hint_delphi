@@ -3,22 +3,23 @@ unit OPP.Buffer.SYLK.Extractor;
 interface
 
 uses System.Classes, Vcl.Controls, System.TypInfo, System.SysUtils,
-  Datasnap.dbclient,
+  Datasnap.dbclient, WinAPI.Messages,
   OPP.Buffer.SYLK, OPP.Help.Component.Enumerator;
 
 type
   TOPPBufferSYLKExtractor = class
   public
     class function GetSYLK(Sender: TObject): TOPPBufferSYLKObject;
-    class procedure SetSYLK(ASYLK: TOPPBufferSYLKObject; AControl: TObject);
+    class procedure SetSYLK(ASYLK: TOPPBufferSYLKObject; AControl: TWinControl);
   end;
 
 implementation
 
 uses
+  Clipbrd, WinAPI.Windows,
   OppObjControl,
   OppAttrControl,
-  OPPRTTIUtils, OPPHelpers;
+  OPPRTTIUtils, OPPHelpers, OPP.Help.System.Str;
 
 type
 
@@ -76,15 +77,16 @@ begin
   result := (Sender as TWinControl).sylkObject;
 end;
 
-class procedure TOPPBufferSYLKExtractor.SetSYLK(ASYLK: TOPPBufferSYLKObject; AControl: TObject);
+class procedure TOPPBufferSYLKExtractor.SetSYLK(ASYLK: TOPPBufferSYLKObject; AControl: TWinControl);
 var
   foppObjControl: TOppObjControl;
   foppAttrControl: TOppAttrControl;
+  fTextBuff: PWideChar;
 begin
   if (not(AControl is TWinControl)) or (not Assigned(ASYLK)) then
     exit;
 
-  foppObjControl := TOPPHelpWinControlExtractor<TOppObjControl>.GetParent(AControl as TWinControl);
+  foppObjControl := TOPPHelpWinControlExtractor<TOppObjControl>.GetParent(AControl);
 
   if Assigned(foppObjControl) then
   begin
@@ -101,16 +103,26 @@ begin
     exit;
   end;
 
-  foppAttrControl := TOPPHelpWinControlExtractor<TOppAttrControl>.GetParent(AControl as TWinControl);
+  foppAttrControl := TOPPHelpWinControlExtractor<TOppAttrControl>.GetParent(AControl);
   if Assigned(foppAttrControl) then
   begin
     if ASYLK.oppBufferType = otAttrControl then
     begin
       foppAttrControl.DataInControl := ASYLK.loodsmanId;
     end else begin
-      foppObjControl.DataInControl := ASYLK.text;
+      foppAttrControl.DataInControl := ASYLK.text;
     end;
     exit;
+  end;
+
+  fTextBuff := ASYLK.text.ToWideChar;
+  try
+    try
+      SendMessage(AControl.Handle, WM_SETTEXT, 0, LParam(fTextBuff));
+    except
+    end;
+  finally
+    FreeMem(fTextBuff);
   end;
 
 end;
@@ -152,13 +164,28 @@ end;
 
 function TOPPBufferWinControlHelper.sylkObject: TOPPBufferSYLKObject;
 var
-  fText: String;
+  fText: PWideChar;
+  fLength: Integer;
+  fString: String;
 begin
-  fText := OPPRTTIUtils.OPPObjectDOTPropertyValueGet(self, 'EditValue');
+  fLength := SendMessage(self.Handle, WM_GETTEXTLENGTH, 0, 0);
+  if fLength = 0 then
+    exit;
 
-  result := TOPPBufferSYLKObject.Create(otWinControl, fText);
-  result.loodsmanType := '';
-  result.loodsmanId := fText;
+  GetMem(fText, fLength + 1);
+  try
+    try
+      SendMessage(self.Handle, WM_GETTEXT, fLength + 1 , LParam(fText));
+
+      fString := WideCharToString(fText);
+      result := TOPPBufferSYLKObject.Create(otWinControl, fString);
+      result.loodsmanType := '';
+      result.loodsmanId := '';
+    except
+    end;
+  finally
+    FreeMem(fText);
+  end;
 end;
 
 { TAttrKindHelper }

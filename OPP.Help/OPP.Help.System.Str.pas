@@ -36,12 +36,8 @@ var
   oleStr: PWideChar;
 begin
   GetMem(oleStr, (Length(self) + 1) * SizeOf(WideChar));
-//  try
-    StringToWideChar(self, oleStr, Length(self) + 1);
-    Result := oleStr;
-//  finally
-//    FreeMem(oleStr);
-//  end;
+  StringToWideChar(self, oleStr, Length(self) + 1);
+  Result := oleStr;
 end;
 
 function StringHelper.isEmpty: Boolean;

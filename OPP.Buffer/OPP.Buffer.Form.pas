@@ -20,7 +20,7 @@ uses
   OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls, cxBlobEdit, cxImage;
 
 type
-  TOPPBufferFormOnApply = reference to procedure(ARecord: TOPPBufferManagerRecord; AClipboardControl: TControl);
+  TOPPBufferFormOnApply = reference to procedure(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
 
   TOPPBufferForm = class(TForm)
     actionApplySelection: TAction;
@@ -135,7 +135,7 @@ type
     fIsEditMode: Boolean;
     fIsMultiSelectMode: Boolean;
     fOnApply: TOPPBufferFormOnApply;
-    fClipboardControl: TControl;
+    fClipboardControl: TWinControl;
     function GetHasRecords: Boolean;
     function GetHasSelectedRecord: Boolean;
     procedure ReloadActionsVisibility;
@@ -155,7 +155,7 @@ type
     procedure ColumnSortRead;
     procedure ColumnSizeChange;
 
-    class procedure OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TControl);
+    class procedure OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
 
     { Private declarations }
 
@@ -164,10 +164,10 @@ type
 
   public
     class procedure ShowForm(AOwner: TControl); overload;
-    class procedure ShowForm(AOwner: TControl; AControl: TControl); overload;
+    class procedure ShowForm(AOwner: TControl; AControl: TWinControl); overload;
     { Public declarations }
     property OnApply: TOPPBufferFormOnApply read fOnApply write SetOnApply;
-    property ClipboardControl: TControl read fClipboardControl write fClipboardControl;
+    property ClipboardControl: TWinControl read fClipboardControl write fClipboardControl;
   end;
 
   TOPPDataControllerSortHelper = class helper for TcxGridDBTableView
@@ -619,7 +619,7 @@ begin
   end;
 end;
 
-class procedure TOPPBufferForm.OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TControl);
+class procedure TOPPBufferForm.OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
 begin
   if not Assigned(AClipboardControl) then
   begin
@@ -637,7 +637,7 @@ begin
   end;
 end;
 
-class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TControl);
+class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TWinControl);
 var
   fForm: TOPPBufferForm;
   fCanApplyText: Boolean;
