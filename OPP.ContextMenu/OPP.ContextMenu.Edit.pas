@@ -51,6 +51,9 @@ uses
   System.RTTI,
   Vcl.ClipBrd, Vcl.Forms,
   cxEdit,
+
+  OPPConfiguration,
+
   OPP.Help.Log,
   OPP.Help.System.Control,
   OPP.Buffer.Form,
@@ -59,8 +62,6 @@ uses
 { TOPPContextMenuEdit }
 
 constructor TOPPContextMenuEdit.Create(AOwner: TComponent);
-var
-  fItem: TMenuItem;
 begin
   inherited Create(AOwner);
 
@@ -193,7 +194,7 @@ class procedure TOPPContextMenuEditHelper.OnOPPBufferOpen(Sender: TObject);
 begin
   if FindWindow('TOPPBufferForm', nil) = 0 then
   begin
-    TOPPBufferForm.ShowForm(nil, Screen.ActiveControl);
+    TOPPBufferForm.ShowForm(nil, OPPConfiguration.Config.TypesNamesRepository, Screen.ActiveControl);
   end
   else
     eventLogger.Debug('Cant run second instance');

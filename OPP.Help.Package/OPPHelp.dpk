@@ -92,7 +92,7 @@ contains
   OPP.Buffer.Manager in '..\OPP.Buffer\OPP.Buffer.Manager.pas',
   OPP.Buffer.Manager.Settings.Data in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas',
   OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
-  OPP.ContextMenu.Edit in '..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas',
+  //OPP.ContextMenu.Edit in '..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas',
   OPP.Help.System.Control in '..\OPP.Help\OPP.Help.System.Control.pas',
   OPP.Help.System.Clipboard in '..\OPP.Help\OPP.Help.System.Clipboard.pas',
   OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},

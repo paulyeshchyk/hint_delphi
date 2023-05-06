@@ -10,7 +10,8 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxGridLevel, cxClasses, cxGridCustomView, cxGrid,
   cxTextEdit, cxContainer, cxButtons, cxGridDBTableView,
-  cxDataControllerConditionalFormattingRulesManagerDialog, cxDBData, cxGridCustomTableView, cxGridTableView,
+  cxDataControllerConditionalFormattingRulesManagerDialog, cxDBData, cxGridCustomTableView, cxGridTableView, cxCheckBox,
+  dxStatusBar, dxBar, Vcl.ExtCtrls, cxBlobEdit, cxImage,
 
   cxGridDBDataDefinitions,
 
@@ -18,7 +19,7 @@ uses
   OPP.Buffer.Manager.Settings.Data,
   OPP.Buffer.Clipboard,
   OPP.Buffer.Manager.DatasetRecord,
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls, cxBlobEdit, cxImage;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings;
 
 type
   TOPPBufferFormOnApply = reference to procedure(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
@@ -154,6 +155,8 @@ type
     procedure SetIsFiltered(const Value: Boolean);
     procedure SetClipboardControl(const Value: TWinControl);
     procedure SetFilterValue(const Value: String);
+    procedure SetIconRepositoryItem(const Value: TcxEditRepositoryItem);
+    function GetIconRepositoryItem: TcxEditRepositoryItem;
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
     property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
@@ -176,11 +179,12 @@ type
     property FilterValue: String read fFilterValue write SetFilterValue;
 
   public
-    class procedure ShowForm(AOwner: TControl); overload;
-    class procedure ShowForm(AOwner: TControl; AControl: TWinControl); overload;
+    class procedure ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem); overload;
+    class procedure ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem; AControl: TWinControl); overload;
     { Public declarations }
     property OnApply: TOPPBufferFormOnApply read fOnApply write SetOnApply;
     property ClipboardControl: TWinControl read fClipboardControl write SetClipboardControl;
+    property IconRepositoryItem: TcxEditRepositoryItem read GetIconRepositoryItem write SetIconRepositoryItem;
   end;
 
   TOPPDataControllerSortHelper = class helper for TcxGridDBTableView
@@ -217,8 +221,6 @@ uses
   OPP.Help.System.Control,
 
   OPP.Buffer.OPPInfo.Helper,
-
-  OPPConfiguration,
 
   OPP.Keyboard.Shortcut.Manager;
 
@@ -526,9 +528,6 @@ begin
 
   self.IsEditMode := false;
   DataSource1.DataSet := TClientDataset(self.DataSet);
-
-  cxGrid1DBTableView1Column4.RepositoryItem := Config.TypesNamesRepository;
-
 end;
 
 procedure TOPPBufferForm.FormResize(Sender: TObject);
@@ -549,6 +548,11 @@ end;
 function TOPPBufferForm.GetHasSelectedRecord: Boolean;
 begin
   result := (cxGrid1DBTableView1.DataController.FocusedRecordIndex >= 0);
+end;
+
+function TOPPBufferForm.GetIconRepositoryItem: TcxEditRepositoryItem;
+begin
+  result := cxGrid1DBTableView1Column4.RepositoryItem;
 end;
 
 function TOPPBufferForm.GetSelectedRecordsCountText: String;
@@ -640,6 +644,11 @@ begin
   ReloadFilter;
 end;
 
+procedure TOPPBufferForm.SetIconRepositoryItem(const Value: TcxEditRepositoryItem);
+begin
+  cxGrid1DBTableView1Column4.RepositoryItem := Value;
+end;
+
 procedure TOPPBufferForm.setIsEditMode(const Value: Boolean);
 var
   style: TcxStyle;
@@ -672,12 +681,13 @@ begin
   ReloadActionsVisibility;
 end;
 
-class procedure TOPPBufferForm.ShowForm(AOwner: TControl);
+class procedure TOPPBufferForm.ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem);
 var
   fForm: TOPPBufferForm;
 begin
   fForm := TOPPBufferForm.Create(AOwner);
   try
+    fForm.IconRepositoryItem := IconRepositoryItem;
     fForm.ShowModal;
   finally
     FreeAndNil(fForm);
@@ -702,7 +712,7 @@ begin
   end;
 end;
 
-class procedure TOPPBufferForm.ShowForm(AOwner: TControl; AControl: TWinControl);
+class procedure TOPPBufferForm.ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem; AControl: TWinControl);
 var
   fForm: TOPPBufferForm;
   fCanApplyText: Boolean;
@@ -711,6 +721,7 @@ begin
 
   fForm := TOPPBufferForm.Create(AOwner);
   try
+    fForm.IconRepositoryItem := IconRepositoryItem;
     fCanApplyText := false;
     if Assigned(AControl) then
       fCanApplyText := AControl.HasTextProp();
@@ -856,10 +867,12 @@ begin
         begin
           if FindWindow('TOPPBufferForm', nil) = 0 then
           begin
-            TOPPBufferForm.ShowForm(nil, Screen.ActiveControl);
+            //  OPPConfiguration,
+            //Config.TypesNamesRepository;
+            TOPPBufferForm.ShowForm(nil, nil, Screen.ActiveControl);
           end
           else
-            eventLogger.Debug('Cant run second instance');
+            eventLogger.Debug('Cant run second instance', 'TOPPBufferFormHelper');
         end);
     end);
 end;

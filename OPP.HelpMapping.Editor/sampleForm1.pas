@@ -207,7 +207,7 @@ uses
   SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
 
-  OPP.ContextMenu.Edit,
+  //OPP.ContextMenu.Edit,
 
   OPP.Help.Settings.Form,
   OPP.Help.System.Codable.FormSizeSettings,

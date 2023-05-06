@@ -6,8 +6,7 @@ uses
   Datasnap.dbclient, Data.DB,
   System.SysUtils,
   OPP.Buffer.Clipboard,
-  OPP.Buffer.Manager.DatasetRecord,
-  OPPConfiguration;
+  OPP.Buffer.Manager.DatasetRecord;
 
 type
 

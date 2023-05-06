@@ -201,7 +201,6 @@
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas"/>
-        <DCCReference Include="..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Control.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Clipboard.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Settings.Form.pas">
@@ -211,15 +210,15 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.JSON.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.SYLK.Extractor.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.SYLK.pas"/>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
