@@ -37,6 +37,7 @@ object OPPBufferForm: TOPPBufferForm
       FilterBox.Visible = fvNever
       OnCellDblClick = cxGrid1DBTableView1CellDblClick
       OnEditing = cxGrid1DBTableView1Editing
+      OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
       OnSelectionChanged = cxGrid1DBTableView1SelectionChanged
       DataController.DataSource = DataSource1
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -77,6 +78,7 @@ object OPPBufferForm: TOPPBufferForm
         PropertiesClassName = 'TcxImageProperties'
         Properties.GraphicClassName = 'TIcon'
         Options.Filtering = False
+        Options.Focusing = False
         Options.AutoWidthSizable = False
         Options.HorzSizing = False
         Width = 20
@@ -401,7 +403,7 @@ object OPPBufferForm: TOPPBufferForm
       DockedLeft = 0
       DockedTop = 25
       DockingStyle = dsTop
-      FloatLeft = 1036
+      FloatLeft = 0
       FloatTop = 8
       FloatClientWidth = 0
       FloatClientHeight = 0
@@ -436,6 +438,7 @@ object OPPBufferForm: TOPPBufferForm
       Row = 1
       SizeGrip = False
       UseOwnFont = True
+      UseRecentItems = False
       UseRestSpace = True
       Visible = True
       WholeRow = False
@@ -449,10 +452,10 @@ object OPPBufferForm: TOPPBufferForm
       Caption = 'Custom 2'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 798
+      DockedLeft = 861
       DockedTop = 25
       DockingStyle = dsTop
-      FloatLeft = 1036
+      FloatLeft = 0
       FloatTop = 8
       FloatClientWidth = 0
       FloatClientHeight = 0
@@ -470,6 +473,8 @@ object OPPBufferForm: TOPPBufferForm
       Row = 1
       SizeGrip = False
       UseOwnFont = False
+      UseRecentItems = False
+      UseRestSpace = True
       Visible = True
       WholeRow = False
     end

@@ -6,6 +6,7 @@ uses
   Datasnap.dbclient, Data.DB,
   System.SysUtils,
   OPP.Buffer.Clipboard,
+  OPP.Buffer.Manager.DatasetRecord,
   OPPConfiguration;
 
 type
@@ -34,6 +35,29 @@ type
     procedure DeleteRecordsAfterIndex(const AValue: Integer; const AFixed: Boolean);
   end;
 
+  TOPPBufferManagerFieldDef = record
+    name: String;
+    dataType: TFieldType;
+    size: Integer;
+  end;
+
+  TOPPBufferManagerRecordFields = record
+    Data: TOPPBufferManagerFieldDef;
+    sortIndex: TOPPBufferManagerFieldDef;
+    isFixed: TOPPBufferManagerFieldDef;
+    oppObject: TOPPBufferManagerFieldDef;
+    loodsmanType: TOPPBufferManagerFieldDef;
+  end;
+
+const
+  OPPBufferManagerRecordFields: TOPPBufferManagerRecordFields = (
+    { } Data: (name: 'Data'; dataType: ftString; size: 255);
+    { } sortIndex: (name: 'SortIndex'; dataType: ftInteger; size: 0);
+    { } isFixed: (name: 'isFixed'; dataType: ftBoolean; size: 0);
+    { } oppObject: (name: 'OPPObject'; dataType: ftBlob; size: 0);
+    { } loodsmanType: (name: '_TYPE'; dataType: ftString; size: 255)
+    { } );
+
 implementation
 
 uses
@@ -41,7 +65,7 @@ uses
   OPP.Help.log,
   OPP.Help.System.Str,
   OPP.Help.System.JSON,
-  OPP.Buffer.SYLK,
+  OPP.Buffer.OPPInfo.Helper,
   Vcl.Forms;
 
 const
@@ -53,11 +77,21 @@ procedure TOPPBufferManagerDataset.Rebuild;
 begin
   self.Close;
   self.FieldDefs.Clear;
-  self.FieldDefs.Add('Data', ftString, 255);
-  self.FieldDefs.Add('SortIndex', ftInteger);
-  self.FieldDefs.Add('isFixed', ftBoolean);
-  self.FieldDefs.Add('OPPObject', ftBlob);
-  self.FieldDefs.Add('_TYPE', ftString, 255);
+  { data }
+  with OPPBufferManagerRecordFields.Data do
+    self.FieldDefs.Add(name, dataType, size);
+  { sortIndex }
+  with OPPBufferManagerRecordFields.sortIndex do
+    self.FieldDefs.Add(name, dataType, size);
+  { isFixed }
+  with OPPBufferManagerRecordFields.isFixed do
+    self.FieldDefs.Add(name, dataType, size);
+  { oppObject }
+  with OPPBufferManagerRecordFields.oppObject do
+    self.FieldDefs.Add(name, dataType, size);
+  { loodsmanType }
+  with OPPBufferManagerRecordFields.loodsmanType do
+    self.FieldDefs.Add(name, dataType, size);
   self.CreateDataSet;
 end;
 
@@ -70,12 +104,12 @@ begin
     try
       cloned.CloneCursor(self, false);
 
-      cloned.IndexFieldNames := 'SortIndex';
+      cloned.IndexFieldNames := OPPBufferManagerRecordFields.sortIndex.name;
       cloned.First;
       while (not cloned.EOF) do
       begin
         cloned.Edit;
-        cloned.FieldByName('SortIndex').AsInteger := cloned.RecNo;
+        cloned.FieldByName(OPPBufferManagerRecordFields.sortIndex.name).AsInteger := cloned.RecNo;
         cloned.Post;
         cloned.Next;
       end;
@@ -85,11 +119,9 @@ begin
         eventLogger.Error(E, kContext);
       end;
     end;
-
   finally
     cloned.Free;
   end;
-
 end;
 
 procedure TOPPBufferManagerDataset.ExtractRecord(callback: TOPPBufferManagerDatasetRecordExtractionCallback);
@@ -97,24 +129,23 @@ var
   fBytes: TArray<Byte>;
 begin
 
-  fBytes := self.FieldByName('OPPObject').AsBytes;
+  fBytes := self.FieldByName(OPPBufferManagerRecordFields.oppObject.name).AsBytes;
 
-  TOPPJSONParser.Deserialize<TOPPBufferSYLKObject>(fBytes, false,
-    procedure(theObject: TOPPBufferSYLKObject; Error: Exception)
+  TOPPJSONParser.Deserialize<TOPPBufferOPPInfo>(fBytes, false,
+    procedure(OPPInfo: TOPPBufferOPPInfo; Error: Exception)
     var
       theRecord: TOPPBufferManagerRecord;
     begin
-      if Assigned(theObject) and Assigned(callback) then
+      if Assigned(OPPInfo) and Assigned(callback) then
       begin
         theRecord := TOPPBufferManagerRecord.Create;
-        theRecord.SetText(self.FieldByName('Data').AsString);
-        theRecord.SortIndex := self.FieldByName('SortIndex').AsInteger;
-        theRecord.IsFixed := self.FieldByName('isFixed').AsBoolean;
-        theRecord.SYLK := theObject;
+        theRecord.text := self.FieldByName(OPPBufferManagerRecordFields.Data.name).AsString;
+        theRecord.sortIndex := self.FieldByName(OPPBufferManagerRecordFields.sortIndex.name).AsInteger;
+        theRecord.isFixed := self.FieldByName(OPPBufferManagerRecordFields.isFixed.name).AsBoolean;
+        theRecord.OPPInfo := OPPInfo;
         callback(theRecord);
       end;
     end);
-
 end;
 
 procedure TOPPBufferManagerDataset.SetCustomFilter(AFilter: String);
@@ -129,7 +160,7 @@ begin
   if not Assigned(ARecord) then
     exit;
 
-  if HasTheSameValue(ARecord.Data) then
+  if HasTheSameValue(ARecord.text) then
   begin
     exit;
   end;
@@ -141,11 +172,11 @@ begin
 
   try
     self.Append;
-    self.FieldByName('Data').AsVariant := ARecord.Data;
-    self.FieldByName('SortIndex').AsInteger := self.RecordCount;
-    self.FieldByName('isFixed').AsBoolean := false;
-    self.FieldByName('OPPObject').AsBytes := ARecord.SYLK.SaveToBytes;
-    self.FieldByName('_TYPE').AsString := ARecord.SYLK.loodsmanType;
+    self.FieldByName(OPPBufferManagerRecordFields.Data.name).AsVariant := ARecord.text;
+    self.FieldByName(OPPBufferManagerRecordFields.sortIndex.name).AsInteger := self.RecordCount;
+    self.FieldByName(OPPBufferManagerRecordFields.isFixed.name).AsBoolean := false;
+    self.FieldByName(OPPBufferManagerRecordFields.oppObject.name).AsBytes := ARecord.OPPInfo.SaveToBytes;
+    self.FieldByName(OPPBufferManagerRecordFields.loodsmanType.name).AsString := ARecord.OPPInfo.loodsmanType;
     self.Post;
 
     RebuildSortIndex;
@@ -171,11 +202,11 @@ begin
 
       itemsLeftCount := cloned.RecordCount;
 
-      cloned.IndexFieldNames := 'SortIndex';
+      cloned.IndexFieldNames := OPPBufferManagerRecordFields.sortIndex.name;
       cloned.First;
       while (not cloned.EOF) and (itemsLeftCount > AValue) do
       begin
-        if cloned.FieldByName('isFixed').AsBoolean = AFixed then
+        if cloned.FieldByName(OPPBufferManagerRecordFields.isFixed.name).AsBoolean = AFixed then
         begin
           cloned.Delete;
           itemsLeftCount := itemsLeftCount - 1;
@@ -212,7 +243,7 @@ begin
   try
     try
       cloned.CloneCursor(self, false);
-      cloned.Filter := Format('%s LIKE %s', ['Data', QuotedStr(AValue)]);
+      cloned.Filter := Format('%s LIKE %s', [OPPBufferManagerRecordFields.Data.name, QuotedStr(AValue)]);
       cloned.Filtered := true;
       result := cloned.FindFirst;
     except

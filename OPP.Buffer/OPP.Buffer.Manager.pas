@@ -1,4 +1,4 @@
-unit OPP.Buffer.Manager;
+﻿unit OPP.Buffer.Manager;
 
 interface
 
@@ -15,7 +15,7 @@ uses
 
   OPP.Buffer.Clipboard,
   OPP.Buffer.Manager.Dataset,
-  OPP.Buffer.SYLK,
+  OPP.Buffer.Manager.DatasetRecord,
 
   System.Generics.Collections,
   System.Variants, System.StrUtils;
@@ -49,13 +49,12 @@ type
     fDataset: TOPPBufferManagerDataset;
     fSettings: IOPPBufferManagerSettings;
     procedure AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
+    procedure CreateRecordAndSave(const OPPInfo: TOPPBufferOPPInfo);
     function GetCanAcceptRecord: Boolean;
     function GetDataset: IOPPBufferManagerDataset;
     function GetRecordsStorageFileName(AFileName: String = ''): String;
     function GetSettings: IOPPBufferManagerSettings;
     procedure LoadRecords();
-    procedure SaveClipboardToManagerRecord(SYLK: TOPPBufferSYLKObject);
-    procedure SaveSYLKToManagerRecord(SYLK: TOPPBufferSYLKObject);
     procedure SaveRecords(AFileName: String = '');
     procedure SetRecordsStorageFileName(AFileName: String = '');
     procedure OnCalcFields(ADataset: TDataset);
@@ -89,7 +88,7 @@ uses
   Vcl.Dialogs,
   Vcl.Forms,
 
-  OPP.Buffer.SYLK.Extractor,
+  OPP.Buffer.OPPInfo.Helper,
 
   WinAPI.Windows;
 
@@ -274,7 +273,7 @@ end;
 
 procedure TOPPBufferManager.ReadDataFromControl(Sender: TWinControl);
 var
-  fSYLK: TOPPBufferSYLKObject;
+  fOPPInfo: TOPPBufferOPPInfo;
 begin
   if not self.CanAcceptRecord then
     exit;
@@ -284,13 +283,13 @@ begin
 
   fIgnoreClipboardMessages := true;
 
-  fSYLK := TOPPBufferSYLKExtractor.GetSYLK(Sender);
-  if assigned(fSYLK) then
+  fOPPInfo := TOPPBufferOPPInfo.GetOPPInfo(Sender);
+  if assigned(fOPPInfo) then
   begin
     try
-      SaveClipboardToManagerRecord(fSYLK);
+      CreateRecordAndSave(fOPPInfo);
     finally
-      fSYLK.Free;
+      fOPPInfo.Free;
     end;
   end else begin
     eventLogger.warning(SWarningClipboardChangedButNothingCopied, kContext);
@@ -303,7 +302,7 @@ procedure TOPPBufferManager.WriteDataIntoControl(Sender: TWinControl; AData: TOP
 begin
   if ((not assigned(AData)) or (not assigned(Sender))) then
     exit;
-  TOPPBufferSYLKExtractor.SetSYLK(AData.SYLK, Sender);
+  TOPPBufferOPPInfo.SetOPPInfo(AData.OPPInfo, AData.text, Sender);
 end;
 
 procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);
@@ -311,26 +310,12 @@ begin
   fDataset.RemoveRecordsAfter(AAfter);
 end;
 
-procedure TOPPBufferManager.SaveSYLKToManagerRecord(SYLK: TOPPBufferSYLKObject);
+procedure TOPPBufferManager.CreateRecordAndSave(const OPPInfo: TOPPBufferOPPInfo);
 var
   fRecord: TOPPBufferManagerRecord;
 begin
 
-  fRecord := TOPPBufferManagerRecord.Create;
-  try
-    fRecord.SYLK := SYLK;
-    self.AddRecordAndSave(fRecord);
-  finally
-    FreeAndNil(fRecord);
-  end;
-end;
-
-procedure TOPPBufferManager.SaveClipboardToManagerRecord(SYLK: TOPPBufferSYLKObject);
-var
-  fRecord: TOPPBufferManagerRecord;
-begin
-
-  fRecord := Clipboard.CreateRecord(SYLK);
+  fRecord := Clipboard.CreateRecord(OPPInfo);
 
   if fRecord = nil then
     exit;

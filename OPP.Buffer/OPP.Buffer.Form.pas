@@ -17,6 +17,7 @@ uses
   OPP.Buffer.Manager.DataSet,
   OPP.Buffer.Manager.Settings.Data,
   OPP.Buffer.Clipboard,
+  OPP.Buffer.Manager.DatasetRecord,
   OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, cxCheckBox, dxStatusBar, dxBar, Vcl.ExtCtrls, cxBlobEdit, cxImage;
 
 type
@@ -120,7 +121,6 @@ type
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionTurnEditModeExecute(Sender: TObject);
     procedure actionWipeRecordsExecute(Sender: TObject);
-    procedure ClientDataSet1CalcFields(DataSet: TDataSet);
     procedure cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
     procedure cxGrid1DBTableView1DataControllerDataChanged(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -129,6 +129,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure cxGrid1DBTableView1Editing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
+    procedure cxGrid1DBTableView1FocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
     procedure cxGrid1DBTableView1SelectionChanged(Sender: TcxCustomGridTableView);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
     procedure DataSource1StateChange(Sender: TObject);
@@ -215,8 +216,7 @@ uses
   OPP.Help.System.Clipboard,
   OPP.Help.System.Control,
 
-  OPP.Buffer.SYLK,
-  OPP.Buffer.SYLK.Extractor,
+  OPP.Buffer.OPPInfo.Helper,
 
   OPPConfiguration,
 
@@ -234,8 +234,6 @@ resourcestring
 
 const
   kContext = 'TOPPBufferForm';
-  kFieldNameOrder = 'order';
-  kFieldNameData = 'data';
   kFileNameOPPBufferManagerOppclipboarddata = 'OPPBufferManager.oppclipboarddata';
 
 {$R *.dfm}
@@ -261,11 +259,9 @@ end;
 procedure TOPPBufferForm.actionCloseByPressingEscExecute(Sender: TObject);
 begin
   if cxGrid1DBTableView1Column2.Editing then
-  begin
-    cxGrid1DBTableView1Column2.Editing := false;
-    exit;
-  end;
-  Close;
+    cxGrid1DBTableView1Column2.Editing := false
+  else
+    Close;
 end;
 
 procedure TOPPBufferForm.actionCloseExecute(Sender: TObject);
@@ -312,7 +308,7 @@ end;
 
 procedure TOPPBufferForm.actionMarkAsFixedExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.OPPSetFixedMark('isFixed', true);
+  cxGrid1DBTableView1.OPPSetFixedMark(OPPBufferManagerRecordFields.isFixed.name, true);
 end;
 
 procedure TOPPBufferForm.actionMarkAsInvertedExecute(Sender: TObject);
@@ -322,7 +318,7 @@ end;
 
 procedure TOPPBufferForm.actionMarkAsNonFixedExecute(Sender: TObject);
 begin
-  cxGrid1DBTableView1.OPPSetFixedMark('isFixed', false);
+  cxGrid1DBTableView1.OPPSetFixedMark(OPPBufferManagerRecordFields.isFixed.name, false);
 end;
 
 procedure TOPPBufferForm.actionMultiSelectModeExecute(Sender: TObject);
@@ -399,11 +395,6 @@ begin
   cxGrid1DBTableView1.OPPDeleteSelected;
 end;
 
-procedure TOPPBufferForm.ClientDataSet1CalcFields(DataSet: TDataSet);
-begin
-  DataSet.FieldByName(kFieldNameOrder).AsInteger := DataSet.RecNo;
-end;
-
 procedure TOPPBufferForm.ColumnSizeChange;
 var
   i: Integer;
@@ -472,6 +463,11 @@ begin
 end;
 
 procedure TOPPBufferForm.cxGrid1DBTableView1Editing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
+begin
+  ReloadActionsVisibility;
+end;
+
+procedure TOPPBufferForm.cxGrid1DBTableView1FocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
   ReloadActionsVisibility;
 end;
@@ -611,23 +607,31 @@ end;
 
 procedure TOPPBufferForm.SetClipboardControl(const Value: TWinControl);
 var
-  fSYLKObject: TOPPBufferSYLKObject;
+  fOPPInfo: TOPPBufferOPPInfo;
 begin
   fClipboardControl := Value;
   actionSetFiltered.Enabled := Assigned(fClipboardControl);
-  self.IsFiltered := Assigned(fClipboardControl);
-  if Assigned(fClipboardControl) then
+  self.IsFiltered := false;
+  self.FilterValue := '';
+
+  if not Assigned(fClipboardControl) then
   begin
-    fSYLKObject := TOPPBufferSYLKExtractor.GetSYLK(Value);
-    if Assigned(fSYLKObject) then
-    begin
-      self.FilterValue := fSYLKObject.loodsmanType;
-    end else begin
-      self.FilterValue := '';
-    end;
-  end
-  else
-    self.FilterValue := '';
+    exit;
+  end;
+
+  fOPPInfo := TOPPBufferOPPInfo.GetOPPInfo(Value);
+  if not Assigned(fOPPInfo) then
+  begin
+    exit;
+  end;
+
+  try
+    self.FilterValue := fOPPInfo.loodsmanType;
+    self.IsFiltered := (Length(Self.FilterValue) <> 0);
+  finally
+    fOPPInfo.Free;
+  end;
+
 end;
 
 procedure TOPPBufferForm.SetFilterValue(const Value: String);
@@ -792,7 +796,7 @@ begin
   for i := 0 to Length(AArray) - 1 do
   begin
     fItem := self.DataController.GetItemByFieldName(AArray[i].FieldName);
-    fItem.SortIndex := AArray[i].SortIndex;
+    fItem.sortIndex := AArray[i].sortIndex;
     fItem.SortOrder := TcxDataSortOrder(AArray[i].SortOrder);
   end;
   // self.DataController.EndFullUpdate;
@@ -833,7 +837,7 @@ begin
       continue;
     fFieldName := TcxGridItemDBDataBinding(fItem.DataBinding).FieldName;
     result[i].FieldName := fFieldName;
-    result[i].SortIndex := fItem.SortIndex;
+    result[i].sortIndex := fItem.sortIndex;
     result[i].SortOrder := Integer(fItem.SortOrder);
   end;
 end;

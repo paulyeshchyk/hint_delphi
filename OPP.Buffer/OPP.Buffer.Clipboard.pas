@@ -6,27 +6,13 @@ uses
   System.SysUtils, System.Classes,
   WinAPI.Windows,
   Vcl.Clipbrd,
-  OPP.Buffer.SYLK;
+  OPP.Buffer.Manager.DatasetRecord;
 
 type
 
-  TOPPBufferManagerRecord = class
-  private
-    fSYLK: TOPPBufferSYLKObject;
-    fData: Variant;
-    fIsFixed: Boolean;
-    fSortIndex: Integer;
-  public
-    procedure SetText(AText: String);
-    property SYLK: TOPPBufferSYLKObject read fSYLK write fSYLK;
-    property Data: Variant read fData;
-    property IsFixed: Boolean read fIsFixed write fIsFixed;
-    property SortIndex: Integer read fSortIndex write fSortIndex;
-  end;
-
   TOPPClipboardHelper = class helper for TClipboard
   public
-    function CreateRecord(SYLK: TOPPBufferSYLKObject): TOPPBufferManagerRecord;
+    function CreateRecord(OPPInfo: TOPPBufferOPPInfo): TOPPBufferManagerRecord;
     function HasClipboardFormat(): Boolean;
   end;
 
@@ -35,16 +21,9 @@ implementation
 uses
   OPP.Help.Log;
 
-{ TOPPBufferManagerRecord }
-
-procedure TOPPBufferManagerRecord.SetText(AText: String);
-begin
-  fData := AText;
-end;
-
 { TOPPClipboardHelper }
 
-function TOPPClipboardHelper.CreateRecord(SYLK: TOPPBufferSYLKObject): TOPPBufferManagerRecord;
+function TOPPClipboardHelper.CreateRecord(OPPInfo: TOPPBufferOPPInfo): TOPPBufferManagerRecord;
 begin
   result := nil;
 
@@ -52,13 +31,13 @@ begin
     if Clipboard.HasFormat(CF_TEXT) then
     begin
       result := TOPPBufferManagerRecord.Create;
-      result.SYLK := SYLK;
-      result.SetText(Clipboard.AsText);
+      result.OPPInfo := OPPInfo;
+      result.text := Clipboard.AsText;
     end;
   except
     on E: Exception do
     begin
-      eventLogger.Error(E, 'Cliboard');
+      eventLogger.Error(E, 'TOPPClipboardHelper');
     end;
   end;
 
