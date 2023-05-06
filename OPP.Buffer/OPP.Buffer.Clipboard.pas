@@ -49,14 +49,12 @@ begin
   result := nil;
 
   try
-    Clipboard.Open;
     if Clipboard.HasFormat(CF_TEXT) then
     begin
       result := TOPPBufferManagerRecord.Create;
       result.SYLK := SYLK;
       result.SetText(Clipboard.AsText);
     end;
-    Clipboard.Close;
   except
     on E: Exception do
     begin

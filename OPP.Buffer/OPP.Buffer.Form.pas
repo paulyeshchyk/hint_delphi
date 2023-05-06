@@ -99,6 +99,8 @@ type
     dxBarButton14: TdxBarButton;
     actionClose: TAction;
     cxGrid1DBTableView1Column4: TcxGridDBColumn;
+    dxBarLargeButton7: TdxBarLargeButton;
+    actionSetFiltered: TAction;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseByPressingEscExecute(Sender: TObject);
@@ -114,6 +116,7 @@ type
     procedure actionMultiSelectModeExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionSaveRecordsExecute(Sender: TObject);
+    procedure actionSetFilteredExecute(Sender: TObject);
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionTurnEditModeExecute(Sender: TObject);
     procedure actionWipeRecordsExecute(Sender: TObject);
@@ -136,6 +139,8 @@ type
     fIsMultiSelectMode: Boolean;
     fOnApply: TOPPBufferFormOnApply;
     fClipboardControl: TWinControl;
+    fIsFiltered: Boolean;
+    fFilterValue: String;
     function GetHasRecords: Boolean;
     function GetHasSelectedRecord: Boolean;
     procedure ReloadActionsVisibility;
@@ -145,11 +150,16 @@ type
     function GetSelectedRecordsCountText: String;
     procedure SetOnApply(const Value: TOPPBufferFormOnApply);
     function GetDataset: IOPPBufferManagerDataset;
+    procedure SetIsFiltered(const Value: Boolean);
+    procedure SetClipboardControl(const Value: TWinControl);
+    procedure SetFilterValue(const Value: String);
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
     property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
     property SelectedRecordsCountText: String read GetSelectedRecordsCountText;
-    property Dataset:IOPPBufferManagerDataset read GetDataset;
+    property DataSet: IOPPBufferManagerDataset read GetDataset;
+
+    procedure ReloadFilter;
 
     procedure ColumnSortSave;
     procedure ColumnSortRead;
@@ -161,13 +171,15 @@ type
 
     property IsEditMode: Boolean read fIsEditMode write setIsEditMode default false;
     property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
+    property IsFiltered: Boolean read fIsFiltered write SetIsFiltered default false;
+    property FilterValue: String read fFilterValue write SetFilterValue;
 
   public
     class procedure ShowForm(AOwner: TControl); overload;
     class procedure ShowForm(AOwner: TControl; AControl: TWinControl); overload;
     { Public declarations }
     property OnApply: TOPPBufferFormOnApply read fOnApply write SetOnApply;
-    property ClipboardControl: TWinControl read fClipboardControl write fClipboardControl;
+    property ClipboardControl: TWinControl read fClipboardControl write SetClipboardControl;
   end;
 
   TOPPDataControllerSortHelper = class helper for TcxGridDBTableView
@@ -186,6 +198,9 @@ type
     procedure FillRestOfTheSpace;
   end;
 
+const
+  columnDataBindingNames: array [0 .. 3] of String = ('SortIndex', '_TYPE', 'data', 'isFixed');
+
 var
   OPPBufferForm: TOPPBufferForm;
 
@@ -199,6 +214,9 @@ uses
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard,
   OPP.Help.System.Control,
+
+  OPP.Buffer.SYLK,
+  OPP.Buffer.SYLK.Extractor,
 
   OPPConfiguration,
 
@@ -223,24 +241,15 @@ const
 {$R *.dfm}
 
 procedure TOPPBufferForm.actionApplySelectionExecute(Sender: TObject);
-var
-  fBytes: TArray<Byte>;
 begin
-  if not Assigned(fOnApply) then
-  begin
-    Close;
-    exit;
-  end;
-
-
-  Dataset.ExtractRecord(
+  DataSet.ExtractRecord(
     procedure(theRecord: TOPPBufferManagerRecord)
     begin
-      if Assigned(theRecord) then
+      if (Assigned(theRecord) and Assigned(fOnApply)) then
       begin
         fOnApply(theRecord, fClipboardControl);
-        Close;
       end;
+      Close;
     end);
 end;
 
@@ -331,6 +340,11 @@ begin
   //
 end;
 
+procedure TOPPBufferForm.actionSetFilteredExecute(Sender: TObject);
+begin
+  self.IsFiltered := not self.IsFiltered;
+end;
+
 procedure TOPPBufferForm.actionShowSettingsExecute(Sender: TObject);
 var
   fSettingsForm: TOPPBufferSettingsForm;
@@ -358,7 +372,6 @@ begin
             fFilePath := AValue.GetDefaultFilePath;
             ShowMessage(Format(SErrotCantSaveSettingsTemplate, [fFilePath]));
           end;
-
         end;
       end;
 
@@ -395,8 +408,6 @@ procedure TOPPBufferForm.ColumnSizeChange;
 var
   i: Integer;
   fColumn: TcxGridDBColumn;
-const
-  columnDataBindingNames: array [0 .. 3] of String = ('SortIndex', '_TYPE', 'data', 'isFixed');
 begin
   for i := 0 to cxGrid1DBTableView1.ColumnCount - 1 do
   begin
@@ -518,7 +529,7 @@ begin
   end;
 
   self.IsEditMode := false;
-  DataSource1.DataSet := TClientDataset(self.Dataset);
+  DataSource1.DataSet := TClientDataset(self.DataSet);
 
   cxGrid1DBTableView1Column4.RepositoryItem := Config.TypesNamesRepository;
 
@@ -531,7 +542,7 @@ end;
 
 function TOPPBufferForm.GetDataset: IOPPBufferManagerDataset;
 begin
-  result := oppBufferManager.Dataset;
+  result := oppBufferManager.DataSet;
 end;
 
 function TOPPBufferForm.GetHasRecords: Boolean;
@@ -582,6 +593,49 @@ begin
   dxStatusBar1.Panels[1].Text := ifThen(not fIsMultiSelectMode, '', self.SelectedRecordsCountText)
 end;
 
+procedure TOPPBufferForm.ReloadFilter;
+var
+  typecolumnIndex: Integer;
+  fFilterRow: TcxGridFilterRow;
+begin
+  with cxGrid1DBTableView1.DataController.Filter do
+  begin
+    BeginUpdate;
+    Root.Clear;
+    if self.IsFiltered then
+      Root.AddItem(cxGrid1DBTableView1Column4, cxFilter.foEqual, self.FilterValue, 'Тип');
+    Active := self.IsFiltered;
+    EndUpdate;
+  end;
+end;
+
+procedure TOPPBufferForm.SetClipboardControl(const Value: TWinControl);
+var
+  fSYLKObject: TOPPBufferSYLKObject;
+begin
+  fClipboardControl := Value;
+  actionSetFiltered.Enabled := Assigned(fClipboardControl);
+  self.IsFiltered := Assigned(fClipboardControl);
+  if Assigned(fClipboardControl) then
+  begin
+    fSYLKObject := TOPPBufferSYLKExtractor.GetSYLK(Value);
+    if Assigned(fSYLKObject) then
+    begin
+      self.FilterValue := fSYLKObject.loodsmanType;
+    end else begin
+      self.FilterValue := '';
+    end;
+  end
+  else
+    self.FilterValue := '';
+end;
+
+procedure TOPPBufferForm.SetFilterValue(const Value: String);
+begin
+  fFilterValue := Value;
+  ReloadFilter;
+end;
+
 procedure TOPPBufferForm.setIsEditMode(const Value: Boolean);
 var
   style: TcxStyle;
@@ -592,6 +646,13 @@ begin
 
   cxGrid1DBTableView1Column2.Properties.ReadOnly := not fIsEditMode;
   cxGrid1DBTableView1Column3.Properties.ReadOnly := not fIsEditMode;
+end;
+
+procedure TOPPBufferForm.SetIsFiltered(const Value: Boolean);
+begin
+  fIsFiltered := Value;
+  actionSetFiltered.Checked := fIsFiltered;
+  ReloadFilter;
 end;
 
 procedure TOPPBufferForm.SetIsMultiSelectMode(const Value: Boolean);
@@ -781,6 +842,8 @@ end;
 
 class procedure TOPPBufferFormHelper.injectionShowForm;
 begin
+  // NO Injecttion for now,
+  exit;
   keyboardShortcutManager.registerHook(oppBufferManager.Settings.GetShortCut,
     procedure
     begin

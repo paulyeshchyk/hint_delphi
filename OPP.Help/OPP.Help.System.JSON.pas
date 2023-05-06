@@ -33,7 +33,7 @@ uses
 
 class procedure TOPPJSONParser.deserializeJSON<T>(AJSON: TJSONObject; callback: TOPPJSONParserCallback<T>);
 var
-  fMapList: T;
+  fResult: T;
   Error: Exception;
 begin
   if not assigned(AJSON) then
@@ -51,14 +51,14 @@ begin
   end;
 
   try
-    fMapList := TJson.JsonToObject<T>(AJSON);
+    fResult := TJson.JsonToObject<T>(AJSON);
     try
       if assigned(callback) then
       begin
-        callback(fMapList, nil);
+        callback(fResult, nil);
       end;
     finally
-      FreeAndNil(fMapList);
+      FreeAndNil(fResult);
     end;
   except
     on E: Exception do

@@ -45,6 +45,7 @@ type
 
   TOPPBufferManager = class(TInterfacedObject, IOPPBufferManager)
   private
+    fIgnoreClipboardMessages: Boolean;
     fDataset: TOPPBufferManagerDataset;
     fSettings: IOPPBufferManagerSettings;
     procedure AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
@@ -93,8 +94,10 @@ uses
   WinAPI.Windows;
 
 resourcestring
-  SBufferManagerRecordsFileWasDamaged = 'Файл записей буфера обмена был повреждён!';
-  SNotAbleToDeleteDamagedFileTemplate = 'При попытке восстановить файл записей произошла ошибка:'#13#10#13#10'%s'#13#10#13#10'Обратитесь к администратору';
+  SErrorFileNotFoundTemplate = 'File not found:[%s]';
+  SWarningClipboardChangedButNothingCopied = 'Clipboard changed, but nothing copied';
+  SBufferManagerRecordsFileWasDamaged = 'Р¤Р°Р№Р» Р·Р°РїРёСЃРµР№ Р±СѓС„РµСЂР° РѕР±РјРµРЅР° Р±С‹Р» РїРѕРІСЂРµР¶РґС‘РЅ!';
+  SNotAbleToDeleteDamagedFileTemplate = 'РџСЂРё РїРѕРїС‹С‚РєРµ РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ С„Р°Р№Р» Р·Р°РїРёСЃРµР№ РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°:'#13#10#13#10'%s'#13#10#13#10'РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ';
 
 const
   kContext = 'TOPPBufferManager';
@@ -131,6 +134,7 @@ begin
   fDataset := TOPPBufferManagerDataset.Create(nil);
   fDataset.OnCalcFields := self.OnCalcFields;
   fDataset.Rebuild;
+  fIgnoreClipboardMessages := false;
 
   LoadRecords();
 end;
@@ -236,7 +240,7 @@ begin
   fFileName := GetRecordsStorageFileName();
   if not TFile.Exists(fFileName) then
   begin
-    eventLogger.Error(Format('File not found:[%s]', [fFileName]), kContext);
+    eventLogger.Error(Format(SErrorFileNotFoundTemplate, [fFileName]), kContext);
     exit;
   end;
 
@@ -275,27 +279,32 @@ begin
   if not self.CanAcceptRecord then
     exit;
 
-  fSYLK := TOPPBufferSYLKExtractor.GetSYLK(Sender);
-  if not assigned(fSYLK) then
-  begin
-    eventLogger.warning('Clipboard changed, but nothing copied', kContext);
+  if fIgnoreClipboardMessages then
     exit;
+
+  fIgnoreClipboardMessages := true;
+
+  fSYLK := TOPPBufferSYLKExtractor.GetSYLK(Sender);
+  if assigned(fSYLK) then
+  begin
+    try
+      SaveClipboardToManagerRecord(fSYLK);
+    finally
+      fSYLK.Free;
+    end;
+  end else begin
+    eventLogger.warning(SWarningClipboardChangedButNothingCopied, kContext);
   end;
 
-  try
-    SaveClipboardToManagerRecord(fSYLK);
-  finally
-    fSYLK.Free;
-  end;
+  fIgnoreClipboardMessages := false;
 end;
 
 procedure TOPPBufferManager.WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
 begin
-  if ((not Assigned(AData)) or (not Assigned(Sender))) then
+  if ((not assigned(AData)) or (not assigned(Sender))) then
     exit;
   TOPPBufferSYLKExtractor.SetSYLK(AData.SYLK, Sender);
 end;
-
 
 procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);
 begin
@@ -308,9 +317,8 @@ var
 begin
 
   fRecord := TOPPBufferManagerRecord.Create;
-  fRecord.SYLK := SYLK;
-
   try
+    fRecord.SYLK := SYLK;
     self.AddRecordAndSave(fRecord);
   finally
     FreeAndNil(fRecord);
@@ -335,7 +343,6 @@ begin
         eventLogger.Error(E, kContext);
       end;
     end;
-
   finally
     FreeAndNil(fRecord);
   end;
