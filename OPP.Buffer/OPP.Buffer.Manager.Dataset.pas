@@ -175,8 +175,11 @@ begin
     self.FieldByName(OPPBufferManagerRecordFields.Data.name).AsVariant := ARecord.text;
     self.FieldByName(OPPBufferManagerRecordFields.sortIndex.name).AsInteger := self.RecordCount;
     self.FieldByName(OPPBufferManagerRecordFields.isFixed.name).AsBoolean := false;
-    self.FieldByName(OPPBufferManagerRecordFields.oppObject.name).AsBytes := ARecord.OPPInfo.SaveToBytes;
-    self.FieldByName(OPPBufferManagerRecordFields.loodsmanType.name).AsString := ARecord.OPPInfo.loodsmanType;
+    if Assigned(ARecord.OPPInfo) then
+    begin
+      self.FieldByName(OPPBufferManagerRecordFields.oppObject.name).AsBytes := ARecord.OPPInfo.SaveToBytes;
+      self.FieldByName(OPPBufferManagerRecordFields.loodsmanType.name).AsString := ARecord.OPPInfo.loodsmanType;
+    end;
     self.Post;
 
     RebuildSortIndex;
