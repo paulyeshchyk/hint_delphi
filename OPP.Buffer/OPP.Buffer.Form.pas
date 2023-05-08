@@ -103,6 +103,7 @@ type
     cxGrid1DBTableView1Column4: TcxGridDBColumn;
     dxBarLargeButton7: TdxBarLargeButton;
     actionSetFiltered: TAction;
+    cxGrid1DBTableView1Column5: TcxGridDBColumn;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseByPressingEscExecute(Sender: TObject);
@@ -169,6 +170,7 @@ type
     procedure ColumnSortSave;
     procedure ColumnSortRead;
     procedure ColumnSizeChange;
+    procedure ColumnVisibilityChange;
 
     class procedure OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
 
@@ -205,7 +207,7 @@ type
   end;
 
 const
-  columnDataBindingNames: array [0 .. 3] of String = ('SortIndex', '_TYPE', 'data', 'isFixed');
+  columnDataBindingNames: array [0 .. 4] of String = ('SortIndex', '_TYPE', '_ATTR', 'data', 'isFixed');
 
 var
   OPPBufferForm: TOPPBufferForm;
@@ -368,6 +370,8 @@ begin
       begin
         try
           AValue.Save;
+          ColumnVisibilityChange;
+          ColumnSizeChange;
         except
           on E: Exception do
           begin
@@ -418,11 +422,15 @@ begin
         begin
           fColumn.Width := 22;
         end;
-      2: // data
+      2: // ATTR
+        begin
+          fColumn.ApplyBestFit(true);
+        end;
+      3: // data
         begin
           fColumn.FillRestOfTheSpace;
         end;
-      3: // isFixed
+      4: // isFixed
         begin
           fColumn.ApplyBestFit(true);
         end;
@@ -445,6 +453,11 @@ begin
   finally
     SetLength(sortRecords, 0);
   end;
+end;
+
+procedure TOPPBufferForm.ColumnVisibilityChange;
+begin
+  cxGrid1DBTableView1Column5.Visible := self.Settings.GetSourceIsVisible;
 end;
 
 procedure TOPPBufferForm.cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
@@ -498,6 +511,7 @@ end;
 procedure TOPPBufferForm.FormActivate(Sender: TObject);
 begin
   cxGrid1.SetFocus;
+  ColumnVisibilityChange;
   ColumnSortRead;
   ColumnSizeChange;
 end;
@@ -557,7 +571,6 @@ function TOPPBufferForm.GetIconRepositoryItem: TcxEditRepositoryItem;
 begin
   result := cxGrid1DBTableView1Column4.RepositoryItem;
 end;
-
 
 function TOPPBufferForm.GetSelectedRecordsCountText: String;
 begin
@@ -645,16 +658,15 @@ begin
     fControlType := fOPPInfo.loodsmanType
   else
     fControlType := SActionFilterHintNoType;
-  actionSetFiltered.Hint := Format(SActionFilterHintTemplate,[fControlType]);
-
+  actionSetFiltered.Hint := Format(SActionFilterHintTemplate, [fControlType]);
 
   fIsAutoFilter := true;
-  if Assigned(Self.Settings) then
-    fIsAutoFilter := Self.Settings.GetAutoFilter;
+  if Assigned(self.Settings) then
+    fIsAutoFilter := self.Settings.GetAutoFilter;
 
   try
     self.FilterValue := fOPPInfo.loodsmanType;
-    self.IsFiltered := (Length(Self.FilterValue) <> 0) and (fIsAutoFilter);
+    self.IsFiltered := (Length(self.FilterValue) <> 0) and (fIsAutoFilter);
   finally
     fOPPInfo.Free;
   end;
@@ -890,8 +902,8 @@ begin
         begin
           if FindWindow('TOPPBufferForm', nil) = 0 then
           begin
-            //  OPPConfiguration,
-            //Config.TypesNamesRepository;
+            // OPPConfiguration,
+            // Config.TypesNamesRepository;
             TOPPBufferForm.ShowForm(nil, nil, Screen.ActiveControl);
           end
           else

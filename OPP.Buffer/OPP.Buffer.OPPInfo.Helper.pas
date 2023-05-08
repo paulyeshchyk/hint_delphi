@@ -160,6 +160,7 @@ begin
   result := TOPPBufferOPPInfo.Create(otObjControl);
   result.loodsmanType := self.loodsmanType;
   result.loodsmanId := Format('%d', [self.ObjectID]);
+  result.loodsmanAttribute := self.Attribute;
 end;
 
 { TOPPBufferAttrControlHelper }
@@ -169,6 +170,7 @@ begin
   result := TOPPBufferOPPInfo.Create(otAttrControl);
   result.loodsmanType := '';
   result.loodsmanId := self.DataInControl;
+  result.loodsmanAttribute := self.Attribute;
 end;
 
 { TOPPBufferWinControlHelper }

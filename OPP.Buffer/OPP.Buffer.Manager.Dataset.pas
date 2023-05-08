@@ -46,6 +46,7 @@ type
     isFixed: TOPPBufferManagerFieldDef;
     oppObject: TOPPBufferManagerFieldDef;
     loodsmanType: TOPPBufferManagerFieldDef;
+    loodsmanAttr: TOPPBufferManagerFieldDef;
   end;
 
 const
@@ -54,7 +55,8 @@ const
     { } sortIndex: (name: 'SortIndex'; dataType: ftInteger; size: 0);
     { } isFixed: (name: 'isFixed'; dataType: ftBoolean; size: 0);
     { } oppObject: (name: 'OPPObject'; dataType: ftBlob; size: 0);
-    { } loodsmanType: (name: '_TYPE'; dataType: ftString; size: 255)
+    { } loodsmanType: (name: '_TYPE'; dataType: ftString; size: 255);
+    { } loodsmanAttr: (name: '_ATTR'; dataType: ftString; size: 255)
     { } );
 
 implementation
@@ -90,6 +92,9 @@ begin
     self.FieldDefs.Add(name, dataType, size);
   { loodsmanType }
   with OPPBufferManagerRecordFields.loodsmanType do
+    self.FieldDefs.Add(name, dataType, size);
+  { loodsmanAttr }
+  with OPPBufferManagerRecordFields.loodsmanAttr do
     self.FieldDefs.Add(name, dataType, size);
   self.CreateDataSet;
 end;
@@ -178,6 +183,7 @@ begin
     begin
       self.FieldByName(OPPBufferManagerRecordFields.oppObject.name).AsBytes := ARecord.OPPInfo.SaveToBytes;
       self.FieldByName(OPPBufferManagerRecordFields.loodsmanType.name).AsString := ARecord.OPPInfo.loodsmanType;
+      self.FieldByName(OPPBufferManagerRecordFields.loodsmanAttr.name).AsString := ARecord.OPPInfo.loodsmanAttribute;
     end;
     self.Post;
 

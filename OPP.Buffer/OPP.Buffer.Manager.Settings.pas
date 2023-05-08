@@ -39,6 +39,9 @@ type
     procedure SetAutoFilter(AValue: Boolean);
     function GetAutoFilter: Boolean;
 
+    procedure SetSourceIsVisible(AValue: Boolean);
+    function GetSourceIsVisible: Boolean;
+
     procedure Save;
   end;
 
@@ -79,6 +82,9 @@ type
 
     procedure SetAutoFilter(AValue: Boolean);
     function GetAutoFilter: Boolean;
+
+    procedure SetSourceIsVisible(AValue: Boolean);
+    function GetSourceIsVisible: Boolean;
 
     procedure Save;
   end;
@@ -153,6 +159,11 @@ end;
 function TOPPBufferManagerSettings.GetShortCut: Word;
 begin
   result := fData.Shortcut;
+end;
+
+function TOPPBufferManagerSettings.GetSourceIsVisible: Boolean;
+begin
+  result := fData.SourceIsVisible;
 end;
 
 function TOPPBufferManagerSettings.GetUseRecordsCountLimit: Boolean;
@@ -239,6 +250,11 @@ end;
 procedure TOPPBufferManagerSettings.SetShortCut(AValue: Word);
 begin
   fData.Shortcut := AValue;
+end;
+
+procedure TOPPBufferManagerSettings.SetSourceIsVisible(AValue: Boolean);
+begin
+fData.SourceIsVisible := AValue;
 end;
 
 procedure TOPPBufferManagerSettings.SetUseRecordsCountLimit(AValue: Boolean);

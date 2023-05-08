@@ -27,17 +27,19 @@ type
     fColumnSort: TList<TOPPBufferManagerSettingsColumnSort>;
     fFormFrame: TRect;
     fAutoFilter: Boolean;
+    fSourceIsVisible: Boolean;
 
   public
     class procedure Save(AFileName: String; AData: TOPPBufferManagerSettingsData);
     class procedure Load(AFileName: String; out AData: TOPPBufferManagerSettingsData);
 
-    constructor Create;override;
-    destructor Destroy;override;
+    constructor Create; override;
+    destructor Destroy; override;
 
-    procedure SetColumnSortArray(AArray:TArray<TOPPBufferManagerSettingsColumnSort>);
+    procedure SetColumnSortArray(AArray: TArray<TOPPBufferManagerSettingsColumnSort>);
     property CurrentFileName: String read fCurrentFileName write fCurrentFileName;
     property Shortcut: Word read fShortcut write fShortcut;
+    property SourceIsVisible: Boolean read fSourceIsVisible write fSourceIsVisible;
     property RecordsCountLimit: Integer read fRecordsCountLimit write fRecordsCountLimit;
     property IsExternalAllowed: Boolean read fIsExternalAllowed write fIsExternalAllowed;
     property CanSaveFormFrame: Boolean read fCanSaveFormFrame write fCanSaveFormFrame;
@@ -56,7 +58,7 @@ uses
 const
   SOPPBufferManagerSettingsFileName = 'OPPBufferManager.settings';
 
-{ TOPPBufferManagerSettingsData }
+  { TOPPBufferManagerSettingsData }
 
 constructor TOPPBufferManagerSettingsData.Create;
 begin

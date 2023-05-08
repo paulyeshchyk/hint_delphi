@@ -26,10 +26,12 @@ type
     fOPPBufferType: TOPPBufferOPPInfoType;
     fLoodsmanId: String;
     fLoodsmanType: String;
+    fLoodsmanAttribute: String;
   public
     constructor Create(AType: TOPPBufferOPPInfoType);
 
     property oppBufferType: TOPPBufferOPPInfoType read fOPPBufferType write fOPPBufferType;
+    property loodsmanAttribute: String read fLoodsmanAttribute write fLoodsmanAttribute;
     property loodsmanType: String read fLoodsmanType write fLoodsmanType;
     property loodsmanId: String read fLoodsmanId write fLoodsmanId;
   end;
@@ -44,6 +46,7 @@ begin
   fOPPBufferType := AType;
   fLoodsmanId := '';
   fLoodsmanType := '';
+  fLoodsmanAttribute := '';
 end;
 
 { TOPPBufferManagerRecord }

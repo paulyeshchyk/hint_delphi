@@ -40,10 +40,13 @@ type
     Label3: TLabel;
     checkBoxAutoFilter: TcxCheckBox;
     actionAutoFilter: TAction;
+    checkBoxSourceIsVisible: TcxCheckBox;
+    actionSourceIsVisible: TAction;
     procedure actionAutoFilterExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionSaveSettingsExecute(Sender: TObject);
+    procedure actionSourceIsVisibleExecute(Sender: TObject);
     procedure actionWipeShortcutExecute(Sender: TObject);
     procedure clipboardManagerShortcutChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -145,6 +148,11 @@ begin
   actionClose.Execute;
 end;
 
+procedure TOPPBufferSettingsForm.actionSourceIsVisibleExecute(Sender: TObject);
+begin
+  fSettings.SetSourceIsVisible(checkBoxSourceIsVisible.checked);
+end;
+
 procedure TOPPBufferSettingsForm.actionWipeShortcutExecute(Sender: TObject);
 begin
   clipboardManagerShortcut.HotKey := 0;
@@ -168,6 +176,7 @@ begin
   CanSaveFormFrameCheckbox.Checked := fSettings.GetCanSaveFormFrame;
   checkBoxAutoFilter.Checked := fSettings.GetAutoFilter;
   clipboardManagerShortcut.HotKey := fSettings.GetShortCut;
+  checkBoxSourceIsVisible.checked := fSettings.GetSourceIsVisible;
 
   DoUpdateUI;
 end;
