@@ -36,6 +36,9 @@ type
     procedure SetFormFrame(AFrame: TRect);
     function GetFormFrame: TRect;
 
+    procedure SetAutoFilter(AValue: Boolean);
+    function GetAutoFilter: Boolean;
+
     procedure Save;
   end;
 
@@ -74,6 +77,9 @@ type
     procedure SetFormFrame(AFrame: TRect);
     function GetFormFrame: TRect;
 
+    procedure SetAutoFilter(AValue: Boolean);
+    function GetAutoFilter: Boolean;
+
     procedure Save;
   end;
 
@@ -102,6 +108,11 @@ destructor TOPPBufferManagerSettings.Destroy;
 begin
   fData.Free;
   inherited;
+end;
+
+function TOPPBufferManagerSettings.GetAutoFilter: Boolean;
+begin
+  result := fData.AutoFilter;
 end;
 
 function TOPPBufferManagerSettings.GetCanSaveFormFrame: Boolean;
@@ -182,6 +193,11 @@ begin
   end;
 
   TOPPBufferManagerSettingsData.Save(SOPPBufferManagerSettingsFileName, fData);
+end;
+
+procedure TOPPBufferManagerSettings.SetAutoFilter(AValue: Boolean);
+begin
+  fData.AutoFilter := AValue;
 end;
 
 procedure TOPPBufferManagerSettings.SetCanSaveFormFrame(AValue: Boolean);

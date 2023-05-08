@@ -135,7 +135,6 @@ type
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
     procedure DataSource1StateChange(Sender: TObject);
   private
-    fSettings: IOPPBufferManagerSettings;
 
     fIsEditMode: Boolean;
     fIsMultiSelectMode: Boolean;
@@ -157,11 +156,13 @@ type
     procedure SetFilterValue(const Value: String);
     procedure SetIconRepositoryItem(const Value: TcxEditRepositoryItem);
     function GetIconRepositoryItem: TcxEditRepositoryItem;
+    function GetSettings: IOPPBufferManagerSettings;
     property HasRecords: Boolean read GetHasRecords;
     property HasSelectedRecord: Boolean read GetHasSelectedRecord;
     property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
     property SelectedRecordsCountText: String read GetSelectedRecordsCountText;
     property DataSet: IOPPBufferManagerDataset read GetDataset;
+    property Settings: IOPPBufferManagerSettings read GetSettings;
 
     procedure ReloadFilter;
 
@@ -225,6 +226,9 @@ uses
   OPP.Keyboard.Shortcut.Manager;
 
 resourcestring
+  SActionFilterHintTemplate = 'Фильтрация по типу: %s';
+  SActionFilterHintNoType = 'Без типа';
+  SActionFilterHintDisabled = 'Фильтрация недоступна для текущего режима';
   SDuplicatedRecord = 'Такая запись уже есть в списке';
   SErrotCantSaveSettingsTemplate = 'Невозможно сохранить настройки. Файл %s заблокирован. Обратитесь к администратору.';
   SDeleteRecord = 'Удалить текущую';
@@ -428,7 +432,7 @@ end;
 
 procedure TOPPBufferForm.ColumnSortRead;
 begin
-  cxGrid1DBTableView1.OPPSetColumnsSort(fSettings.GetColumnSort);
+  cxGrid1DBTableView1.OPPSetColumnsSort(self.Settings.GetColumnSort);
 end;
 
 procedure TOPPBufferForm.ColumnSortSave;
@@ -437,7 +441,7 @@ var
 begin
   sortRecords := cxGrid1DBTableView1.OPPGetColumnsSort;
   try
-    fSettings.SetColumnSort(sortRecords);
+    self.Settings.SetColumnSort(sortRecords);
   finally
     SetLength(sortRecords, 0);
   end;
@@ -501,7 +505,7 @@ end;
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   ColumnSortSave;
-  fSettings.SetFormFrame(self.frame);
+  self.Settings.SetFormFrame(self.frame);
   oppBufferManager.SaveRecords();
   DataSource1.DataSet := nil;
 end;
@@ -510,8 +514,7 @@ procedure TOPPBufferForm.FormCreate(Sender: TObject);
 var
   ffFrame: TRect;
 begin
-  fSettings := oppBufferManager.Settings;
-  ffFrame := fSettings.GetFormFrame;
+  ffFrame := self.Settings.GetFormFrame;
   if not ffFrame.isEmpty then
   begin
     if ffFrame.Left < 0 then
@@ -555,6 +558,7 @@ begin
   result := cxGrid1DBTableView1Column4.RepositoryItem;
 end;
 
+
 function TOPPBufferForm.GetSelectedRecordsCountText: String;
 begin
   result := '';
@@ -564,6 +568,11 @@ begin
     exit;
 
   result := Format(SSelectedRecordsTemplate, [cxGrid1DBTableView1.Controller.SelectedRowCount]);
+end;
+
+function TOPPBufferForm.GetSettings: IOPPBufferManagerSettings;
+begin
+  result := oppBufferManager.Settings;
 end;
 
 function TOPPBufferForm.GetHasSelectedFewRecords: Boolean;
@@ -612,6 +621,8 @@ end;
 procedure TOPPBufferForm.SetClipboardControl(const Value: TWinControl);
 var
   fOPPInfo: TOPPBufferOPPInfo;
+  fIsAutoFilter: Boolean;
+  fControlType: String;
 begin
   fClipboardControl := Value;
   actionSetFiltered.Enabled := Assigned(fClipboardControl);
@@ -623,15 +634,27 @@ begin
     exit;
   end;
 
+  actionSetFiltered.Hint := SActionFilterHintDisabled;
   fOPPInfo := TOPPBufferOPPInfo.GetOPPInfo(Value);
   if not Assigned(fOPPInfo) then
   begin
     exit;
   end;
 
+  if Length(fOPPInfo.loodsmanType) <> 0 then
+    fControlType := fOPPInfo.loodsmanType
+  else
+    fControlType := SActionFilterHintNoType;
+  actionSetFiltered.Hint := Format(SActionFilterHintTemplate,[fControlType]);
+
+
+  fIsAutoFilter := true;
+  if Assigned(Self.Settings) then
+    fIsAutoFilter := Self.Settings.GetAutoFilter;
+
   try
     self.FilterValue := fOPPInfo.loodsmanType;
-    self.IsFiltered := (Length(Self.FilterValue) <> 0);
+    self.IsFiltered := (Length(Self.FilterValue) <> 0) and (fIsAutoFilter);
   finally
     fOPPInfo.Free;
   end;

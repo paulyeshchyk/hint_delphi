@@ -38,6 +38,9 @@ type
     Label2: TLabel;
     Button1: TButton;
     Label3: TLabel;
+    checkBoxAutoFilter: TcxCheckBox;
+    actionAutoFilter: TAction;
+    procedure actionAutoFilterExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionSaveSettingsExecute(Sender: TObject);
@@ -80,6 +83,11 @@ uses
   VarUtils;
 
 {$R *.dfm}
+
+procedure TOPPBufferSettingsForm.actionAutoFilterExecute(Sender: TObject);
+begin
+  fSettings.SetAutoFilter(checkBoxAutoFilter.Checked);
+end;
 
 procedure TOPPBufferSettingsForm.FormCreate(Sender: TObject);
 begin
@@ -158,6 +166,7 @@ begin
   recordsCountLimitEdit.Value := fSettings.GetRecordsCountLimit;
   AllowExternalsCheckBox.Checked := fSettings.GetIsExternalAllowed;
   CanSaveFormFrameCheckbox.Checked := fSettings.GetCanSaveFormFrame;
+  checkBoxAutoFilter.Checked := fSettings.GetAutoFilter;
   clipboardManagerShortcut.HotKey := fSettings.GetShortCut;
 
   DoUpdateUI;

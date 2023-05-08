@@ -4,7 +4,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1073#1091#1092#1077#1088#1072' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 368
+  ClientHeight = 397
   ClientWidth = 469
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -94,9 +94,9 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 311
+    Top = 335
     Width = 469
-    Height = 57
+    Height = 62
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -104,6 +104,8 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 352
+    ExplicitHeight = 45
     object Button1: TButton
       Left = 378
       Top = 16
@@ -118,7 +120,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Left = 16
     Top = 173
     Width = 437
-    Height = 132
+    Height = 156
     Margins.Left = 16
     Margins.Top = 6
     Margins.Right = 16
@@ -128,7 +130,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     TabOrder = 2
     object SpeedButton1: TSpeedButton
       Left = 341
-      Top = 93
+      Top = 114
       Width = 76
       Height = 22
       Hint = #1054#1095#1080#1089#1090#1080#1090#1100
@@ -144,7 +146,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     end
     object Label2: TLabel
       Left = 16
-      Top = 93
+      Top = 114
       Width = 170
       Height = 13
       Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
@@ -153,7 +155,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     end
     object AllowExternalsCheckBox: TcxCheckBox
       Left = 8
-      Top = 32
+      Top = 53
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -168,7 +170,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     end
     object CanSaveFormFrameCheckbox: TcxCheckBox
       Left = 8
-      Top = 60
+      Top = 81
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -183,7 +185,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     end
     object clipboardManagerShortcut: THotKey
       Left = 195
-      Top = 93
+      Top = 114
       Width = 142
       Height = 19
       Margins.Left = 6
@@ -195,6 +197,20 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       TabOrder = 2
       Visible = False
       OnChange = clipboardManagerShortcutChange
+    end
+    object checkBoxAutoFilter: TcxCheckBox
+      Left = 8
+      Top = 24
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Action = actionAutoFilter
+      Style.LookAndFeel.NativeStyle = True
+      StyleDisabled.LookAndFeel.NativeStyle = True
+      StyleFocused.LookAndFeel.NativeStyle = True
+      StyleHot.LookAndFeel.NativeStyle = True
+      TabOrder = 3
     end
   end
   object ActionList1: TActionList
@@ -217,6 +233,10 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     object actionWipeShortcut: TAction
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100
       OnExecute = actionWipeShortcutExecute
+    end
+    object actionAutoFilter: TAction
+      Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1092#1080#1083#1100#1090#1088#1072#1094#1080#1103' '#1079#1072#1087#1080#1089#1077#1081
+      OnExecute = actionAutoFilterExecute
     end
   end
 end

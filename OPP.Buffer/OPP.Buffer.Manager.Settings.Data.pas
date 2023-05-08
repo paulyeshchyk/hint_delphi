@@ -26,6 +26,7 @@ type
     fUseRecordsCountLimit: Boolean;
     fColumnSort: TList<TOPPBufferManagerSettingsColumnSort>;
     fFormFrame: TRect;
+    fAutoFilter: Boolean;
 
   public
     class procedure Save(AFileName: String; AData: TOPPBufferManagerSettingsData);
@@ -40,6 +41,7 @@ type
     property RecordsCountLimit: Integer read fRecordsCountLimit write fRecordsCountLimit;
     property IsExternalAllowed: Boolean read fIsExternalAllowed write fIsExternalAllowed;
     property CanSaveFormFrame: Boolean read fCanSaveFormFrame write fCanSaveFormFrame;
+    property AutoFilter: Boolean read fAutoFilter write fAutoFilter;
     property UseRecordsCountLimit: Boolean read fUseRecordsCountLimit write fUseRecordsCountLimit;
     property ColumnSort: TList<TOPPBufferManagerSettingsColumnSort> read fColumnSort write fColumnSort;
     property FormFrame: TRect read fFormFrame write fFormFrame;
