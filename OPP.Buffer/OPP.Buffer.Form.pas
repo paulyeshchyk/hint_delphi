@@ -222,9 +222,7 @@ uses
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.System.Clipboard,
   OPP.Help.System.Control,
-
-  OPP.Buffer.OPPInfo.Helper,
-
+  OPP.Buffer.OPPInfo,
   OPP.Keyboard.Shortcut.Manager;
 
 resourcestring
@@ -648,7 +646,8 @@ begin
   end;
 
   actionSetFiltered.Hint := SActionFilterHintDisabled;
-  fOPPInfo := TOPPBufferOPPInfo.GetOPPInfo(Value);
+
+  fOPPInfo := oppBufferManager.GetOPPInfo(Value);
   if not Assigned(fOPPInfo) then
   begin
     exit;
@@ -658,6 +657,7 @@ begin
     fControlType := fOPPInfo.loodsmanType
   else
     fControlType := SActionFilterHintNoType;
+
   actionSetFiltered.Hint := Format(SActionFilterHintTemplate, [fControlType]);
 
   fIsAutoFilter := true;

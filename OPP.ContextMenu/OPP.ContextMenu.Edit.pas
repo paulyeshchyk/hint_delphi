@@ -42,7 +42,6 @@ type
     class function OnValidateDeleteText(Sender: TWinControl): Boolean;
     class function OnValidateSelectAllText(Sender: TWinControl): Boolean;
     class function OnValidateOPPBufferOpen(Sender: TWinControl): Boolean;
-
   end;
 
 implementation
@@ -160,7 +159,6 @@ begin
   end else begin
     result := PopupComponent;
   end
-
 end;
 
 class procedure TOPPContextMenuEditHelper.OnCopyText(Sender: TObject);

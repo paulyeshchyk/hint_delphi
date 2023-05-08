@@ -66,7 +66,7 @@ uses
   OPP.Help.log,
   OPP.Help.System.Str,
   OPP.Help.System.JSON,
-  OPP.Buffer.OPPInfo.Helper,
+  OPP.Buffer.OPPInfo,
   Vcl.Forms;
 
 const

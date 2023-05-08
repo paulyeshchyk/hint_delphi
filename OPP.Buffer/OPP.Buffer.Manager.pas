@@ -10,17 +10,25 @@ uses
   OPP.Help.System.Codable,
   OPP.Help.System.Codable.Helper,
 
+  OPP.Buffer.OPPInfo,
+  OPP.Buffer.Manager.Dataset,
+  OPP.Buffer.Manager.DatasetRecord,
+
   OPP.Buffer.Manager.Settings,
   OPP.Buffer.Manager.Settings.Data,
 
   OPP.Buffer.Clipboard,
-  OPP.Buffer.Manager.Dataset,
-  OPP.Buffer.Manager.DatasetRecord,
 
   System.Generics.Collections,
   System.Variants, System.StrUtils;
 
 type
+  TOPPInfoExtractor = class
+  protected
+    function isApplicable(Sender: TWinControl): Boolean; virtual;
+    function GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo; virtual;
+    procedure SetOPPInfo(OPPInfo: TOPPBufferOPPInfo; AText: String; AControl: TWinControl); virtual;
+  end;
 
   IOPPBufferManager = interface
     procedure ReadDataFromControl(Sender: TWinControl);
@@ -31,6 +39,7 @@ type
 
     function GetDataset: IOPPBufferManagerDataset;
     function GetSettings: IOPPBufferManagerSettings;
+    function GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
 
     procedure LoadRecords();
     procedure SaveRecords(AFileName: String = '');
@@ -38,6 +47,8 @@ type
     procedure RemoveRecordsAfter(AAfter: Integer);
 
     procedure SetCustomFilter(AFilter: String);
+
+    procedure RegisterOPPInfoExtractor(AExtractor: TOPPInfoExtractor);
 
     property Dataset: IOPPBufferManagerDataset read GetDataset;
     property Settings: IOPPBufferManagerSettings read GetSettings;
@@ -48,20 +59,27 @@ type
     fIgnoreClipboardMessages: Boolean;
     fDataset: TOPPBufferManagerDataset;
     fSettings: IOPPBufferManagerSettings;
+    fOPPInfoExtractors: TArray<TOPPInfoExtractor>;
     procedure AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);
     procedure CreateRecordAndSave(const OPPInfo: TOPPBufferOPPInfo);
     function GetCanAcceptRecord: Boolean;
     function GetDataset: IOPPBufferManagerDataset;
     function GetRecordsStorageFileName(AFileName: String = ''): String;
     function GetSettings: IOPPBufferManagerSettings;
+
     procedure LoadRecords();
     procedure SaveRecords(AFileName: String = '');
     procedure SetRecordsStorageFileName(AFileName: String = '');
     procedure OnCalcFields(ADataset: TDataset);
     property CanAcceptRecord: Boolean read GetCanAcceptRecord;
+
   public
     constructor Create;
     destructor Destroy; override;
+
+    procedure RegisterOPPInfoExtractor(AExtractor: TOPPInfoExtractor);
+    function GetOPPInfoExtractor(Sender: TWinControl): TOPPInfoExtractor;
+    function GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
 
     procedure ReadDataFromControl(Sender: TWinControl);
     procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
@@ -82,13 +100,9 @@ uses
   System.SyncObjs,
   System.SysUtils,
   System.IOUtils,
-  OPP.Help.System.Files,
-  OPP.Help.System.Str,
   OPP.Help.Log,
   Vcl.Dialogs,
   Vcl.Forms,
-
-  OPP.Buffer.OPPInfo.Helper,
 
   WinAPI.Windows;
 
@@ -155,7 +169,6 @@ begin
   finally
     fRecord.Free;
   end;
-
 end;
 
 { TOPPBufferManager }
@@ -204,7 +217,53 @@ end;
 
 function TOPPBufferManager.GetDataset: IOPPBufferManagerDataset;
 begin
-  result := fDataset
+  result := fDataset;
+end;
+
+function TOPPBufferManager.GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
+var
+  i: Integer;
+  fFound: Boolean;
+  fExtractor: TOPPInfoExtractor;
+begin
+  fFound := false;
+  result := nil;
+  i := 0;
+
+  while (not fFound) and (i < Length(fOPPInfoExtractors)) do
+  begin
+    fExtractor := fOPPInfoExtractors[i];
+    if assigned(fExtractor) then
+    begin
+      result := fExtractor.GetOPPInfo(Sender);
+      fFound := assigned(result);
+    end;
+    inc(i);
+  end;
+
+end;
+
+function TOPPBufferManager.GetOPPInfoExtractor(Sender: TWinControl): TOPPInfoExtractor;
+var
+  i: Integer;
+  fFound: Boolean;
+  fExtractor: TOPPInfoExtractor;
+begin
+  fFound := false;
+  result := nil;
+  i := 0;
+
+  while (not fFound) and (i < Length(fOPPInfoExtractors)) do
+  begin
+    fExtractor := fOPPInfoExtractors[i];
+    if assigned(fExtractor) then
+    begin
+      fFound := fExtractor.isApplicable(Sender);
+      if fFound then
+        result := fExtractor;
+    end;
+    inc(i);
+  end;
 end;
 
 function TOPPBufferManager.GetRecordsStorageFileName(AFileName: String): String;
@@ -283,7 +342,8 @@ begin
 
   fIgnoreClipboardMessages := true;
 
-  fOPPInfo := TOPPBufferOPPInfo.GetOPPInfo(Sender);
+  fOPPInfo := self.GetOPPInfo(Sender);
+
   if assigned(fOPPInfo) then
   begin
     try
@@ -298,11 +358,27 @@ begin
   fIgnoreClipboardMessages := false;
 end;
 
+procedure TOPPBufferManager.RegisterOPPInfoExtractor(AExtractor: TOPPInfoExtractor);
+var
+  len: Integer;
+begin
+  if not assigned(AExtractor) then
+    exit;
+
+  len := Length(fOPPInfoExtractors);
+  SetLength(fOPPInfoExtractors, len + 1);
+  fOPPInfoExtractors[len] := AExtractor;
+end;
+
 procedure TOPPBufferManager.WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
+var
+  fExtractor: TOPPInfoExtractor;
 begin
   if ((not assigned(AData)) or (not assigned(Sender))) then
     exit;
-  TOPPBufferOPPInfo.SetOPPInfo(AData.OPPInfo, AData.text, Sender);
+  fExtractor := GetOPPInfoExtractor(Sender);
+  if assigned(fExtractor) then
+    fExtractor.SetOPPInfo(AData.OPPInfo, AData.text, Sender);
 end;
 
 procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);
@@ -364,6 +440,23 @@ function TOPPBufferManagerRecordStreamHelper.GetBufferManagerRecord(ASortIndex: 
 begin
   result.SortIndex := ASortIndex;
   result.IsFixed := false;
+end;
+
+{ TOPPInfoExtractor }
+
+function TOPPInfoExtractor.GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
+begin
+  result := nil;
+end;
+
+function TOPPInfoExtractor.isApplicable(Sender: TWinControl): Boolean;
+begin
+  result := false;
+end;
+
+procedure TOPPInfoExtractor.SetOPPInfo(OPPInfo: TOPPBufferOPPInfo; AText: String; AControl: TWinControl);
+begin
+  //
 end;
 
 initialization

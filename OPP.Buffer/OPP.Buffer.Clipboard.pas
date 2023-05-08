@@ -6,6 +6,7 @@ uses
   System.SysUtils, System.Classes,
   WinAPI.Windows,
   Vcl.Clipbrd,
+  OPP.Buffer.OPPInfo,
   OPP.Buffer.Manager.DatasetRecord;
 
 type
