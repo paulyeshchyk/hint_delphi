@@ -207,7 +207,7 @@ uses
   SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
 
-  //OPP.ContextMenu.Edit,
+  OPP.ContextMenu.Edit,
 
   OPP.Help.Settings.Form,
   OPP.Help.System.Codable.FormSizeSettings,
@@ -412,7 +412,7 @@ procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
 begin
   if FindWindow('TOPPBufferForm', nil) = 0 then
   begin
-    TOPPBufferForm.ShowForm(nil, Screen.ActiveControl);
+    TOPPBufferForm.ShowForm(nil, nil, Screen.ActiveControl);
   end
   else
     eventLogger.Debug('Cant run second instance');
@@ -666,7 +666,7 @@ var
   dropdownItem: String;
 begin
 
-  cxEditIdentifierName.PopupMenu := TOPPContextMenuEdit.Create(self);
+  cxEditIdentifierName.PopupMenu := TOPPContextMenuEdit.Create(self, nil);
 
   // settings
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();

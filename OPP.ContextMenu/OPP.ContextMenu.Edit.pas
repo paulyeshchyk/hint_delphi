@@ -2,7 +2,8 @@
 
 interface
 
-uses Vcl.Menus, System.Classes, WinAPI.Messages, WinAPI.Windows, Vcl.Controls;
+uses Vcl.Menus, System.Classes, WinAPI.Messages, WinAPI.Windows, Vcl.Controls,
+  cxEdit;
 
 type
   TOPPContextMenuItemOnValidate = reference to function(Sender: TWinControl): Boolean;
@@ -15,33 +16,33 @@ type
   end;
 
   TOPPContextMenuEdit = class(TPopupMenu)
+  private
+    fcxEditRepositoryItem: TcxEditRepositoryItem;
   protected
     procedure Popup(X, Y: Integer); override;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent; AIconRepositoryItem: TcxEditRepositoryItem);
     class function CreateCustomMenuItem(AOwner: TComponent; Caption: String; onClick: TNotifyEvent; OnValidate: TOPPContextMenuItemOnValidate): TOPPContextMenuItem;
   end;
 
   TOPPContextMenuEditHelper = class Helper for TOPPContextMenuEdit
-  private
-    class function doCheckIfSenderIsEditable(Sender: TObject): Boolean;
   public
     class function GetPopupComponentAsEditControl(Sender: TObject): TWinControl;
     class function GetPopupComponentAsEditControlForAction(Sender: TObject): TWinControl;
 
-    class procedure OnCutText(Sender: TObject);
-    class procedure OnCopyText(Sender: TObject);
-    class procedure OnPasteText(Sender: TObject);
-    class procedure OnDeleteText(Sender: TObject);
-    class procedure OnSelectAllText(Sender: TObject);
-    class procedure OnOPPBufferOpen(Sender: TObject);
+    procedure OnCutText(Sender: TObject);
+    procedure OnCopyText(Sender: TObject);
+    procedure OnPasteText(Sender: TObject);
+    procedure OnDeleteText(Sender: TObject);
+    procedure OnSelectAllText(Sender: TObject);
+    procedure OnOPPBufferOpen(Sender: TObject);
 
-    class function OnValidateCutText(Sender: TWinControl): Boolean;
-    class function OnValidateCopyText(Sender: TWinControl): Boolean;
-    class function OnValidatePasteText(Sender: TWinControl): Boolean;
-    class function OnValidateDeleteText(Sender: TWinControl): Boolean;
-    class function OnValidateSelectAllText(Sender: TWinControl): Boolean;
-    class function OnValidateOPPBufferOpen(Sender: TWinControl): Boolean;
+    function OnValidateCutText(Sender: TWinControl): Boolean;
+    function OnValidateCopyText(Sender: TWinControl): Boolean;
+    function OnValidatePasteText(Sender: TWinControl): Boolean;
+    function OnValidateDeleteText(Sender: TWinControl): Boolean;
+    function OnValidateSelectAllText(Sender: TWinControl): Boolean;
+    function OnValidateOPPBufferOpen(Sender: TWinControl): Boolean;
   end;
 
 implementation
@@ -49,9 +50,6 @@ implementation
 uses
   System.RTTI,
   Vcl.ClipBrd, Vcl.Forms,
-  cxEdit,
-
-  OPPConfiguration,
 
   OPP.Help.Log,
   OPP.Help.System.Control,
@@ -60,18 +58,19 @@ uses
 
 { TOPPContextMenuEdit }
 
-constructor TOPPContextMenuEdit.Create(AOwner: TComponent);
+constructor TOPPContextMenuEdit.Create(AOwner: TComponent; AIconRepositoryItem: TcxEditRepositoryItem);
 begin
   inherited Create(AOwner);
+  self.fcxEditRepositoryItem := AIconRepositoryItem;
 
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Вырезать', TOPPContextMenuEdit.OnCutText, TOPPContextMenuEdit.OnValidateCutText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Копировать', TOPPContextMenuEdit.OnCopyText, TOPPContextMenuEdit.OnValidateCopyText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Вставить', TOPPContextMenuEdit.OnPasteText, TOPPContextMenuEdit.OnValidatePasteText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Удалить', TOPPContextMenuEdit.OnDeleteText, TOPPContextMenuEdit.OnValidateDeleteText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, '-', nil, nil));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Выделить всё', TOPPContextMenuEdit.OnSelectAllText, TOPPContextMenuEdit.OnValidateSelectAllText));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, '-', nil, nil));
-  self.Items.Add(TOPPContextMenuEdit.CreateCustomMenuItem(self, 'Буфер обмена ГС', TOPPContextMenuEdit.OnOPPBufferOpen, nil));
+  self.Items.Add(CreateCustomMenuItem(self, 'Вырезать', OnCutText, OnValidateCutText));
+  self.Items.Add(CreateCustomMenuItem(self, 'Копировать', OnCopyText, OnValidateCopyText));
+  self.Items.Add(CreateCustomMenuItem(self, 'Вставить', OnPasteText, OnValidatePasteText));
+  self.Items.Add(CreateCustomMenuItem(self, 'Удалить', OnDeleteText, OnValidateDeleteText));
+  self.Items.Add(CreateCustomMenuItem(self, '-', nil, nil));
+  self.Items.Add(CreateCustomMenuItem(self, 'Выделить всё', OnSelectAllText, OnValidateSelectAllText));
+  self.Items.Add(CreateCustomMenuItem(self, '-', nil, nil));
+  self.Items.Add(CreateCustomMenuItem(self, 'Буфер обмена ГС', OnOPPBufferOpen, nil));
 end;
 
 class function TOPPContextMenuEdit.CreateCustomMenuItem(AOwner: TComponent; Caption: String; onClick: TNotifyEvent; OnValidate: TOPPContextMenuItemOnValidate): TOPPContextMenuItem;
@@ -85,8 +84,6 @@ end;
 procedure TOPPContextMenuEdit.Popup(X, Y: Integer);
 var
   item: TMenuItem;
-  isEnabledItem: Boolean;
-  fWinControl: TWinControl;
 begin
   for item in self.Items do
   begin
@@ -109,20 +106,9 @@ end;
 
 { TOPPContextMenuEditHelper }
 
-class function TOPPContextMenuEditHelper.doCheckIfSenderIsEditable(Sender: TObject): Boolean;
-var
-  PopupComponent: TComponent;
-begin
-  result := false;
-  PopupComponent := GetPopupComponentAsEditControl(Sender);
-  if Assigned(PopupComponent) then
-    result := true;
-end;
-
 class function TOPPContextMenuEditHelper.GetPopupComponentAsEditControl(Sender: TObject): TWinControl;
 var
   PopupComponent: TWinControl;
-  fComponent: TComponent;
 begin
   result := nil;
   if not(Sender is TWinControl) then
@@ -161,7 +147,7 @@ begin
   end
 end;
 
-class procedure TOPPContextMenuEditHelper.OnCopyText(Sender: TObject);
+procedure TOPPContextMenuEditHelper.OnCopyText(Sender: TObject);
 var
   PopupComponent: TComponent;
 begin
@@ -170,7 +156,7 @@ begin
     SendMessage(TWinControl(PopupComponent).Handle, WM_COPY, 0, 0);
 end;
 
-class procedure TOPPContextMenuEditHelper.OnCutText(Sender: TObject);
+procedure TOPPContextMenuEditHelper.OnCutText(Sender: TObject);
 var
   PopupComponent: TComponent;
 begin
@@ -179,7 +165,7 @@ begin
     SendMessage(TWinControl(PopupComponent).Handle, WM_CUT, 0, 0);
 end;
 
-class procedure TOPPContextMenuEditHelper.OnDeleteText(Sender: TObject);
+procedure TOPPContextMenuEditHelper.OnDeleteText(Sender: TObject);
 var
   PopupComponent: TComponent;
 begin
@@ -188,17 +174,17 @@ begin
     SendMessage(TWinControl(PopupComponent).Handle, WM_CLEAR, 0, 0);
 end;
 
-class procedure TOPPContextMenuEditHelper.OnOPPBufferOpen(Sender: TObject);
+procedure TOPPContextMenuEditHelper.OnOPPBufferOpen(Sender: TObject);
 begin
   if FindWindow('TOPPBufferForm', nil) = 0 then
   begin
-    TOPPBufferForm.ShowForm(nil, OPPConfiguration.Config.TypesNamesRepository, Screen.ActiveControl);
+    TOPPBufferForm.ShowForm(nil, self.fcxEditRepositoryItem, Screen.ActiveControl);
   end
   else
     eventLogger.Debug('Cant run second instance');
 end;
 
-class procedure TOPPContextMenuEditHelper.OnPasteText(Sender: TObject);
+procedure TOPPContextMenuEditHelper.OnPasteText(Sender: TObject);
 var
   PopupComponent: TComponent;
 begin
@@ -207,7 +193,7 @@ begin
     SendMessage(TWinControl(PopupComponent).Handle, WM_PASTE, 0, 0);
 end;
 
-class procedure TOPPContextMenuEditHelper.OnSelectAllText(Sender: TObject);
+procedure TOPPContextMenuEditHelper.OnSelectAllText(Sender: TObject);
 var
   PopupComponent: TComponent;
 begin
@@ -216,7 +202,7 @@ begin
     SendMessage(TWinControl(PopupComponent).Handle, EM_SETSEL, 0, -1);
 end;
 
-class function TOPPContextMenuEditHelper.OnValidateCopyText(Sender: TWinControl): Boolean;
+function TOPPContextMenuEditHelper.OnValidateCopyText(Sender: TWinControl): Boolean;
 var
   PopupComponent: TWinControl;
 begin
@@ -227,7 +213,7 @@ begin
   result := (PopupComponent.TextSelectionLength > 0);
 end;
 
-class function TOPPContextMenuEditHelper.OnValidateCutText(Sender: TWinControl): Boolean;
+function TOPPContextMenuEditHelper.OnValidateCutText(Sender: TWinControl): Boolean;
 var
   PopupComponent: TWinControl;
 begin
@@ -238,7 +224,7 @@ begin
   result := (PopupComponent.TextSelectionLength > 0);
 end;
 
-class function TOPPContextMenuEditHelper.OnValidateDeleteText(Sender: TWinControl): Boolean;
+function TOPPContextMenuEditHelper.OnValidateDeleteText(Sender: TWinControl): Boolean;
 var
   PopupComponent: TWinControl;
 begin
@@ -249,7 +235,7 @@ begin
   result := (PopupComponent.TextSelectionLength > 0);
 end;
 
-class function TOPPContextMenuEditHelper.OnValidateOPPBufferOpen(Sender: TWinControl): Boolean;
+function TOPPContextMenuEditHelper.OnValidateOPPBufferOpen(Sender: TWinControl): Boolean;
 begin
   result := false;
   if not Assigned(Sender) then
@@ -257,9 +243,7 @@ begin
   result := Sender.HasTextProp;
 end;
 
-class function TOPPContextMenuEditHelper.OnValidatePasteText(Sender: TWinControl): Boolean;
-var
-  PopupComponent: TComponent;
+function TOPPContextMenuEditHelper.OnValidatePasteText(Sender: TWinControl): Boolean;
 begin
   result := false;
   if not Assigned(Sender) then
@@ -268,7 +252,7 @@ begin
   result := result and Clipboard.HasClipboardFormat();
 end;
 
-class function TOPPContextMenuEditHelper.OnValidateSelectAllText(Sender: TWinControl): Boolean;
+function TOPPContextMenuEditHelper.OnValidateSelectAllText(Sender: TWinControl): Boolean;
 var
   PopupComponent: TWinControl;
 begin

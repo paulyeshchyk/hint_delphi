@@ -86,19 +86,18 @@ contains
   OPP.Help.System.Codable.TunningEditorDefaultSettings in '..\OPP.Help\OPP.Help.System.Codable.TunningEditorDefaultSettings.pas',
   OPP.Help.System.Application in '..\OPP.Help\OPP.Help.System.Application.pas',
   OPP.Keyboard.Shortcut.Manager in '..\OPP.Keyboard\OPP.Keyboard.Shortcut.Manager.pas',
+  OPP.Help.System.Control in '..\OPP.Help\OPP.Help.System.Control.pas',
+  OPP.Help.System.Clipboard in '..\OPP.Help\OPP.Help.System.Clipboard.pas',
+  OPP.Help.System.JSON in '..\OPP.Help\OPP.Help.System.JSON.pas',
   OPP.Buffer.Clipboard in '..\OPP.Buffer\OPP.Buffer.Clipboard.pas',
   OPP.Buffer.Form in '..\OPP.Buffer\OPP.Buffer.Form.pas' {OPPBufferForm},
   OPP.Buffer.Manager.Dataset in '..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas',
+  OPP.Buffer.Manager.DatasetRecord in '..\OPP.Buffer\OPP.Buffer.Manager.DatasetRecord.pas',
   OPP.Buffer.Manager in '..\OPP.Buffer\OPP.Buffer.Manager.pas',
   OPP.Buffer.Manager.Settings.Data in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas',
   OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
-  //OPP.ContextMenu.Edit in '..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas',
-  OPP.Help.System.Control in '..\OPP.Help\OPP.Help.System.Control.pas',
-  OPP.Help.System.Clipboard in '..\OPP.Help\OPP.Help.System.Clipboard.pas',
-  OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
-  OPP.Help.System.JSON in '..\OPP.Help\OPP.Help.System.JSON.pas',
-  OPP.Buffer.SYLK.Extractor in '..\OPP.Buffer\OPP.Buffer.SYLK.Extractor.pas',
-  OPP.Buffer.SYLK in '..\OPP.Buffer\OPP.Buffer.SYLK.pas';
+  OPP.Buffer.OPPInfo in '..\OPP.Buffer\OPP.Buffer.OPPInfo.pas',
+  OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm};
 
 end.
 
