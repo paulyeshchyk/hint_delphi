@@ -22,7 +22,7 @@ uses
   OPP.Buffer.Manager, OPP.Buffer.Manager.Settings;
 
 type
-  TOPPBufferFormOnApply = reference to procedure(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
+  TOPPBufferFormOnApply = reference to procedure(ARecord: TOPPBufferManagerRecord; ABufferManager: TOPPBufferManager; AClipboardControl: TWinControl);
 
   TOPPBufferForm = class(TForm)
     actionApplySelection: TAction;
@@ -143,36 +143,39 @@ type
     fClipboardControl: TWinControl;
     fIsFiltered: Boolean;
     fFilterValue: String;
-    function GetHasRecords: Boolean;
-    function GetHasSelectedRecord: Boolean;
-    procedure ReloadActionsVisibility;
-    procedure setIsEditMode(const Value: Boolean);
-    procedure SetIsMultiSelectMode(const Value: Boolean);
-    function GetHasSelectedFewRecords: Boolean;
-    function GetSelectedRecordsCountText: String;
-    procedure SetOnApply(const Value: TOPPBufferFormOnApply);
+    fBufferManager: TOPPBufferManager;
     function GetDataset: IOPPBufferManagerDataset;
-    procedure SetIsFiltered(const Value: Boolean);
+    function GetHasRecords: Boolean;
+    function GetHasSelectedFewRecords: Boolean;
+    function GetHasSelectedRecord: Boolean;
+    function GetIconRepositoryItem: TcxEditRepositoryItem;
+    function GetSelectedRecordsCountText: String;
+    function GetSettings: IOPPBufferManagerSettings;
+    procedure ReloadActionsVisibility;
+    procedure SetBufferManager(const Value: TOPPBufferManager);
     procedure SetClipboardControl(const Value: TWinControl);
     procedure SetFilterValue(const Value: String);
     procedure SetIconRepositoryItem(const Value: TcxEditRepositoryItem);
-    function GetIconRepositoryItem: TcxEditRepositoryItem;
-    function GetSettings: IOPPBufferManagerSettings;
-    property HasRecords: Boolean read GetHasRecords;
-    property HasSelectedRecord: Boolean read GetHasSelectedRecord;
-    property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
-    property SelectedRecordsCountText: String read GetSelectedRecordsCountText;
+    procedure setIsEditMode(const Value: Boolean);
+    procedure SetIsFiltered(const Value: Boolean);
+    procedure SetIsMultiSelectMode(const Value: Boolean);
+    procedure SetOnApply(const Value: TOPPBufferFormOnApply);
     property DataSet: IOPPBufferManagerDataset read GetDataset;
+    property HasRecords: Boolean read GetHasRecords;
+    property HasSelectedFewRecords: Boolean read GetHasSelectedFewRecords;
+    property HasSelectedRecord: Boolean read GetHasSelectedRecord;
+    property SelectedRecordsCountText: String read GetSelectedRecordsCountText;
     property Settings: IOPPBufferManagerSettings read GetSettings;
 
     procedure ReloadFilter;
+    procedure ReadSettings;
 
     procedure ColumnSortSave;
     procedure ColumnSortRead;
     procedure ColumnSizeChange;
     procedure ColumnVisibilityChange;
 
-    class procedure OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
+    class procedure OnApplyData(ARecord: TOPPBufferManagerRecord; ABufferManager: TOPPBufferManager; AClipboardControl: TWinControl);
 
     { Private declarations }
 
@@ -180,11 +183,13 @@ type
     property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
     property IsFiltered: Boolean read fIsFiltered write SetIsFiltered default false;
     property FilterValue: String read fFilterValue write SetFilterValue;
+    property BufferManager: TOPPBufferManager read fBufferManager write SetBufferManager;
 
   public
-    class procedure ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem); overload;
-    class procedure ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem; AControl: TWinControl); overload;
+    class procedure ShowForm(AOwner: TControl; ABufferManager: TOPPBufferManager; IconRepositoryItem: TcxEditRepositoryItem); overload;
+    class procedure ShowForm(AOwner: TControl; ABufferManager: TOPPBufferManager; IconRepositoryItem: TcxEditRepositoryItem; AControl: TWinControl); overload;
     { Public declarations }
+    constructor Create(AOwner: TComponent; ABufferManager: TOPPBufferManager);
     property OnApply: TOPPBufferFormOnApply read fOnApply write SetOnApply;
     property ClipboardControl: TWinControl read fClipboardControl write SetClipboardControl;
     property IconRepositoryItem: TcxEditRepositoryItem read GetIconRepositoryItem write SetIconRepositoryItem;
@@ -251,7 +256,7 @@ begin
     begin
       if (Assigned(theRecord) and Assigned(fOnApply)) then
       begin
-        fOnApply(theRecord, fClipboardControl);
+        fOnApply(theRecord, self.BufferManager, fClipboardControl);
       end;
       Close;
     end);
@@ -282,10 +287,13 @@ end;
 
 procedure TOPPBufferForm.actionExportBufferExecute(Sender: TObject);
 begin
-  SaveDialog1.FileName := oppBufferManager.Settings.GetDefaultFilePath;
+  if not Assigned(self.Settings) then
+    exit;
+
+  SaveDialog1.FileName := self.Settings.GetDefaultFilePath;
   if SaveDialog1.Execute(self.Handle) then
   begin
-    oppBufferManager.SaveRecords(SaveDialog1.FileName);
+    self.BufferManager.SaveRecords(SaveDialog1.FileName);
   end;
 end;
 
@@ -298,12 +306,17 @@ procedure TOPPBufferForm.actionImportBufferExecute(Sender: TObject);
 var
   fDefaultFilePath: String;
 begin
+  if not Assigned(self.BufferManager) then
+  begin
+    exit;
+  end;
+
   fDefaultFilePath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(kFileNameOPPBufferManagerOppclipboarddata);
   OpenDialog1.FileName := fDefaultFilePath;
   if OpenDialog1.Execute(self.Handle) then
   begin
-    oppBufferManager.SetRecordsStorageFileName(OpenDialog1.FileName);
-    oppBufferManager.LoadRecords();
+    self.BufferManager.SetRecordsStorageFileName(OpenDialog1.FileName);
+    self.BufferManager.LoadRecords();
   end;
 end;
 
@@ -334,7 +347,11 @@ end;
 
 procedure TOPPBufferForm.actionNewRecordExecute(Sender: TObject);
 begin
-  oppBufferManager.AddEmpty();
+  if not Assigned(self.BufferManager) then
+  begin
+    exit;
+  end;
+  self.BufferManager.AddEmpty();
 end;
 
 procedure TOPPBufferForm.actionSaveRecordsExecute(Sender: TObject);
@@ -351,15 +368,22 @@ procedure TOPPBufferForm.actionShowSettingsExecute(Sender: TObject);
 var
   fSettingsForm: TOPPBufferSettingsForm;
 begin
+  if not Assigned(self.BufferManager) then
+  begin
+    exit;
+  end;
+  if not Assigned(self.Settings) then
+    exit;
+
   fSettingsForm := TOPPBufferSettingsForm.Create(self);
   try
     fSettingsForm.onLeaveRecordsCount := procedure(ARecordsCountToLeave: Integer)
       begin
-        oppBufferManager.RemoveRecordsAfter(ARecordsCountToLeave);
+        self.BufferManager.RemoveRecordsAfter(ARecordsCountToLeave);
       end;
     fSettingsForm.onBufferSettingsLoad := function(): IOPPBufferManagerSettings
       begin
-        result := oppBufferManager.Settings;
+        result := self.Settings;
       end;
 
     fSettingsForm.onBufferSettingsSave := procedure(AValue: IOPPBufferManagerSettings)
@@ -445,6 +469,8 @@ procedure TOPPBufferForm.ColumnSortSave;
 var
   sortRecords: TArray<TOPPBufferManagerSettingsColumnSort>;
 begin
+  if not Assigned(self.Settings) then
+    exit;
   sortRecords := cxGrid1DBTableView1.OPPGetColumnsSort;
   try
     self.Settings.SetColumnSort(sortRecords);
@@ -455,7 +481,15 @@ end;
 
 procedure TOPPBufferForm.ColumnVisibilityChange;
 begin
+  if not Assigned(self.Settings) then
+    exit;
   cxGrid1DBTableView1Column5.Visible := self.Settings.GetSourceIsVisible;
+end;
+
+constructor TOPPBufferForm.Create(AOwner: TComponent; ABufferManager: TOPPBufferManager);
+begin
+  fBufferManager := ABufferManager;
+  inherited Create(AOwner);
 end;
 
 procedure TOPPBufferForm.cxGrid1DBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
@@ -466,8 +500,13 @@ end;
 
 procedure TOPPBufferForm.cxGrid1DBTableView1Column2PropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 begin
+  if not Assigned(self.BufferManager) then
+  begin
+    exit;
+  end;
+
   Error := false;
-  if oppBufferManager.DataSet.HasTheSameValue(DisplayValue) then
+  if self.BufferManager.DataSet.HasTheSameValue(DisplayValue) then
   begin
     Error := true;
     ErrorText := SDuplicatedRecord;
@@ -516,31 +555,21 @@ end;
 
 procedure TOPPBufferForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  if not Assigned(self.BufferManager) then
+  begin
+    exit;
+  end;
+  if not Assigned(self.Settings) then
+    exit;
+
   ColumnSortSave;
   self.Settings.SetFormFrame(self.frame);
-  oppBufferManager.SaveRecords();
+  self.BufferManager.SaveRecords();
   DataSource1.DataSet := nil;
 end;
 
 procedure TOPPBufferForm.FormCreate(Sender: TObject);
-var
-  ffFrame: TRect;
 begin
-  ffFrame := self.Settings.GetFormFrame;
-  if not ffFrame.isEmpty then
-  begin
-    if ffFrame.Left < 0 then
-    begin
-      ffFrame.Width := ffFrame.Width + Abs(ffFrame.Left);
-      ffFrame.Left := 0;
-    end;
-    if ffFrame.Left > Screen.WorkAreaWidth then
-    begin
-      ffFrame.Left := ffFrame.Left - 20;
-    end;
-    self.frame := ffFrame;
-  end;
-
   self.IsEditMode := false;
   DataSource1.DataSet := TClientDataset(self.DataSet);
 end;
@@ -552,7 +581,13 @@ end;
 
 function TOPPBufferForm.GetDataset: IOPPBufferManagerDataset;
 begin
-  result := oppBufferManager.DataSet;
+  if not Assigned(self.BufferManager) then
+  begin
+    result := nil;
+    exit;
+  end;
+
+  result := self.BufferManager.DataSet;
 end;
 
 function TOPPBufferForm.GetHasRecords: Boolean;
@@ -583,12 +618,41 @@ end;
 
 function TOPPBufferForm.GetSettings: IOPPBufferManagerSettings;
 begin
-  result := oppBufferManager.Settings;
+  if not Assigned(self.BufferManager) then
+  begin
+    result := nil;
+    exit;
+  end;
+
+  result := self.BufferManager.Settings;
 end;
 
 function TOPPBufferForm.GetHasSelectedFewRecords: Boolean;
 begin
   result := (cxGrid1DBTableView1.Controller.SelectedRowCount > 1);
+end;
+
+procedure TOPPBufferForm.ReadSettings;
+var
+  ffFrame: TRect;
+begin
+  if not Assigned(self.Settings) then
+    exit;
+
+  ffFrame := self.Settings.GetFormFrame;
+  if ffFrame.isEmpty then
+    exit;
+
+  if ffFrame.Left < 0 then
+  begin
+    ffFrame.Width := ffFrame.Width + Abs(ffFrame.Left);
+    ffFrame.Left := 0;
+  end;
+  if ffFrame.Left > Screen.WorkAreaWidth then
+  begin
+    ffFrame.Left := ffFrame.Left - 20;
+  end;
+  self.frame := ffFrame;
 end;
 
 procedure TOPPBufferForm.ReloadActionsVisibility;
@@ -629,12 +693,24 @@ begin
   end;
 end;
 
+procedure TOPPBufferForm.SetBufferManager(const Value: TOPPBufferManager);
+begin
+  fBufferManager := Value;
+  ReadSettings;
+end;
+
 procedure TOPPBufferForm.SetClipboardControl(const Value: TWinControl);
 var
   fOPPInfo: TOPPBufferOPPInfo;
   fIsAutoFilter: Boolean;
   fControlType: String;
 begin
+
+  if not Assigned(self.BufferManager) then
+  begin
+    exit;
+  end;
+
   fClipboardControl := Value;
   actionSetFiltered.Enabled := Assigned(fClipboardControl);
   self.IsFiltered := false;
@@ -647,7 +723,7 @@ begin
 
   actionSetFiltered.Hint := SActionFilterHintDisabled;
 
-  fOPPInfo := oppBufferManager.GetOPPInfo(Value);
+  fOPPInfo := self.BufferManager.GetOPPInfo(Value);
   if not Assigned(fOPPInfo) then
   begin
     exit;
@@ -716,21 +792,27 @@ begin
   ReloadActionsVisibility;
 end;
 
-class procedure TOPPBufferForm.ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem);
+class procedure TOPPBufferForm.ShowForm(AOwner: TControl; ABufferManager: TOPPBufferManager; IconRepositoryItem: TcxEditRepositoryItem);
 var
   fForm: TOPPBufferForm;
 begin
-  fForm := TOPPBufferForm.Create(AOwner);
+  fForm := TOPPBufferForm.Create(AOwner, ABufferManager);
   try
     fForm.IconRepositoryItem := IconRepositoryItem;
+    fForm.BufferManager := ABufferManager;
     fForm.ShowModal;
   finally
     FreeAndNil(fForm);
   end;
 end;
 
-class procedure TOPPBufferForm.OnApplyData(ARecord: TOPPBufferManagerRecord; AClipboardControl: TWinControl);
+class procedure TOPPBufferForm.OnApplyData(ARecord: TOPPBufferManagerRecord; ABufferManager: TOPPBufferManager; AClipboardControl: TWinControl);
 begin
+  if not Assigned(ABufferManager) then
+  begin
+    exit;
+  end;
+
   if not Assigned(AClipboardControl) then
   begin
     eventLogger.Warning('Not assigned clipboard control', kContext);
@@ -738,7 +820,7 @@ begin
   end;
 
   try
-    oppBufferManager.WriteDataIntoControl(AClipboardControl, ARecord);
+    ABufferManager.WriteDataIntoControl(AClipboardControl, ARecord);
   except
     on E: Exception do
     begin
@@ -747,16 +829,18 @@ begin
   end;
 end;
 
-class procedure TOPPBufferForm.ShowForm(AOwner: TControl; IconRepositoryItem: TcxEditRepositoryItem; AControl: TWinControl);
+class procedure TOPPBufferForm.ShowForm(AOwner: TControl; ABufferManager: TOPPBufferManager; IconRepositoryItem: TcxEditRepositoryItem; AControl: TWinControl);
 var
   fForm: TOPPBufferForm;
   fCanApplyText: Boolean;
   mrResult: TModalResult;
 begin
 
-  fForm := TOPPBufferForm.Create(AOwner);
+  fForm := TOPPBufferForm.Create(AOwner, ABufferManager);
   try
     fForm.IconRepositoryItem := IconRepositoryItem;
+    fForm.BufferManager := ABufferManager;
+
     fCanApplyText := false;
     if Assigned(AControl) then
       fCanApplyText := AControl.HasTextProp();
@@ -894,22 +978,22 @@ class procedure TOPPBufferFormHelper.injectionShowForm;
 begin
   // NO Injecttion for now,
   exit;
-  keyboardShortcutManager.registerHook(oppBufferManager.Settings.GetShortCut,
-    procedure
-    begin
-      TThread.Synchronize(nil,
-        procedure
-        begin
-          if FindWindow('TOPPBufferForm', nil) = 0 then
-          begin
-            // OPPConfiguration,
-            // Config.TypesNamesRepository;
-            TOPPBufferForm.ShowForm(nil, nil, Screen.ActiveControl);
-          end
-          else
-            eventLogger.Debug('Cant run second instance', 'TOPPBufferFormHelper');
-        end);
-    end);
+  // keyboardShortcutManager.registerHook(oppBufferManager.Settings.GetShortCut,
+  // procedure
+  // begin
+  // TThread.Synchronize(nil,
+  // procedure
+  // begin
+  // if FindWindow('TOPPBufferForm', nil) = 0 then
+  // begin
+  // // OPPConfiguration,
+  // // Config.TypesNamesRepository;
+  // TOPPBufferForm.ShowForm(nil, nil, Screen.ActiveControl);
+  // end
+  // else
+  // eventLogger.Debug('Cant run second instance', 'TOPPBufferFormHelper');
+  // end);
+  // end);
 end;
 
 { TOPPcxGridDBColumnHelper }

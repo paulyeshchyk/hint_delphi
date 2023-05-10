@@ -3,7 +3,8 @@
 interface
 
 uses Vcl.Menus, System.Classes, WinAPI.Messages, WinAPI.Windows, Vcl.Controls,
-  cxEdit;
+  cxEdit,
+  OPP.Buffer.Manager;
 
 type
   TOPPContextMenuItemOnValidate = reference to function(Sender: TWinControl): Boolean;
@@ -18,10 +19,11 @@ type
   TOPPContextMenuEdit = class(TPopupMenu)
   private
     fcxEditRepositoryItem: TcxEditRepositoryItem;
+    fBufferManager: TOPPBufferManager;
   protected
     procedure Popup(X, Y: Integer); override;
   public
-    constructor Create(AOwner: TComponent; AIconRepositoryItem: TcxEditRepositoryItem);
+    constructor Create(AOwner: TComponent; AIconRepositoryItem: TcxEditRepositoryItem; ABufferManager: TOPPBufferManager);
     class function CreateCustomMenuItem(AOwner: TComponent; Caption: String; onClick: TNotifyEvent; OnValidate: TOPPContextMenuItemOnValidate): TOPPContextMenuItem;
   end;
 
@@ -58,10 +60,11 @@ uses
 
 { TOPPContextMenuEdit }
 
-constructor TOPPContextMenuEdit.Create(AOwner: TComponent; AIconRepositoryItem: TcxEditRepositoryItem);
+constructor TOPPContextMenuEdit.Create(AOwner: TComponent; AIconRepositoryItem: TcxEditRepositoryItem; ABufferManager: TOPPBufferManager);
 begin
   inherited Create(AOwner);
   self.fcxEditRepositoryItem := AIconRepositoryItem;
+  self.fBufferManager := ABufferManager;
 
   self.Items.Add(CreateCustomMenuItem(self, 'Вырезать', OnCutText, OnValidateCutText));
   self.Items.Add(CreateCustomMenuItem(self, 'Копировать', OnCopyText, OnValidateCopyText));
@@ -178,7 +181,7 @@ procedure TOPPContextMenuEditHelper.OnOPPBufferOpen(Sender: TObject);
 begin
   if FindWindow('TOPPBufferForm', nil) = 0 then
   begin
-    TOPPBufferForm.ShowForm(nil, self.fcxEditRepositoryItem, Screen.ActiveControl);
+    TOPPBufferForm.ShowForm(nil, self.fBufferManager, self.fcxEditRepositoryItem, Screen.ActiveControl);
   end
   else
     eventLogger.Debug('Cant run second instance');

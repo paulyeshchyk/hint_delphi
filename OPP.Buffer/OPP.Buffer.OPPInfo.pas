@@ -42,7 +42,7 @@ end;
 
 procedure TOPPBufferOPPInfo.LoadFromBytes(bytes: TArray<Byte>; isUTF8: Boolean);
 begin
-  TOPPJSONParser.deserialize<TOPPBufferOPPInfo>(bytes, isUTF8,
+  TOPPJSONParser.DeSerialize<TOPPBufferOPPInfo>(bytes, isUTF8,
     procedure(AResult: TOPPBufferOPPInfo; Error: Exception)
     begin
     end);

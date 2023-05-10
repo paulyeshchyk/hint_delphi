@@ -22,6 +22,7 @@ uses
   OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
   OPP.Help.System.Codable.TunningEditorDefaultSettings,
+  SampleFormWinControlOPPInfoExtractor,
   SampleFormSaveState, JvComponentBase, JvClipboardMonitor;
 
 type
@@ -412,7 +413,7 @@ procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
 begin
   if FindWindow('TOPPBufferForm', nil) = 0 then
   begin
-    TOPPBufferForm.ShowForm(nil, nil, Screen.ActiveControl);
+    TOPPBufferForm.ShowForm(nil, oppBufferManager, nil, Screen.ActiveControl);
   end
   else
     eventLogger.Debug('Cant run second instance');
@@ -666,7 +667,9 @@ var
   dropdownItem: String;
 begin
 
-  cxEditIdentifierName.PopupMenu := TOPPContextMenuEdit.Create(self, nil);
+  oppBufferManager.RegisterOPPInfoExtractor(TWinControlOPPInfoExtractor.Create);
+
+  cxEditIdentifierName.PopupMenu := TOPPContextMenuEdit.Create(self, nil, oppBufferManager);
 
   // settings
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
@@ -726,7 +729,7 @@ end;
 
 procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
 begin
-  oppBufferManager.OnClipboardChange(Sender);
+  oppBufferManager.ReadDataFromControl(Screen.ActiveControl);
 end;
 
 { ------------ }

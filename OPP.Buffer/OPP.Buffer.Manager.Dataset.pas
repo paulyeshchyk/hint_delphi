@@ -131,24 +131,34 @@ end;
 procedure TOPPBufferManagerDataset.ExtractRecord(callback: TOPPBufferManagerDatasetRecordExtractionCallback);
 var
   fBytes: TArray<Byte>;
+  isUTF8: Boolean;
 begin
 
   fBytes := self.FieldByName(OPPBufferManagerRecordFields.oppObject.name).AsBytes;
+  isUTF8 := true;
 
-  TOPPJSONParser.Deserialize<TOPPBufferOPPInfo>(fBytes, false,
+  TOPPJSONParser.Deserialize<TOPPBufferOPPInfo>(fBytes, isUTF8,
     procedure(OPPInfo: TOPPBufferOPPInfo; Error: Exception)
     var
       theRecord: TOPPBufferManagerRecord;
     begin
-      if Assigned(OPPInfo) and Assigned(callback) then
+      if not Assigned(OPPInfo) then
       begin
-        theRecord := TOPPBufferManagerRecord.Create;
-        theRecord.text := self.FieldByName(OPPBufferManagerRecordFields.Data.name).AsString;
-        theRecord.sortIndex := self.FieldByName(OPPBufferManagerRecordFields.sortIndex.name).AsInteger;
-        theRecord.isFixed := self.FieldByName(OPPBufferManagerRecordFields.isFixed.name).AsBoolean;
-        theRecord.OPPInfo := OPPInfo;
-        callback(theRecord);
+        eventLogger.Warning('OPPInfo is not defined', 'TOPPBufferManagerDataset');
+        exit;
       end;
+      if not Assigned(callback) then
+      begin
+        eventLogger.Warning('callback is not defined', 'TOPPBufferManagerDataset');
+        exit;
+      end;
+
+      theRecord := TOPPBufferManagerRecord.Create;
+      theRecord.text := self.FieldByName(OPPBufferManagerRecordFields.Data.name).AsString;
+      theRecord.sortIndex := self.FieldByName(OPPBufferManagerRecordFields.sortIndex.name).AsInteger;
+      theRecord.isFixed := self.FieldByName(OPPBufferManagerRecordFields.isFixed.name).AsBoolean;
+      theRecord.OPPInfo := OPPInfo;
+      callback(theRecord);
     end);
 end;
 

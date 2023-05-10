@@ -30,31 +30,31 @@ type
     procedure SetOPPInfo(OPPInfo: TOPPBufferOPPInfo; AText: String; AControl: TWinControl); virtual;
   end;
 
-  IOPPBufferManager = interface
-    procedure ReadDataFromControl(Sender: TWinControl);
-    procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
-    procedure AddEmpty();
-    function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
-    function DeleteFocused(): Boolean;
+  // IOPPBufferManager = interface
+  // procedure ReadDataFromControl(Sender: TWinControl);
+  // procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
+  // procedure AddEmpty();
+  // function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
+  // function DeleteFocused(): Boolean;
+  //
+  // function GetDataset: IOPPBufferManagerDataset;
+  // function GetSettings: IOPPBufferManagerSettings;
+  // function GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
+  //
+  // procedure LoadRecords();
+  // procedure SaveRecords(AFileName: String = '');
+  // procedure SetRecordsStorageFileName(AFileName: String = '');
+  // procedure RemoveRecordsAfter(AAfter: Integer);
+  //
+  // procedure SetCustomFilter(AFilter: String);
+  //
+  // procedure RegisterOPPInfoExtractor(AExtractor: TOPPInfoExtractor);
+  //
+  // property Dataset: IOPPBufferManagerDataset read GetDataset;
+  // property Settings: IOPPBufferManagerSettings read GetSettings;
+  // end;
 
-    function GetDataset: IOPPBufferManagerDataset;
-    function GetSettings: IOPPBufferManagerSettings;
-    function GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
-
-    procedure LoadRecords();
-    procedure SaveRecords(AFileName: String = '');
-    procedure SetRecordsStorageFileName(AFileName: String = '');
-    procedure RemoveRecordsAfter(AAfter: Integer);
-
-    procedure SetCustomFilter(AFilter: String);
-
-    procedure RegisterOPPInfoExtractor(AExtractor: TOPPInfoExtractor);
-
-    property Dataset: IOPPBufferManagerDataset read GetDataset;
-    property Settings: IOPPBufferManagerSettings read GetSettings;
-  end;
-
-  TOPPBufferManager = class(TInterfacedObject, IOPPBufferManager)
+  TOPPBufferManager = class // {TInterfacedObject, IOPPBufferManager}
   private
     fIgnoreClipboardMessages: Boolean;
     fDataset: TOPPBufferManagerDataset;
@@ -67,9 +67,6 @@ type
     function GetRecordsStorageFileName(AFileName: String = ''): String;
     function GetSettings: IOPPBufferManagerSettings;
 
-    procedure LoadRecords();
-    procedure SaveRecords(AFileName: String = '');
-    procedure SetRecordsStorageFileName(AFileName: String = '');
     procedure OnCalcFields(ADataset: TDataset);
     property CanAcceptRecord: Boolean read GetCanAcceptRecord;
 
@@ -85,14 +82,19 @@ type
     procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
 
     procedure AddEmpty();
+    procedure AddOPPInfoAndSave(AText: String; const AOPPInfo:TOPPBufferOPPInfo);
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
+    procedure LoadRecords();
+    procedure SaveRecords(AFileName: String = '');
     procedure RemoveRecordsAfter(AAfter: Integer);
     property Settings: IOPPBufferManagerSettings read GetSettings;
+    property Dataset: IOPPBufferManagerDataset read GetDataset;
     procedure SetCustomFilter(AFilter: String);
+    procedure SetRecordsStorageFileName(AFileName: String = '');
   end;
 
-function oppBufferManager: IOPPBufferManager;
+function oppBufferManager: TOPPBufferManager; // IOPPBufferManager;
 
 implementation
 
@@ -122,9 +124,9 @@ type
 
 var
   fBufferManagerLock: TCriticalSection;
-  fBufferManager: IOPPBufferManager;
+  fBufferManager: TOPPBufferManager; // IOPPBufferManager;
 
-function oppBufferManager: IOPPBufferManager;
+function oppBufferManager: TOPPBufferManager; // IOPPBufferManager;
 begin
   fBufferManagerLock.Acquire;
   try
@@ -172,6 +174,20 @@ begin
 end;
 
 { TOPPBufferManager }
+
+procedure TOPPBufferManager.AddOPPInfoAndSave(AText: String; const AOPPInfo: TOPPBufferOPPInfo);
+var
+  fRecord: TOPPBufferManagerRecord;
+begin
+  fRecord := TOPPBufferManagerRecord.Create;
+  try
+    fRecord.OPPInfo := AOPPInfo;
+    fRecord.Text := AText;
+    self.AddRecordAndSave(fRecord);
+  finally
+    fRecord.Free;
+  end;
+end;
 
 function TOPPBufferManager.AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
 var
@@ -302,6 +318,7 @@ begin
     exit;
   end;
 
+  eventLogger.Debug(Format('Load content from file: %s', [fFileName]), 'TOPPBufferManager');
   try
     fDataset.LoadFromFile(fFileName);
   except
@@ -377,8 +394,12 @@ begin
   if ((not assigned(AData)) or (not assigned(Sender))) then
     exit;
   fExtractor := GetOPPInfoExtractor(Sender);
-  if assigned(fExtractor) then
-    fExtractor.SetOPPInfo(AData.OPPInfo, AData.text, Sender);
+  if not assigned(fExtractor) then
+  begin
+    eventLogger.warning('Extractor is not defined', 'TOPPBufferManager');
+    exit;
+  end;
+  fExtractor.SetOPPInfo(AData.OPPInfo, AData.text, Sender);
 end;
 
 procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);

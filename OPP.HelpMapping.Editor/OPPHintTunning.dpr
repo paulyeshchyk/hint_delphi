@@ -15,7 +15,8 @@ uses
   OPP.Help.Tips.Factory in '..\OPP.Client.Helper\OPP.Help.Tips.Factory.pas',
   OPP.Help.Settings.Form in 'Settings\OPP.Help.Settings.Form.pas' {OPPHelpSettingsForm},
   OPP.Help.Settings.Value.Editor in 'Settings\OPP.Help.Settings.Value.Editor.pas' {OPPHelpSettingsValueEditor},
-  OPP.ContextMenu.Edit in '..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas';
+  OPP.ContextMenu.Edit in '..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas',
+  SampleFormWinControlOPPInfoExtractor in 'Helpers\SampleFormWinControlOPPInfoExtractor.pas';
 
 {$R *.res}
 

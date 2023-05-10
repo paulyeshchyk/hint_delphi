@@ -3,27 +3,26 @@ unit OPP.Help.System.JSON;
 interface
 
 uses
-  System.Generics.Collections,
+  System.Generics.Collections, System.Classes,
   System.SysUtils,
   System.JSON,
   Rest.JSON,
-  //Data.DBXJSONReflect,
   System.IOUtils,
 
   Vcl.Dialogs;
 
 type
   TOPPJSONParserCallback<T: class, constructor> = reference to procedure(Mapset: T; Error: Exception);
-  TOPPJSONWriteCompletion = reference to procedure(error: Exception);
+  TOPPJSONWriteCompletion = reference to procedure(Error: Exception);
 
   TOPPJSONParser = class
   private
     class procedure DeserializeJSON<T: class, constructor>(AJSON: TJSONObject; callback: TOPPJSONParserCallback<T>);
   public
-    class function Serialize<T: class, constructor>(AObject: T): String;overload;
-    class function Serialize<T: class, constructor>(AObject: T; AFilename: String; callback: TOPPJSONWriteCompletion): Integer;overload;
-    class procedure Deserialize<T: class, constructor>(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPJSONParserCallback<T>);overload;
-    class procedure Deserialize<T: class, constructor>(AFileName: String; callback: TOPPJSONParserCallback<T>);overload;
+    class function Serialize<T: class, constructor>(AObject: T): String; overload;
+    class function Serialize<T: class, constructor>(AObject: T; AFilename: String; callback: TOPPJSONWriteCompletion): Integer; overload;
+    class procedure DeSerialize<T: class, constructor>(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPJSONParserCallback<T>); overload;
+    class procedure DeSerialize<T: class, constructor>(AFilename: String; callback: TOPPJSONParserCallback<T>); overload;
   end;
 
 implementation
@@ -31,7 +30,7 @@ implementation
 uses
   OPP.Help.Log, OPP.Help.System.Files;
 
-class procedure TOPPJSONParser.deserializeJSON<T>(AJSON: TJSONObject; callback: TOPPJSONParserCallback<T>);
+class procedure TOPPJSONParser.DeserializeJSON<T>(AJSON: TJSONObject; callback: TOPPJSONParserCallback<T>);
 var
   fResult: T;
   Error: Exception;
@@ -63,7 +62,7 @@ begin
   except
     on E: Exception do
     begin
-      eventLogger.Error(E);
+      eventLogger.Error(E, 'TOPPJSONParser');
       if assigned(callback) then
         callback(nil, E);
     end;
@@ -76,40 +75,35 @@ begin
   result := TJson.ObjectToJsonString(AObject);
 end;
 
-class procedure TOPPJSONParser.deserialize<T>(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPJSONParserCallback<T>);
+class procedure TOPPJSONParser.DeSerialize<T>(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPJSONParserCallback<T>);
 var
   jsonObject: TJSONObject;
 begin
   jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
+  if not assigned(jsonObject) then
+  begin
+    eventLogger.Warning('jsonObject is not defined', 'TOPPJSONParser');
+    if assigned(callback) then
+      callback(nil, nil);
+    exit;
+  end;
   try
-    try
-      TOPPJSONParser.deserializeJSON<T>(jsonObject, callback);
-    except
-      on E: Exception do
-      begin
-        eventLogger.Error(E);
-        if assigned(callback) then
-        begin
-          callback(nil, E);
-        end;
-      end;
-    end;
+    TOPPJSONParser.DeserializeJSON<T>(jsonObject, callback);
   finally
     FreeAndNil(jsonObject);
   end;
 end;
 
-
-class procedure TOPPJSONParser.deserialize<T>(AFileName: String; callback: TOPPJSONParserCallback<T>);
+class procedure TOPPJSONParser.DeSerialize<T>(AFilename: String; callback: TOPPJSONParserCallback<T>);
 var
   bytes: System.TArray<System.Byte>;
   Error: Exception;
 begin
-  if not FileExists(AFileName) then
+  if not FileExists(AFilename) then
   begin
     if assigned(callback) then
     begin
-      Error := Exception.Create(Format('File not found: %s', [AFileName]));
+      Error := Exception.Create(Format('File not found: %s', [AFilename]));
       try
         callback(nil, Error);
       finally
@@ -120,20 +114,19 @@ begin
   end;
 
   try
-    bytes := TFile.ReadAllBytes(AFileName);
+    bytes := TFile.ReadAllBytes(AFilename);
     try
-      deserialize<T>(bytes, false, callback);
+      DeSerialize<T>(bytes, false, callback);
     finally
       SetLength(bytes, 0);
     end;
   except
     on Error: Exception do
     begin
-      eventLogger.Error(Format('Error: %s; %s', [Error.Message, TOPPHelpSystemFilesHelper.AbsolutePath(AFileName)]));
+      eventLogger.Error(Format('Error: %s; %s', [Error.Message, TOPPHelpSystemFilesHelper.AbsolutePath(AFilename)]));
     end;
   end;
 end;
-
 
 class function TOPPJSONParser.Serialize<T>(AObject: T; AFilename: String; callback: TOPPJSONWriteCompletion): Integer;
 var
@@ -143,13 +136,14 @@ var
 begin
   result := -1;
 
-  if not TOPPHelpSystemFilesHelper.CreateDirectoryIfNeed(AFileName) then begin
+  if not TOPPHelpSystemFilesHelper.CreateDirectoryIfNeed(AFilename) then
+  begin
     exit;
   end;
 
   jsonString := TOPPJSONParser.Serialize<T>(AObject);
   try
-    TFile.WriteAllText(AFileName, jsonString);
+    TFile.WriteAllText(AFilename, jsonString);
     if assigned(callback) then
       callback(nil);
     result := 0;

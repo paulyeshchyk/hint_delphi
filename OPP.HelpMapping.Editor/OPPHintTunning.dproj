@@ -146,15 +146,16 @@
             <Form>OPPHelpSettingsValueEditor</Form>
         </DCCReference>
         <DCCReference Include="..\OPP.ContextMenu\OPP.ContextMenu.Edit.pas"/>
+        <DCCReference Include="Helpers\SampleFormWinControlOPPInfoExtractor.pas"/>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -181,13 +182,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHintTunning.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>OPPHintTunning.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win32\Debug\OPPHintSample.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
