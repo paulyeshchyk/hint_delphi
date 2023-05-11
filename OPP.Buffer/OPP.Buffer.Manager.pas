@@ -30,31 +30,7 @@ type
     procedure SetOPPInfo(OPPInfo: TOPPBufferOPPInfo; AText: String; AControl: TWinControl); virtual;
   end;
 
-  // IOPPBufferManager = interface
-  // procedure ReadDataFromControl(Sender: TWinControl);
-  // procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
-  // procedure AddEmpty();
-  // function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
-  // function DeleteFocused(): Boolean;
-  //
-  // function GetDataset: IOPPBufferManagerDataset;
-  // function GetSettings: IOPPBufferManagerSettings;
-  // function GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
-  //
-  // procedure LoadRecords();
-  // procedure SaveRecords(AFileName: String = '');
-  // procedure SetRecordsStorageFileName(AFileName: String = '');
-  // procedure RemoveRecordsAfter(AAfter: Integer);
-  //
-  // procedure SetCustomFilter(AFilter: String);
-  //
-  // procedure RegisterOPPInfoExtractor(AExtractor: TOPPInfoExtractor);
-  //
-  // property Dataset: IOPPBufferManagerDataset read GetDataset;
-  // property Settings: IOPPBufferManagerSettings read GetSettings;
-  // end;
-
-  TOPPBufferManager = class // {TInterfacedObject, IOPPBufferManager}
+  TOPPBufferManager = class
   private
     fIgnoreClipboardMessages: Boolean;
     fDataset: TOPPBufferManagerDataset;
@@ -124,9 +100,9 @@ type
 
 var
   fBufferManagerLock: TCriticalSection;
-  fBufferManager: TOPPBufferManager; // IOPPBufferManager;
+  fBufferManager: TOPPBufferManager;
 
-function oppBufferManager: TOPPBufferManager; // IOPPBufferManager;
+function oppBufferManager: TOPPBufferManager;
 begin
   fBufferManagerLock.Acquire;
   try
