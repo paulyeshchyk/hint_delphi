@@ -15,13 +15,7 @@ const
   WM_OPPZoomFit = WM_USER + 803;
   WM_OPPZoomFitReaction = WM_USER + 804;
 
-const
-  WM_OPPZoomFitWParamHeight = 899;
-  WM_OPPZoomFitWParamWidth = 898;
-  WM_OPPZoomFitWParamTwoColumns = 897;
-
 type
-
   TWMCopyData = packed record
     Msg: Cardinal;
     From: HWND;

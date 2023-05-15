@@ -14,7 +14,7 @@ type
 
   IOPPBufferManagerDataset = interface
     procedure Rebuild;
-    function AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer): Boolean;
+    function AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer; ADuplicatesAllowed: Boolean): Boolean;
     function HasTheSameValue(const AValue: Variant): Boolean;
     function RemoveRecordsAfter(const AValue: Integer): Boolean;
     procedure RebuildSortIndex;
@@ -24,7 +24,7 @@ type
 
   TOPPBufferManagerDataset = class(TClientDataSet, IOPPBufferManagerDataset)
     procedure Rebuild;
-    function AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer): Boolean;
+    function AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer; ADuplicatesAllowed: Boolean): Boolean;
     function HasTheSameValue(const AValue: Variant): Boolean;
     function RemoveRecordsAfter(const AValue: Integer): Boolean;
     procedure RebuildSortIndex;
@@ -168,13 +168,13 @@ begin
   self.Filtered := true;
 end;
 
-function TOPPBufferManagerDataset.AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer): Boolean;
+function TOPPBufferManagerDataset.AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer; ADuplicatesAllowed: Boolean): Boolean;
 begin
   result := false;
   if not Assigned(ARecord) then
     exit;
 
-  if HasTheSameValue(ARecord.text) then
+  if (HasTheSameValue(ARecord.text) and not (ADuplicatesAllowed)) then
   begin
     exit;
   end;

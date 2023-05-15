@@ -173,7 +173,7 @@ begin
   if not fSettings.GetUseRecordsCountLimit then
     fMaxAllowed := Integer.MaxValue;
 
-  result := fDataset.AddRecord(ARecord, fMaxAllowed);
+  result := fDataset.AddRecord(ARecord, fMaxAllowed, fSettings.GetAllowDuplicates);
 end;
 
 procedure TOPPBufferManager.AddRecordAndSave(const ARecord: TOPPBufferManagerRecord);

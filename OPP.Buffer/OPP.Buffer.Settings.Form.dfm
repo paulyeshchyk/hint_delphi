@@ -4,7 +4,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1073#1091#1092#1077#1088#1072' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 453
+  ClientHeight = 517
   ClientWidth = 469
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -94,9 +94,9 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 391
+    Top = 415
     Width = 469
-    Height = 62
+    Height = 102
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -104,7 +104,8 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 335
+    ExplicitTop = 416
+    ExplicitHeight = 101
     object Button1: TButton
       Left = 378
       Top = 16
@@ -119,7 +120,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     Left = 16
     Top = 173
     Width = 437
-    Height = 212
+    Height = 236
     Margins.Left = 16
     Margins.Top = 6
     Margins.Right = 16
@@ -129,7 +130,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     TabOrder = 2
     object SpeedButton1: TSpeedButton
       Left = 341
-      Top = 144
+      Top = 169
       Width = 76
       Height = 22
       Hint = #1054#1095#1080#1089#1090#1080#1090#1100
@@ -145,7 +146,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     end
     object Label2: TLabel
       Left = 16
-      Top = 144
+      Top = 169
       Width = 170
       Height = 13
       Caption = #1042#1099#1074#1086#1076' '#1086#1082#1085#1072' '#1082#1086#1084#1073#1080#1085#1072#1094#1080#1077#1081' '#1082#1083#1072#1074#1080#1096
@@ -184,7 +185,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     end
     object clipboardManagerShortcut: THotKey
       Left = 195
-      Top = 144
+      Top = 169
       Width = 142
       Height = 19
       Margins.Left = 6
@@ -225,6 +226,21 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       StyleHot.LookAndFeel.NativeStyle = True
       TabOrder = 4
     end
+    object allowDuplicatesCheckBox: TcxCheckBox
+      Left = 8
+      Top = 136
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Action = ActionAllowDuplicates
+      Properties.OnEditValueChanged = CanSaveFormFrameCheckboxPropertiesEditValueChanged
+      Style.LookAndFeel.NativeStyle = True
+      StyleDisabled.LookAndFeel.NativeStyle = True
+      StyleFocused.LookAndFeel.NativeStyle = True
+      StyleHot.LookAndFeel.NativeStyle = True
+      TabOrder = 5
+    end
   end
   object ActionList1: TActionList
     Left = 8
@@ -254,6 +270,10 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
     object actionSourceIsVisible: TAction
       Caption = #1054#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1080#1089#1090#1086#1095#1085#1080#1082
       OnExecute = actionSourceIsVisibleExecute
+    end
+    object ActionAllowDuplicates: TAction
+      Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' '#1076#1091#1073#1083#1080#1082#1072#1090#1099
+      OnExecute = ActionAllowDuplicatesExecute
     end
   end
 end

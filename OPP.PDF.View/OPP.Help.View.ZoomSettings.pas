@@ -6,43 +6,39 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, cxTextEdit, cxMaskEdit, cxSpinEdit, cxLabel, cxTrackBar, System.Actions, Vcl.ActnList,
-  Vcl.StdActns, Vcl.Menus, cxButtons, System.ImageList, Vcl.ImgList, Vcl.StdCtrls, Vcl.ExtCtrls;
+  Vcl.StdActns, Vcl.Menus, cxButtons, System.ImageList, Vcl.ImgList, Vcl.StdCtrls, Vcl.ExtCtrls,
+  OPP.Help.PreviewSettings, cxDropDownEdit;
 
 type
+
   TOPPHelpPreviewZoomForm = class(TForm)
     ActionList1: TActionList;
     actionClose: TAction;
     Panel1: TPanel;
     cxLabel1: TcxLabel;
-    cxSpinEdit1: TcxSpinEdit;
-    Bevel1: TBevel;
-    Panel2: TPanel;
+    cxSpinZoomFactor: TcxSpinEdit;
     Panel3: TPanel;
-    Bevel2: TBevel;
     Button1: TButton;
     ImageList1: TImageList;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
-    cxButton3: TcxButton;
     actionZoomHeight: TAction;
     actionZoomWidth: TAction;
     actionZoomTwoColumns: TAction;
     actionCustomZoom: TAction;
+    cxComboBox1: TcxComboBox;
+    cxLabel2: TcxLabel;
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionCustomZoomExecute(Sender: TObject);
-    procedure cxSpinEdit1PropertiesEditValueChanged(Sender: TObject);
+    procedure cxComboBox1PropertiesChange(Sender: TObject);
+    procedure cxSpinZoomFactorPropertiesChange(Sender: TObject);
   private
     { Private declarations }
-    fZoomValue: Integer;
     fIsHandlingMessage: Boolean;
-    procedure setZoomValue(AValue: Integer);
-    procedure PostZoomChangeMessage(AValue: Integer);
-    procedure applyHints;
-
+    fSettings: TOPPHelpPreviewSettings;
+    procedure SetSettings(const Value: TOPPHelpPreviewSettings);
   public
     { Public declarations }
-    property zoomValue: Integer read fZoomValue write setZoomValue;
+    property Settings: TOPPHelpPreviewSettings read fSettings write SetSettings;
   end;
 
 var
@@ -59,18 +55,27 @@ uses
 procedure TOPPHelpPreviewZoomForm.FormCreate(Sender: TObject);
 begin
   fIsHandlingMessage := false;
-  applyHints;
 end;
 
-procedure TOPPHelpPreviewZoomForm.setZoomValue(AValue: Integer);
+procedure TOPPHelpPreviewZoomForm.SetSettings(const Value: TOPPHelpPreviewSettings);
 begin
-  if AValue = fZoomValue then
+  fSettings := Value;
+  if not Assigned(fSettings) then
     exit;
-  fZoomValue := AValue;
-  if cxSpinEdit1.Value <> AValue then
-    cxSpinEdit1.Value := AValue;
 
-  PostZoomChangeMessage(fZoomValue);
+  fIsHandlingMessage := true;
+  case fSettings.ZoomMode of
+    zmFitHeight:
+      cxComboBox1.ItemIndex := 0;
+    zmFitWidth:
+      cxComboBox1.ItemIndex := 1;
+    zmTwoColumns:
+      cxComboBox1.ItemIndex := 2;
+    zmCustom:
+      cxComboBox1.ItemIndex := 3;
+  end;
+  cxSpinZoomFactor.Value := Value.ZoomScale;
+  fIsHandlingMessage := false;
 end;
 
 procedure TOPPHelpPreviewZoomForm.actionCloseExecute(Sender: TObject);
@@ -86,40 +91,47 @@ var
 const
   fClassName: String = 'TOPPHelpPreviewForm';
 begin
+  if fIsHandlingMessage then exit;
+
   fIsHandlingMessage := true;
   fTag := TAction(Sender).Tag;
   fHandle := FindWindow(fClassName.toWideChar(), nil);
-  messageResult := SendMessage(fHandle, WM_OPPZoomFit, fTag, 0);
-  cxSpinEdit1.Properties.BeginUpdate;
-  cxSpinEdit1.Value := messageResult;
-  cxSpinEdit1.Properties.EndUpdate(false);
+  messageResult := SendMessage(fHandle, WM_OPPZoomFit, fTag, cxSpinZoomFactor.Value);
+  cxSpinZoomFactor.Value := messageResult;
   fIsHandlingMessage := false;
 end;
 
-procedure TOPPHelpPreviewZoomForm.applyHints;
+procedure TOPPHelpPreviewZoomForm.cxComboBox1PropertiesChange(Sender: TObject);
 begin
-  actionZoomHeight.Hint := 'Подобрать размер по высоте';
-  actionZoomWidth.Hint := 'Подобрать размер по ширине';
-  actionZoomTwoColumns.Hint := 'Подобрать размер для двух страниц';
+  case cxComboBox1.ItemIndex of
+    0:
+      begin
+        cxSpinZoomFactor.Enabled := false;
+        actionZoomHeight.Execute;
+      end;
+    1:
+      begin
+        cxSpinZoomFactor.Enabled := false;
+        actionZoomWidth.Execute;
+      end;
+    2:
+      begin
+        cxSpinZoomFactor.Enabled := false;
+        actionZoomTwoColumns.Execute;
+      end;
+    3:
+      begin
+        cxSpinZoomFactor.Enabled := true;
+        actionCustomZoom.Execute;
+      end;
+  end;
 end;
 
-procedure TOPPHelpPreviewZoomForm.cxSpinEdit1PropertiesEditValueChanged(Sender: TObject);
+procedure TOPPHelpPreviewZoomForm.cxSpinZoomFactorPropertiesChange(Sender: TObject);
 begin
   if fIsHandlingMessage then
     exit;
-  zoomValue := cxSpinEdit1.Value;
-  // cxSpinEdit1.SelectAll;
-end;
-
-procedure TOPPHelpPreviewZoomForm.PostZoomChangeMessage(AValue: Integer);
-var
-  fHandle: THandle;
-const
-  fClassName: String = 'TOPPHelpPreviewForm';
-begin
-  fZoomValue := AValue;
-  fHandle := FindWindow(fClassName.toWideChar(), nil);
-  PostMessage(fHandle, WM_OPPZoom, fZoomValue, 0);
+  actionCustomZoom.Execute;
 end;
 
 end.

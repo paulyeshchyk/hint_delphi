@@ -193,10 +193,13 @@ end;
 function TWinControlOPPInfoExtractor.GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
 begin
   result := nil;
-  if not(Sender is TWinControl) then
-    exit;
 
-  result := TOPPBufferOPPInfo.Create(otWinControl);
+  //если sender == nil тогда текст пришёл из внешнего источника
+  //иначе sender должен быть TWinControl
+  if (not Assigned(Sender)) or (Sender is TWinControl) then begin
+    result := TOPPBufferOPPInfo.Create(otWinControl);
+  end;
+
 end;
 
 function TWinControlOPPInfoExtractor.isApplicable(Sender: TWinControl): Boolean;

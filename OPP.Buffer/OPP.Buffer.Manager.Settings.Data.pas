@@ -28,6 +28,7 @@ type
     fFormFrame: TRect;
     fAutoFilter: Boolean;
     fSourceIsVisible: Boolean;
+    fAllowDuplicates: Boolean;
 
   public
     class procedure Save(AFileName: String; AData: TOPPBufferManagerSettingsData);
@@ -43,6 +44,7 @@ type
     property RecordsCountLimit: Integer read fRecordsCountLimit write fRecordsCountLimit;
     property IsExternalAllowed: Boolean read fIsExternalAllowed write fIsExternalAllowed;
     property CanSaveFormFrame: Boolean read fCanSaveFormFrame write fCanSaveFormFrame;
+    property AllowDuplicates: Boolean read fAllowDuplicates write fAllowDuplicates;
     property AutoFilter: Boolean read fAutoFilter write fAutoFilter;
     property UseRecordsCountLimit: Boolean read fUseRecordsCountLimit write fUseRecordsCountLimit;
     property ColumnSort: TList<TOPPBufferManagerSettingsColumnSort> read fColumnSort write fColumnSort;
@@ -63,6 +65,7 @@ const
 constructor TOPPBufferManagerSettingsData.Create;
 begin
   inherited Create;
+  self.AllowDuplicates := false;
   self.Shortcut := 0;
   self.RecordsCountLimit := 20;
   self.IsExternalAllowed := false;

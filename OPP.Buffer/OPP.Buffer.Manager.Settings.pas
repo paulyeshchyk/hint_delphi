@@ -42,6 +42,9 @@ type
     procedure SetSourceIsVisible(AValue: Boolean);
     function GetSourceIsVisible: Boolean;
 
+    procedure SetAllowDuplicates(AValue: Boolean);
+    function GetAllowDuplicates: Boolean;
+
     procedure Save;
   end;
 
@@ -86,6 +89,9 @@ type
     procedure SetSourceIsVisible(AValue: Boolean);
     function GetSourceIsVisible: Boolean;
 
+    procedure SetAllowDuplicates(AValue: Boolean);
+    function GetAllowDuplicates: Boolean;
+
     procedure Save;
   end;
 
@@ -98,6 +104,7 @@ uses
   System.IOUtils;
 
 const
+  kContext = 'TOPPBufferManagerSettings';
   SClipboardFileName = 'OPPBufferManager.oppclipboarddata';
   SOPPBufferManagerSettingsFileName = 'OPPBufferManager.settings';
 
@@ -114,6 +121,11 @@ destructor TOPPBufferManagerSettings.Destroy;
 begin
   fData.Free;
   inherited;
+end;
+
+function TOPPBufferManagerSettings.GetAllowDuplicates: Boolean;
+begin
+  result := fData.AllowDuplicates;
 end;
 
 function TOPPBufferManagerSettings.GetAutoFilter: Boolean;
@@ -192,18 +204,25 @@ var
   fFilePath: String;
 begin
   fFilePath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(SOPPBufferManagerSettingsFileName);
-  if TFile.Exists(fFilePath) then begin
+  if TFile.Exists(fFilePath) then
+  begin
     try
       TFile.Delete(fFilePath);
     except
-      on E: Exception do begin
-        eventLogger.Error(E, 'TOPPBufferManagerSettings');
+      on E: Exception do
+      begin
+        eventLogger.Error(E, kContext);
         raise E;
       end;
     end;
   end;
 
   TOPPBufferManagerSettingsData.Save(SOPPBufferManagerSettingsFileName, fData);
+end;
+
+procedure TOPPBufferManagerSettings.SetAllowDuplicates(AValue: Boolean);
+begin
+  fData.AllowDuplicates := AValue;
 end;
 
 procedure TOPPBufferManagerSettings.SetAutoFilter(AValue: Boolean);
@@ -219,7 +238,7 @@ end;
 procedure TOPPBufferManagerSettings.SetColumnSort(AValue: TArray<TOPPBufferManagerSettingsColumnSort>);
 begin
   fData.SetColumnSortArray(AValue);
-  //Run save
+  // Run save
   Save;
 end;
 
@@ -231,7 +250,8 @@ end;
 
 procedure TOPPBufferManagerSettings.SetFormFrame(AFrame: TRect);
 begin
-  if fData.CanSaveFormFrame then begin
+  if fData.CanSaveFormFrame then
+  begin
     fData.FormFrame := AFrame;
     Save;
   end;
@@ -254,7 +274,7 @@ end;
 
 procedure TOPPBufferManagerSettings.SetSourceIsVisible(AValue: Boolean);
 begin
-fData.SourceIsVisible := AValue;
+  fData.SourceIsVisible := AValue;
 end;
 
 procedure TOPPBufferManagerSettings.SetUseRecordsCountLimit(AValue: Boolean);

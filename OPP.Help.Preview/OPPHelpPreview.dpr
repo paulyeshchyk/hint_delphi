@@ -1,14 +1,14 @@
 ﻿program OPPHelpPreview;
 
-{$R '..\..\Rus\devexlocalization.res'}
 {$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
 
 uses
   Vcl.Forms,
-  OPP.Help.PreviewForm in '..\OPP.PDF.View\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm} ,
+  OPP.Help.PreviewForm in '..\OPP.PDF.View\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
   OPP.Help.View.Fullscreen in '..\OPP.PDF.View\OPP.Help.View.Fullscreen.pas',
   OPP.Help.View.Helper in '..\OPP.PDF.View\OPP.Help.View.Helper.pas',
-  OPP.Help.View.ZoomSettings in '..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas' {OPPHelpPreviewZoomForm};
+  OPP.Help.View.ZoomSettings in '..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas' {OPPHelpPreviewZoomForm},
+  OPP.Help.PreviewSettings in '..\OPP.PDF.View\OPP.Help.PreviewSettings.pas';
 
 {$R *.res}
 

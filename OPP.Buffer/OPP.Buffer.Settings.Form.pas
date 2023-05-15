@@ -42,6 +42,9 @@ type
     actionAutoFilter: TAction;
     checkBoxSourceIsVisible: TcxCheckBox;
     actionSourceIsVisible: TAction;
+    allowDuplicatesCheckBox: TcxCheckBox;
+    ActionAllowDuplicates: TAction;
+    procedure ActionAllowDuplicatesExecute(Sender: TObject);
     procedure actionAutoFilterExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
@@ -86,6 +89,11 @@ uses
   VarUtils;
 
 {$R *.dfm}
+
+procedure TOPPBufferSettingsForm.ActionAllowDuplicatesExecute(Sender: TObject);
+begin
+  fSettings.SetAllowDuplicates(allowDuplicatesCheckBox.checked);
+end;
 
 procedure TOPPBufferSettingsForm.actionAutoFilterExecute(Sender: TObject);
 begin
@@ -177,6 +185,7 @@ begin
   checkBoxAutoFilter.Checked := fSettings.GetAutoFilter;
   clipboardManagerShortcut.HotKey := fSettings.GetShortCut;
   checkBoxSourceIsVisible.checked := fSettings.GetSourceIsVisible;
+  allowDuplicatesCheckBox.checked := fSettings.GetAllowDuplicates;
 
   DoUpdateUI;
 end;

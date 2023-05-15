@@ -156,8 +156,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1077#1088#1077#1093#1086#1076#1099' '#1087#1086' '#1089#1090#1088#1072#1085#1080#1094#1072#1084
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 317
-      DockedTop = 24
+      DockedLeft = 325
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -240,8 +240,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1086#1080#1089#1082
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 53
-      DockedTop = 24
+      DockedLeft = 55
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -269,8 +269,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1055#1077#1095#1072#1090#1100
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 234
-      DockedTop = 24
+      DockedLeft = 240
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -294,7 +294,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 24
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -317,8 +317,8 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1052#1072#1089#1096#1090#1072#1073
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 544
-      DockedTop = 24
+      DockedLeft = 554
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -585,7 +585,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     object zoomValueEdit: TcxBarEditItem
       Category = 0
       Visible = ivAlways
-      OnChange = zoomValueEditChange
       PropertiesClassName = 'TcxSpinEditProperties'
       CanSelect = False
       Properties.Alignment.Horz = taCenter
@@ -628,7 +627,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Category = 0
       Hint = #1055#1088#1080#1073#1083#1080#1078#1105#1085#1085#1086
       Visible = ivAlways
-      OnChange = cxBarEditItem4Change
       PropertiesClassName = 'TcxTrackBarProperties'
       Properties.Frequency = 30
       Properties.Max = 500
@@ -1509,6 +1507,10 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         item
           Visible = True
           ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton23'
         end>
     end
     object dxBarButton5: TdxBarButton
@@ -1699,6 +1701,10 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         item
           Visible = True
           ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton24'
         end
         item
           Visible = True
@@ -2244,6 +2250,14 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object dxBarButton23: TdxBarButton
+      Action = actionGotoTermsAndDefinitions
+      Category = 0
+    end
+    object dxBarButton24: TdxBarButton
+      Action = actionGotoTermsAndDefinitions
+      Category = 0
+    end
   end
   object TrayIcon1: TTrayIcon
     Icon.Data = {
@@ -2408,7 +2422,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     end
     object actionFitTwoPages: TAction
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1074#1077' '#1089#1090#1088#1072#1085#1080#1094#1099
-      OnExecute = actionFitTwoPagesExecute
     end
     object actionFitPageHeight: TAction
       Caption = #1055#1086' '#1074#1099#1089#1086#1090#1077
@@ -2422,10 +2435,6 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1057#1087#1088#1103#1090#1072#1090#1100
       ShortCut = 27
       OnExecute = actionHideExecute
-    end
-    object actionGotoInitialText: TAction
-      Caption = #1048#1079#1085#1072#1095#1072#1083#1100#1085#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
-      OnExecute = actionGotoInitialTextExecute
     end
     object actionGotoFirstPage: TAction
       Caption = #1055#1077#1088#1074#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
@@ -2451,9 +2460,17 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = #1054#1075#1083#1072#1074#1083#1077#1085#1080#1077
       OnExecute = actionGotoContentsExecute
     end
+    object actionGotoInitialText: TAction
+      Caption = #1048#1079#1085#1072#1095#1072#1083#1100#1085#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
+      OnExecute = actionGotoInitialTextExecute
+    end
     object actionGotoTerms: TAction
       Caption = #1057#1087#1080#1089#1086#1082' '#1089#1086#1082#1088#1072#1097#1077#1085#1080#1081
       OnExecute = actionGotoTermsExecute
+    end
+    object actionGotoTermsAndDefinitions: TAction
+      Caption = #1058#1077#1088#1084#1080#1085#1099' '#1080' '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
+      OnExecute = actionGotoTermsAndDefinitionsExecute
     end
     object actionPrint: TAction
       Caption = #1055#1077#1095#1072#1090#1100
