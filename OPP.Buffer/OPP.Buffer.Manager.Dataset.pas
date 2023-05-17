@@ -4,7 +4,7 @@ interface
 
 uses
   MidasLib,
-  Datasnap.dbclient, Data.DB, System.Classes,
+  Datasnap.dbclient, Data.DB,
   System.SysUtils,
   OPP.Buffer.Clipboard,
   OPP.Buffer.Manager.DatasetRecord;
@@ -63,6 +63,7 @@ const
 implementation
 
 uses
+  System.Classes,
   OPP.Help.log,
   OPP.Help.System.Str,
   OPP.Help.System.JSON,

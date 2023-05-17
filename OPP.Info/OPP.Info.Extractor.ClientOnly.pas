@@ -75,6 +75,7 @@ begin
   result.loodsmanType := self.loodsmanType;
   result.loodsmanId := Format('%d', [self.ObjectID]);
   result.loodsmanAttribute := self.Attribute;
+  result.ControlText := self.FControl.EditValue;
 end;
 
 { TOPPBufferAttrControlHelper }
@@ -85,6 +86,7 @@ begin
   result.loodsmanType := '';
   result.loodsmanId := self.DataInControl;
   result.loodsmanAttribute := self.Attribute;
+  result.ControlText := self.FControl.EditValue;
 end;
 
 { TOPPBufferWinControlHelper }
@@ -96,6 +98,7 @@ begin
     exit;
 
   result := TOPPBufferOPPInfo.Create(otWinControl);
+  result.ControlText := self.TextPropertyValue;
 end;
 
 { TOPPAttrControlInfoExtractor }
@@ -112,6 +115,7 @@ begin
   result.loodsmanType := '';
   result.loodsmanId := foppAttrControl.DataInControl;
   result.loodsmanAttribute := foppAttrControl.Attribute;
+  result.ControlText := foppAttrControl.FControl.EditValue;
 end;
 
 function TOPPAttrControlOPPInfoExtractor.isApplicable(Sender: TWinControl): Boolean;
@@ -154,6 +158,7 @@ begin
   result.loodsmanType := foppObjControl.loodsmanType;
   result.loodsmanId := Format('%d', [foppObjControl.ObjectID]);
   result.loodsmanAttribute := foppObjControl.Attribute;
+  result.ControlText := foppObjControl.FControl.EditValue;
 end;
 
 function TOPPObjControlOPPInfoExtractor.isApplicable(Sender: TWinControl): Boolean;
@@ -198,6 +203,7 @@ begin
   //иначе sender должен быть TWinControl
   if (not Assigned(Sender)) or (Sender is TWinControl) then begin
     result := TOPPBufferOPPInfo.Create(otWinControl);
+    result.ControlText := Sender.TextPropertyValue;
   end;
 
 end;

@@ -25,16 +25,36 @@ uses
 { TOPPClipboardHelper }
 
 function TOPPClipboardHelper.CreateRecord(OPPInfo: TOPPBufferOPPInfo): TOPPBufferManagerRecord;
+var
+  fText: String;
 begin
   result := nil;
 
   try
     if Clipboard.HasFormat(CF_TEXT) then
     begin
+      fText := Clipboard.AsText;
+      if length(fText) = 0 then begin
+        eventLogger.Warning('Clipboard[CF_TEXT] contains no text','TOPPClipboardHelper');
+        fText := OPPInfo.ControlText;
+      end;
+
       result := TOPPBufferManagerRecord.Create;
       result.OPPInfo := OPPInfo;
-      result.text := Clipboard.AsText;
+      result.text := fText;
+    end
+    else if Clipboard.HasFormat(CF_LOCALE) then
+    begin
+      fText := Clipboard.AsText;
+      if Length(fText) = 0 then begin
+        eventLogger.Warning('Clipboard[CF_LOCALE] contains no text','TOPPClipboardHelper');
+        fText := OPPInfo.ControlText;
+      end;
+      result := TOPPBufferManagerRecord.Create;
+      result.OPPInfo := OPPInfo;
+      result.text := fText;
     end;
+
   except
     on E: Exception do
     begin

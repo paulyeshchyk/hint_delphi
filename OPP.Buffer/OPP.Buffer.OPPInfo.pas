@@ -12,6 +12,7 @@ type
     fLoodsmanId: String;
     fLoodsmanType: String;
     fLoodsmanAttribute: String;
+    fControlText: String;
   public
     constructor Create(AType: TOPPBufferOPPInfoType);
     procedure LoadFromBytes(bytes: TArray<Byte>; isUTF8: Boolean);
@@ -21,6 +22,7 @@ type
     property loodsmanAttribute: String read fLoodsmanAttribute write fLoodsmanAttribute;
     property loodsmanType: String read fLoodsmanType write fLoodsmanType;
     property loodsmanId: String read fLoodsmanId write fLoodsmanId;
+    property ControlText: String read fControlText write fControlText;
   end;
 
 implementation
