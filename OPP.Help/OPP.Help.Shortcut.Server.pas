@@ -120,7 +120,7 @@ begin
   fPDFMemoryStream := TDictionary<String, TMemoryStream>.Create;
 
   fShortcutDataset := TOPPHelpShortcutDataset.Create;
-  fShortcutDataset.load(kShortcutMappingDefaultFileName);
+  fShortcutDataset.load(TOPPHelpSystemFilesHelper.AbsolutePath(kShortcutMappingDefaultFileName));
 end;
 
 destructor TOPPHelpShortcutServer.Destroy;

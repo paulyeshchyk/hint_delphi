@@ -13,6 +13,7 @@ function RelToAbs(const RelPath, BasePath: string): string;
 type
   TOPPHelpSystemFilesHelper = class
   public
+    class function ExeFileDir(): String;
     class function RelativePath(APath: String): String;
     class function AbsolutePath(APath: String): String;
     class function GetOPPSettingsPath(AFileName: String): String;
@@ -28,12 +29,12 @@ uses System.SysUtils,
 
 class function TOPPHelpSystemFilesHelper.RelativePath(APath: String): String;
 begin
-  result := AbsToRel(APath, ExtractFileDir(Application.ExeName));
+  result := AbsToRel(APath, ExeFileDir);
 end;
 
 class function TOPPHelpSystemFilesHelper.AbsolutePath(APath: String): String;
 begin
-  result := RelToAbs(APath, ExtractFileDir(Application.ExeName));
+  result := RelToAbs(APath, ExeFileDir);
 end;
 
 function AbsToRel(const AbsPath, BasePath: string): string;
@@ -82,6 +83,12 @@ begin
       result := false;
     end;
   end;
+end;
+
+class function TOPPHelpSystemFilesHelper.ExeFileDir: String;
+begin
+  result := ExtractFileDir(Application.ExeName);
+  //eventLogger.Flow(Format('ExeFileDir: %s',[result]), 'TOPPHelpSystemFilesHelper');
 end;
 
 class function TOPPHelpSystemFilesHelper.GetOPPSettingsPath(AFileName: String): String;

@@ -258,6 +258,7 @@ function TOPPHelpHintServer.findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapI
 var
   fMap: TOPPHelpMap;
   fPredicate: TOPPHelpPredicate;
+  fPredicateFileName: String;
 begin
   result := nil;
 
@@ -289,27 +290,29 @@ begin
     exit;
   end;
 
-  result := getReader(fMap.Predicate.filename);
+  fPredicateFileName := TOPPHelpSystemFilesHelper.AbsolutePath(fMap.Predicate.filename);
+
+  result := getReader(fPredicateFileName);
   if Assigned(result) then
   begin
-    eventLogger.Debug(Format('reader was found for:[%s]', [fMap.Predicate.filename]));
+    eventLogger.Debug(Format('reader was found for:[%s]', [fPredicateFileName]));
     exit;
   end;
 
   if not Assigned(fDefaultOnHintReaderCreator) then
   begin
-    eventLogger.Debug(Format('hintreader creator was not defined for:[%s]', [fMap.Predicate.filename]));
+    eventLogger.Debug(Format('hintreader creator was not defined for:[%s]', [fPredicateFileName]));
     exit;
   end;
 
   result := fDefaultOnHintReaderCreator(fMap);
   if not Assigned(result) then
   begin
-    eventLogger.Debug(Format('hintreader was not created for:[%s]', [fMap.Predicate.filename]));
+    eventLogger.Debug(Format('hintreader was not created for:[%s]', [fPredicateFileName]));
     exit;
   end;
 
-  fHintDataReaders.Add(fMap.Predicate.filename, result);
+  fHintDataReaders.Add(fPredicateFileName, result);
 end;
 
 function TOPPHelpHintServer.GetAvailableMaps: TList<TOPPHelpMap>;
@@ -347,7 +350,7 @@ var
   fHintTexts: TList<TOPPHelpHint>;
 begin
 
-  self.reloadConfigurationIfNeed(ARequest.MappingFileName);
+  self.reloadConfigurationIfNeed(TOPPHelpSystemFilesHelper.AbsolutePath(ARequest.MappingFileName));
   if not fLoaded then
   begin
     if Assigned(completion) then
@@ -407,7 +410,7 @@ begin
 
   eventLogger.Flow(Format('Load hints started for [%s]', [ARequest.Control.ClassName]), kContext);
 
-  self.reloadConfigurationIfNeed(ARequest.MappingFileName);
+  self.reloadConfigurationIfNeed(TOPPHelpSystemFilesHelper.AbsolutePath(ARequest.MappingFileName));
   if not fLoaded then
   begin
     if Assigned(completion) then

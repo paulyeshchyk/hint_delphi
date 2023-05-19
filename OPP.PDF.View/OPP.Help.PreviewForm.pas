@@ -248,6 +248,7 @@ uses
   OPP.Help.System.Messaging.Pipe,
   OPP.Help.System.Types,
   OPP.Help.System.Application,
+  OPP.Help.System.Files,
   AsyncCalls;
 
 const
@@ -753,7 +754,7 @@ begin
   end;
 
   eventLogger.Flow(Format(SEventStartedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kContext);
-  helpShortcutServer.loadPDF(APredicate.filename,
+  helpShortcutServer.loadPDF(TOPPHelpSystemFilesHelper.AbsolutePath(APredicate.filename),
     procedure(AStream: TMemoryStream; AStatus: TOPPHelpShortcutServerLoadStreamStatus)
     begin
       eventLogger.Flow(Format(SEventFinishedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kContext);

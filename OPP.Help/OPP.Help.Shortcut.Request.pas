@@ -39,7 +39,7 @@ constructor TOPPHelpShortcutRequest.Create(AActiveControl: TControl);
 begin
   inherited Create;
   fActiveControl := AActiveControl;
-  eventLogger.Debug(fActiveControl.ClassName);
+  eventLogger.Flow(Format('Create(Class: %s)', [fActiveControl.ClassName]),'TOPPHelpShortcutRequest');
 end;
 
 end.

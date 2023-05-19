@@ -33,6 +33,7 @@ uses
   system.SysUtils,
   OPP.Help.Log,
   OPP.Help.system.Error,
+  OPP.Help.System.Files,
   OPPClientChild;
 
 const
@@ -123,7 +124,7 @@ end;
 function CreateHintReader(AMap: TOPPHelpMap): IOPPHelpHintDataReader;
 begin
   result := TOPPHelpRichtextHintReader.Create;
-  result.loadData(AMap.Predicate.filename);
+  result.loadData(TOPPHelpSystemFilesHelper.AbsolutePath(AMap.Predicate.filename));
 end;
 
 initialization
