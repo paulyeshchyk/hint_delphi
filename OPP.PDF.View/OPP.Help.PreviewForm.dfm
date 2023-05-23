@@ -94,7 +94,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Height = 392
     Align = dalRight
     BarManager = dxBarManager1
-    ExplicitLeft = 857
+    ExplicitLeft = 855
   end
   object dxBarDockControl3: TdxBarDockControl
     Left = 0
@@ -103,7 +103,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Height = 3
     Align = dalBottom
     BarManager = dxBarManager1
-    ExplicitTop = 471
+    ExplicitTop = 469
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace
@@ -157,7 +157,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 325
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -241,7 +241,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 55
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -270,7 +270,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 240
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -294,7 +294,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -318,7 +318,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 554
-      DockedTop = 23
+      DockedTop = 24
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -1499,27 +1499,17 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         item
           Visible = True
           ItemName = 'dxBarSeparator11'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton5'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton23'
         end>
     end
     object dxBarButton5: TdxBarButton
-      Action = actionGotoContents
+      Caption = #1054#1075#1083#1072#1074#1083#1077#1085#1080#1077
       Category = 0
+      Visible = ivAlways
     end
     object dxBarButton6: TdxBarButton
-      Action = actionGotoTerms
+      Caption = #1057#1087#1080#1089#1086#1082' '#1089#1086#1082#1088#1072#1097#1077#1085#1080#1081
       Category = 0
+      Visible = ivAlways
     end
     object dxBarLargeButton8: TdxBarLargeButton
       Action = actionPrint
@@ -1682,29 +1672,13 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       ShowCaption = False
     end
     object dxBarSubItem7: TdxBarSubItem
-      Caption = #1041#1099#1089#1090#1088#1099#1081' '#1087#1077#1088#1077#1093#1086#1076
+      Caption = #1055#1077#1088#1077#1093#1086#1076
       Category = 0
       Visible = ivAlways
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton20'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator10'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton8'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton9'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton24'
+          ItemName = 'dxBarSubItem10'
         end
         item
           Visible = True
@@ -1740,12 +1714,14 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         end>
     end
     object dxBarButton8: TdxBarButton
-      Action = actionGotoContents
+      Caption = #1054#1075#1083#1072#1074#1083#1077#1085#1080#1077
       Category = 0
+      Visible = ivAlways
     end
     object dxBarButton9: TdxBarButton
-      Action = actionGotoTerms
+      Caption = #1057#1087#1080#1089#1086#1082' '#1089#1086#1082#1088#1072#1097#1077#1085#1080#1081
       Category = 0
+      Visible = ivAlways
     end
     object dxBarSeparator6: TdxBarSeparator
       Caption = 'New Separator'
@@ -2251,12 +2227,28 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       ShowCaption = False
     end
     object dxBarButton23: TdxBarButton
-      Action = actionGotoTermsAndDefinitions
+      Caption = #1058#1077#1088#1084#1080#1085#1099' '#1080' '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
       Category = 0
+      Visible = ivAlways
     end
     object dxBarButton24: TdxBarButton
-      Action = actionGotoTermsAndDefinitions
+      Caption = #1058#1077#1088#1084#1080#1085#1099' '#1080' '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
       Category = 0
+      Visible = ivAlways
+    end
+    object dxBarSubItem10: TdxBarSubItem
+      Caption = #1041#1099#1089#1090#1088#1099#1081' '#1087#1077#1088#1077#1093#1086#1076
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton20'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator10'
+        end>
     end
   end
   object TrayIcon1: TTrayIcon
@@ -2456,21 +2448,9 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       ShortCut = 35
       OnExecute = actionGotoLastPageExecute
     end
-    object actionGotoContents: TAction
-      Caption = #1054#1075#1083#1072#1074#1083#1077#1085#1080#1077
-      OnExecute = actionGotoContentsExecute
-    end
     object actionGotoInitialText: TAction
       Caption = #1048#1079#1085#1072#1095#1072#1083#1100#1085#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
       OnExecute = actionGotoInitialTextExecute
-    end
-    object actionGotoTerms: TAction
-      Caption = #1057#1087#1080#1089#1086#1082' '#1089#1086#1082#1088#1072#1097#1077#1085#1080#1081
-      OnExecute = actionGotoTermsExecute
-    end
-    object actionGotoTermsAndDefinitions: TAction
-      Caption = #1058#1077#1088#1084#1080#1085#1099' '#1080' '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
-      OnExecute = actionGotoTermsAndDefinitionsExecute
     end
     object actionPrint: TAction
       Caption = #1055#1077#1095#1072#1090#1100
@@ -2506,5 +2486,9 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Left = 408
     Top = 360
     PixelsPerInch = 96
+  end
+  object customActionList: TActionList
+    Left = 88
+    Top = 208
   end
 end

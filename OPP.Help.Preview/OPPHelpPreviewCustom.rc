@@ -1,2 +1,3 @@
-RC_DEFAULT_SPLASH       RCDATA         "..\resources\gulfstream8.png"
-RC_PDF_TITLE            RCDATA         "..\resources\title.pdf"
+RC_DEFAULT_SPLASH       RCDATA          "..\resources\gulfstream8.png"
+RC_PDF_TITLE            RCDATA          "..\resources\title.pdf"
+RC_HELP_DROPDOWN_MENU   RCDATA          "..\resources\help_dropdown_menu.idx"

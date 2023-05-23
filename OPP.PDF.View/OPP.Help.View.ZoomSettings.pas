@@ -14,9 +14,6 @@ type
   TOPPHelpPreviewZoomForm = class(TForm)
     ActionList1: TActionList;
     actionClose: TAction;
-    Panel1: TPanel;
-    cxLabel1: TcxLabel;
-    cxSpinZoomFactor: TcxSpinEdit;
     Panel3: TPanel;
     Button1: TButton;
     ImageList1: TImageList;
@@ -24,13 +21,20 @@ type
     actionZoomWidth: TAction;
     actionZoomTwoColumns: TAction;
     actionCustomZoom: TAction;
-    cxComboBox1: TcxComboBox;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    cxLabel3: TcxLabel;
+    cxComboBox2: TcxComboBox;
     cxLabel2: TcxLabel;
+    cxComboBox1: TcxComboBox;
+    cxLabel1: TcxLabel;
+    cxSpinZoomFactor: TcxSpinEdit;
     procedure FormCreate(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionCustomZoomExecute(Sender: TObject);
     procedure cxComboBox1PropertiesChange(Sender: TObject);
     procedure cxSpinZoomFactorPropertiesChange(Sender: TObject);
+    procedure cxComboBox2PropertiesChange(Sender: TObject);
   private
     { Private declarations }
     fIsHandlingMessage: Boolean;
@@ -74,6 +78,12 @@ begin
     zmCustom:
       cxComboBox1.ItemIndex := 3;
   end;
+
+  case fSettings.ScrollingType of
+    stLines: cxComboBox2.ItemIndex := 0;
+    stPages: cxComboBox2.ItemIndex := 1;
+  end;
+
   cxSpinZoomFactor.Value := Value.ZoomScale;
   fIsHandlingMessage := false;
 end;
@@ -125,6 +135,20 @@ begin
         actionCustomZoom.Execute;
       end;
   end;
+end;
+
+procedure TOPPHelpPreviewZoomForm.cxComboBox2PropertiesChange(Sender: TObject);
+var
+  fHandle: THandle;
+  messageResult: NativeInt;
+const
+  fClassName: String = 'TOPPHelpPreviewForm';
+begin
+  if fIsHandlingMessage then exit;
+
+  fIsHandlingMessage := true;
+  fHandle := FindWindow(fClassName.toWideChar(), nil);
+  SendMessage(fHandle, WM_OPPScrollingType, WPARAM(cxComboBox2.ItemIndex), 0);
 end;
 
 procedure TOPPHelpPreviewZoomForm.cxSpinZoomFactorPropertiesChange(Sender: TObject);

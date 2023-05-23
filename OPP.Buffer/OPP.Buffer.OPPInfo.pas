@@ -40,6 +40,7 @@ begin
   fLoodsmanId := '';
   fLoodsmanType := '';
   fLoodsmanAttribute := '';
+  fControlText := '';
 end;
 
 procedure TOPPBufferOPPInfo.LoadFromBytes(bytes: TArray<Byte>; isUTF8: Boolean);

@@ -15,6 +15,7 @@ const
   WM_OPPZoomFit = WM_USER + 803;
   WM_OPPZoomFitReaction = WM_USER + 804;
   WM_OPPNavBarVisible = WM_USER + 805;
+  WM_OPPScrollingType = WM_USER + 806;
 
 type
   TWMCopyData = packed record

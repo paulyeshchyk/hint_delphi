@@ -2,7 +2,7 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1084#1072#1089#1096#1090#1072#1073#1072
+  Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
   ClientHeight = 381
   ClientWidth = 420
   Color = clBtnFace
@@ -16,17 +16,61 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
   OnCreate = FormCreate
   PixelsPerInch = 192
   TextHeight = 13
-  object Panel1: TPanel
+  object Panel3: TPanel
     Left = 0
-    Top = 0
+    Top = 344
     Width = 420
-    Height = 78
-    Align = alTop
+    Height = 37
+    Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    object Button1: TButton
+      Left = 328
+      Top = 3
+      Width = 75
+      Height = 25
+      Action = actionClose
+      TabOrder = 0
+    end
+  end
+  object GroupBox1: TGroupBox
+    AlignWithMargins = True
+    Left = 8
+    Top = 8
+    Width = 404
+    Height = 89
+    Margins.Left = 8
+    Margins.Top = 8
+    Margins.Right = 8
+    Margins.Bottom = 8
+    Align = alTop
+    Caption = #1052#1072#1089#1096#1090#1072#1073
+    TabOrder = 1
+    object cxLabel2: TcxLabel
+      Left = 16
+      Top = 21
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = #1052#1077#1090#1086#1076
+    end
+    object cxComboBox1: TcxComboBox
+      Left = 77
+      Top = 21
+      Properties.Items.Strings = (
+        #1055#1086' '#1074#1099#1089#1086#1090#1077' '#1089#1090#1088#1072#1085#1080#1094#1099
+        #1055#1086' '#1096#1080#1088#1080#1085#1077' '#1089#1090#1088#1072#1085#1080#1094#1099
+        #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1089#1090#1088#1072#1085#1080#1094
+        #1058#1086#1095#1085#1086)
+      Properties.OnChange = cxComboBox1PropertiesChange
+      TabOrder = 1
+      Text = #1058#1086#1095#1085#1086
+      Width = 153
+    end
     object cxLabel1: TcxLabel
       Left = 16
-      Top = 47
+      Top = 51
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -34,8 +78,8 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
       Caption = #1047#1085#1072#1095#1077#1085#1080#1077
     end
     object cxSpinZoomFactor: TcxSpinEdit
-      Left = 72
-      Top = 46
+      Left = 77
+      Top = 51
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -50,54 +94,49 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
       Properties.UseLeftAlignmentOnEditing = False
       Properties.ValidationOptions = [evoRaiseException, evoShowErrorIcon]
       Properties.OnChange = cxSpinZoomFactorPropertiesChange
-      TabOrder = 1
+      TabOrder = 3
       Value = 81
       Height = 22
       Width = 97
     end
-    object cxComboBox1: TcxComboBox
-      Left = 72
-      Top = 16
-      Properties.Items.Strings = (
-        #1055#1086' '#1074#1099#1089#1086#1090#1077' '#1089#1090#1088#1072#1085#1080#1094#1099
-        #1055#1086' '#1096#1080#1088#1080#1085#1077' '#1089#1090#1088#1072#1085#1080#1094#1099
-        #1053#1077#1089#1082#1086#1083#1100#1082#1086' '#1089#1090#1088#1072#1085#1080#1094
-        #1058#1086#1095#1085#1086)
-      Properties.OnChange = cxComboBox1PropertiesChange
-      TabOrder = 2
-      Text = #1058#1086#1095#1085#1086
-      Width = 153
-    end
-    object cxLabel2: TcxLabel
+  end
+  object GroupBox2: TGroupBox
+    AlignWithMargins = True
+    Left = 8
+    Top = 113
+    Width = 404
+    Height = 64
+    Margins.Left = 8
+    Margins.Top = 8
+    Margins.Right = 8
+    Margins.Bottom = 8
+    Align = alTop
+    Caption = #1055#1088#1086#1082#1088#1091#1090#1082#1072
+    TabOrder = 2
+    object cxLabel3: TcxLabel
       Left = 16
-      Top = 17
+      Top = 21
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
       Caption = #1052#1077#1090#1086#1076
     end
-  end
-  object Panel3: TPanel
-    Left = 0
-    Top = 344
-    Width = 420
-    Height = 37
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 1
-    object Button1: TButton
-      Left = 328
-      Top = 3
-      Width = 75
-      Height = 25
-      Action = actionClose
-      TabOrder = 0
+    object cxComboBox2: TcxComboBox
+      Left = 72
+      Top = 21
+      Properties.Items.Strings = (
+        #1055#1086#1089#1090#1088#1086#1095#1085#1086
+        #1055#1086#1089#1090#1088#1072#1085#1080#1095#1085#1086)
+      Properties.OnChange = cxComboBox2PropertiesChange
+      TabOrder = 1
+      Text = #1055#1086#1089#1090#1088#1086#1095#1085#1086
+      Width = 153
     end
   end
   object ActionList1: TActionList
-    Left = 24
-    Top = 120
+    Left = 104
+    Top = 200
     object actionClose: TAction
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ShortCut = 27
@@ -124,10 +163,10 @@ object OPPHelpPreviewZoomForm: TOPPHelpPreviewZoomForm
   object ImageList1: TImageList
     Height = 256
     Width = 256
-    Left = 96
-    Top = 160
+    Left = 240
+    Top = 168
     Bitmap = {
-      494C010102001400380000010001FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020014003C0000010001FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000400000001000001002000000000000000
       100000000000000000000000000000000000100F0E651C1A19B31F1C1BC41E1C
       1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C1BC21E1C

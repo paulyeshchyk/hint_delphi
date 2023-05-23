@@ -49,12 +49,10 @@ type
     actionFitPageHeight: TAction;
     actionFitPageWidth: TAction;
     actionFitTwoPages: TAction;
-    actionGotoContents: TAction;
     actionGotoFirstPage: TAction;
     actionGotoLastPage: TAction;
     actionGotoNextPage: TAction;
     actionGotoPreviousPage: TAction;
-    actionGotoTerms: TAction;
     actionHide: TAction;
     ActionList1: TActionList;
     actionPrint: TAction;
@@ -159,19 +157,17 @@ type
     actionSendToBackground: TAction;
     actionSendToForeground: TAction;
     dxBarButton23: TdxBarButton;
-    actionGotoTermsAndDefinitions: TAction;
     dxBarButton24: TdxBarButton;
+    customActionList: TActionList;
+    dxBarSubItem10: TdxBarSubItem;
     procedure actionFitPageCustomExecute(Sender: TObject);
     procedure actionFitPageHeightExecute(Sender: TObject);
     procedure actionFitPageWidthExecute(Sender: TObject);
-    procedure actionGotoContentsExecute(Sender: TObject);
     procedure actionGotoFirstPageExecute(Sender: TObject);
     procedure actionGotoInitialTextExecute(Sender: TObject);
     procedure actionGotoLastPageExecute(Sender: TObject);
     procedure actionGotoNextPageExecute(Sender: TObject);
     procedure actionGotoPreviousPageExecute(Sender: TObject);
-    procedure actionGotoTermsAndDefinitionsExecute(Sender: TObject);
-    procedure actionGotoTermsExecute(Sender: TObject);
     procedure actionHideExecute(Sender: TObject);
     procedure actionPrintDialogExecute(Sender: TObject);
     procedure actionPrintExecute(Sender: TObject);
@@ -224,6 +220,7 @@ type
     procedure OnMessageWMOPPPredicate(var Msg: TMessage); message WM_OPPPredicate;
     procedure OnMessageWMUserZoom(var Msg: TMessage); message WM_OPPZoom;
     procedure OnMessageWMUserZoomFit(var Msg: TMessage); message WM_OPPZoomFit;
+    procedure OnMessageWMScrollingType(var Msg: TMessage); message WM_OPPScrollingType;
     procedure WMExitSizeMove(var Message: TMessage); message WM_EXITSIZEMOVE;
     procedure WMEnterSizeMove(var Message: TMessage); message WM_ENTERSIZEMOVE;
   public
@@ -249,6 +246,8 @@ uses
   OPP.Help.System.Types,
   OPP.Help.System.Application,
   OPP.Help.System.Files,
+  OPP.Help.Map,
+  OPP.Help.QuickJumpMenuBuilder,
   AsyncCalls;
 
 const
@@ -301,20 +300,6 @@ begin
   oppHelpView.FitPageWidth();
 end;
 
-procedure TOPPHelpPreviewForm.actionGotoContentsExecute(Sender: TObject);
-var
-  fPredicate: TOPPHelpPredicate;
-begin
-  fPredicate := TOPPHelpPredicate.Create;
-  try
-    fPredicate.keywordType := ktPage;
-    fPredicate.value := kGulfstreamContentsPageIndex;
-    oppHelpView.setPredicate(fPredicate);
-  finally
-    fPredicate.Free;
-  end;
-end;
-
 procedure TOPPHelpPreviewForm.actionGotoFirstPageExecute(Sender: TObject);
 begin
   if Assigned(Navigator) then
@@ -344,38 +329,9 @@ begin
     Navigator.GotoPreviousPage;
 end;
 
-procedure TOPPHelpPreviewForm.actionGotoTermsAndDefinitionsExecute(Sender: TObject);
-var
-  fPredicate: TOPPHelpPredicate;
-begin
-  fPredicate := TOPPHelpPredicate.Create;
-  try
-    fPredicate.keywordType := ktPage;
-    fPredicate.value := kGulfstreamTermsAndDefinitionsPageIndex;
-    oppHelpView.setPredicate(fPredicate);
-  finally
-    fPredicate.Free;
-  end;
-end;
-
-procedure TOPPHelpPreviewForm.actionGotoTermsExecute(Sender: TObject);
-var
-  fPredicate: TOPPHelpPredicate;
-begin
-  fPredicate := TOPPHelpPredicate.Create;
-  try
-    fPredicate.keywordType := ktPage;
-    fPredicate.value := kGulfstreamTermsPageIndex;
-    oppHelpView.setPredicate(fPredicate);
-  finally
-    fPredicate.Free;
-  end;
-end;
-
 procedure TOPPHelpPreviewForm.actionHideExecute(Sender: TObject);
 begin
   Close;
-  // Application.Minimize;
 end;
 
 procedure TOPPHelpPreviewForm.actionPrintDialogExecute(Sender: TObject);
@@ -440,12 +396,10 @@ begin
   actionFitPageHeight.Hint := 'Подобрать размер по высоте';
   actionFitPageWidth.Hint := 'Подобрать размер по ширине';
   actionFitTwoPages.Hint := 'Подобрать размер для двух страниц';
-  actionGotoContents.Hint := 'Перейти к содержанию';
   actionGotoFirstPage.Hint := 'Перейти на первую страницу';
   actionGotoLastPage.Hint := 'Перейти на последнюю страницу';
   actionGotoNextPage.Hint := 'Перейти на слудеющую страницу';
   actionGotoPreviousPage.Hint := 'Перейти на предыдущую страницу';
-  actionGotoTerms.Hint := 'Перейти на список сокращений';
   actionHide.Hint := 'Спрятать';
   actionPrint.Hint := 'Распечатать';
   actionPrintDialog.Hint := 'Распечатать, используя диалог';
@@ -459,6 +413,8 @@ procedure TOPPHelpPreviewForm.ApplySettings(ASettings: TOPPHelpPreviewSettings);
 begin
   if not Assigned(ASettings) then
     exit;
+
+  oppHelpView.ScrollingType := ASettings.ScrollingType;
 
   case ASettings.ZoomMode of
     zmFitHeight:
@@ -537,6 +493,25 @@ begin
   actionVersion.Caption := Application.BuildNumber;
 
   self.ReadFormState;
+
+  TOPPHelpQuickJumpMenuBuilder.Build(self,
+    procedure(AAction: TAction)
+    var
+      fLink: TdxBarItemLink;
+    begin
+      AAction.ActionList := customActionList;
+      with buttonQuickNavigation.ItemLinks.AddButton do
+        Item.Action := AAction;
+      with dxBarSubItem10.ItemLinks.AddButton do
+        item.Action := AAction;
+    end,
+    procedure(AHelpMap: TOPPHelpMap)
+    begin
+      if Assigned(AHelpMap) then
+      begin
+        oppHelpView.setPredicate(AHelpMap.Predicate);
+      end;
+    end);
 
   reloadIsInProgress := false;
   self.currentState := fsFormCreated;
@@ -640,6 +615,17 @@ begin
   Msg.Result := NativeInt(fResult);
 end;
 
+procedure TOPPHelpPreviewForm.OnMessageWMScrollingType(var Msg: TMessage);
+begin
+  if Assigned(fSettings) then
+  begin
+    fSettings.ScrollingType := TOPPHelpScrollingType(msg.WParam);
+    TOPPHelpPreviewSettings.Save(fSettings);
+
+    oppHelpView.ScrollingType := fSettings.ScrollingType;
+  end;
+end;
+
 procedure TOPPHelpPreviewForm.OnMessageWMUserZoom(var Msg: TMessage);
 begin
 end;
@@ -668,7 +654,7 @@ end;
 
 procedure TOPPHelpPreviewForm.OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
 begin
-  fitActualSizeButton.Down := (AStatus.zoomMode = TdxPreviewZoomMode.pzmPageWidth);
+  fitActualSizeButton.Down := (AStatus.ZoomMode = TdxPreviewZoomMode.pzmPageWidth);
   zoomValueEdit.EditValue := AStatus.ZoomFactor;
   zoomMenuButton.Caption := Format(SScalingTemplate, [AStatus.ZoomFactor]);
 end;
@@ -703,10 +689,15 @@ end;
 procedure TOPPHelpPreviewForm.ReloadNavigationPanel(ANavigator: IOPPNavigator);
 var
   fNavigationInfo: TOPPHelpPreviewNavigationPanelInfo;
+  i: integer;
 begin
   reloadIsInProgress := true;
 
   fNavigationInfo := NavigationInfo(ANavigator);
+
+  for i:= 0 to customActionList.ActionCount - 1 do begin
+    customActionList[i].Enabled := fNavigationInfo.hasConstraints;
+  end;
 
   actionGotoInitialText.Enabled := fNavigationInfo.hasConstraints;
   actionZoomIncrease.Enabled := fNavigationInfo.hasConstraints;
@@ -723,9 +714,6 @@ begin
   actionPrint.Enabled := fNavigationInfo.hasConstraints;
   actionPrintDialog.Enabled := fNavigationInfo.hasConstraints;
 
-  actionGotoContents.Enabled := fNavigationInfo.hasConstraints;
-  actionGotoTerms.Enabled := fNavigationInfo.hasConstraints;
-  actionGotoTermsAndDefinitions.Enabled := fNavigationInfo.hasConstraints;
   actionGotoFirstPage.Enabled := ncCanGoFirstPage in fNavigationInfo.constraints;
   actionGotoPreviousPage.Enabled := ncCanGoPreviousPage in fNavigationInfo.constraints;
   actionGotoNextPage.Enabled := ncCanGoNextPage in fNavigationInfo.constraints;

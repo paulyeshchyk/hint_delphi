@@ -32,7 +32,7 @@ type
 implementation
 
 uses
-  System.SysUtils,
+  System.SysUtils, System.Variants,
 
   OPP.Help.Component.Enumerator,
   OPP.Help.System.Control,
@@ -75,7 +75,8 @@ begin
   result.loodsmanType := self.loodsmanType;
   result.loodsmanId := Format('%d', [self.ObjectID]);
   result.loodsmanAttribute := self.Attribute;
-  result.ControlText := self.FControl.EditValue;
+  if Assigned(FControl) then
+    result.ControlText := VarToStr(FControl.EditValue);
 end;
 
 { TOPPBufferAttrControlHelper }
@@ -86,7 +87,8 @@ begin
   result.loodsmanType := '';
   result.loodsmanId := self.DataInControl;
   result.loodsmanAttribute := self.Attribute;
-  result.ControlText := self.FControl.EditValue;
+  if Assigned(FControl) then
+    result.ControlText := VarToStr(FControl.EditValue);
 end;
 
 { TOPPBufferWinControlHelper }
@@ -115,7 +117,8 @@ begin
   result.loodsmanType := '';
   result.loodsmanId := foppAttrControl.DataInControl;
   result.loodsmanAttribute := foppAttrControl.Attribute;
-  result.ControlText := foppAttrControl.FControl.EditValue;
+  if Assigned(foppAttrControl.FControl) then
+    result.ControlText := VarToStr(foppAttrControl.FControl.EditValue);
 end;
 
 function TOPPAttrControlOPPInfoExtractor.isApplicable(Sender: TWinControl): Boolean;
@@ -158,7 +161,8 @@ begin
   result.loodsmanType := foppObjControl.loodsmanType;
   result.loodsmanId := Format('%d', [foppObjControl.ObjectID]);
   result.loodsmanAttribute := foppObjControl.Attribute;
-  result.ControlText := foppObjControl.FControl.EditValue;
+  if Assigned(foppObjControl.FControl) then
+    result.ControlText := VarToStr(foppObjControl.FControl.EditValue);
 end;
 
 function TOPPObjControlOPPInfoExtractor.isApplicable(Sender: TWinControl): Boolean;

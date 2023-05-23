@@ -29,6 +29,16 @@ type
     zoomFactor: Integer;
   end;
 
+  TOPPPDFViewerOnScrollEvent = reference to function(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
+
+  TOPPPdfViewer = class(TdxPDFViewer)
+  private
+    fOnScrollEvent: TOPPPDFViewerOnScrollEvent;
+  public
+    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
+    property onScrollEvent: TOPPPDFViewerOnScrollEvent read fOnScrollEvent write fOnScrollEvent;
+  end;
+
   TOPPHelpViewSearchInstanciator = (siDocumentLoad, siPredicate);
   TOPPHelpViewOnStatusChanged = reference to procedure(AStatus: TOPPHelpViewFullScreenStatus);
   TOPPNavigatorConstraint = (ncCanGoFirstPage, ncCanGoPreviousPage, ncCanGoNextPage, ncCanGoLastPage);
@@ -59,9 +69,10 @@ type
     fNavigatorStatusChangesCompletion: TOPPNavigatorStatusChangedCompletion;
     fOnFindPanelVisiblityChange: TOPPHelpBooleanCompletion;
     fOnStatusChanged: TOPPHelpViewOnStatusChanged;
-    fPDFViewer: TdxPDFViewer;
+    fPDFViewer: TOPPPdfViewer;
     fPredicate: TOPPHelpPredicate;
     fSearchIsInProgress: Boolean;
+    fScrollingType: TOPPHelpScrollingType;
     procedure DoSearchIfPossible(AInstanciator: TOPPHelpViewSearchInstanciator);
     function GetEventListeners(): TList<IOPPHelpViewEventListener>;
     function GetIsFindPanelVisible(): Boolean;
@@ -69,6 +80,7 @@ type
     function GetStatus: TOPPHelpViewFullScreenStatus;
     procedure OnHideFindPanelEvent(Sender: TObject);
     procedure OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
+    function OnPDFViewerScrollEvent(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
     procedure OnSelectedPageChanged(Sender: TObject; APageIndex: Integer);
     procedure OnShowFindPanelEvent(Sender: TObject);
     procedure SetHasLoadedDocument(AHasLoadedDocument: Boolean);
@@ -76,6 +88,7 @@ type
     procedure SetSearchIsInProgress(const Value: Boolean);
     function GetZoomFactor: Integer;
     procedure SetZoomFactor(const Value: Integer);
+    procedure SetScrollingType(const Value: TOPPHelpScrollingType);
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
     property HasLoadedDocument: Boolean read fHasLoadedDocument write SetHasLoadedDocument;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
@@ -108,11 +121,12 @@ type
     property IsFindPanelVisible: Boolean read GetIsFindPanelVisible write SetIsFindPanelVisible;
     property PageIndex: Integer read GetPageIndex write SetPageIndex;
     property Status: TOPPHelpViewFullScreenStatus read GetStatus;
-    property ZoomFactor: Integer read GetZoomFactor write SetZoomFactor;
+    property zoomFactor: Integer read GetZoomFactor write SetZoomFactor;
+    property ScrollingType: TOPPHelpScrollingType read fScrollingType write SetScrollingType default stLines;
 
     property OnFindPanelVisibilityChange: TOPPHelpBooleanCompletion read fOnFindPanelVisiblityChange write fOnFindPanelVisiblityChange;
     property OnStatusChanged: TOPPHelpViewOnStatusChanged read fOnStatusChanged write fOnStatusChanged;
-   end;
+  end;
 
 const
   kContext: String = 'PDFViewer';
@@ -141,16 +155,18 @@ begin
   inherited Create(AOwner);
   self.BevelOuter := bvNone;
 
-  fPDFViewer := TdxPDFViewer.Create(self);
+  fPDFViewer := TOPPPdfViewer.Create(self);
   fPDFViewer.parent := self;
   fPDFViewer.Align := alClient;
   fPDFViewer.OptionsZoom.zoomMode := pzmPages;
   fPDFViewer.OnDocumentLoaded := OnPDFViewer1DocumentLoaded;
+  fPDFViewer.onScrollEvent := OnPDFViewerScrollEvent;
 
   fPDFViewer.OnHideFindPanel := OnHideFindPanelEvent;
   fPDFViewer.OnShowFindPanel := OnShowFindPanelEvent;
   fPDFViewer.OnSelectedPageChanged := OnSelectedPageChanged;
   fPDFViewer.OnZoomFactorChanged := OnZoomFactorChanged;
+
   fHasLoadedDocument := false;
   fSearchIsInProgress := false;
 
@@ -194,8 +210,8 @@ end;
 
 procedure TOPPHelpViewFullScreen.FitCustom(AFactor: Integer);
 begin
-  fPDFViewer.OptionsZoom.ZoomMode := pzmNone;
-  fPDFViewer.OptionsZoom.ZoomFactor := AFactor;
+  fPDFViewer.OptionsZoom.zoomMode := pzmNone;
+  fPDFViewer.OptionsZoom.zoomFactor := AFactor;
 end;
 
 procedure TOPPHelpViewFullScreen.FitPageHeight;
@@ -210,8 +226,8 @@ end;
 
 procedure TOPPHelpViewFullScreen.FitTwoColumns;
 begin
-  fPDFViewer.OptionsZoom.ZoomMode := pzmNone;
-  fPDFViewer.OptionsZoom.ZoomFactor := 81;
+  fPDFViewer.OptionsZoom.zoomMode := pzmNone;
+  fPDFViewer.OptionsZoom.zoomFactor := 81;
 end;
 
 function TOPPHelpViewFullScreen.GetEventListeners: TList<IOPPHelpViewEventListener>;
@@ -240,7 +256,7 @@ end;
 
 function TOPPHelpViewFullScreen.GetZoomFactor: Integer;
 begin
-  result := fPDFViewer.OptionsZoom.ZoomFactor;
+  result := fPDFViewer.OptionsZoom.zoomFactor;
 end;
 
 procedure TOPPHelpViewFullScreen.GotoFirstPage;
@@ -322,6 +338,27 @@ procedure TOPPHelpViewFullScreen.OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocume
 begin
   HasLoadedDocument := true;
   DoSearchIfPossible(siDocumentLoad);
+end;
+
+function TOPPHelpViewFullScreen.OnPDFViewerScrollEvent(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
+var
+  cnt: Integer;
+begin
+  result := false;
+  case fScrollingType of
+    stLines:
+      begin
+        result := true;
+      end;
+    stPages:
+      begin
+        if assigned(fPDFViewer) then
+        begin
+          cnt := (-1) * Round(Extended(WheelDelta) / WHEEL_DELTA);
+          fPDFViewer.CurrentPageIndex := fPDFViewer.CurrentPageIndex + cnt;
+        end;
+      end;
+  end;
 end;
 
 procedure TOPPHelpViewFullScreen.OnSelectedPageChanged(Sender: TObject; APageIndex: Integer);
@@ -427,6 +464,11 @@ begin
   DoSearchIfPossible(siPredicate);
 end;
 
+procedure TOPPHelpViewFullScreen.SetScrollingType(const Value: TOPPHelpScrollingType);
+begin
+  fScrollingType := Value;
+end;
+
 procedure TOPPHelpViewFullScreen.SetSearchIsInProgress(const Value: Boolean);
 var
   fListener: IOPPHelpViewEventListener;
@@ -448,7 +490,7 @@ end;
 
 procedure TOPPHelpViewFullScreen.SetZoomFactor(const Value: Integer);
 begin
-  fPDFViewer.OptionsZoom.ZoomFactor := Value;
+  fPDFViewer.OptionsZoom.zoomFactor := Value;
 end;
 
 procedure TOPPHelpViewFullScreen.ShowPrintDialog(APrinterComponent: TCustomdxComponentPrinter);
@@ -470,7 +512,6 @@ begin
   finally
     lnk.Free;
   end;
-
 end;
 
 procedure TOPPHelpViewFullScreen.LoadDefaultResource(AResourceName: String = '');
@@ -512,8 +553,8 @@ begin
 
   CurrentPageIndex := fPDFViewer.CurrentPageIndex;
 
-  result.zoomMode := fPDFViewer.OptionsZoom.ZoomMode;
-  result.zoomFactor := fPDFViewer.OptionsZoom.ZoomFactor;
+  result.zoomMode := fPDFViewer.OptionsZoom.zoomMode;
+  result.zoomFactor := fPDFViewer.OptionsZoom.zoomFactor;
 
 {$REGION 'the fix for DevEx feature: it is changing preview when zoom mode was changed. updated view presents another page, so, use sleep, goto page that was visible before'}
   Sleep(20);
@@ -524,6 +565,28 @@ begin
     fPDFViewer.CurrentPageIndex := CurrentPageIndex;
   end;
 {$ENDREGION}
+end;
+
+{ TOPPPdfViewer }
+
+function TOPPPdfViewer.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
+var
+  ftobeHandled: Boolean;
+begin
+  ftobeHandled := true;
+  if not assigned(fOnScrollEvent) then
+  begin
+    ftobeHandled := true;
+  end else begin
+    ftobeHandled := fOnScrollEvent(Shift, WheelDelta, MousePos);
+  end;
+
+  if (ftobeHandled) then
+  begin
+    result := inherited DoMouseWheel(Shift, WheelDelta, MousePos)
+  end else begin
+    result := true;
+  end;
 
 end;
 

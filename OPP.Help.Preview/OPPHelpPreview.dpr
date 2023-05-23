@@ -8,7 +8,8 @@ uses
   OPP.Help.View.Fullscreen in '..\OPP.PDF.View\OPP.Help.View.Fullscreen.pas',
   OPP.Help.View.Helper in '..\OPP.PDF.View\OPP.Help.View.Helper.pas',
   OPP.Help.View.ZoomSettings in '..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas' {OPPHelpPreviewZoomForm},
-  OPP.Help.PreviewSettings in '..\OPP.PDF.View\OPP.Help.PreviewSettings.pas';
+  OPP.Help.PreviewSettings in '..\OPP.PDF.View\OPP.Help.PreviewSettings.pas',
+  OPP.Help.QuickJumpMenuBuilder in '..\OPP.PDF.View\OPP.Help.QuickJumpMenuBuilder.pas';
 
 {$R *.res}
 

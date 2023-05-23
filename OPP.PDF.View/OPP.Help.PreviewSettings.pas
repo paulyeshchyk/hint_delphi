@@ -8,17 +8,20 @@ uses
 type
 
   TOPPHelpPreviewZoomMode = (zmFitHeight = 899, zmFitWidth = 898, zmTwoColumns = 897, zmCustom = 896);
+  TOPPHelpScrollingType = (stLines = 0, stPages = 1);
 
   TOPPHelpPreviewSettings = class(TOPPCodable)
   private
     fZoomScale: Integer;
     fZoomMode: Integer;
+    fScrollingType: TOPPHelpScrollingType;
     function GetZoomMode: TOPPHelpPreviewZoomMode;
     procedure SetZoomMode(const Value: TOPPHelpPreviewZoomMode);
   public
     constructor Create; override;
-    property ZoomScale: Integer read fZoomScale write fZoomScale;
-    property ZoomMode: TOPPHelpPreviewZoomMode read GetZoomMode write SetZoomMode;
+    property ZoomScale: Integer read fZoomScale write fZoomScale default 78;
+    property ZoomMode: TOPPHelpPreviewZoomMode read GetZoomMode write SetZoomMode default zmFitHeight;
+    property ScrollingType: TOPPHelpScrollingType read fScrollingType write fScrollingType default stLines;
   end;
 
   TOPPHelpPreviewSettingsHelper = class helper for TOPPHelpPreviewSettings
@@ -47,8 +50,6 @@ const
 constructor TOPPHelpPreviewSettings.Create;
 begin
   inherited Create;
-  fZoomScale := 78;
-  fZoomMode := Integer(zmFitHeight);
 end;
 
 function TOPPHelpPreviewSettings.GetZoomMode: TOPPHelpPreviewZoomMode;
@@ -108,4 +109,3 @@ begin
 end;
 
 end.
-

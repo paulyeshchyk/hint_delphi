@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.Generics.Collections,
+  System.Generics.Collections, System.Classes,
   System.SysUtils,
   System.JSON,
 
@@ -26,6 +26,7 @@ type
     class procedure parseJSONBytes(ABytes: System.TArray<System.Byte>; isUTF8: Boolean = false; callback: TOPPHelpMapParserJSONCallback = nil);
     class procedure deserializeJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
   public
+    class procedure readStream(AStream: TCustomMemoryStream; callback: TOPPHelpMapParserJSONCallback);
     class procedure readJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
     class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
@@ -154,7 +155,7 @@ begin
   jsonObject := TJSONObject.ParseJSONValue(ABytes, 0, isUTF8) as TJSONObject;
   try
     try
-      DeserializeJSON(jsonObject, callback);
+      deserializeJSON(jsonObject, callback);
     except
       on E: Exception do
       begin
@@ -209,6 +210,27 @@ begin
   end;
 end;
 
+class procedure TOPPHelpMapRESTParser.readStream(AStream: TCustomMemoryStream; callback: TOPPHelpMapParserJSONCallback);
+var fBuffer: System.TArray<System.Byte>;
+begin
+  if not assigned(callback) then
+    exit;
+
+  if (not assigned(AStream)) and (AStream.Size = 0) then
+  begin
+
+    exit;
+  end;
+  AStream.Position := 0;
+  SetLength(fBuffer, AStream.Size);
+  try
+    AStream.Read(fBuffer, AStream.Size);
+    TOPPHelpMapRESTParser.parseJSONBytes(fBuffer,true,callback);
+  finally
+    SetLength(fBuffer, 0);
+  end;
+end;
+
 class function TOPPHelpMapRESTParserExtended.saveExtendedJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
@@ -251,7 +273,8 @@ var
 begin
   result := -1;
 
-  if not TOPPHelpSystemFilesHelper.CreateDirectoryIfNeed(AFileName) then begin
+  if not TOPPHelpSystemFilesHelper.CreateDirectoryIfNeed(AFileName) then
+  begin
     exit;
   end;
 
