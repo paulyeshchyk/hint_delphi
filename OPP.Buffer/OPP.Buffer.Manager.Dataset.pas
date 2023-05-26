@@ -77,6 +77,8 @@ const
 
 procedure TOPPBufferManagerDataset.Rebuild;
 begin
+  eventLogger.Flow('Rebuild', kContext);
+
   self.Close;
   self.FieldDefs.Clear;
   { data }
@@ -104,6 +106,8 @@ procedure TOPPBufferManagerDataset.RebuildSortIndex;
 var
   cloned: TOPPBufferManagerDataset;
 begin
+  eventLogger.Flow('RebuildSortIndex', kContext);
+
   cloned := TOPPBufferManagerDataset.Create(nil);
   try
     try
@@ -165,23 +169,31 @@ end;
 
 procedure TOPPBufferManagerDataset.SetCustomFilter(AFilter: String);
 begin
+  eventLogger.Flow('SetCustomFilter', kContext);
+
   self.Filter := AFilter;
   self.Filtered := true;
 end;
 
 function TOPPBufferManagerDataset.AddRecord(const ARecord: TOPPBufferManagerRecord; AMaxAllowed: Integer; ADuplicatesAllowed: Boolean): Boolean;
 begin
+  eventLogger.Flow('AddRecord', kContext);
+
   result := false;
-  if not Assigned(ARecord) then
+  if not Assigned(ARecord) then begin
+    eventLogger.Warning('Can`t Add Record: it is not assigned', kContext);
     exit;
+  end;
 
   if (HasTheSameValue(ARecord.text) and not (ADuplicatesAllowed)) then
   begin
+    eventLogger.Flow('Can`t Add Record: duplicate found', kContext);
     exit;
   end;
 
   if self.RecordCount >= AMaxAllowed then
   begin
+    eventLogger.Flow('Will remove record: Max allowed riched', kContext);
     RemoveRecordsAfter((AMaxAllowed - 1));
   end;
 
@@ -214,6 +226,8 @@ var
   cloned: TOPPBufferManagerDataset;
   itemsLeftCount: Integer;
 begin
+  eventLogger.Flow('DeleteRecordsAfterIndex', kContext);
+
   cloned := TOPPBufferManagerDataset.Create(nil);
   try
     try
@@ -247,6 +261,8 @@ end;
 
 function TOPPBufferManagerDataset.RemoveRecordsAfter(const AValue: Integer): Boolean;
 begin
+  eventLogger.Flow('RemoveRecordsAfter', kContext);
+
   DeleteRecordsAfterIndex(AValue, false);
   DeleteRecordsAfterIndex(AValue, true);
   RebuildSortIndex;

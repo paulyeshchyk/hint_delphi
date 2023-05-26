@@ -72,7 +72,14 @@ end;
 
 class function TOPPJSONParser.Serialize<T>(AObject: T): String;
 begin
-  result := TJson.ObjectToJsonString(AObject);
+  try
+    result := TJson.ObjectToJsonString(AObject);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, 'TOPPJSONParser');
+    end;
+  end;
 end;
 
 class procedure TOPPJSONParser.DeSerialize<T>(ABytes: System.TArray<System.Byte>; isUTF8: Boolean; callback: TOPPJSONParserCallback<T>);

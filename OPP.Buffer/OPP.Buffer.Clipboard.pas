@@ -22,20 +22,31 @@ implementation
 uses
   OPP.Help.Log;
 
+const
+  kContext = 'TOPPClipboardHelper';
+
 { TOPPClipboardHelper }
 
 function TOPPClipboardHelper.CreateRecord(OPPInfo: TOPPBufferOPPInfo): TOPPBufferManagerRecord;
 var
   fText: String;
 begin
+  eventLogger.Flow('CreateRecord', kContext);
+
   result := nil;
+  if not Assigned(OPPInfo) then
+  begin
+    eventLogger.Warning('OPPInfo is not defined', kContext);
+    exit;
+  end;
 
   try
     if Clipboard.HasFormat(CF_TEXT) then
     begin
       fText := Clipboard.AsText;
-      if length(fText) = 0 then begin
-        eventLogger.Warning('Clipboard[CF_TEXT] contains no text','TOPPClipboardHelper');
+      if length(fText) = 0 then
+      begin
+        eventLogger.Warning('Clipboard[CF_TEXT] contains no text', kContext);
         fText := OPPInfo.ControlText;
       end;
 
@@ -46,8 +57,9 @@ begin
     else if Clipboard.HasFormat(CF_LOCALE) then
     begin
       fText := Clipboard.AsText;
-      if Length(fText) = 0 then begin
-        eventLogger.Warning('Clipboard[CF_LOCALE] contains no text','TOPPClipboardHelper');
+      if length(fText) = 0 then
+      begin
+        eventLogger.Warning('Clipboard[CF_LOCALE] contains no text', kContext);
         fText := OPPInfo.ControlText;
       end;
       result := TOPPBufferManagerRecord.Create;
@@ -55,10 +67,17 @@ begin
       result.text := fText;
     end;
 
+    if not Assigned(result) then
+    begin
+      eventLogger.Warning(Format('not created record for OPPInfo: %s', [OPPInfo.debugInfo]), kContext);
+    end else begin
+      eventLogger.Flow(Format('Created record for OPPInfo: %s', [OPPInfo.debugInfo]), kContext);
+    end;
+
   except
     on E: Exception do
     begin
-      eventLogger.Error(E, 'TOPPClipboardHelper');
+      eventLogger.Error(E, kContext);
     end;
   end;
 

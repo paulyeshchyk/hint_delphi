@@ -157,7 +157,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 325
-      DockedTop = 24
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -241,7 +241,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 55
-      DockedTop = 24
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -270,7 +270,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 240
-      DockedTop = 24
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -294,7 +294,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 24
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -318,7 +318,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 554
-      DockedTop = 24
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8

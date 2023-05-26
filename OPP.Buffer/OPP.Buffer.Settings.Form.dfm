@@ -35,7 +35,7 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
       AlignWithMargins = True
       Left = 18
       Top = 111
-      Width = 401
+      Width = 381
       Height = 26
       Margins.Left = 16
       Margins.Top = 16
@@ -47,7 +47,6 @@ object OPPBufferSettingsForm: TOPPBufferSettingsForm
         #1080#1102' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1093#1089#1103' '#1085#1077#1079#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1093' '#1079#1072#1087#1080#1089 +
         #1077#1081'.'
       WordWrap = True
-      ExplicitWidth = 381
     end
     object Label3: TLabel
       Left = 16

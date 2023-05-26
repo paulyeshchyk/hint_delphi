@@ -28,6 +28,7 @@ type
     function isApplicable(Sender: TWinControl): Boolean; virtual;
     function GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo; virtual;
     procedure SetOPPInfo(OPPInfo: TOPPBufferOPPInfo; AText: String; AControl: TWinControl); virtual;
+    function debugInfo: String; virtual;
   end;
 
   TOPPBufferManager = class
@@ -58,7 +59,7 @@ type
     procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
 
     procedure AddEmpty();
-    procedure AddOPPInfoAndSave(AText: String; const AOPPInfo:TOPPBufferOPPInfo);
+    procedure AddOPPInfoAndSave(AText: String; const AOPPInfo: TOPPBufferOPPInfo);
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
     procedure LoadRecords();
@@ -120,6 +121,8 @@ constructor TOPPBufferManager.Create;
 begin
   inherited;
 
+  eventLogger.Flow('Create', kContext);
+
   fSettings := TOPPBufferManagerSettings.Create;
 
   fDataset := TOPPBufferManagerDataset.Create(nil);
@@ -132,6 +135,8 @@ end;
 
 destructor TOPPBufferManager.Destroy;
 begin
+  eventLogger.Flow('Destroy', kContext);
+
   fSettings := nil;
   fDataset.Free;
   inherited;
@@ -141,6 +146,8 @@ procedure TOPPBufferManager.AddEmpty;
 var
   fRecord: TOPPBufferManagerRecord;
 begin
+  eventLogger.Flow('Add empty', kContext);
+
   fRecord := TOPPBufferManagerRecord.Create;
   try
     self.AddRecord(fRecord);
@@ -155,6 +162,8 @@ procedure TOPPBufferManager.AddOPPInfoAndSave(AText: String; const AOPPInfo: TOP
 var
   fRecord: TOPPBufferManagerRecord;
 begin
+  eventLogger.Flow('AddOPPInfo', kContext);
+
   fRecord := TOPPBufferManagerRecord.Create;
   try
     fRecord.OPPInfo := AOPPInfo;
@@ -169,6 +178,8 @@ function TOPPBufferManager.AddRecord(const ARecord: TOPPBufferManagerRecord): Bo
 var
   fMaxAllowed: Integer;
 begin
+  eventLogger.Flow('AddRecord', kContext);
+
   fMaxAllowed := fSettings.GetRecordsCountLimit;
   if not fSettings.GetUseRecordsCountLimit then
     fMaxAllowed := Integer.MaxValue;
@@ -184,6 +195,8 @@ end;
 
 function TOPPBufferManager.DeleteFocused: Boolean;
 begin
+  eventLogger.Flow('DeleteFocused', kContext);
+
   result := false;
   if fDataset.RecNo = -1 then
     exit;
@@ -222,6 +235,7 @@ begin
   result := nil;
   i := 0;
 
+  eventLogger.Flow('GetOPPInfo: extractor iteration start', kContext);
   while (not fFound) and (i < Length(fOPPInfoExtractors)) do
   begin
     fExtractor := fOPPInfoExtractors[i];
@@ -229,10 +243,19 @@ begin
     begin
       result := fExtractor.GetOPPInfo(Sender);
       fFound := assigned(result);
+      if fFound then begin
+        eventLogger.Flow(Format('GetOPPInfo: will use extractor: %s',[fExtractor.debugInfo]), kContext);
+      end else begin
+        //eventLogger.Flow(Format('GetOPPInfo: skipping extractor: %s',[fExtractor.debugInfo]), kContext);
+      end;
     end;
     inc(i);
   end;
-
+  if fFound = false then begin
+    eventLogger.Flow('GetOPPInfo: extractor iteration end: No extractor found', kContext);
+  end else begin
+    eventLogger.Flow('GetOPPInfo: extractor iteration end', kContext);
+  end;
 end;
 
 function TOPPBufferManager.GetOPPInfoExtractor(Sender: TWinControl): TOPPInfoExtractor;
@@ -287,6 +310,8 @@ procedure TOPPBufferManager.LoadRecords();
 var
   fFileName: String;
 begin
+  eventLogger.Flow('LoadRecords', kContext);
+
   fFileName := GetRecordsStorageFileName();
   if not TFile.Exists(fFileName) then
   begin
@@ -327,6 +352,8 @@ procedure TOPPBufferManager.ReadDataFromControl(Sender: TWinControl);
 var
   fOPPInfo: TOPPBufferOPPInfo;
 begin
+  eventLogger.Flow('ReadDataFromControl', kContext);
+
   if not self.CanAcceptRecord then
     exit;
 
@@ -367,6 +394,8 @@ procedure TOPPBufferManager.WriteDataIntoControl(Sender: TWinControl; AData: TOP
 var
   fExtractor: TOPPInfoExtractor;
 begin
+  eventLogger.Flow('WriteDataIntoControl', kContext);
+
   if ((not assigned(AData)) or (not assigned(Sender))) then
     exit;
   fExtractor := GetOPPInfoExtractor(Sender);
@@ -375,11 +404,13 @@ begin
     eventLogger.warning('Extractor is not defined', 'TOPPBufferManager');
     exit;
   end;
-  fExtractor.SetOPPInfo(AData.OPPInfo, AData.text, Sender);
+  fExtractor.SetOPPInfo(AData.OPPInfo, AData.Text, Sender);
 end;
 
 procedure TOPPBufferManager.RemoveRecordsAfter(AAfter: Integer);
 begin
+  eventLogger.Flow('RemoveRecordsAfter', kContext);
+
   fDataset.RemoveRecordsAfter(AAfter);
 end;
 
@@ -387,6 +418,13 @@ procedure TOPPBufferManager.CreateRecordAndSave(const OPPInfo: TOPPBufferOPPInfo
 var
   fRecord: TOPPBufferManagerRecord;
 begin
+  eventLogger.Flow('CreateRecordAndSave', kContext);
+
+  if not assigned(OPPInfo) then
+  begin
+    eventLogger.warning('Can`t create record: OPPInfo is not defined', kContext);
+    exit;
+  end;
 
   fRecord := Clipboard.CreateRecord(OPPInfo);
 
@@ -410,6 +448,8 @@ procedure TOPPBufferManager.SaveRecords(AFileName: String);
 var
   fFileName: String;
 begin
+  eventLogger.Flow('SaveRecords', kContext);
+
   fFileName := IfThen(Length(AFileName) = 0, GetRecordsStorageFileName(), AFileName);
   try
     fDataset.SaveToFile(fFileName);
@@ -423,11 +463,15 @@ end;
 
 procedure TOPPBufferManager.SetCustomFilter(AFilter: String);
 begin
+  eventLogger.Flow('SetCustomFilter', kContext);
+
   fDataset.SetCustomFilter(AFilter);
 end;
 
 procedure TOPPBufferManager.SetRecordsStorageFileName(AFileName: String);
 begin
+  eventLogger.Flow('SetRecordsStorageFileName', kContext);
+
   self.Settings.SetCurrentFilePath(AFileName);
 end;
 
@@ -440,6 +484,11 @@ begin
 end;
 
 { TOPPInfoExtractor }
+
+function TOPPInfoExtractor.debugInfo: String;
+begin
+  result := self.ClassName;
+end;
 
 function TOPPInfoExtractor.GetOPPInfo(Sender: TWinControl): TOPPBufferOPPInfo;
 begin

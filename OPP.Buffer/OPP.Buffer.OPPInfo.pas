@@ -25,10 +25,17 @@ type
     property ControlText: String read fControlText write fControlText;
   end;
 
+  TOPPBufferOPPInfoDebugHelper = class helper for TOPPBufferOPPInfo
+  private
+    function GetDebugInfo: String;
+  public
+    property debugInfo: String read GetDebugInfo;
+  end;
+
 implementation
 
 uses
-  System.SysUtils,
+  System.SysUtils, System.Classes,
   OPP.Help.System.JSON,
   OPP.Help.Log;
 
@@ -65,6 +72,27 @@ begin
       eventLogger.Error(E, 'TOPPBufferOPPInfo');
     end;
   end;
+end;
+
+{ TOPPBufferOPPInfoDebugHelper }
+
+function TOPPBufferOPPInfoDebugHelper.GetDebugInfo: String;
+var
+  strings: TStringList;
+begin
+  strings := TStringList.Create;
+  try
+    strings.Add(Format('%s=`%s`',['loodsmanAttribute',loodsmanAttribute]));
+    strings.Add(Format('%s=`%s`',['loodsmanType',loodsmanType]));
+    strings.Add(Format('%s=`%s`',['loodsmanId',loodsmanId]));
+    strings.Add(Format('%s=`%s`',['ControlText',ControlText]));
+    strings.Add(Format('%s=`%d`',['OPPBufferType',Integer(fOPPBufferType)]));
+    strings.Delimiter := ';';
+    result := strings.DelimitedText;
+  finally
+    strings.Free;
+  end;
+
 end;
 
 end.

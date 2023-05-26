@@ -2,143 +2,186 @@ unit OPP.Help.Log;
 
 interface
 
-uses System.SysUtils;
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+  System.Classes,
+  OPP.Help.Log.Output,
+  OPP.Help.Log.Formatter;
 
 type
   TOPPLogMessageType = (lmInfo, lmError, lmWarning, lmDebug, lmFlow);
 
-  IOPPHelpLog = interface
-    procedure Error(AString: String; AFlowName: String = ''); overload;
-    procedure Error(AError: Exception; AFlowName: String = ''); overload;
-    procedure Warning(AString: String; AFlowName: String = '');
-    procedure Debug(AString: String; AFlowName: String = '');
-    procedure Flow(AString: String; AFlowName: String = '');
-  end;
-
   TOPPHelpLog = class(TInterfacedObject, IOPPHelpLog)
   private
-    procedure Log(AString: String; postfix: String = ''; messageType: TOPPLogMessageType = lmInfo);
+    fSessionStart: TDateTime;
+    fOutputs: TList<IOPPHelpLogOutput>;
   public
+    constructor Create();
     destructor Destroy; override;
-    procedure Error(AString: String; AFlowName: String = ''); overload;
-    procedure Error(AError: Exception; AFlowName: String = ''); overload;
-    procedure Warning(AString: String; AFlowName: String = '');
-    procedure Debug(AString: String; AFlowName: String = '');
-    procedure Flow(AString: String; AFlowName: String = '');
+    procedure RegisterLogOutput(AOutput: IOPPHelpLogOutput);
+    procedure Custom(const AText: String; const AFlowName: String; const AFormatterClass: TOPPHelpLogFormatterClass);
+    procedure SessionStart(date: TDateTime);
+    procedure SessionEnd(date: TDateTime);
   end;
 
-function eventLogger: IOPPHelpLog;
+  TOPPHelpLogHelper = class helper for TOPPHelpLog
+    procedure Error(const AString: String; AFlowName: String = ''); overload;
+    procedure Error(const AError: Exception; AFlowName: String = ''); overload;
+    procedure Warning(const AString: String; AFlowName: String = '');
+    procedure Debug(const AString: String; AFlowName: String = '');
+    procedure Flow(const AString: String; AFlowName: String = '');
+  end;
+
+function eventLogger: TOPPHelpLog;
 
 implementation
 
 uses
-  System.SyncObjs,
   WinAPI.Windows,
-  OPP.Help.System.Str;
+  System.SyncObjs,
+  OPP.Help.System.Str,
+  OPP.Help.Log.OutputConsole,
+  OPP.Help.Log.OutputFile;
 
-resourcestring
-  SFlow = 'Flow';
-  SFlowTemplate = '[%s]: %s';
-  SWarningNoFlowTemplate = '[Warning]: %s';
-  SInfoNoFlowTemplate = '[Info]: %s';
-  SDebugNoFlowTemplate = '[Debug]: %s';
-  SErrorNoFlowTemplate = '[Error]: %s';
-  SErrorNoFlowPrefix = '%s';
-  SErrorAndFlowPrefix = '[%s] - %s';
-
-procedure TOPPHelpLog.Debug(AString: string; AFlowName: String = '');
+constructor TOPPHelpLog.Create();
 begin
-  exit;
-  if Length(AFlowName) > 0 then
-    self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmDebug)
-  else
-    self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmDebug);
+  inherited Create;
+
+  fOutputs := TList<IOPPHelpLogOutput>.Create;
+  fSessionStart := Now();
 end;
 
-procedure TOPPHelpLog.Flow(AString: string; AFlowName: String);
+procedure TOPPHelpLog.Custom(const AText: String; const AFlowName: String; const AFormatterClass: TOPPHelpLogFormatterClass);
 begin
-  self.Log(AString, AFlowName, lmFlow);
+
+  if not assigned(fOutputs) then
+    exit;
+
+  TThread.Queue(TThread.Current,
+    procedure()
+    var
+      fDate: TOPPHelpLogDate;
+      fOutput: IOPPHelpLogOutput;
+    begin
+
+      fDate.sessionDate := fSessionStart;
+      fDate.messageDate := Now();
+      try
+        for fOutput in fOutputs do
+        begin
+          fOutput.WriteText(fDate, AText, AFlowName, AFormatterClass);
+        end;
+      except
+        on E: Exception do
+        begin
+          OutputDebugString(E.message.toWideChar);
+        end;
+      end;
+    end);
 end;
 
 destructor TOPPHelpLog.Destroy;
 begin
-  //
+
+  self.SessionEnd(fSessionStart);
+
+  if assigned(fOutputs) then
+    fOutputs.Clear;
+
   inherited;
 end;
 
-procedure TOPPHelpLog.Error(AString: string; AFlowName: String = '');
+procedure TOPPHelpLog.RegisterLogOutput(AOutput: IOPPHelpLogOutput);
 begin
-  if Length(AFlowName) > 0 then
-    self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmError)
-  else
-    self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmError);
+  if assigned(AOutput) then
+  begin
+    fOutputs.Add(AOutput);
+  end;
 end;
 
-procedure TOPPHelpLog.Error(AError: Exception; AFlowName: String = '');
+procedure TOPPHelpLog.SessionStart(date: TDateTime);
 begin
-  if not assigned(AError) then
+  self.fSessionStart := date;
+
+  if not assigned(fOutputs) then
     exit;
-  Error(AError.message, AFlowName);
+
+  TThread.Queue(TThread.Current,
+    procedure()
+    var
+      fOutput: IOPPHelpLogOutput;
+    begin
+      for fOutput in fOutputs do
+        fOutput.StartSession(date);
+    end)
 end;
 
-procedure TOPPHelpLog.Warning(AString: string; AFlowName: String = '');
+procedure TOPPHelpLog.SessionEnd(date: TDateTime);
 begin
-  if Length(AFlowName) > 0 then
-    self.Log(Format(SErrorAndFlowPrefix, [AFlowName, AString]), '', lmWarning)
-  else
-    self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmWarning);
-end;
+  if not assigned(fOutputs) then
+    exit;
 
-procedure TOPPHelpLog.Log(AString: string; postfix: String; messageType: TOPPLogMessageType);
-var
-  outresult: String;
-  completeString: String;
-  fWideChar: PWideChar;
-begin
-  case messageType of
-    lmDebug:
-      outresult := Format(SDebugNoFlowTemplate, [AString]);
-    lmInfo:
-      outresult := Format(SInfoNoFlowTemplate, [AString]);
-    lmError:
-      outresult := Format(SErrorNoFlowTemplate, [AString]);
-    lmWarning:
-      outresult := Format(SWarningNoFlowTemplate, [AString]);
-    lmFlow:
-      begin
-        if Length(postfix) = 0 then
-          completeString := SFlow
-        else
-          completeString := postfix;
-        outresult := Format(SFlowTemplate, [completeString, AString]);
-      end;
-  end;
-
-  fWideChar := outresult.toWideChar;
-  try
-    OutputDebugString(fWideChar);
-  finally
-    FreeMem(fWideChar);
-  end;
+  TThread.Queue(TThread.Current,
+    procedure()
+    var
+      fOutput: IOPPHelpLogOutput;
+    begin
+      for fOutput in fOutputs do
+        fOutput.EndSession(date);
+    end);
 end;
 
 { ------------ }
 var
   fInfoLogLock: TCriticalSection;
-  fInfoLog: IOPPHelpLog;
+  fInfoLog: TOPPHelpLog;
 
-function eventLogger: IOPPHelpLog;
+function eventLogger: TOPPHelpLog;
 begin
   fInfoLogLock.Acquire;
   try
     if not assigned(fInfoLog) then
     begin
       fInfoLog := TOPPHelpLog.Create();
+      fInfoLog.RegisterLogOutput(TOPPHelpLogOutputConsole.Create);
+      fInfoLog.RegisterLogOutput(TOPPHelpLogOutputFile.Create);
+
+      fInfoLog.SessionStart(Now());
     end;
     result := fInfoLog;
   finally
     fInfoLogLock.Release;
   end;
+end;
+
+{ TOPPHelpLogHelper }
+
+procedure TOPPHelpLogHelper.Error(const AString: string; AFlowName: String = '');
+begin
+  self.Custom(AString, AFlowName, TOPPHelpErrorLogFormatter);
+end;
+
+procedure TOPPHelpLogHelper.Error(const AError: Exception; AFlowName: String = '');
+begin
+  if not assigned(AError) then
+    exit;
+  Error(AError.message, AFlowName);
+end;
+
+procedure TOPPHelpLogHelper.Warning(const AString: string; AFlowName: String = '');
+begin
+  self.Custom(AString, AFlowName, TOPPHelpWarningLogFormatter);
+end;
+
+procedure TOPPHelpLogHelper.Debug(const AString: string; AFlowName: String = '');
+begin
+  self.Custom(AString, AFlowName, TOPPHelpDebugLogFormatter);
+end;
+
+procedure TOPPHelpLogHelper.Flow(const AString: string; AFlowName: String);
+begin
+  self.Custom(AString, AFlowName, TOPPHelpFlowLogFormatter);
 end;
 
 initialization

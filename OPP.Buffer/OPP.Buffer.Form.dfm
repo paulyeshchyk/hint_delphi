@@ -32,6 +32,7 @@ object OPPBufferForm: TOPPBufferForm
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 75
     object cxGrid1DBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       FilterBox.Visible = fvNever
@@ -47,6 +48,7 @@ object OPPBufferForm: TOPPBufferForm
       FilterRow.SeparatorWidth = 12
       FixedDataRows.SeparatorWidth = 12
       NewItemRow.SeparatorWidth = 12
+      OptionsBehavior.FixedGroups = True
       OptionsSelection.InvertSelect = False
       OptionsView.NavigatorOffset = 100
       OptionsView.NoDataToDisplayInfoText = 

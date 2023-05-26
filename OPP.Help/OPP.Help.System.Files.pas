@@ -17,6 +17,7 @@ type
     class function RelativePath(APath: String): String;
     class function AbsolutePath(APath: String): String;
     class function GetOPPSettingsPath(AFileName: String): String;
+    class function GetOPPLogsPath(AFileName: String): String;
     class function CreateDirectoryIfNeed(AFileName: String): Boolean;
   end;
 
@@ -60,7 +61,7 @@ begin
   result := false;
   if Length(AFileName) = 0 then
   begin
-    eventLogger.Error('Path is empty');
+    eventLogger.Error('Path is empty','TOPPHelpSystemFilesHelper');
     exit;
   end;
 
@@ -78,8 +79,7 @@ begin
   except
     on e: Exception do
     begin
-      eventLogger.Error(e);
-      ShowMessage(Format('Not able to save file: %s, because %s', [AFileName, e.Message]));
+      eventLogger.Error(e,'TOPPHelpSystemFilesHelper');
       result := false;
     end;
   end;
@@ -89,6 +89,19 @@ class function TOPPHelpSystemFilesHelper.ExeFileDir: String;
 begin
   result := ExtractFileDir(Application.ExeName);
   //eventLogger.Flow(Format('ExeFileDir: %s',[result]), 'TOPPHelpSystemFilesHelper');
+end;
+
+class function TOPPHelpSystemFilesHelper.GetOPPLogsPath(AFileName: String): String;
+var
+  fLogsPath: String;
+begin
+  try
+    fLogsPath := TPath.Combine(TPath.GetHomePath, 'Ascon\Gulfstream\Logs');
+    TDirectory.CreateDirectory(fLogsPath);
+    result := fLogsPath + TPath.DirectorySeparatorChar + AFileName;
+  except
+    result := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
+  end;
 end;
 
 class function TOPPHelpSystemFilesHelper.GetOPPSettingsPath(AFileName: String): String;

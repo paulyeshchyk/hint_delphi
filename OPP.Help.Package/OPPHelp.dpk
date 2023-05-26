@@ -97,7 +97,11 @@ contains
   OPP.Buffer.Manager.Settings.Data in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas',
   OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
   OPP.Buffer.OPPInfo in '..\OPP.Buffer\OPP.Buffer.OPPInfo.pas',
-  OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm};
+  OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
+  OPP.Help.Log.Formatter in '..\OPP.Help\OPP.Help.Log.Formatter.pas',
+  OPP.Help.Log.Output in '..\OPP.Help\OPP.Help.Log.Output.pas',
+  OPP.Help.Log.OutputConsole in '..\OPP.Help\OPP.Help.Log.OutputConsole.pas',
+  OPP.Help.Log.OutputFile in '..\OPP.Help\OPP.Help.Log.OutputFile.pas';
 
 end.
 
