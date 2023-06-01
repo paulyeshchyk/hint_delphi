@@ -91,6 +91,7 @@ function TOPPControlHelper.TextPropertyValue: String;
 var
   fText: PWideChar;
   fLength: Integer;
+  fTextStr: String;
 begin
   if not(self is TWinControl) then
   begin
@@ -105,19 +106,15 @@ begin
     exit;
   end;
 
-  GetMem(fText, fLength + 1);
   try
-    try
-      SendMessage(TWinControl(self).Handle, WM_GETTEXT, fLength + 1, LPARAM(fText));
-      result := WideCharToString(fText);
-    except
-      on E: Exception do
-      begin
-        result := '';
-      end;
+    SetLength(fTextStr, fLength);
+    SendMessage(TWinControl(self).Handle, WM_GETTEXT, fLength + 1, LPARAM(PChar(fTextStr)));
+    result := fTextStr;
+  except
+    on E: Exception do
+    begin
+      result := '';
     end;
-  finally
-    FreeMem(fText);
   end;
 end;
 

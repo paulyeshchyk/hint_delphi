@@ -12,6 +12,9 @@
         <Projects Include="OPP.HelpMapping.Editor\OPPHintTunning.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="OPP.Guide\OPP.Guide.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="OPPHintTunning:Make">
         <MSBuild Projects="OPP.HelpMapping.Editor\OPPHintTunning.dproj" Targets="Make"/>
     </Target>
+    <Target Name="OPP_Guide">
+        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj"/>
+    </Target>
+    <Target Name="OPP_Guide:Clean">
+        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPP_Guide:Make">
+        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPHelp;OPPHelpPreview;OPPHintTunning"/>
+        <CallTarget Targets="OPPHelp;OPPHelpPreview;OPPHintTunning;OPP_Guide"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPHelp:Clean;OPPHelpPreview:Clean;OPPHintTunning:Clean"/>
+        <CallTarget Targets="OPPHelp:Clean;OPPHelpPreview:Clean;OPPHintTunning:Clean;OPP_Guide:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPHelp:Make;OPPHelpPreview:Make;OPPHintTunning:Make"/>
+        <CallTarget Targets="OPPHelp:Make;OPPHelpPreview:Make;OPPHintTunning:Make;OPP_Guide:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
