@@ -50,14 +50,25 @@ type
     ClientDataSet1PIdentifier: TStringField;
     actionReload: TAction;
     dxBarButton4: TdxBarButton;
+    FileOpenDialog1: TFileOpenDialog;
+    actionOpen: TAction;
+    ClientDataSet1Order: TIntegerField;
+    cxDBVerticalGrid1DBEditorRow5: TcxDBEditorRow;
+    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actionExportExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
+    procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State:
+        TDragState; var Accept: Boolean);
+    procedure cxDBTreeList1EndDrag(Sender, Target: TObject; X, Y: Integer);
+    procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
   private
     { Private declarations }
+    function Count(parentID: Variant): Integer;
   public
     { Public declarations }
   end;
@@ -74,56 +85,117 @@ uses
 
 procedure TForm1.actionAddChildRecordExecute(Sender: TObject);
 var
-  pid: variant;
+  pid: Variant;
   id: String;
   fGUID: TGuid;
+  cnt: Integer;
 begin
   pid := DataSource1.DataSet.FieldByName('identifier').Value;
-  DataSource1.DataSet.Insert;
   CreateGUID(fGUID);
   id := GUIDToString(fGUID);
-  DataSource1.DataSet.FieldByName('identifier').value := id;
+
+  cnt := Count(pid);
+
+  DataSource1.DataSet.Insert;
+  DataSource1.DataSet.FieldByName('identifier').Value := id;
   DataSource1.DataSet.FieldByName('pidentifier').Value := pid;
+  DataSource1.DataSet.FieldByName('Caption').Value := id;
+  DataSource1.DataSet.FieldByName('Order').Value := cnt;
   DataSource1.DataSet.Post;
 end;
 
 procedure TForm1.actionAddRecordExecute(Sender: TObject);
 var
-  pid: variant;
+  pid: Variant;
   id: String;
   fGUID: TGuid;
+  cnt: Integer;
 begin
   pid := DataSource1.DataSet.FieldByName('pidentifier').Value;
-  DataSource1.DataSet.Insert;
   CreateGUID(fGUID);
   id := GUIDToString(fGUID);
-  DataSource1.DataSet.FieldByName('identifier').value := id;
+
+  cnt := Count(pid);
+
+  DataSource1.DataSet.Insert;
+  DataSource1.DataSet.FieldByName('identifier').Value := id;
   DataSource1.DataSet.FieldByName('pidentifier').Value := pid;
+  DataSource1.DataSet.FieldByName('Caption').Value := id;
+  DataSource1.DataSet.FieldByName('Order').Value := cnt;
   DataSource1.DataSet.Post;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-//  ClientDataSet1.LoadFromFile('C:\Users\pavel\Documents\1.xml');
+  ClientDataSet1.LoadFromFile('C:\Users\pavel\Application Data\Ascon\Gulfstream\Guide\opp.guide.xml');
 end;
 
 procedure TForm1.actionExportExecute(Sender: TObject);
 begin
   if SaveDialog1.Execute(self.handle) then
   begin
-//    ClientDataSet1.Post;
     ClientDataSet1.SaveToFile(SaveDialog1.FileName, dfXMLUTF8);
   end;
 end;
 
 procedure TForm1.actionReloadExecute(Sender: TObject);
 begin
-  ClientDataSet1.LoadFromFile('C:\Users\pavel\Documents\1.xml');
+  if FileOpenDialog1.Execute then
+    ClientDataSet1.LoadFromFile(FileOpenDialog1.FileName);
+end;
+
+function TForm1.Count(parentID: Variant): Integer;
+var
+  cloned: TClientDataSet;
+  fFilter: String;
+begin
+  result := 0;
+  if (VarIsNull(parentID) or VarIsEmpty(parentID)) then
+  begin
+    fFilter := Format('pidentifier IS NULL', []);
+  end else begin
+    fFilter := Format('pidentifier LIKE ''%s''', [parentID]);
+  end;
+  cloned := TClientDataSet.Create(nil);
+  try
+    cloned.CloneCursor(ClientDataSet1, false);
+    cloned.Filter := fFilter;
+    cloned.Filtered := true;
+    result := cloned.RecordCount;
+  finally
+    cloned.Free;
+  end;
+
+end;
+
+procedure TForm1.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
+begin
+//
+end;
+
+procedure TForm1.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer;
+    State: TDragState; var Accept: Boolean);
+begin
+//
+end;
+
+procedure TForm1.cxDBTreeList1EndDrag(Sender, Target: TObject; X, Y: Integer);
+begin
+//
+end;
+
+procedure TForm1.cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
+var
+  fGUID: TGuid;
+begin
+  CreateGUID(fGUID);
+  AFocusedNode.KeyValue := GUIDToString(fGUID);
+  AHandled := true;
 end;
 
 procedure TForm1.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
-  actionAddChildRecord.Enabled := (datasource1.DataSet.RecordCount <> 0) and (not DataSource1.DataSet.FieldByName('identifier').IsNull);
+  actionAddChildRecord.Enabled := (DataSource1.DataSet.RecordCount <> 0) and (not DataSource1.DataSet.FieldByName('identifier').IsNull);
 end;
 
 end.
