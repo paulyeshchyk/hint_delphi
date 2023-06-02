@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 599
-  ClientWidth = 974
+  ClientWidth = 1121
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,170 +11,312 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  WindowState = wsMaximized
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object dxDockSite1: TdxDockSite
     Left = 0
     Top = 31
-    Width = 974
+    Width = 1121
     Height = 568
     Align = alClient
     DockingType = 5
-    OriginalWidth = 974
+    OriginalWidth = 1121
     OriginalHeight = 568
-    object dxLayoutDockSite3: TdxLayoutDockSite
-      Left = 321
+    object dxLayoutDockSite2: TdxLayoutDockSite
+      Left = 0
       Top = 0
-      Width = 653
-      Height = 568
+      Width = 1121
+      Height = 320
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
-      object dxLayoutDockSite1: TdxLayoutDockSite
-        Left = 0
+      object dxLayoutDockSite3: TdxLayoutDockSite
+        Left = 321
         Top = 0
-        Width = 332
-        Height = 568
+        Width = 800
+        Height = 320
+        ExplicitWidth = 300
+        ExplicitHeight = 200
         DockingType = 0
         OriginalWidth = 300
         OriginalHeight = 200
-      end
-      object dxDockPanel2: TdxDockPanel
-        Left = 332
-        Top = 0
-        Width = 321
-        Height = 568
-        AllowFloating = True
-        AutoHide = False
-        Caption = 'dxDockPanel2'
-        CustomCaptionButtons.Buttons = <>
-        TabsProperties.CustomButtons.Buttons = <>
-        TabsProperties.Style = 9
-        DockingType = 3
-        OriginalWidth = 321
-        OriginalHeight = 140
-        object cxDBVerticalGrid1: TcxDBVerticalGrid
+        object dxLayoutDockSite1: TdxLayoutDockSite
           Left = 0
           Top = 0
-          Width = 317
-          Height = 540
-          BorderStyle = cxcbsNone
-          Align = alClient
-          Navigator.Buttons.CustomButtons = <>
-          TabOrder = 0
-          DataController.DataSource = DataSource1
-          Version = 1
-          object cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow
-            Properties.DataBinding.FieldName = 'Caption'
-            ID = 0
-            ParentID = -1
-            Index = 0
-            Version = 1
+          Width = 479
+          Height = 320
+          ExplicitHeight = 568
+          DockingType = 0
+          OriginalWidth = 300
+          OriginalHeight = 200
+        end
+        object dxVertContainerDockSite2: TdxVertContainerDockSite
+          Left = 479
+          Top = 0
+          Width = 321
+          Height = 320
+          ActiveChildIndex = -1
+          AllowFloating = True
+          AutoHide = False
+          CustomCaptionButtons.Buttons = <>
+          ExplicitHeight = 568
+          DockingType = 3
+          OriginalWidth = 321
+          OriginalHeight = 140
+          object dxDockPanel5: TdxDockPanel
+            Left = 0
+            Top = 0
+            Width = 321
+            Height = 160
+            AllowFloating = True
+            AutoHide = False
+            Caption = 'dxDockPanel5'
+            CustomCaptionButtons.Buttons = <>
+            TabsProperties.CustomButtons.Buttons = <>
+            DockingType = 2
+            OriginalWidth = 321
+            OriginalHeight = 140
           end
-          object cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow
-            Properties.DataBinding.FieldName = 'ActionText'
-            ID = 1
-            ParentID = -1
-            Index = 1
-            Version = 1
+          object dxDockPanel6: TdxDockPanel
+            Left = 0
+            Top = 160
+            Width = 321
+            Height = 160
+            AllowFloating = True
+            AutoHide = False
+            Caption = 'dxDockPanel6'
+            CustomCaptionButtons.Buttons = <>
+            TabsProperties.CustomButtons.Buttons = <>
+            DockingType = 2
+            OriginalWidth = 321
+            OriginalHeight = 140
           end
-          object cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow
-            Properties.DataBinding.FieldName = 'ReactionText'
-            ID = 2
-            ParentID = -1
-            Index = 2
-            Version = 1
+        end
+      end
+      object dxVertContainerDockSite1: TdxVertContainerDockSite
+        Left = 0
+        Top = 0
+        Width = 321
+        Height = 320
+        ActiveChildIndex = -1
+        AllowFloating = True
+        AutoHide = False
+        CustomCaptionButtons.Buttons = <>
+        ExplicitHeight = 140
+        DockingType = 1
+        OriginalWidth = 321
+        OriginalHeight = 140
+        object dxDockPanel1: TdxDockPanel
+          Left = 0
+          Top = 0
+          Width = 321
+          Height = 160
+          Color = clBtnFace
+          ManagerColor = False
+          AllowFloating = True
+          AutoHide = False
+          Caption = 'dxDockPanel1'
+          CustomCaptionButtons.Buttons = <>
+          TabsProperties.CustomButtons.Buttons = <>
+          TabsProperties.Style = 9
+          DockingType = 2
+          OriginalWidth = 321
+          OriginalHeight = 140
+          object cxDBTreeList1: TcxDBTreeList
+            Left = 0
+            Top = 0
+            Width = 317
+            Height = 132
+            BorderStyle = cxcbsNone
+            Align = alClient
+            Bands = <
+              item
+              end>
+            DataController.DataSource = DataSource1
+            DataController.ImageIndexField = 'NodeType'
+            DataController.ParentField = 'PIdentifier'
+            DataController.KeyField = 'Identifier'
+            DragMode = dmAutomatic
+            Images = ImageList1
+            Navigator.Buttons.CustomButtons = <>
+            OptionsBehavior.ImmediateEditor = False
+            OptionsSelection.InvertSelect = False
+            OptionsView.Indicator = True
+            RootValue = -1
+            TabOrder = 0
+            OnDragDrop = cxDBTreeList1DragDrop
+            OnDragOver = cxDBTreeList1DragOver
+            OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
+            OnKeyDown = cxDBTreeList1KeyDown
+            OnKeyPress = cxDBTreeList1KeyPress
+            ExplicitHeight = 256
+            object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
+              DataBinding.FieldName = 'Caption'
+              Options.Sorting = False
+              Width = 295
+              Position.ColIndex = 0
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
+            object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
+              Visible = False
+              DataBinding.FieldName = 'Order'
+              Width = 100
+              Position.ColIndex = 1
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              SortOrder = soAscending
+              SortIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
           end
-          object cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow
-            Properties.DataBinding.FieldName = 'ActualResultText'
-            ID = 3
-            ParentID = -1
-            Index = 3
-            Version = 1
+        end
+        object dxTabContainerDockSite1: TdxTabContainerDockSite
+          Left = 0
+          Top = 160
+          Width = 321
+          Height = 160
+          ActiveChildIndex = 0
+          AllowFloating = True
+          AutoHide = False
+          CustomCaptionButtons.Buttons = <>
+          TabsProperties.CustomButtons.Buttons = <>
+          DockingType = 2
+          OriginalWidth = 321
+          OriginalHeight = 140
+          object dxDockPanel2: TdxDockPanel
+            Left = 0
+            Top = 0
+            Width = 317
+            Height = 108
+            AllowFloating = True
+            AutoHide = False
+            Caption = 'dxDockPanel2'
+            CustomCaptionButtons.Buttons = <>
+            TabsProperties.CustomButtons.Buttons = <>
+            TabsProperties.Style = 9
+            ExplicitHeight = 232
+            DockingType = 0
+            OriginalWidth = 321
+            OriginalHeight = 140
+            object cxDBVerticalGrid1: TcxDBVerticalGrid
+              Left = 0
+              Top = 0
+              Width = 317
+              Height = 108
+              BorderStyle = cxcbsNone
+              Align = alClient
+              Navigator.Buttons.CustomButtons = <>
+              TabOrder = 0
+              DataController.DataSource = DataSource1
+              ExplicitHeight = 232
+              Version = 1
+              object cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'Caption'
+                ID = 1
+                ParentID = -1
+                Index = 0
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'ReactionIdentifier'
+                ID = 2
+                ParentID = -1
+                Index = 1
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'ActualResultIdentifier'
+                ID = 3
+                ParentID = -1
+                Index = 2
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'ActionIdentifier'
+                ID = 4
+                ParentID = -1
+                Index = 3
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'NodeType'
+                ID = 5
+                ParentID = -1
+                Index = 4
+                Version = 1
+              end
+            end
           end
-          object cxDBVerticalGrid1DBEditorRow5: TcxDBEditorRow
-            Properties.DataBinding.FieldName = 'Order'
-            ID = 4
-            ParentID = -1
-            Index = 4
-            Version = 1
+          object dxDockPanel3: TdxDockPanel
+            Left = 0
+            Top = 0
+            Width = 317
+            Height = 108
+            AllowFloating = True
+            AutoHide = False
+            Caption = 'dxDockPanel3'
+            CustomCaptionButtons.Buttons = <>
+            TabsProperties.CustomButtons.Buttons = <>
+            ExplicitHeight = 232
+            DockingType = 0
+            OriginalWidth = 321
+            OriginalHeight = 140
+          end
+          object dxDockPanel4: TdxDockPanel
+            Left = 0
+            Top = 0
+            Width = 317
+            Height = 108
+            AllowFloating = True
+            AutoHide = False
+            Caption = 'dxDockPanel4'
+            CustomCaptionButtons.Buttons = <>
+            TabsProperties.CustomButtons.Buttons = <>
+            ExplicitHeight = 232
+            DockingType = 0
+            OriginalWidth = 321
+            OriginalHeight = 140
           end
         end
       end
     end
-    object dxDockPanel1: TdxDockPanel
+    object dxDockPanel7: TdxDockPanel
       Left = 0
-      Top = 0
-      Width = 321
-      Height = 568
-      Color = clBtnFace
-      ManagerColor = False
+      Top = 320
+      Width = 1121
+      Height = 248
       AllowFloating = True
       AutoHide = False
-      Caption = 'dxDockPanel1'
+      Caption = 'dxDockPanel7'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      TabsProperties.Style = 9
-      DockingType = 1
-      OriginalWidth = 321
-      OriginalHeight = 140
-      object cxDBTreeList1: TcxDBTreeList
+      DockingType = 4
+      OriginalWidth = 185
+      OriginalHeight = 248
+      object cxMemo1: TcxMemo
         Left = 0
         Top = 0
-        Width = 317
-        Height = 540
-        BorderStyle = cxcbsNone
         Align = alClient
-        Bands = <
-          item
-          end>
-        DataController.DataSource = DataSource1
-        DataController.ImageIndexField = 'NodeType'
-        DataController.ParentField = 'PIdentifier'
-        DataController.KeyField = 'Identifier'
-        DragMode = dmAutomatic
-        Images = ImageList1
-        Navigator.Buttons.CustomButtons = <>
-        OptionsBehavior.ImmediateEditor = False
-        OptionsBehavior.DragDropText = True
-        OptionsSelection.InvertSelect = False
-        OptionsView.Indicator = True
-        RootValue = -1
+        Properties.ReadOnly = True
+        Properties.ScrollBars = ssBoth
         TabOrder = 0
-        OnDragDrop = cxDBTreeList1DragDrop
-        OnDragOver = cxDBTreeList1DragOver
-        OnEndDrag = cxDBTreeList1EndDrag
-        OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
-        object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
-          DataBinding.FieldName = 'Caption'
-          Options.Sorting = False
-          Width = 295
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
-        object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
-          Visible = False
-          DataBinding.FieldName = 'Order'
-          Width = 100
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          SortOrder = soAscending
-          SortIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
+        ExplicitWidth = 475
+        ExplicitHeight = 112
+        Height = 220
+        Width = 1117
       end
     end
   end
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
     Top = 0
-    Width = 974
+    Width = 1121
     Align = dalTop
   end
   object dxDockingManager1: TdxDockingManager
@@ -194,48 +336,31 @@ object Form1: TForm1
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    Left = 440
+    Left = 480
     Top = 112
     PixelsPerInch = 96
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1
     OnDataChange = DataSource1DataChange
-    Left = 397
-    Top = 240
+    Left = 573
+    Top = 40
   end
   object ClientDataSet1: TClientDataSet
-    PersistDataPacket.Data = {
-      F90000009619E0BD010000001800000008000000000003000000F90007436170
-      74696F6E020049000000010005574944544802000200FF000A416374696F6E54
-      657874020049000000010005574944544802000200FF00084E6F646554797065
-      04000100000000000C5265616374696F6E546578740200490000000100055749
-      44544802000200FF001041637475616C526573756C7454657874010049000000
-      01000557494454480200020014000A4964656E74696669657201004900000001
-      000557494454480200020022000B504964656E74696669657201004900000001
-      00055749445448020002002200054F7264657204000100000000000000}
-    Active = True
     Aggregates = <>
     Params = <>
-    Left = 480
-    Top = 304
+    Left = 512
+    Top = 40
     object ClientDataSet1Caption: TStringField
       FieldName = 'Caption'
       Size = 255
     end
     object ClientDataSet1ActionText: TStringField
-      FieldName = 'ActionText'
+      FieldName = 'ActionIdentifier'
       Size = 255
     end
     object ClientDataSet1NodeType: TIntegerField
       FieldName = 'NodeType'
-    end
-    object ClientDataSet1ReactionText: TStringField
-      FieldName = 'ReactionText'
-      Size = 255
-    end
-    object ClientDataSet1ActualResultText: TStringField
-      FieldName = 'ActualResultText'
     end
     object ClientDataSet1Identifier: TStringField
       DisplayWidth = 40
@@ -265,8 +390,8 @@ object Form1: TForm1
       True)
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 536
-    Top = 200
+    Left = 520
+    Top = 176
     PixelsPerInch = 96
     DockControlHeights = (
       0
@@ -287,6 +412,20 @@ object Form1: TForm1
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -294,12 +433,13 @@ object Form1: TForm1
           ItemName = 'dxBarButton2'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'dxBarButton4'
+          ItemName = 'dxBarButton6'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton3'
+          ItemName = 'dxBarButton7'
         end>
       OneOnRow = True
       Row = 0
@@ -422,10 +562,94 @@ object Form1: TForm1
         AE01EC00A24064DBDFB7B504F000BBF764B30208BFF3FFA9C7E0B9B422AAA90C
         AE0000000049454E44AE426082}
     end
+    object dxBarButton5: TdxBarButton
+      Action = actionNew
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000003D744558745469746C65004E65773B506167653B426172733B526962
+        626F6E3B5374616E646172643B4974656D3B426C616E6B3B44656661756C743B
+        456D7074793B130452ED0000016349444154785E6D51314E04310C1CEF1E0289
+        B7D0D3C035347C006A2A3AC413A8A9111D15E20B743420D1DE6310E2F612DBC8
+        B11372DC269BC4BBF1CC8EC70B5505118D8F2FABB7611C970A850D3BEC2EC2B6
+        D9A79CA68FDBABE33355DD2CE06300D1F2FAF2C8E21D10407EC6FEF0BC3A0130
+        1AB01210B3946093045A49D4379BFE10F6F706E45C72879E002CCE2E1DDAF1F1
+        1ACBE859B8C27A05A9D61DA0DE030A02BBA3AA80FE1178AA4803951C356564D0
+        CEC4CCBB04393114A180C84F4F6B31A99794D2AE026CC2448181B7DB286122DB
+        1245E61905927301899802448CE8405352569E333145FB44B5815BDD2EA3DDE7
+        AC331E30438BC46656AB5B10C362CB9933910B525D41DF3E9BBD1A19C0336D44
+        628163156182CF4AA643FB01F30C8164F7E0F060E11D28C904F5DF7B77C44B10
+        F13A7B82BC9EBEDF6FEE5E4F15CD441069B09707146AA6F5D7A775BE27989EEE
+        2FCE01EC0118AA2FFDD9C51AE01F03FE022E9833255C6BD8490000000049454E
+        44AE426082}
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actionRunSelected
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000001B744558745469746C65004E6578743B506C61793B4172726F773B52
+        6967687416E40EAE000002AF49444154785EA5925D6895751CC73FCFD14D46BE
+        B41AF6C20A870425152C2F82A08B0ABD295D05416F572184045D2644082A425A
+        831A62128E2E448C59108D9430D84A1C81DBD4D6B6D05C3B739B5B3BB1EDAC73
+        CEF33CFFDF4BCFE1807076DB173E7CF95FFC3E7C2FFE91BB136501D600D556C0
+        3F3839EC8262062A86A9A3E2881B224AE9DF949E032F90A396B5877A46C3BEAF
+        0687DF3DDABB0B683CBAE7A99C064352458212AA484053218943F55D3BA4969C
+        A8B2E7C5C71E3FF7EBFAEFDEEBFAA56FE1D6C4FECFF73E7D1908638BC1821A6A
+        10D439DCD58FA8D7092255A3A5B9898EE71F213FBBF9B99F06365D7CFBE0F9AF
+        676E0C1FDED6DC70030803B3154B122388616AF582204A2A30B562DCD5BC8137
+        3AB6716DEC9ED7FBD76F7C75C3E6B3DD7F0EF67EFCCC834D7380EC78BFD7D457
+        2D90E0A46A9412A5583688E081875A78B3F5DEC6CBD75AF636346D7AAB65EBB3
+        9DBF5F387EE242D7AE2520D0E59EBBB320552AC1A8A4423938C58A905F4C3302
+        AD5BEE67F72BDB373EB1BDFDC0932F7D34D4FE5AE73B4063DD822408A5D4AB20
+        6224197195580966AC6B8878B47D0B0F6FBDAFB5E754F205701A48EE082AA540
+        A124148A29E6206A04ABC9725184C6C6D0C84D4606AF2FAE14663E03A47E811A
+        CB15214E0D7343CC897211EBD6464C8C4F73F5D278BCFCF7ADEEF93F7A3B97A7
+        06E680A44E90A6CA526CC4C18822674D2EC7FCC43C570646AD3033F5CD3F13FD
+        870AD7CFFD05C480B5ED3CEEAB048195B262EE141796B87A7194DBF97CDFCAF4
+        9583B77F3B35045400FDF0C7593F7DE45B4484D50B982B14B3C33126C76F8E94
+        1646F74F0F7ED9079401D9F7C3AC03A880AA60AB7EA2A6B1F27DF7F9A9CAE2E4
+        91C94B9F9C014A4068DB71CCCD9C339F9EA5DAA686BB634E9DA0FCF38997EFA6
+        961848DB761E7337C7CC5071DC0C73C7AB4419A60044EECEFFC97FFDEAC21326
+        FC988F0000000049454E44AE426082}
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actionRunAll
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000002C744558745469746C65004E6578743B446F75626C653B4172726F77
+        3B466173743B526577696E643B496E637265617365C977401F000002A4494441
+        54785EA5937F2C947F00C73F59FA4145B1564C368DFAA3560B49E12F27B34EAD
+        E5BEFB2E6B5487B14493CC8F6A213BD250A11885EE34CDF97147256EA2E3B843
+        E28E76A8CC6EDCA8DCE122DE3DCFB3E30FFACF677BFFF1BCB6F7EBD93EEFE721
+        00D695750BE8634265933126E1057D6B98CFCD26E215F996B85D1191801429F1
+        4F6C21CB8C3E9BE3042A843F5548CEDF2A75A3C0162A5BEFBC1E5CCD4C5C2E8B
+        C885E48F841D2F21AC9846E219F1861198C594F4A37D588724FEC06220AFB9FC
+        C869EED1EAF65148D5BF5698FB7F4907E897D1A26EED0291690CE454683D2330
+        8F2AFA8CEFB3C0F0F412848A0970B3E47309056D908F6831A09D43A57C1CDC6C
+        F9AC6F7445A6BDF3393BA368C389103123D816F1B407CAA92588BF2DA255B388
+        4ECD3C1ED40C8173EF03E29ECB51AFD2423AAA4746B51A67121A275D2FE6C553
+        BD9DC63B223BB88F145068FFA07C701E2F9506F0550688870DA856E9702DBF07
+        ACEB75887DA18050F573851D0FAAF8E2E89312440B2C02D365681E5B4071DF1C
+        0A7B0DC8ED9A4176870E8F3B7528E9D5234B328EC3FF578227195BC368816540
+        722BC443BFF1A47B06399D7A64CAF4784809D29A26C1E175C09D5B85E0EC56F0
+        5A2656D8218EE0AB9D67E2555AB08B9D2081A07F16E96DD35459878C962904E7
+        F5C2234C044EDA7BDCAD53E37EA306C1B99FE01C24FCB19F957AD7D4CCDAC638
+        2FB1624537E0591755944E23AC7800EE212203275688941A2552A96268919261
+        4E67728AB6DBBAD0739AD3733AB0F9CC0AD62743EA70E3D508BC221BE0E49F5F
+        6B61EFE99DC557208AAFA6D83B86591DF477A52F9CCA467AC2DBEFA7C83EBF32
+        46B0F3D8A52A38B20B657B9C43CF1AE7D9EDC1AD5DCD4CE9A2035B40ECFDF8C4
+        CEB78CECF52E6504A6C692E5F207F22F66E35D42A830455B5629313EAFFF6FFC
+        0B0C0C183FEAAD166E0000000049454E44AE426082}
+    end
   end
   object ActionList1: TActionList
-    Left = 440
-    Top = 216
+    Left = 344
+    Top = 56
     object actionAddRecord: TAction
       Caption = 'actionAddRecord'
       OnExecute = actionAddRecordExecute
@@ -449,16 +673,27 @@ object Form1: TForm1
     object actionOpen: TAction
       Caption = 'actionOpen'
     end
+    object actionNew: TAction
+      Caption = 'actionNew'
+      OnExecute = actionNewExecute
+    end
+    object actionRunSelected: TAction
+      Caption = 'actionRunSelected'
+      OnExecute = actionRunSelectedExecute
+    end
+    object actionRunAll: TAction
+      Caption = 'actionRunAll'
+    end
   end
   object SaveDialog1: TSaveDialog
-    Left = 432
-    Top = 496
+    Left = 424
+    Top = 320
   end
   object ImageList1: TImageList
-    Left = 360
-    Top = 88
+    Left = 592
+    Top = 168
     Bitmap = {
-      494C010102000C004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000C00540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -598,6 +833,8 @@ object Form1: TForm1
       000000000000}
   end
   object cxStyleRepository1: TcxStyleRepository
+    Left = 584
+    Top = 112
     PixelsPerInch = 96
     object cxStyle1: TcxStyle
       AssignedValues = [svTextColor]
@@ -609,6 +846,6 @@ object Form1: TForm1
     FileTypes = <>
     Options = []
     Left = 349
-    Top = 503
+    Top = 319
   end
 end
