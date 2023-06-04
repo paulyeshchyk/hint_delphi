@@ -211,7 +211,7 @@ object Form1: TForm1
               item
                 MinWidth = 40
               end>
-            DataController.DataSource = DataSource1
+            DataController.DataSource = DataSourceTreeView
             DataController.ImageIndexField = 'NodeType'
             DataController.ParentField = 'PIdentifier'
             DataController.KeyField = 'Identifier'
@@ -316,50 +316,56 @@ object Form1: TForm1
               OptionsView.ValueWidth = 200
               OptionsView.ValueMinWidth = 80
               OptionsView.NavigatorOffset = 100
+              OptionsBehavior.GoToNextCellOnEnter = True
+              OptionsBehavior.ImmediateEditor = False
+              OptionsBehavior.FocusCellOnCycle = True
               Navigator.Buttons.CustomButtons = <>
               ScrollbarAnnotations.CustomAnnotations = <>
               TabOrder = 0
-              DataController.DataSource = DataSource1
+              DataController.DataSource = DataSourceTreeView
+              ExplicitLeft = -10
               Version = 1
-              object cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow
-                Properties.DataBinding.FieldName = 'Caption'
-                ID = 0
-                ParentID = -1
-                Index = 0
-                Version = 1
-              end
-              object cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow
-                Properties.DataBinding.FieldName = 'ReactionIdentifier'
-                ID = 1
-                ParentID = -1
-                Index = 1
-                Version = 1
-              end
-              object cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow
-                Properties.DataBinding.FieldName = 'ActualResultIdentifier'
-                ID = 2
-                ParentID = -1
-                Index = 2
-                Version = 1
-              end
-              object cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow
-                Properties.DataBinding.FieldName = 'ActionIdentifier'
-                ID = 3
-                ParentID = -1
-                Index = 3
-                Version = 1
-              end
               object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
                 Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
+                Properties.EditProperties.ImmediatePost = True
                 Properties.EditProperties.KeyFieldNames = 'id'
                 Properties.EditProperties.ListColumns = <
                   item
                     FieldName = 'caption'
                   end>
                 Properties.EditProperties.ListOptions.ShowHeader = False
-                Properties.EditProperties.ListSource = DataSource2
+                Properties.EditProperties.ListSource = DataSourceNodeType
                 Properties.DataBinding.FieldName = 'NodeType'
                 ID = 4
+                ParentID = -1
+                Index = 0
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow
+                Properties.EditPropertiesClassName = 'TcxTextEditProperties'
+                Properties.DataBinding.FieldName = 'Caption'
+                ID = 0
+                ParentID = -1
+                Index = 1
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'ReactionIdentifier'
+                ID = 1
+                ParentID = -1
+                Index = 2
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'ActualResultIdentifier'
+                ID = 2
+                ParentID = -1
+                Index = 3
+                Version = 1
+              end
+              object cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow
+                Properties.DataBinding.FieldName = 'ActionIdentifier'
+                ID = 3
                 ParentID = -1
                 Index = 4
                 Version = 1
@@ -483,13 +489,13 @@ object Form1: TForm1
     Top = 304
     PixelsPerInch = 192
   end
-  object DataSource1: TDataSource
-    DataSet = ClientDataSet1
-    OnDataChange = DataSource1DataChange
+  object DataSourceTreeView: TDataSource
+    DataSet = DataSetTreeView
+    OnDataChange = DataSourceTreeViewDataChange
     Left = 957
     Top = 104
   end
-  object ClientDataSet1: TClientDataSet
+  object DataSetTreeView: TClientDataSet
     PersistDataPacket.Data = {
       B90000009619E0BD010000001800000006000000000003000000B90010416374
       696F6E4964656E746966696572020049000000010005574944544802000200FF
@@ -502,35 +508,35 @@ object Form1: TForm1
     Params = <>
     Left = 960
     Top = 216
-    object ClientDataSet1Caption: TWideStringField
+    object DataSetTreeViewCaption: TWideStringField
       FieldName = 'Caption'
       Size = 255
     end
-    object ClientDataSet1ActionText: TStringField
+    object DataSetTreeViewActionText: TStringField
       FieldName = 'ActionIdentifier'
       Size = 255
     end
-    object ClientDataSet1NodeType: TIntegerField
+    object DataSetTreeViewNodeType: TIntegerField
       FieldName = 'NodeType'
     end
-    object ClientDataSet1Identifier: TStringField
+    object DataSetTreeViewIdentifier: TStringField
       DisplayWidth = 40
       FieldName = 'Identifier'
       Size = 34
     end
-    object ClientDataSet1PIdentifier: TStringField
+    object DataSetTreeViewPIdentifier: TStringField
       DisplayWidth = 40
       FieldName = 'PIdentifier'
       Size = 34
     end
-    object ClientDataSet1Order: TIntegerField
+    object DataSetTreeViewOrder: TIntegerField
       FieldName = 'Order'
     end
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -24
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -999,12 +1005,12 @@ object Form1: TForm1
     Left = 733
     Top = 543
   end
-  object DataSource2: TDataSource
-    DataSet = ClientDataSet2
-    Left = 408
-    Top = 272
+  object DataSourceNodeType: TDataSource
+    DataSet = DataSetNodeType
+    Left = 1224
+    Top = 112
   end
-  object ClientDataSet2: TClientDataSet
+  object DataSetNodeType: TClientDataSet
     PersistDataPacket.Data = {
       870000009619E0BD010000001800000002000300000003000000410002696404
       000100100000000763617074696F6E02004A0010000100055749445448020002
@@ -1014,12 +1020,12 @@ object Form1: TForm1
     Active = True
     Aggregates = <>
     Params = <>
-    Left = 408
-    Top = 416
-    object ClientDataSet2id: TIntegerField
+    Left = 1224
+    Top = 256
+    object DataSetNodeTypeid: TIntegerField
       FieldName = 'id'
     end
-    object ClientDataSet2caption: TWideStringField
+    object DataSetNodeTypecaption: TWideStringField
       FieldName = 'caption'
       Size = 255
     end

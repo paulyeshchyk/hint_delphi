@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>  
+<DATAPACKET Version="2.0"><METADATA><FIELDS><FIELD attrname="id" fieldtype="i4"/>
+<FIELD attrname="caption" fieldtype="string.uni" WIDTH="510"/></FIELDS>
+<PARAMS/></METADATA>
+<ROWDATA>
+
+<ROW id="0" caption ="folder"/>
+<ROW id="1" caption ="script"/>
+<ROW id="2" caption ="description"/>
+
+</ROWDATA>
+</DATAPACKET>

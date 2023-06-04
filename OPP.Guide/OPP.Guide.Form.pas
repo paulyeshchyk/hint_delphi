@@ -17,10 +17,10 @@ type
     dxDockPanel2: TdxDockPanel;
     dxDockPanel1: TdxDockPanel;
     dxLayoutDockSite3: TdxLayoutDockSite;
-    DataSource1: TDataSource;
-    ClientDataSet1: TClientDataSet;
-    ClientDataSet1ActionText: TStringField;
-    ClientDataSet1NodeType: TIntegerField;
+    DataSourceTreeView: TDataSource;
+    DataSetTreeView: TClientDataSet;
+    DataSetTreeViewActionText: TStringField;
+    DataSetTreeViewNodeType: TIntegerField;
     cxDBTreeList1: TcxDBTreeList;
     cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBVerticalGrid1: TcxDBVerticalGrid;
@@ -43,13 +43,13 @@ type
     ImageList1: TImageList;
     cxStyleRepository1: TcxStyleRepository;
     cxStyle1: TcxStyle;
-    ClientDataSet1Identifier: TStringField;
-    ClientDataSet1PIdentifier: TStringField;
+    DataSetTreeViewIdentifier: TStringField;
+    DataSetTreeViewPIdentifier: TStringField;
     actionReload: TAction;
     dxBarButton4: TdxBarButton;
     FileOpenDialog1: TFileOpenDialog;
     actionOpen: TAction;
-    ClientDataSet1Order: TIntegerField;
+    DataSetTreeViewOrder: TIntegerField;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
     dxDockPanel3: TdxDockPanel;
     dxDockPanel4: TdxDockPanel;
@@ -69,11 +69,11 @@ type
     dxDockPanel7: TdxDockPanel;
     cxMemo1: TcxMemo;
     dxLayoutDockSite2: TdxLayoutDockSite;
-    ClientDataSet1Caption: TWideStringField;
-    DataSource2: TDataSource;
-    ClientDataSet2: TClientDataSet;
-    ClientDataSet2id: TIntegerField;
-    ClientDataSet2caption: TWideStringField;
+    DataSetTreeViewCaption: TWideStringField;
+    DataSourceNodeType: TDataSource;
+    DataSetNodeType: TClientDataSet;
+    DataSetNodeTypeid: TIntegerField;
+    DataSetNodeTypecaption: TWideStringField;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -86,7 +86,7 @@ type
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cxDBTreeList1KeyPress(Sender: TObject; var Key: Char);
-    procedure DataSource1DataChange(Sender: TObject; Field: TField);
+    procedure DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
   private
     { Private declarations }
     function Count(parentID: Variant): Integer;
@@ -116,18 +116,18 @@ var
   fGUID: TGuid;
   cnt: Integer;
 begin
-  pid := DataSource1.DataSet.FieldByName('identifier').Value;
+  pid := DataSourceTreeView.DataSet.FieldByName('identifier').Value;
   CreateGUID(fGUID);
   id := GUIDToString(fGUID);
 
   cnt := Count(pid);
 
-  DataSource1.DataSet.Insert;
-  DataSource1.DataSet.FieldByName('identifier').Value := id;
-  DataSource1.DataSet.FieldByName('pidentifier').Value := pid;
-  DataSource1.DataSet.FieldByName('Caption').Value := id;
-  DataSource1.DataSet.FieldByName('Order').Value := cnt;
-  DataSource1.DataSet.Post;
+  DataSourceTreeView.DataSet.Insert;
+  DataSourceTreeView.DataSet.FieldByName('identifier').Value := id;
+  DataSourceTreeView.DataSet.FieldByName('pidentifier').Value := pid;
+  DataSourceTreeView.DataSet.FieldByName('Caption').Value := id;
+  DataSourceTreeView.DataSet.FieldByName('Order').Value := cnt;
+  DataSourceTreeView.DataSet.Post;
 end;
 
 procedure TForm1.actionAddRecordExecute(Sender: TObject);
@@ -137,56 +137,56 @@ var
   fGUID: TGuid;
   cnt: Integer;
 begin
-  pid := DataSource1.DataSet.FieldByName('pidentifier').Value;
+  pid := DataSourceTreeView.DataSet.FieldByName('pidentifier').Value;
   CreateGUID(fGUID);
   id := GUIDToString(fGUID);
 
   cnt := Count(pid);
 
-  DataSource1.DataSet.Insert;
-  DataSource1.DataSet.FieldByName('identifier').Value := id;
-  DataSource1.DataSet.FieldByName('pidentifier').Value := pid;
-  DataSource1.DataSet.FieldByName('Caption').Value := id;
-  DataSource1.DataSet.FieldByName('Order').Value := cnt;
-  DataSource1.DataSet.Post;
+  DataSourceTreeView.DataSet.Insert;
+  DataSourceTreeView.DataSet.FieldByName('identifier').Value := id;
+  DataSourceTreeView.DataSet.FieldByName('pidentifier').Value := pid;
+  DataSourceTreeView.DataSet.FieldByName('Caption').Value := id;
+  DataSourceTreeView.DataSet.FieldByName('Order').Value := cnt;
+  DataSourceTreeView.DataSet.Post;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  ClientDataSet1.LoadFromFile('C:\Users\paul\Application Data\Ascon\Gulfstream\Guide\opp.guide.xml');
+  DataSetTreeView.LoadFromFile('C:\Users\paul\Application Data\Ascon\Gulfstream\Guide\opp.guide.xml');
 end;
 
 procedure TForm1.actionExportExecute(Sender: TObject);
 begin
   if SaveDialog1.Execute(self.handle) then
   begin
-    ClientDataSet1.SaveToFile(SaveDialog1.FileName, dfXMLUTF8);
+    DataSetTreeView.SaveToFile(SaveDialog1.FileName, dfXMLUTF8);
   end;
 end;
 
 procedure TForm1.actionNewExecute(Sender: TObject);
 begin
-  ClientDataSet1.DisableControls;
+  DataSetTreeView.DisableControls;
   try
-    ClientDataSet1.EmptyDataSet;
+    DataSetTreeView.EmptyDataSet;
   finally
-    ClientDataSet1.EnableControls;
+    DataSetTreeView.EnableControls;
   end;
 end;
 
 procedure TForm1.actionReloadExecute(Sender: TObject);
 begin
   if FileOpenDialog1.Execute then
-    ClientDataSet1.LoadFromFile(FileOpenDialog1.FileName);
+    DataSetTreeView.LoadFromFile(FileOpenDialog1.FileName);
 end;
 
 procedure TForm1.actionRunSelectedExecute(Sender: TObject);
 var
   ident: Variant;
 begin
-  ident := ClientDataSet1.FieldByName('identifier').Value;
+  ident := DataSetTreeView.FieldByName('identifier').Value;
   cxMemo1.Clear;
-  TOPPGuideExecutor.run(ClientDataSet1, ident,
+  TOPPGuideExecutor.run(DataSetTreeView, ident,
     procedure(AText: String)
     begin
       cxMemo1.Lines.Add(AText);
@@ -207,7 +207,7 @@ begin
   end;
   cloned := TClientDataSet.Create(nil);
   try
-    cloned.CloneCursor(ClientDataSet1, false);
+    cloned.CloneCursor(DataSetTreeView, false);
     cloned.Filter := fFilter;
     cloned.Filtered := true;
     result := cloned.RecordCount;
@@ -265,7 +265,7 @@ begin
   if Assigned(nodeToReplace) and (nodeToReplace is TcxDBTreeListNode) then
   begin
     kv1 := TcxDBTreeListNode(nodeToReplace).KeyValue;
-    ClientDataSet1.swapValues('Order', 'identifier', kv1, kv2);
+    DataSetTreeView.swapValues('Order', 'identifier', kv1, kv2);
     Key := 0;//VK_ESCAPE;
   end;
 
@@ -277,9 +277,9 @@ begin
   //
 end;
 
-procedure TForm1.DataSource1DataChange(Sender: TObject; Field: TField);
+procedure TForm1.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
 begin
-  actionAddChildRecord.Enabled := (DataSource1.DataSet.RecordCount <> 0) and (not DataSource1.DataSet.FieldByName('identifier').IsNull);
+  actionAddChildRecord.Enabled := (DataSourceTreeView.DataSet.RecordCount <> 0) and (not DataSourceTreeView.DataSet.FieldByName('identifier').IsNull);
 end;
 
 { TOPPTreeDatasetHelpler }
