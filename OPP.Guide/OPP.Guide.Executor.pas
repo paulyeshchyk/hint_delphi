@@ -1,4 +1,4 @@
-unit OPP.Guide.Executor;
+﻿unit OPP.Guide.Executor;
 
 interface
 
@@ -9,7 +9,7 @@ type
   TOPPGuideCompletion = reference to procedure(ALog: String);
 
   TOPPGuideExecutor = class
-    class function run(dataset: TClientDataSet; ident: variant; completion: TOPPGuideCompletion): Boolean;
+    class function run(dataset: TClientDataSet; ident: variant; runSubs: Boolean; completion: TOPPGuideCompletion): Boolean;
     class function runSubs(dataset: TClientDataSet; pident: variant; completion: TOPPGuideCompletion): Boolean;
   end;
 
@@ -20,7 +20,7 @@ uses
 
 { TOPPGuideExecutor }
 
-class function TOPPGuideExecutor.run(dataset: TClientDataSet; ident: variant; completion: TOPPGuideCompletion): Boolean;
+class function TOPPGuideExecutor.run(dataset: TClientDataSet; ident: variant; runSubs: Boolean; completion: TOPPGuideCompletion): Boolean;
 var
   fCDS: TClientDataSet;
   fCaption: String;
@@ -54,7 +54,8 @@ begin
         if Assigned(completion) then
           completion(Format('Finished: %s', [fCDS.FieldByName('Caption').AsString]));
 
-        TOPPGuideExecutor.runSubs(dataset, fCDS.FieldByName('identifier').value, completion);
+        if runSubs then
+          TOPPGuideExecutor.runSubs(dataset, fCDS.FieldByName('identifier').value, completion);
         fCDS.Next;
       end;
     end;
@@ -91,7 +92,7 @@ begin
     fCDS.First;
     while not fCDS.Eof do
     begin
-      TOPPGuideExecutor.run(dataset, fCDS.FieldByName('identifier').value, completion);
+      TOPPGuideExecutor.run(dataset, fCDS.FieldByName('identifier').value, true, completion);
       fCDS.Next;
     end;
   finally

@@ -174,7 +174,7 @@ object Form1: TForm1
         DockingType = 1
         OriginalWidth = 642
         OriginalHeight = 280
-        object dxDockPanel1: TdxDockPanel
+        object dxDockPanelTreeView: TdxDockPanel
           Left = 0
           Top = 0
           Width = 642
@@ -189,7 +189,7 @@ object Form1: TForm1
           ParentFont = True
           AllowFloating = True
           AutoHide = False
-          Caption = 'dxDockPanel1'
+          Caption = 'Hierarchy'
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
           TabsProperties.Style = 9
@@ -229,12 +229,14 @@ object Form1: TForm1
             RootValue = -1
             ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
+            OnChange = cxDBTreeList1Change
             OnDragDrop = cxDBTreeList1DragDrop
             OnDragOver = cxDBTreeList1DragOver
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
             OnKeyPress = cxDBTreeList1KeyPress
-            ExplicitHeight = 290
+            ExplicitLeft = -10
+            ExplicitTop = 6
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
               MinWidth = 40
@@ -280,7 +282,7 @@ object Form1: TForm1
           DockingType = 2
           OriginalWidth = 642
           OriginalHeight = 280
-          object dxDockPanel2: TdxDockPanel
+          object dxDockPanelProperties: TdxDockPanel
             Left = 0
             Top = 0
             Width = 638
@@ -293,7 +295,7 @@ object Form1: TForm1
             ParentFont = True
             AllowFloating = True
             AutoHide = False
-            Caption = 'dxDockPanel2'
+            Caption = 'Properties'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
             TabsProperties.Style = 9
@@ -323,7 +325,6 @@ object Form1: TForm1
               ScrollbarAnnotations.CustomAnnotations = <>
               TabOrder = 0
               DataController.DataSource = DataSourceTreeView
-              ExplicitLeft = -10
               Version = 1
               object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
                 Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -336,7 +337,7 @@ object Form1: TForm1
                 Properties.EditProperties.ListOptions.ShowHeader = False
                 Properties.EditProperties.ListSource = DataSourceNodeType
                 Properties.DataBinding.FieldName = 'NodeType'
-                ID = 4
+                ID = 0
                 ParentID = -1
                 Index = 0
                 Version = 1
@@ -344,35 +345,35 @@ object Form1: TForm1
               object cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow
                 Properties.EditPropertiesClassName = 'TcxTextEditProperties'
                 Properties.DataBinding.FieldName = 'Caption'
-                ID = 0
+                ID = 1
                 ParentID = -1
                 Index = 1
                 Version = 1
               end
               object cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow
                 Properties.DataBinding.FieldName = 'ReactionIdentifier'
-                ID = 1
+                ID = 2
                 ParentID = -1
                 Index = 2
                 Version = 1
               end
               object cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow
                 Properties.DataBinding.FieldName = 'ActualResultIdentifier'
-                ID = 2
+                ID = 3
                 ParentID = -1
                 Index = 3
                 Version = 1
               end
               object cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow
                 Properties.DataBinding.FieldName = 'ActionIdentifier'
-                ID = 3
+                ID = 4
                 ParentID = -1
                 Index = 4
                 Version = 1
               end
             end
           end
-          object dxDockPanel3: TdxDockPanel
+          object dxDockPanelScript: TdxDockPanel
             Left = 0
             Top = 0
             Width = 638
@@ -385,12 +386,24 @@ object Form1: TForm1
             ParentFont = True
             AllowFloating = True
             AutoHide = False
-            Caption = 'dxDockPanel3'
+            Caption = 'Script'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
             DockingType = 0
             OriginalWidth = 642
             OriginalHeight = 280
+            object cxDBMemo1: TcxDBMemo
+              Left = 0
+              Top = 0
+              Align = alClient
+              DataBinding.DataField = 'Script'
+              DataBinding.DataSource = DataSourceTreeView
+              Style.BorderStyle = ebsNone
+              TabOrder = 0
+              ExplicitLeft = -7
+              Height = 252
+              Width = 638
+            end
           end
           object dxDockPanel4: TdxDockPanel
             Left = 0
@@ -415,7 +428,7 @@ object Form1: TForm1
         end
       end
     end
-    object dxDockPanel7: TdxDockPanel
+    object dxDockPanelOutputLog: TdxDockPanel
       Left = 0
       Top = 655
       Width = 2242
@@ -428,7 +441,7 @@ object Form1: TForm1
       ParentFont = True
       AllowFloating = True
       AutoHide = False
-      Caption = 'dxDockPanel7'
+      Caption = 'Log'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
       ExplicitTop = 654
@@ -497,28 +510,19 @@ object Form1: TForm1
   end
   object DataSetTreeView: TClientDataSet
     PersistDataPacket.Data = {
-      B90000009619E0BD010000001800000006000000000003000000B90010416374
-      696F6E4964656E746966696572020049000000010005574944544802000200FF
-      00084E6F64655479706504000100000000000A4964656E746966696572010049
-      00000001000557494454480200020022000B504964656E746966696572010049
-      0000000100055749445448020002002200054F72646572040001000000000007
-      43617074696F6E02004A000000010005574944544802000200FE010000}
+      DD0000009619E0BD010000001800000007000000000003000000DD000A496465
+      6E74696669657201004900000001000557494454480200020022000B50496465
+      6E7469666965720100490000000100055749445448020002002200084E6F6465
+      547970650400010000000000054F726465720400010000000000074361707469
+      6F6E02004A000000010005574944544802000200FE0110416374696F6E496465
+      6E746966696572020049000000010005574944544802000200FF000653637269
+      707404004B0000000100075355425459504502004900070042696E6172790000
+      00}
     Active = True
     Aggregates = <>
     Params = <>
     Left = 960
     Top = 216
-    object DataSetTreeViewCaption: TWideStringField
-      FieldName = 'Caption'
-      Size = 255
-    end
-    object DataSetTreeViewActionText: TStringField
-      FieldName = 'ActionIdentifier'
-      Size = 255
-    end
-    object DataSetTreeViewNodeType: TIntegerField
-      FieldName = 'NodeType'
-    end
     object DataSetTreeViewIdentifier: TStringField
       DisplayWidth = 40
       FieldName = 'Identifier'
@@ -529,8 +533,22 @@ object Form1: TForm1
       FieldName = 'PIdentifier'
       Size = 34
     end
+    object DataSetTreeViewNodeType: TIntegerField
+      FieldName = 'NodeType'
+    end
     object DataSetTreeViewOrder: TIntegerField
       FieldName = 'Order'
+    end
+    object DataSetTreeViewCaption: TWideStringField
+      FieldName = 'Caption'
+      Size = 255
+    end
+    object DataSetTreeViewActionText: TStringField
+      FieldName = 'ActionIdentifier'
+      Size = 255
+    end
+    object DataSetTreeViewScript: TBlobField
+      FieldName = 'Script'
     end
   end
   object dxBarManager1: TdxBarManager
@@ -840,6 +858,7 @@ object Form1: TForm1
     end
     object actionRunAll: TAction
       Caption = 'actionRunAll'
+      OnExecute = actionRunAllExecute
     end
   end
   object SaveDialog1: TSaveDialog
@@ -1007,21 +1026,21 @@ object Form1: TForm1
   end
   object DataSourceNodeType: TDataSource
     DataSet = DataSetNodeType
-    Left = 1224
-    Top = 112
+    Left = 1240
+    Top = 96
   end
   object DataSetNodeType: TClientDataSet
     PersistDataPacket.Data = {
       870000009619E0BD010000001800000002000300000003000000410002696404
       000100100000000763617074696F6E02004A0010000100055749445448020002
-      00FE0100000000000000000C0066006F006C006400650072000000020000000C
-      0073006300720069007000740000000100000016006400650073006300720069
+      00FE0100000000000000000C0066006F006C006400650072000000010000000C
+      0073006300720069007000740000000200000016006400650073006300720069
       007000740069006F006E00}
     Active = True
     Aggregates = <>
     Params = <>
-    Left = 1224
-    Top = 256
+    Left = 1240
+    Top = 208
     object DataSetNodeTypeid: TIntegerField
       FieldName = 'id'
     end

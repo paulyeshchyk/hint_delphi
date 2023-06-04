@@ -8,14 +8,14 @@ uses
   Data.DB, Datasnap.DBClient, dxdbtree, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxStyles, cxTL,
   cxMaskEdit, cxTLdxBarBuiltInMenu, cxDataControllerConditionalFormattingRulesManagerDialog, cxInplaceContainer, cxDBTL,
   cxTLData, cxEdit, cxVGrid, cxDBVGrid, dxBar, System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, cxContainer,
-  cxTextEdit, cxMemo, dxScrollbarAnnotations, cxDBLookupComboBox;
+  cxTextEdit, cxMemo, dxScrollbarAnnotations, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit;
 
 type
   TForm1 = class(TForm)
     dxDockingManager1: TdxDockingManager;
     dxDockSite1: TdxDockSite;
-    dxDockPanel2: TdxDockPanel;
-    dxDockPanel1: TdxDockPanel;
+    dxDockPanelProperties: TdxDockPanel;
+    dxDockPanelTreeView: TdxDockPanel;
     dxLayoutDockSite3: TdxLayoutDockSite;
     DataSourceTreeView: TDataSource;
     DataSetTreeView: TClientDataSet;
@@ -51,7 +51,7 @@ type
     actionOpen: TAction;
     DataSetTreeViewOrder: TIntegerField;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
-    dxDockPanel3: TdxDockPanel;
+    dxDockPanelScript: TdxDockPanel;
     dxDockPanel4: TdxDockPanel;
     dxDockPanel5: TdxDockPanel;
     dxDockPanel6: TdxDockPanel;
@@ -66,7 +66,7 @@ type
     actionRunAll: TAction;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
-    dxDockPanel7: TdxDockPanel;
+    dxDockPanelOutputLog: TdxDockPanel;
     cxMemo1: TcxMemo;
     dxLayoutDockSite2: TdxLayoutDockSite;
     DataSetTreeViewCaption: TWideStringField;
@@ -74,13 +74,17 @@ type
     DataSetNodeType: TClientDataSet;
     DataSetNodeTypeid: TIntegerField;
     DataSetNodeTypecaption: TWideStringField;
+    DataSetTreeViewScript: TBlobField;
+    cxDBMemo1: TcxDBMemo;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actionExportExecute(Sender: TObject);
     procedure actionNewExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
+    procedure actionRunAllExecute(Sender: TObject);
     procedure actionRunSelectedExecute(Sender: TObject);
+    procedure cxDBTreeList1Change(Sender: TObject);
     procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
@@ -180,13 +184,26 @@ begin
     DataSetTreeView.LoadFromFile(FileOpenDialog1.FileName);
 end;
 
+procedure TForm1.actionRunAllExecute(Sender: TObject);
+var
+  ident: Variant;
+begin
+  ident := DataSetTreeView.FieldByName('identifier').Value;
+  cxMemo1.Clear;
+  TOPPGuideExecutor.run(DataSetTreeView, ident, true,
+    procedure(AText: String)
+    begin
+      cxMemo1.Lines.Add(AText);
+    end);
+end;
+
 procedure TForm1.actionRunSelectedExecute(Sender: TObject);
 var
   ident: Variant;
 begin
   ident := DataSetTreeView.FieldByName('identifier').Value;
   cxMemo1.Clear;
-  TOPPGuideExecutor.run(DataSetTreeView, ident,
+  TOPPGuideExecutor.run(DataSetTreeView, ident, false,
     procedure(AText: String)
     begin
       cxMemo1.Lines.Add(AText);
@@ -215,6 +232,16 @@ begin
     cloned.Free;
   end;
 
+end;
+
+procedure TForm1.cxDBTreeList1Change(Sender: TObject);
+var
+  pid: Variant;
+  cnt: Integer;
+begin
+  pid := DataSourceTreeView.DataSet.FieldByName('identifier').Value;
+  cnt := Count(pid);
+  actionRunAll.Enabled := (cnt > 0);
 end;
 
 procedure TForm1.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -266,7 +293,7 @@ begin
   begin
     kv1 := TcxDBTreeListNode(nodeToReplace).KeyValue;
     DataSetTreeView.swapValues('Order', 'identifier', kv1, kv2);
-    Key := 0;//VK_ESCAPE;
+    Key := 0; // VK_ESCAPE;
   end;
 
   //
