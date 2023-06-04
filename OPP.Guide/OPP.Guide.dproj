@@ -105,6 +105,7 @@
         </DCCReference>
         <DCCReference Include="OPP.Guide.Executor.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Str.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <None Include="readme.txt"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

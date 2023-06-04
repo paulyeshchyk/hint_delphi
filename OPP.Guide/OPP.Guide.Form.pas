@@ -89,17 +89,24 @@ type
     procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure cxDBTreeList1KeyPress(Sender: TObject; var Key: Char);
     procedure DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
+    procedure cxDBMemo1PropertiesChange(Sender: TObject);
+    procedure DataSetTreeViewAfterOpen(DataSet: TDataSet);
   private
     { Private declarations }
-    function Count(parentID: Variant): Integer;
   public
     { Public declarations }
   end;
 
   TOPPTreeDatasetHelpler = class helper for TClientDataSet
     procedure swapValues(AFieldName: String; AIDFieldName: String; sourceId, destinationId: Variant);
+  end;
+
+  TForm1Helper = class helper for TForm1
+    procedure AddChild(AParentIdentifier: Variant);
+    function subsCount(AIdentifier: Variant): Integer;
+    function selectedNodeSubsCount: Integer;
+    function selectedNodeIsRunnable: Boolean;
   end;
 
 var
@@ -116,48 +123,24 @@ uses
 procedure TForm1.actionAddChildRecordExecute(Sender: TObject);
 var
   pid: Variant;
-  id: String;
-  fGUID: TGuid;
-  cnt: Integer;
 begin
   pid := DataSourceTreeView.DataSet.FieldByName('identifier').Value;
-  CreateGUID(fGUID);
-  id := GUIDToString(fGUID);
-
-  cnt := Count(pid);
-
-  DataSourceTreeView.DataSet.Insert;
-  DataSourceTreeView.DataSet.FieldByName('identifier').Value := id;
-  DataSourceTreeView.DataSet.FieldByName('pidentifier').Value := pid;
-  DataSourceTreeView.DataSet.FieldByName('Caption').Value := id;
-  DataSourceTreeView.DataSet.FieldByName('Order').Value := cnt;
-  DataSourceTreeView.DataSet.Post;
+  AddChild(pid);
 end;
 
 procedure TForm1.actionAddRecordExecute(Sender: TObject);
 var
   pid: Variant;
-  id: String;
-  fGUID: TGuid;
-  cnt: Integer;
 begin
   pid := DataSourceTreeView.DataSet.FieldByName('pidentifier').Value;
-  CreateGUID(fGUID);
-  id := GUIDToString(fGUID);
-
-  cnt := Count(pid);
-
-  DataSourceTreeView.DataSet.Insert;
-  DataSourceTreeView.DataSet.FieldByName('identifier').Value := id;
-  DataSourceTreeView.DataSet.FieldByName('pidentifier').Value := pid;
-  DataSourceTreeView.DataSet.FieldByName('Caption').Value := id;
-  DataSourceTreeView.DataSet.FieldByName('Order').Value := cnt;
-  DataSourceTreeView.DataSet.Post;
+  AddChild(pid);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  cxDBTreeList1.BeginUpdate;
   DataSetTreeView.LoadFromFile('C:\Users\paul\Application Data\Ascon\Gulfstream\Guide\opp.guide.xml');
+  cxDBTreeList1.EndUpdate;
 end;
 
 procedure TForm1.actionExportExecute(Sender: TObject);
@@ -210,42 +193,16 @@ begin
     end);
 end;
 
-function TForm1.Count(parentID: Variant): Integer;
-var
-  cloned: TClientDataSet;
-  fFilter: String;
+procedure TForm1.cxDBMemo1PropertiesChange(Sender: TObject);
 begin
-  result := 0;
-
-  if not DataSetTreeView.Active then
-    exit;
-
-  if (VarIsNull(parentID) or VarIsEmpty(parentID)) then
-  begin
-    fFilter := Format('pidentifier IS NULL', []);
-  end else begin
-    fFilter := Format('pidentifier LIKE ''%s''', [parentID]);
-  end;
-  cloned := TClientDataSet.Create(nil);
-  try
-    cloned.CloneCursor(DataSetTreeView, false);
-    cloned.Filter := fFilter;
-    cloned.Filtered := true;
-    result := cloned.RecordCount;
-  finally
-    cloned.Free;
-  end;
-
+  if DataSetTreeView.Modified then
+    DataSetTreeView.Post;
 end;
 
 procedure TForm1.cxDBTreeList1Change(Sender: TObject);
-var
-  pid: Variant;
-  cnt: Integer;
 begin
-  pid := DataSourceTreeView.DataSet.FieldByName('identifier').Value;
-  cnt := Count(pid);
-  actionRunAll.Enabled := (cnt > 0);
+  actionRunAll.Enabled := (selectedNodeSubsCount > 0);
+  dxDockPanelScript.Visible := selectedNodeIsRunnable();
 end;
 
 procedure TForm1.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -299,13 +256,11 @@ begin
     DataSetTreeView.swapValues('Order', 'identifier', kv1, kv2);
     Key := 0; // VK_ESCAPE;
   end;
-
-  //
 end;
 
-procedure TForm1.cxDBTreeList1KeyPress(Sender: TObject; var Key: Char);
+procedure TForm1.DataSetTreeViewAfterOpen(DataSet: TDataSet);
 begin
-  //
+  cxDBTreeList1cxDBTreeListColumn1.Width := cxDBTreeList1.Width;
 end;
 
 procedure TForm1.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
@@ -364,6 +319,75 @@ begin
     fSourceDS.Free;
   end;
 
+end;
+
+{ TForm1Helper }
+
+procedure TForm1Helper.AddChild(AParentIdentifier: Variant);
+var
+  id: String;
+  fGUID: TGuid;
+  cnt: Integer;
+begin
+  CreateGUID(fGUID);
+  id := GUIDToString(fGUID);
+
+  cnt := subsCount(AParentIdentifier);
+
+  DataSourceTreeView.DataSet.Insert;
+  DataSourceTreeView.DataSet.FieldByName('identifier').Value := id;
+  DataSourceTreeView.DataSet.FieldByName('pidentifier').Value := AParentIdentifier;
+  DataSourceTreeView.DataSet.FieldByName('Caption').Value := id;
+  DataSourceTreeView.DataSet.FieldByName('Order').Value := cnt;
+  DataSourceTreeView.DataSet.Post;
+end;
+
+function TForm1Helper.selectedNodeIsRunnable: Boolean;
+var
+  value: Variant;
+  intValue: Integer;
+begin
+  result := false;
+  value := DataSourceTreeView.DataSet.FieldByName('nodeType').Value;
+  if VarIsNull(value) or VarIsEmpty(Value) then
+    exit;
+  intValue := VarAsType(value, vtInt64);
+  result := (intValue = 1);
+end;
+
+function TForm1Helper.selectedNodeSubsCount: Integer;
+var
+  pid: Variant;
+begin
+  pid := DataSourceTreeView.DataSet.FieldByName('identifier').Value;
+  result := subsCount(pid);
+end;
+
+function TForm1Helper.subsCount(AIdentifier: Variant): Integer;
+var
+  cloned: TClientDataSet;
+  fFilter: String;
+begin
+  result := 0;
+
+  if not DataSetTreeView.Active then
+    exit;
+
+  if (VarIsNull(AIdentifier) or VarIsEmpty(AIdentifier)) then
+  begin
+    fFilter := Format('pidentifier IS NULL', []);
+  end else begin
+    fFilter := Format('pidentifier LIKE ''%s''', [AIdentifier]);
+  end;
+  cloned := TClientDataSet.Create(nil);
+  try
+    cloned.CloneCursor(DataSetTreeView, false);
+    cloned.Filter := fFilter;
+    cloned.Filtered := true;
+    result := cloned.RecordCount;
+  finally
+    cloned.Free;
+  end;
 end;
 
 end.

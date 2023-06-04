@@ -234,9 +234,7 @@ object Form1: TForm1
             OnDragOver = cxDBTreeList1DragOver
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
-            OnKeyPress = cxDBTreeList1KeyPress
-            ExplicitLeft = -10
-            ExplicitTop = 6
+            ExplicitHeight = 290
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
               MinWidth = 40
@@ -398,9 +396,10 @@ object Form1: TForm1
               Align = alClient
               DataBinding.DataField = 'Script'
               DataBinding.DataSource = DataSourceTreeView
+              Properties.WantTabs = True
+              Properties.OnChange = cxDBMemo1PropertiesChange
               Style.BorderStyle = ebsNone
               TabOrder = 0
-              ExplicitLeft = -7
               Height = 252
               Width = 638
             end
@@ -521,6 +520,7 @@ object Form1: TForm1
     Active = True
     Aggregates = <>
     Params = <>
+    AfterOpen = DataSetTreeViewAfterOpen
     Left = 960
     Top = 216
     object DataSetTreeViewIdentifier: TStringField
