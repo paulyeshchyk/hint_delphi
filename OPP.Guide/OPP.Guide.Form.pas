@@ -216,6 +216,10 @@ var
   fFilter: String;
 begin
   result := 0;
+
+  if not DataSetTreeView.Active then
+    exit;
+
   if (VarIsNull(parentID) or VarIsEmpty(parentID)) then
   begin
     fFilter := Format('pidentifier IS NULL', []);
