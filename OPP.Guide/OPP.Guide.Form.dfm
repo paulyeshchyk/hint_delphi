@@ -2,119 +2,191 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 599
-  ClientWidth = 1121
+  ClientHeight = 1198
+  ClientWidth = 2242
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   WindowState = wsMaximized
   OnCreate = FormCreate
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 192
+  TextHeight = 27
   object dxDockSite1: TdxDockSite
     Left = 0
-    Top = 31
-    Width = 1121
-    Height = 568
+    Top = 47
+    Width = 2242
+    Height = 1151
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+    ManagerFont = False
+    ParentFont = True
     Align = alClient
+    ExplicitWidth = 2228
+    ExplicitHeight = 1150
     DockingType = 5
-    OriginalWidth = 1121
-    OriginalHeight = 568
+    OriginalWidth = 2242
+    OriginalHeight = 1151
     object dxLayoutDockSite2: TdxLayoutDockSite
       Left = 0
       Top = 0
-      Width = 1121
-      Height = 320
+      Width = 2242
+      Height = 655
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      ManagerFont = False
+      ParentFont = True
+      ExplicitWidth = 2228
+      ExplicitHeight = 654
       DockingType = 0
-      OriginalWidth = 300
-      OriginalHeight = 200
+      OriginalWidth = 600
+      OriginalHeight = 400
       object dxLayoutDockSite3: TdxLayoutDockSite
-        Left = 321
+        Left = 642
         Top = 0
-        Width = 800
-        Height = 320
-        ExplicitWidth = 300
-        ExplicitHeight = 200
+        Width = 1600
+        Height = 655
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
+        ManagerFont = False
+        ParentFont = True
         DockingType = 0
-        OriginalWidth = 300
-        OriginalHeight = 200
+        OriginalWidth = 600
+        OriginalHeight = 400
         object dxLayoutDockSite1: TdxLayoutDockSite
           Left = 0
           Top = 0
-          Width = 479
-          Height = 320
-          ExplicitHeight = 568
+          Width = 958
+          Height = 655
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -22
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ManagerFont = False
+          ExplicitWidth = 944
+          ExplicitHeight = 654
           DockingType = 0
-          OriginalWidth = 300
-          OriginalHeight = 200
+          OriginalWidth = 600
+          OriginalHeight = 400
         end
         object dxVertContainerDockSite2: TdxVertContainerDockSite
-          Left = 479
+          Left = 958
           Top = 0
-          Width = 321
-          Height = 320
+          Width = 642
+          Height = 655
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -22
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ManagerFont = False
           ActiveChildIndex = -1
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
-          ExplicitHeight = 568
+          ExplicitLeft = 944
+          ExplicitHeight = 654
           DockingType = 3
-          OriginalWidth = 321
-          OriginalHeight = 140
+          OriginalWidth = 642
+          OriginalHeight = 280
           object dxDockPanel5: TdxDockPanel
             Left = 0
             Top = 0
-            Width = 321
-            Height = 160
+            Width = 642
+            Height = 328
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -22
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ManagerFont = False
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel5'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
             DockingType = 2
-            OriginalWidth = 321
-            OriginalHeight = 140
+            OriginalWidth = 642
+            OriginalHeight = 280
           end
           object dxDockPanel6: TdxDockPanel
             Left = 0
-            Top = 160
-            Width = 321
-            Height = 160
+            Top = 328
+            Width = 642
+            Height = 327
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -22
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ManagerFont = False
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel6'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
             DockingType = 2
-            OriginalWidth = 321
-            OriginalHeight = 140
+            OriginalWidth = 642
+            OriginalHeight = 280
           end
         end
       end
       object dxVertContainerDockSite1: TdxVertContainerDockSite
         Left = 0
         Top = 0
-        Width = 321
-        Height = 320
+        Width = 642
+        Height = 655
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
+        ManagerFont = False
+        ParentFont = True
         ActiveChildIndex = -1
         AllowFloating = True
         AutoHide = False
         CustomCaptionButtons.Buttons = <>
-        ExplicitHeight = 140
         DockingType = 1
-        OriginalWidth = 321
-        OriginalHeight = 140
+        OriginalWidth = 642
+        OriginalHeight = 280
         object dxDockPanel1: TdxDockPanel
           Left = 0
           Top = 0
-          Width = 321
-          Height = 160
+          Width = 642
+          Height = 328
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
           Color = clBtnFace
           ManagerColor = False
+          ManagerFont = False
+          ParentFont = True
           AllowFloating = True
           AutoHide = False
           Caption = 'dxDockPanel1'
@@ -122,17 +194,22 @@ object Form1: TForm1
           TabsProperties.CustomButtons.Buttons = <>
           TabsProperties.Style = 9
           DockingType = 2
-          OriginalWidth = 321
-          OriginalHeight = 140
+          OriginalWidth = 642
+          OriginalHeight = 280
           object cxDBTreeList1: TcxDBTreeList
             Left = 0
             Top = 0
-            Width = 317
-            Height = 132
+            Width = 638
+            Height = 291
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
             BorderStyle = cxcbsNone
             Align = alClient
             Bands = <
               item
+                MinWidth = 40
               end>
             DataController.DataSource = DataSource1
             DataController.ImageIndexField = 'NodeType'
@@ -143,19 +220,26 @@ object Form1: TForm1
             Navigator.Buttons.CustomButtons = <>
             OptionsBehavior.ImmediateEditor = False
             OptionsSelection.InvertSelect = False
+            OptionsView.FixedSeparatorWidth = 4
             OptionsView.Indicator = True
+            OptionsView.IndicatorWidth = 16
+            OptionsView.NavigatorOffset = 100
+            Preview.LeftIndent = 10
+            Preview.RightIndent = 10
             RootValue = -1
+            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
             OnDragDrop = cxDBTreeList1DragDrop
             OnDragOver = cxDBTreeList1DragOver
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
             OnKeyPress = cxDBTreeList1KeyPress
-            ExplicitHeight = 256
+            ExplicitHeight = 290
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
+              MinWidth = 40
               Options.Sorting = False
-              Width = 295
+              Width = 590
               Position.ColIndex = 0
               Position.RowIndex = 0
               Position.BandIndex = 0
@@ -165,7 +249,8 @@ object Form1: TForm1
             object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
               Visible = False
               DataBinding.FieldName = 'Order'
-              Width = 100
+              MinWidth = 40
+              Width = 200
               Position.ColIndex = 1
               Position.RowIndex = 0
               Position.BandIndex = 0
@@ -178,75 +263,103 @@ object Form1: TForm1
         end
         object dxTabContainerDockSite1: TdxTabContainerDockSite
           Left = 0
-          Top = 160
-          Width = 321
-          Height = 160
+          Top = 328
+          Width = 642
+          Height = 327
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          ManagerFont = False
+          ParentFont = True
           ActiveChildIndex = 0
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
           DockingType = 2
-          OriginalWidth = 321
-          OriginalHeight = 140
+          OriginalWidth = 642
+          OriginalHeight = 280
           object dxDockPanel2: TdxDockPanel
             Left = 0
             Top = 0
-            Width = 317
-            Height = 108
+            Width = 638
+            Height = 252
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            ManagerFont = False
+            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel2'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
             TabsProperties.Style = 9
-            ExplicitHeight = 232
             DockingType = 0
-            OriginalWidth = 321
-            OriginalHeight = 140
+            OriginalWidth = 642
+            OriginalHeight = 280
             object cxDBVerticalGrid1: TcxDBVerticalGrid
               Left = 0
               Top = 0
-              Width = 317
-              Height = 108
+              Width = 638
+              Height = 252
+              Margins.Left = 6
+              Margins.Top = 6
+              Margins.Right = 6
+              Margins.Bottom = 6
               BorderStyle = cxcbsNone
               Align = alClient
+              OptionsView.RowHeaderMinWidth = 48
+              OptionsView.RowHeaderWidth = 200
+              OptionsView.ValueWidth = 200
+              OptionsView.ValueMinWidth = 80
+              OptionsView.NavigatorOffset = 100
               Navigator.Buttons.CustomButtons = <>
+              ScrollbarAnnotations.CustomAnnotations = <>
               TabOrder = 0
               DataController.DataSource = DataSource1
-              ExplicitHeight = 232
               Version = 1
               object cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow
                 Properties.DataBinding.FieldName = 'Caption'
-                ID = 1
+                ID = 0
                 ParentID = -1
                 Index = 0
                 Version = 1
               end
               object cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow
                 Properties.DataBinding.FieldName = 'ReactionIdentifier'
-                ID = 2
+                ID = 1
                 ParentID = -1
                 Index = 1
                 Version = 1
               end
               object cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow
                 Properties.DataBinding.FieldName = 'ActualResultIdentifier'
-                ID = 3
+                ID = 2
                 ParentID = -1
                 Index = 2
                 Version = 1
               end
               object cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow
                 Properties.DataBinding.FieldName = 'ActionIdentifier'
-                ID = 4
+                ID = 3
                 ParentID = -1
                 Index = 3
                 Version = 1
               end
               object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
+                Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
+                Properties.EditProperties.KeyFieldNames = 'id'
+                Properties.EditProperties.ListColumns = <
+                  item
+                    FieldName = 'caption'
+                  end>
+                Properties.EditProperties.ListOptions.ShowHeader = False
+                Properties.EditProperties.ListSource = DataSource2
                 Properties.DataBinding.FieldName = 'NodeType'
-                ID = 5
+                ID = 4
                 ParentID = -1
                 Index = 4
                 Version = 1
@@ -256,70 +369,97 @@ object Form1: TForm1
           object dxDockPanel3: TdxDockPanel
             Left = 0
             Top = 0
-            Width = 317
-            Height = 108
+            Width = 638
+            Height = 252
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            ManagerFont = False
+            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel3'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
-            ExplicitHeight = 232
             DockingType = 0
-            OriginalWidth = 321
-            OriginalHeight = 140
+            OriginalWidth = 642
+            OriginalHeight = 280
           end
           object dxDockPanel4: TdxDockPanel
             Left = 0
             Top = 0
-            Width = 317
-            Height = 108
+            Width = 638
+            Height = 252
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            ManagerFont = False
+            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel4'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
-            ExplicitHeight = 232
             DockingType = 0
-            OriginalWidth = 321
-            OriginalHeight = 140
+            OriginalWidth = 642
+            OriginalHeight = 280
           end
         end
       end
     end
     object dxDockPanel7: TdxDockPanel
       Left = 0
-      Top = 320
-      Width = 1121
-      Height = 248
+      Top = 655
+      Width = 2242
+      Height = 496
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      ManagerFont = False
+      ParentFont = True
       AllowFloating = True
       AutoHide = False
       Caption = 'dxDockPanel7'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
+      ExplicitTop = 654
+      ExplicitWidth = 2228
       DockingType = 4
-      OriginalWidth = 185
-      OriginalHeight = 248
+      OriginalWidth = 370
+      OriginalHeight = 496
       object cxMemo1: TcxMemo
         Left = 0
         Top = 0
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         Align = alClient
         Properties.ReadOnly = True
         Properties.ScrollBars = ssBoth
         TabOrder = 0
-        ExplicitWidth = 475
-        ExplicitHeight = 112
-        Height = 220
-        Width = 1117
+        ExplicitWidth = 2224
+        Height = 459
+        Width = 2238
       end
     end
   end
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
     Top = 0
-    Width = 1121
+    Width = 2242
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
     Align = dalTop
+    ExplicitWidth = 2228
   end
   object dxDockingManager1: TdxDockingManager
+    AutoHideMovingSize = 40
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
@@ -331,27 +471,38 @@ object Form1: TForm1
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
+    DockZonesWidth = 40
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -22
     Font.Name = 'Tahoma'
     Font.Style = []
-    Left = 480
-    Top = 112
-    PixelsPerInch = 96
+    ResizeZonesWidth = 6
+    SelectionFrameWidth = 8
+    Left = 736
+    Top = 304
+    PixelsPerInch = 192
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1
     OnDataChange = DataSource1DataChange
-    Left = 573
-    Top = 40
+    Left = 957
+    Top = 104
   end
   object ClientDataSet1: TClientDataSet
+    PersistDataPacket.Data = {
+      B90000009619E0BD010000001800000006000000000003000000B90010416374
+      696F6E4964656E746966696572020049000000010005574944544802000200FF
+      00084E6F64655479706504000100000000000A4964656E746966696572010049
+      00000001000557494454480200020022000B504964656E746966696572010049
+      0000000100055749445448020002002200054F72646572040001000000000007
+      43617074696F6E02004A000000010005574944544802000200FE010000}
+    Active = True
     Aggregates = <>
     Params = <>
-    Left = 512
-    Top = 40
-    object ClientDataSet1Caption: TStringField
+    Left = 960
+    Top = 216
+    object ClientDataSet1Caption: TWideStringField
       FieldName = 'Caption'
       Size = 255
     end
@@ -379,7 +530,7 @@ object Form1: TForm1
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -24
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -390,13 +541,13 @@ object Form1: TForm1
       True)
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 520
-    Top = 176
-    PixelsPerInch = 96
+    Left = 728
+    Top = 192
+    PixelsPerInch = 192
     DockControlHeights = (
       0
       0
-      28
+      44
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'default'
@@ -648,8 +799,8 @@ object Form1: TForm1
     end
   end
   object ActionList1: TActionList
-    Left = 344
-    Top = 56
+    Left = 56
+    Top = 152
     object actionAddRecord: TAction
       Caption = 'actionAddRecord'
       OnExecute = actionAddRecordExecute
@@ -686,156 +837,156 @@ object Form1: TForm1
     end
   end
   object SaveDialog1: TSaveDialog
-    Left = 424
-    Top = 320
+    Left = 728
+    Top = 416
   end
   object ImageList1: TImageList
-    Left = 592
+    Left = 272
     Top = 168
     Bitmap = {
-      494C010102000C00540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FFCACACA35FFFFFF00FFFFFF000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000FF000000FFFFFFFF00FFFF
+      FF00FFFFFF00000000FF000000FFFFFFFF000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000FCFCFD0DFBFCFD0DFBFCFD0DFBFC
-      FD0DFBFCFD0DFBFCFD0DFBFCFD0DFBFCFD0DFBFCFD0DFBFCFD0DFBFCFD0DFBFC
-      FD0DFBFCFD0DFBFCFD0DFDFEFE04000000000000000000000000000000000000
-      0000F8FAF8070000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00000000FF000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00000000FFC5C5C53A0000000000000000000000000000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
       0000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000000000000000000000030BDF1FE2EBEF7FF2EBEF7FF2EBE
-      F7FF2EBEF7FF2EBEF7FF2EBEF7FF2EBEF7FF2EBEF7FF2EBEF7FF2EBEF7FF2EBE
-      F7FF2EBEF7FF2EBEF7FEF0F3F43F000000000000000000000000000000000000
-      000019961BFF168C11F5FEFEFE01000000000000000000000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00000000FFFFFFFF00FFFFFF00FFFFFF000000
+      00FFFFFFFF00FFFFFF00FFFFFF00000000FF0000000000000000000000000000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
       0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00000000FFFFFFFF00FFFFFF00FFFFFF000000
+      00FF000000FFFFFFFF00FFFFFF00000000FF0000000000000000000000000000
+      00FF00000000000000FF000000FF000000FF000000FF000000FF000000FF0000
+      0000000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000003BC2F2FF12BBFCFF12BBFCFF12BB
-      FCFF12BBFCFF12BBFCFF12BBFCFF12BBFCFF12BBFCFF12BBFCFF12BBFCFF12BB
-      FCFF12BBFCFF12BBFCFFB5E7F966000000000000000000000000000000000000
-      000010900BFF00A000FF189515FFE6EFE6190000000000000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00000000FFFFFFFF00FFFFFF00FFFFFF000000
+      00FFFFFFFF00FFFFFF00FFFFFF00000000FF0000000000000000000000000000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
       0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00000000FF000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00000000FF494949B60000000000000000000000000000
+      00FF00000000000000FF000000FF000000FF000000FF000000FF000000FF0000
+      0000000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000003CC4F5FF1DC3FCFF1DC3FCFF1DC3
-      FCFF1DC3FCFF1DC3FCFF1DC3FCFF1DC3FCFF1DC3FCFF1DC3FCFF1DC3FCFF1DC3
-      FCFF1DC3FCFF1DC3FCFF78D5F5CB000000000000000000000000000000000000
-      00000D8F09FF00BA00FF00AA00FF189B16FF9EC59E6100000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000FF000000FFFFFFFF00FFFF
+      FF00FFFFFF00000000FF000000FFFFFFFF000000000000000000000000000000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
       0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000FF000000FF0000
+      00FF000000FF000000FFFFFFFF00FFFFFF000000000000000000000000000000
+      00FF00000000000000FF000000FF000000FF000000FF000000FF000000FF0000
+      0000000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF0000000000000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+      00FFFFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000003EC9FAFF4AD3FDFF4AD3FDFF4DD4
-      FDFF52D5FDFF56D6FDFF5AD7FDFF54D6FDFF46D2FDFF30CDFDFF2ACCFDFF2ACC
-      FDFF2ACCFDFF2ACCFDFF41CBF7FD000000000000000000000000000000000000
-      00000B8D07FF00CD00FF00B500FF009E00FF0A8D0AFF429340BF000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      00FF000000000000000000000000000000FF0000000000000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+      00FFFFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
+      00FF0000000000000000000000000000000000000000000000FF000000FF0000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      00FF00000000000000000000000000000000000000FF00000000000000000000
+      000000000000000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+      00FFFFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
+      00FF0000000000000000000000000000000000000000000000FF000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000000000000000000000043CEFBFF68DDFDFF61DCFEFF66DD
-      FEFF6BDFFEFF71E0FEFF78E1FEFF7EE3FEFF85E4FEFF8CE6FEFF93E7FEFF99E9
-      FEFF64DDFEFF37D4FEFF4CD7FDFF000000000000000000000000000000000000
-      0000098906FF00C300FF00B200FF009D00FF008700FF017201FF10790DF4FEFE
-      FE01000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      00FF00000000000000000000000000000000000000FF000000FF000000FF0000
+      00FF000000FF000000FF0000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000FF000000FF000000FF0000
+      00FFFFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
+      00FF0000000000000000000000000000000000000000000000FF000000FF0000
+      00FF000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000000000000000000000089E1FCFF5ED5F7FF7BE5FEFF81E6
-      FEFF87E8FEFF8DE9FEFF94EAFEFF9AEBFEFFA1EDFEFFA8EEFEFFAEEFFEFFB4F0
-      FFFFBAF1FFFFC0F2FFFF97EAFEFFFBFDFE080000000000000000000000000000
-      0000068404FF00B000FF00A500FF009500FF008100FF006D00FF005700FF0A69
-      08FFEAF1EA1C0000000000000000000000000000000000000000000000000000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF000000000000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000FFFFFFFF00000000FF0000
+      00FFFFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
+      00FF0000000000000000000000000000000000000000000000FF000000FF0000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000000000000000000000FDFD
+      FD02000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FFFDFDFD02000000000000000000000000000000FFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000FF000000FF000000FFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
+      00FF000000FF000000FF000000FF000000FF000000FF0D0D0DF2000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000000000000000000000097E6FCFF5ACFF4FF95ECFEFF9BED
-      FEFFA1EEFEFFA7EFFEFFADF1FEFFB3F2FEFFB9F3FFFFBFF4FFFFC4F4FFFFC9F5
-      FFFFCEF6FFFFD2F7FFFFD5F7FFFFCAEFFA610000000000000000000000000000
-      0000057D03FF2AAF2AFF2CAB2CFF29A029FF299429FF2C892CFF317E31FF3574
-      35FF5A955ADA0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000A2EAFCFF7FDCF8FFA6F0FDFFAAF0
-      FDFFAEF1FDFFB2F2FEFFB6F2FEFFB9F3FEFFBDF3FEFFC0F3FEFFC3F4FEFFC5F4
-      FEFFC7F5FEFFC8F5FEFFC8F5FEFF8EDDF6B50000000000000000000000000000
-      0000027401FF31A731FF36A536FF3AA13AFF3F9B3FFF439443FF3C853BFF6E9E
-      6E91000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000AAECFCFFC2F4FFFFBCF3FFFFB6F1
-      FFFFB0F0FEFFA9EFFEFFA2EEFEFF9BEDFEFF95EBFEFF8EEAFEFF87E9FEFF81E8
-      FEFF81E8FEFF0000000000000000000000000000000000000000000000000000
-      0000006900FF4AAA4AFF4EAA4EFF53A953FF58A658FF2A782AFFC9D9C9360000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000ACEDFCFFCEF6FFFFC9F6FFFFC4F5
-      FFFFBFF4FFFFB9F3FEFF73D9F6F775D8F5EC74D8F5EC73D8F5EC72D8F5EC71D7
-      F5EC70D5F5E90000000000000000000000000000000000000000000000000000
-      0000005B00FF63B263FF67B467FF6CB56CFF0F5A0FFDF8FAF807000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000A3EDFCFFD7F9FFFFD4F8FFFFD0F7
-      FFFFCBF7FFFFC6F6FFFFBDEBF96C000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000004E00FF7CBF7CFF82C282FF206220DF0000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000000000000000000000073D5F4DF7DDAF6EC7DDAF6EC7DDA
-      F6EC7CDAF6EC7BDAF6ECE3F6FC36000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000004C00FF81BB81FF6E996E91000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      00006B986BD5C9D9C93600000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FFFFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000000000000000000000000000424D3E000000000000003E000000
       2800000040000000100000000100010000000000800000000000000000000000
-      000000000000000000000000FFFFFF00FFFFFFFF000000000001F7FF00000000
-      0001F1FF000000000001F0FF000000000001F07F000000000001F03F00000000
-      0001F00F000000000000F007000000000000F007000000000000F00F00000000
-      0007F01F000000000007F03F0000000001FFF0FF0000000001FFF1FF00000000
-      FFFFF3FF00000000FFFFFFFF0000000000000000000000000000000000000000
+      000000000000000000000000FFFFFF00FFFF0000FFFF0000FFFF0000FFFF0000
+      C0030000E0070000DFFB0000EFF70000DFFB0000E8170000DFFB0000EFF70000
+      DFFB0000E8170000DFFB0000EFF70000DFFB0000E8170000C0FB0000EFF70000
+      EEFB0000EF870000EF7B0000EFA70000EF030000EF8F0000EFF70000EF9F0000
+      E0070000E03F0000FFFF0000FFFF000000000000000000000000000000000000
       000000000000}
   end
   object cxStyleRepository1: TcxStyleRepository
-    Left = 584
-    Top = 112
-    PixelsPerInch = 96
+    Left = 728
+    Top = 80
+    PixelsPerInch = 192
     object cxStyle1: TcxStyle
       AssignedValues = [svTextColor]
       TextColor = clMenuHighlight
@@ -845,7 +996,32 @@ object Form1: TForm1
     FavoriteLinks = <>
     FileTypes = <>
     Options = []
-    Left = 349
-    Top = 319
+    Left = 733
+    Top = 543
+  end
+  object DataSource2: TDataSource
+    DataSet = ClientDataSet2
+    Left = 408
+    Top = 272
+  end
+  object ClientDataSet2: TClientDataSet
+    PersistDataPacket.Data = {
+      870000009619E0BD010000001800000002000300000003000000410002696404
+      000100100000000763617074696F6E02004A0010000100055749445448020002
+      00FE0100000000000000000C0066006F006C006400650072000000020000000C
+      0073006300720069007000740000000100000016006400650073006300720069
+      007000740069006F006E00}
+    Active = True
+    Aggregates = <>
+    Params = <>
+    Left = 408
+    Top = 416
+    object ClientDataSet2id: TIntegerField
+      FieldName = 'id'
+    end
+    object ClientDataSet2caption: TWideStringField
+      FieldName = 'caption'
+      Size = 255
+    end
   end
 end

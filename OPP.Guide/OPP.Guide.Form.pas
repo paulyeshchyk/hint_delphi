@@ -8,7 +8,7 @@ uses
   Data.DB, Datasnap.DBClient, dxdbtree, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxStyles, cxTL,
   cxMaskEdit, cxTLdxBarBuiltInMenu, cxDataControllerConditionalFormattingRulesManagerDialog, cxInplaceContainer, cxDBTL,
   cxTLData, cxEdit, cxVGrid, cxDBVGrid, dxBar, System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, cxContainer,
-  cxTextEdit, cxMemo;
+  cxTextEdit, cxMemo, dxScrollbarAnnotations, cxDBLookupComboBox;
 
 type
   TForm1 = class(TForm)
@@ -19,7 +19,6 @@ type
     dxLayoutDockSite3: TdxLayoutDockSite;
     DataSource1: TDataSource;
     ClientDataSet1: TClientDataSet;
-    ClientDataSet1Caption: TStringField;
     ClientDataSet1ActionText: TStringField;
     ClientDataSet1NodeType: TIntegerField;
     cxDBTreeList1: TcxDBTreeList;
@@ -70,6 +69,11 @@ type
     dxDockPanel7: TdxDockPanel;
     cxMemo1: TcxMemo;
     dxLayoutDockSite2: TdxLayoutDockSite;
+    ClientDataSet1Caption: TWideStringField;
+    DataSource2: TDataSource;
+    ClientDataSet2: TClientDataSet;
+    ClientDataSet2id: TIntegerField;
+    ClientDataSet2caption: TWideStringField;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -149,7 +153,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  ClientDataSet1.LoadFromFile('C:\Users\pavel\Application Data\Ascon\Gulfstream\Guide\opp.guide.xml');
+  ClientDataSet1.LoadFromFile('C:\Users\paul\Application Data\Ascon\Gulfstream\Guide\opp.guide.xml');
 end;
 
 procedure TForm1.actionExportExecute(Sender: TObject);
