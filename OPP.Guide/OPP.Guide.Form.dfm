@@ -2,23 +2,25 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 1198
+  ClientHeight = 1061
   ClientWidth = 2242
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   WindowState = wsMaximized
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 13
   object dxDockSite1: TdxDockSite
     Left = 0
-    Top = 47
+    Top = 31
     Width = 2242
-    Height = 1151
+    Height = 1030
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -26,24 +28,20 @@ object Form1: TForm1
     ManagerFont = False
     ParentFont = True
     Align = alClient
-    ExplicitWidth = 2228
-    ExplicitHeight = 1150
     DockingType = 5
     OriginalWidth = 2242
-    OriginalHeight = 1151
+    OriginalHeight = 1030
     object dxLayoutDockSite2: TdxLayoutDockSite
       Left = 0
       Top = 0
       Width = 2242
-      Height = 655
+      Height = 534
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
       ManagerFont = False
       ParentFont = True
-      ExplicitWidth = 2228
-      ExplicitHeight = 654
       DockingType = 0
       OriginalWidth = 600
       OriginalHeight = 400
@@ -51,7 +49,7 @@ object Form1: TForm1
         Left = 642
         Top = 0
         Width = 1600
-        Height = 655
+        Height = 534
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -65,19 +63,13 @@ object Form1: TForm1
           Left = 0
           Top = 0
           Width = 958
-          Height = 655
+          Height = 534
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -22
-          Font.Name = 'Tahoma'
-          Font.Style = []
           ManagerFont = False
-          ExplicitWidth = 944
-          ExplicitHeight = 654
+          ParentFont = True
           DockingType = 0
           OriginalWidth = 600
           OriginalHeight = 400
@@ -86,23 +78,17 @@ object Form1: TForm1
           Left = 958
           Top = 0
           Width = 642
-          Height = 655
+          Height = 534
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -22
-          Font.Name = 'Tahoma'
-          Font.Style = []
           ManagerFont = False
+          ParentFont = True
           ActiveChildIndex = -1
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
-          ExplicitLeft = 944
-          ExplicitHeight = 654
           DockingType = 3
           OriginalWidth = 642
           OriginalHeight = 280
@@ -110,46 +96,40 @@ object Form1: TForm1
             Left = 0
             Top = 0
             Width = 642
-            Height = 328
+            Height = 267
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -22
-            Font.Name = 'Tahoma'
-            Font.Style = []
             ManagerFont = False
+            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel5'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
+            TabsProperties.Style = 11
             DockingType = 2
             OriginalWidth = 642
             OriginalHeight = 280
           end
           object dxDockPanel6: TdxDockPanel
             Left = 0
-            Top = 328
+            Top = 267
             Width = 642
-            Height = 327
+            Height = 267
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -22
-            Font.Name = 'Tahoma'
-            Font.Style = []
             ManagerFont = False
+            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel6'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
+            TabsProperties.Style = 11
             DockingType = 2
             OriginalWidth = 642
             OriginalHeight = 280
@@ -160,7 +140,7 @@ object Form1: TForm1
         Left = 0
         Top = 0
         Width = 642
-        Height = 655
+        Height = 534
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -178,7 +158,7 @@ object Form1: TForm1
           Left = 0
           Top = 0
           Width = 642
-          Height = 328
+          Height = 267
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
@@ -192,7 +172,7 @@ object Form1: TForm1
           Caption = 'Hierarchy'
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
-          TabsProperties.Style = 9
+          TabsProperties.Style = 11
           DockingType = 2
           OriginalWidth = 642
           OriginalHeight = 280
@@ -200,7 +180,7 @@ object Form1: TForm1
             Left = 0
             Top = 0
             Width = 638
-            Height = 291
+            Height = 239
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -221,20 +201,19 @@ object Form1: TForm1
             OptionsBehavior.ImmediateEditor = False
             OptionsSelection.InvertSelect = False
             OptionsView.FixedSeparatorWidth = 4
-            OptionsView.Indicator = True
+            OptionsView.Headers = False
             OptionsView.IndicatorWidth = 16
             OptionsView.NavigatorOffset = 100
             Preview.LeftIndent = 10
             Preview.RightIndent = 10
             RootValue = -1
-            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
-            OnChange = cxDBTreeList1Change
             OnDragDrop = cxDBTreeList1DragDrop
             OnDragOver = cxDBTreeList1DragOver
+            OnFocusedNodeChanged = cxDBTreeList1FocusedNodeChanged
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
-            ExplicitHeight = 290
+            ExplicitHeight = 230
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
               MinWidth = 40
@@ -263,20 +242,21 @@ object Form1: TForm1
         end
         object dxTabContainerDockSite1: TdxTabContainerDockSite
           Left = 0
-          Top = 328
+          Top = 267
           Width = 642
-          Height = 327
+          Height = 267
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
           ManagerFont = False
           ParentFont = True
-          ActiveChildIndex = 0
+          ActiveChildIndex = 1
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
+          TabsProperties.Style = 11
           DockingType = 2
           OriginalWidth = 642
           OriginalHeight = 280
@@ -284,7 +264,7 @@ object Form1: TForm1
             Left = 0
             Top = 0
             Width = 638
-            Height = 252
+            Height = 219
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -296,7 +276,7 @@ object Form1: TForm1
             Caption = 'Properties'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
-            TabsProperties.Style = 9
+            TabsProperties.Style = 11
             DockingType = 0
             OriginalWidth = 642
             OriginalHeight = 280
@@ -304,7 +284,7 @@ object Form1: TForm1
               Left = 0
               Top = 0
               Width = 638
-              Height = 252
+              Height = 219
               Margins.Left = 6
               Margins.Top = 6
               Margins.Right = 6
@@ -320,9 +300,9 @@ object Form1: TForm1
               OptionsBehavior.ImmediateEditor = False
               OptionsBehavior.FocusCellOnCycle = True
               Navigator.Buttons.CustomButtons = <>
-              ScrollbarAnnotations.CustomAnnotations = <>
               TabOrder = 0
               DataController.DataSource = DataSourceTreeView
+              ExplicitHeight = 192
               Version = 1
               object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
                 Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -375,7 +355,7 @@ object Form1: TForm1
             Left = 0
             Top = 0
             Width = 638
-            Height = 252
+            Height = 219
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -387,6 +367,7 @@ object Form1: TForm1
             Caption = 'Script'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
+            TabsProperties.Style = 11
             DockingType = 0
             OriginalWidth = 642
             OriginalHeight = 280
@@ -400,36 +381,17 @@ object Form1: TForm1
               Properties.OnChange = cxDBMemo1PropertiesChange
               Style.BorderStyle = ebsNone
               TabOrder = 0
-              Height = 252
+              ExplicitHeight = 192
+              Height = 219
               Width = 638
             end
-          end
-          object dxDockPanel4: TdxDockPanel
-            Left = 0
-            Top = 0
-            Width = 638
-            Height = 252
-            Margins.Left = 6
-            Margins.Top = 6
-            Margins.Right = 6
-            Margins.Bottom = 6
-            ManagerFont = False
-            ParentFont = True
-            AllowFloating = True
-            AutoHide = False
-            Caption = 'dxDockPanel4'
-            CustomCaptionButtons.Buttons = <>
-            TabsProperties.CustomButtons.Buttons = <>
-            DockingType = 0
-            OriginalWidth = 642
-            OriginalHeight = 280
           end
         end
       end
     end
     object dxDockPanelOutputLog: TdxDockPanel
       Left = 0
-      Top = 655
+      Top = 534
       Width = 2242
       Height = 496
       Margins.Left = 6
@@ -443,8 +405,7 @@ object Form1: TForm1
       Caption = 'Log'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitTop = 654
-      ExplicitWidth = 2228
+      TabsProperties.Style = 11
       DockingType = 4
       OriginalWidth = 370
       OriginalHeight = 496
@@ -458,9 +419,10 @@ object Form1: TForm1
         Align = alClient
         Properties.ReadOnly = True
         Properties.ScrollBars = ssBoth
+        Style.BorderStyle = ebsNone
         TabOrder = 0
-        ExplicitWidth = 2224
-        Height = 459
+        ExplicitHeight = 459
+        Height = 468
         Width = 2238
       end
     end
@@ -474,10 +436,8 @@ object Form1: TForm1
     Margins.Right = 6
     Margins.Bottom = 6
     Align = dalTop
-    ExplicitWidth = 2228
   end
   object dxDockingManager1: TdxDockingManager
-    AutoHideMovingSize = 40
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
@@ -489,17 +449,15 @@ object Form1: TForm1
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
-    DockZonesWidth = 40
+    DefaultTabContainerSiteProperties.TabsProperties.Style = 11
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -22
+    Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ResizeZonesWidth = 6
-    SelectionFrameWidth = 8
     Left = 736
     Top = 304
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
   object DataSourceTreeView: TDataSource
     DataSet = DataSetTreeView
@@ -567,11 +525,11 @@ object Form1: TForm1
     UseSystemFont = True
     Left = 728
     Top = 192
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      44
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'default'
@@ -869,7 +827,7 @@ object Form1: TForm1
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1011,7 +969,7 @@ object Form1: TForm1
   object cxStyleRepository1: TcxStyleRepository
     Left = 728
     Top = 80
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     object cxStyle1: TcxStyle
       AssignedValues = [svTextColor]
       TextColor = clMenuHighlight

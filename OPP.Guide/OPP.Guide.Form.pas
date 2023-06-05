@@ -8,7 +8,7 @@ uses
   Data.DB, Datasnap.DBClient, dxdbtree, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxStyles, cxTL,
   cxMaskEdit, cxTLdxBarBuiltInMenu, cxDataControllerConditionalFormattingRulesManagerDialog, cxInplaceContainer, cxDBTL,
   cxTLData, cxEdit, cxVGrid, cxDBVGrid, dxBar, System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, cxContainer,
-  cxTextEdit, cxMemo, dxScrollbarAnnotations, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit;
+  cxTextEdit, cxMemo, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit;
 
 type
   TForm1 = class(TForm)
@@ -52,7 +52,6 @@ type
     DataSetTreeViewOrder: TIntegerField;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
     dxDockPanelScript: TdxDockPanel;
-    dxDockPanel4: TdxDockPanel;
     dxDockPanel5: TdxDockPanel;
     dxDockPanel6: TdxDockPanel;
     cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow;
@@ -84,14 +83,15 @@ type
     procedure actionReloadExecute(Sender: TObject);
     procedure actionRunAllExecute(Sender: TObject);
     procedure actionRunSelectedExecute(Sender: TObject);
-    procedure cxDBTreeList1Change(Sender: TObject);
     procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
     procedure cxDBMemo1PropertiesChange(Sender: TObject);
+    procedure cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
     procedure DataSetTreeViewAfterOpen(DataSet: TDataSet);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -116,6 +116,7 @@ implementation
 
 uses
   OPP.Help.System.Str,
+  OPP.Help.System.Files,
   midaslib, OPP.Guide.executor;
 
 {$R *.dfm}
@@ -137,9 +138,17 @@ begin
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
+var
+  fIniFile: String;
+  fDatasetXMLFile: String;
 begin
+  fIniFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath('opp.guide.docking.ini');
+  if FileExists(fIniFile) then
+    dxDockingManager1.LoadLayoutFromIniFile(fIniFile);
+
   cxDBTreeList1.BeginUpdate;
-  DataSetTreeView.LoadFromFile('C:\Users\paul\Application Data\Ascon\Gulfstream\Guide\opp.guide.xml');
+  fDatasetXMLFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath('opp.guide.xml');
+  DataSetTreeView.LoadFromFile(fDatasetXMLFile);
   cxDBTreeList1.EndUpdate;
 end;
 
@@ -199,12 +208,6 @@ begin
     DataSetTreeView.Post;
 end;
 
-procedure TForm1.cxDBTreeList1Change(Sender: TObject);
-begin
-  actionRunAll.Enabled := (selectedNodeSubsCount > 0);
-  dxDockPanelScript.Visible := selectedNodeIsRunnable();
-end;
-
 procedure TForm1.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
 begin
   //
@@ -213,6 +216,12 @@ end;
 procedure TForm1.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   OutputDebugString(Format('%d', [Integer(State)]).toWideChar);
+end;
+
+procedure TForm1.cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
+begin
+  actionRunAll.Enabled := (selectedNodeSubsCount > 0);
+  dxDockPanelScript.Visible := selectedNodeIsRunnable();
 end;
 
 procedure TForm1.cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
@@ -266,6 +275,14 @@ end;
 procedure TForm1.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
 begin
   actionAddChildRecord.Enabled := (DataSourceTreeView.DataSet.RecordCount <> 0) and (not DataSourceTreeView.DataSet.FieldByName('identifier').IsNull);
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  fIniFile: String;
+begin
+  fIniFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath('opp.guide.docking.ini');
+  dxDockingManager1.SaveLayoutToIniFile(fIniFile);
 end;
 
 { TOPPTreeDatasetHelpler }
@@ -344,14 +361,14 @@ end;
 
 function TForm1Helper.selectedNodeIsRunnable: Boolean;
 var
-  value: Variant;
+  Value: Variant;
   intValue: Integer;
 begin
   result := false;
-  value := DataSourceTreeView.DataSet.FieldByName('nodeType').Value;
-  if VarIsNull(value) or VarIsEmpty(Value) then
+  Value := DataSourceTreeView.DataSet.FieldByName('nodeType').Value;
+  if VarIsNull(Value) or VarIsEmpty(Value) then
     exit;
-  intValue := VarAsType(value, vtInt64);
+  intValue := VarAsType(Value, vtInt64);
   result := (intValue = 1);
 end;
 
