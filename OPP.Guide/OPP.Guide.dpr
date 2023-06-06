@@ -8,7 +8,8 @@ uses
   OPP.Help.System.Str in '..\OPP.Help\OPP.Help.System.Str.pas',
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
   OPP.Help.System.Files in '..\OPP.Help\OPP.Help.System.Files.pas',
-  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas';
+  OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas',
+  OPP.Guide.Scripter in 'OPP.Guide.Scripter.pas';
 
 {$R *.res}
 

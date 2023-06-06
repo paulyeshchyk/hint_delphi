@@ -3,6 +3,21 @@
         <ProjectGuid>{A4A020B5-FF25-4816-955B-D5040C13A0D0}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
+        <Projects Include="..\..\VCL\OPPVCL.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\DevEx\OPPDevEx.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\DevExAdv\OPPDevExAdv.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\DevExPS\OPPDevExPS.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\DreamControls\dreamInit.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="OPP.Help.Package\OPPHelp.dproj">
             <Dependencies/>
         </Projects>
@@ -23,6 +38,51 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
+    <Target Name="OPPVCL">
+        <MSBuild Projects="..\..\VCL\OPPVCL.dproj"/>
+    </Target>
+    <Target Name="OPPVCL:Clean">
+        <MSBuild Projects="..\..\VCL\OPPVCL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPPVCL:Make">
+        <MSBuild Projects="..\..\VCL\OPPVCL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OPPDevEx">
+        <MSBuild Projects="..\..\DevEx\OPPDevEx.dproj"/>
+    </Target>
+    <Target Name="OPPDevEx:Clean">
+        <MSBuild Projects="..\..\DevEx\OPPDevEx.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPPDevEx:Make">
+        <MSBuild Projects="..\..\DevEx\OPPDevEx.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OPPDevExAdv">
+        <MSBuild Projects="..\..\DevExAdv\OPPDevExAdv.dproj"/>
+    </Target>
+    <Target Name="OPPDevExAdv:Clean">
+        <MSBuild Projects="..\..\DevExAdv\OPPDevExAdv.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPPDevExAdv:Make">
+        <MSBuild Projects="..\..\DevExAdv\OPPDevExAdv.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OPPDevExPS">
+        <MSBuild Projects="..\..\DevExPS\OPPDevExPS.dproj"/>
+    </Target>
+    <Target Name="OPPDevExPS:Clean">
+        <MSBuild Projects="..\..\DevExPS\OPPDevExPS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPPDevExPS:Make">
+        <MSBuild Projects="..\..\DevExPS\OPPDevExPS.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="dreamInit">
+        <MSBuild Projects="..\..\DreamControls\dreamInit.dproj"/>
+    </Target>
+    <Target Name="dreamInit:Clean">
+        <MSBuild Projects="..\..\DreamControls\dreamInit.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dreamInit:Make">
+        <MSBuild Projects="..\..\DreamControls\dreamInit.dproj" Targets="Make"/>
+    </Target>
     <Target Name="OPPHelp">
         <MSBuild Projects="OPP.Help.Package\OPPHelp.dproj"/>
     </Target>
@@ -60,13 +120,13 @@
         <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPHelp;OPPHelpPreview;OPPHintTunning;OPP_Guide"/>
+        <CallTarget Targets="OPPVCL;OPPDevEx;OPPDevExAdv;OPPDevExPS;dreamInit;OPPHelp;OPPHelpPreview;OPPHintTunning;OPP_Guide"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPHelp:Clean;OPPHelpPreview:Clean;OPPHintTunning:Clean;OPP_Guide:Clean"/>
+        <CallTarget Targets="OPPVCL:Clean;OPPDevEx:Clean;OPPDevExAdv:Clean;OPPDevExPS:Clean;dreamInit:Clean;OPPHelp:Clean;OPPHelpPreview:Clean;OPPHintTunning:Clean;OPP_Guide:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPHelp:Make;OPPHelpPreview:Make;OPPHintTunning:Make;OPP_Guide:Make"/>
+        <CallTarget Targets="OPPVCL:Make;OPPDevEx:Make;OPPDevExAdv:Make;OPPDevExPS:Make;dreamInit:Make;OPPHelp:Make;OPPHelpPreview:Make;OPPHintTunning:Make;OPP_Guide:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

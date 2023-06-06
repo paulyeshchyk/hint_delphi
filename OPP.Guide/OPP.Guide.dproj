@@ -85,6 +85,11 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
+        <DCC_UnitSearchPath>..\..\..\DreamControls\units;..\..\..\Common\Constants;..\..\..\Common\Loodsman_Units1;..\..\..\Common\Loodsman_Units1\ConnectToServer;..\..\..\Common\Loodsman_Units1\ConnectToDB;..\..\..\Common\Loodsman_Units1\BlobEditor;..\..\..\Common\Utils;..\..\..\Designer;..\..\..\Designer\OppForm1;..\..\..\Controls1;..\..\..\GreenConf\Forms\Measurement;..\..\..\Common\Forms;..\..\..\Common\StatusBar;..\..\..\Common\Libs;..\..\..\Common\Splash;..\..\..\Common\Datasets;..\..\..\Common\Classes;..\..\..\Common\Collections;..\..\..\Common\Classes\ErrHandle;..\..\..\Calls;..\..\..\WF;..\..\..\Debug;..\..\..\Common\DataModule;..\..\..\Common\Help\legacy;..\..\..\Common\Grids;..\..\..\ReportPreview;..\..\..\Common\Settings;..\..\..\Plugins\CopyObjects_3\uCopyDLG;..\..\..\Sign;..\..\..\Common\Help\OPP.Buffer;..\..\..\Common\Help\OPP.Help;..\..\..\Common\Rus;..\..\..\Controls\dlgErrorCheck\units1;..\..\..\Components\OppComp1;..\..\..\Components\OppComp\UIControls1;..\..\..\DreamControls;..\..\..\Common\Help\OPP.Client.Helper;..\..\..\GreenConf\Forms\MetaData1;..\..\..\Components\Import\OPP Components1;..\..\..\Components\Import\DC;..\..\..\Components\Import\DC\delphi_2006;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Guide</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -108,6 +113,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
+        <DCCReference Include="OPP.Guide.Scripter.pas"/>
         <None Include="readme.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

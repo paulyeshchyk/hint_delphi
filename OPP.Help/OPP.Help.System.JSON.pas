@@ -1,4 +1,4 @@
-﻿unit OPP.Help.System.JSON;
+unit OPP.Help.System.JSON;
 
 interface
 

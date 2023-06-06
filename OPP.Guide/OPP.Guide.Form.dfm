@@ -213,7 +213,6 @@ object Form1: TForm1
             OnFocusedNodeChanged = cxDBTreeList1FocusedNodeChanged
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
-            ExplicitHeight = 230
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
               MinWidth = 40
@@ -291,18 +290,24 @@ object Form1: TForm1
               Margins.Bottom = 6
               BorderStyle = cxcbsNone
               Align = alClient
+              OptionsView.ScrollBars = ssVertical
               OptionsView.RowHeaderMinWidth = 48
-              OptionsView.RowHeaderWidth = 200
+              OptionsView.RowHeaderWidth = 150
               OptionsView.ValueWidth = 200
               OptionsView.ValueMinWidth = 80
               OptionsView.NavigatorOffset = 100
               OptionsBehavior.GoToNextCellOnEnter = True
               OptionsBehavior.ImmediateEditor = False
               OptionsBehavior.FocusCellOnCycle = True
+              OptionsData.Editing = False
+              OptionsData.Appending = False
+              OptionsData.Deleting = False
+              OptionsData.DeletingConfirmation = False
+              OptionsData.Inserting = False
               Navigator.Buttons.CustomButtons = <>
+              Navigator.InfoPanel.Visible = True
               TabOrder = 0
               DataController.DataSource = DataSourceTreeView
-              ExplicitHeight = 192
               Version = 1
               object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
                 Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -371,18 +376,24 @@ object Form1: TForm1
             DockingType = 0
             OriginalWidth = 642
             OriginalHeight = 280
-            object cxDBMemo1: TcxDBMemo
+            object dxBarDockControl2: TdxBarDockControl
               Left = 0
               Top = 0
+              Width = 638
+              Height = 28
+              Align = dalTop
+              BarManager = dxBarManager1
+            end
+            object cxDBMemo1: TcxDBMemo
+              Left = 0
+              Top = 28
               Align = alClient
               DataBinding.DataField = 'Script'
               DataBinding.DataSource = DataSourceTreeView
               Properties.WantTabs = True
-              Properties.OnChange = cxDBMemo1PropertiesChange
               Style.BorderStyle = ebsNone
-              TabOrder = 0
-              ExplicitHeight = 192
-              Height = 219
+              TabOrder = 1
+              Height = 191
               Width = 638
             end
           end
@@ -421,7 +432,6 @@ object Form1: TForm1
         Properties.ScrollBars = ssBoth
         Style.BorderStyle = ebsNone
         TabOrder = 0
-        ExplicitHeight = 459
         Height = 468
         Width = 2238
       end
@@ -479,6 +489,8 @@ object Form1: TForm1
     Aggregates = <>
     Params = <>
     AfterOpen = DataSetTreeViewAfterOpen
+    BeforeEdit = DataSetTreeViewBeforeEdit
+    AfterPost = DataSetTreeViewAfterPost
     Left = 960
     Top = 216
     object DataSetTreeViewIdentifier: TStringField
@@ -573,6 +585,32 @@ object Form1: TForm1
         item
           Visible = True
           ItemName = 'dxBarButton7'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object dxBarManager1Bar2: TdxBar
+      Caption = 'script'
+      CaptionButtons = <>
+      DockControl = dxBarDockControl2
+      DockedDockControl = dxBarDockControl2
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 2276
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
         end>
       OneOnRow = True
       Row = 0
@@ -779,6 +817,57 @@ object Form1: TForm1
         CEB78CECF52E6504A6C692E5F207F22F66E35D42A830455B5629313EAFFF6FFC
         0B0C0C183FEAAD166E0000000049454E44AE426082}
     end
+    object dxBarButton8: TdxBarButton
+      Action = actionSaveScript
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000000B744558745469746C6500536176653BF9E8F9090000020349444154
+        785E7D52316B145110FEDEE6EE9A03EF2E57284A6C6DAC42C0262185829D0A36
+        16820AFE010BADC47F60AB2022585A588875B01041822158D858081204956872
+        DC5DD6DD3733CF99D93DD713CCC0F7BEF776E7FB66E6ED0654912982633EFCFC
+        9F67A2603B2CAC9DBFB2810CEB4B274EE1E4D271B0303832A24450A94C113112
+        2846ECED8F301A7DB59CD76F379E9F6D9901425A5F3DB38C4F9FC7B87BE70690
+        60E1E49C80BC886049B87EF33656964F6373EBFD1A8096190466017352B0ABA6
+        BF22C4D5C9C5972E5CD632010F1F3F0553C4CECE17088B8F9ED99292B898884C
+        EFE2548B270711D942867E7F114717BB9E0308582A83962D2C6EE0EE2925EFA6
+        245671899205ED561B9D4EA77EC7CA6D887063904CCCE29735C923BEEF4F91C4
+        A771DC7FF008C7865DEF88896B23FA6310BC03226FEFEAB55B9A203E63823143
+        5490445C3883D05F23F8FCC228F26F180C06B3CB730059BD57866F20229EDF18
+        D42358BC78F60487C5EAB98B5A6408E63903B1F6BD358B9FE302F06D729610BC
+        B2AE20B63CF9D780602072579FB9F98B6082E6DF8D044932FF156CA648EC89F7
+        5E7E844802299851B3C26667F30BCAF31D043B3091DFC3917E0F5C895C1C4D3C
+        03E095C79303A4CA20984111CBFCDDE6D6F6CA70D0C39B571F2A7164AF129589
+        14C65E59B0FB631765596C03C8030033E929BA8A0C4D8443F6A2982AF67E037E
+        F6AC9379188DF20000000049454E44AE426082}
+    end
+    object dxBarButton9: TdxBarButton
+      Action = actionRunScript
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000001974455874536F6674776172650041646F626520496D616765526561
+        647971C9653C00000011744558745469746C6500506C61793B53746172743B5D
+        61407A000001F049444154785EAD904B6B13511886DF938C4E5A31C560A5174C
+        68E3056C91D07A5D98B6D616BC54105CC4DB527F801050BA511411A550D14271
+        2314ACC5955D14A90B770A820B15A9422B0DB69149C64E9C2493CB3973267E84
+        5884566DC0071E38B3380FEF1CFC3746A74FAA2353273A50252E54D035AB160C
+        6F1F4C1D7F32FCEC58A0EA407231EB9692B160735784B9F07978F2E8D0ED89FE
+        4D6B0E64CCA28B0B81B6C03E74EF8978B636745E56143677F7697FF4EAC821F5
+        9F01291D0821912E7C43412CC1DF588F03A1015F53C3EE3B5E9F3A736BBCF7EC
+        91D3ADAE3F066CDB814D811C37A0673EA168E7A0281C417F13426D875B37FB82
+        8FC30381D7D71F75F7ACBE409420B8036E5BC88B3434F3030C2B46A13C366E50
+        B06BFB36ECDC71707F9DB7F9E5E068F81C2A28CB0B245D1692E667E82C40C0CC
+        C7CBAE73D7C0343D48680652BAF62A9DE2EF0030B2A4FCFE0B8253C0CE4250E0
+        17564E85AE99588ACF7E492C583726EE7D9C0460AD5820CB6FE0A0C0CB0BE8DB
+        83F822C7F785989ED20B43CFC7E6C68C643E0D809336595A1110E547CC607E5E
+        428F7DCD657FF0876F5EC4EFCFBE3792008AA4241DAC465FA465CBA59B1DA58B
+        D742F6F968FBF8DEDEC610002FB9BEF2D80C7FA3EF4C4BFD852BEDD35DA7FC3D
+        00EA489574930C6B44216BC99ACA99A14AD8F2D42AF809500AE0796F04355100
+        00000049454E44AE426082}
+    end
   end
   object ActionList1: TActionList
     Left = 56
@@ -818,6 +907,15 @@ object Form1: TForm1
       Caption = 'actionRunAll'
       OnExecute = actionRunAllExecute
     end
+    object actionSaveScript: TAction
+      Caption = 'actionSaveScript'
+      Enabled = False
+      OnExecute = actionSaveScriptExecute
+    end
+    object actionRunScript: TAction
+      Caption = 'actionRunScript'
+      OnExecute = actionRunScriptExecute
+    end
   end
   object SaveDialog1: TSaveDialog
     Left = 728
@@ -827,7 +925,7 @@ object Form1: TForm1
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -34,8 +34,8 @@ type
     class function GetHWndByPID(const hPID: THandle): THandle;
     class function GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
     class function GetProcessHandleList(AProcessName: String): TList<THandle>;
-    class procedure RunScript(AScript: PWideChar; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion);overload;
-    class procedure RunProcess(AProcessName: String; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion);overload;
+    class procedure RunScript(AScript: PWideChar; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion); overload;
+    class procedure RunProcess(AProcessName: String; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion); overload;
     class function KillProcess(ExeFileName: string): Integer;
   end;
 
@@ -184,8 +184,15 @@ begin
 
 end;
 
-class procedure TOPPSystemMessageHelper.RunScript(AScript: PWideChar; AHandle: THandle; ActivationDelay: Cardinal;
-  completion: TOPPSystemMessageRunCompletion);
+{
+  * cmd.exe /C start mailto:test@test.com?subject=A
+  * cmd.exe /C start D:\Compiled\Executable\OPPHelpPreview.exe
+  * cmd.exe /C D:\Compiled\Executable\OPPHelpPreview.exe
+  * D:\Compiled\Executable\OPPHelpPreview.exe
+  * rundll32.exe user32.dll,SendMessage 65535 0 0 "Test"
+}
+
+class procedure TOPPSystemMessageHelper.RunScript(AScript: PWideChar; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion);
 var
   tmpStartupInfo: TStartupInfo;
   tmpProcessInformation: TProcessInformation;
@@ -247,7 +254,7 @@ begin
     szExeFile := FProcessEntry32.szExeFile;
     extractedFilename := UpperCase(ExtractFileName(szExeFile));
     szFilenameUp := UpperCase(szExeFile);
-    cmpResult1 := (CompareStr(extractedFilename,exeFileNameUp) = 0);
+    cmpResult1 := (CompareStr(extractedFilename, exeFileNameUp) = 0);
     cmpResult2 := (CompareStr(szFilenameUp, exeFileNameUp) = 0);
     if (cmpResult1 or cmpResult2) then
       Result := Integer(TerminateProcess(OpenProcess(PROCESS_TERMINATE, BOOL(0), FProcessEntry32.th32ProcessID), 0));

@@ -74,7 +74,13 @@ type
     DataSetNodeTypeid: TIntegerField;
     DataSetNodeTypecaption: TWideStringField;
     DataSetTreeViewScript: TBlobField;
+    dxBarDockControl2: TdxBarDockControl;
     cxDBMemo1: TcxDBMemo;
+    dxBarManager1Bar2: TdxBar;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    actionSaveScript: TAction;
+    actionRunScript: TAction;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -82,16 +88,19 @@ type
     procedure actionNewExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
     procedure actionRunAllExecute(Sender: TObject);
+    procedure actionRunScriptExecute(Sender: TObject);
     procedure actionRunSelectedExecute(Sender: TObject);
+    procedure actionSaveScriptExecute(Sender: TObject);
     procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
-    procedure cxDBMemo1PropertiesChange(Sender: TObject);
     procedure cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
     procedure DataSetTreeViewAfterOpen(DataSet: TDataSet);
+    procedure DataSetTreeViewAfterPost(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure DataSetTreeViewBeforeEdit(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -115,6 +124,7 @@ var
 implementation
 
 uses
+  OPP.Guide.Scripter,
   OPP.Help.System.Str,
   OPP.Help.System.Files,
   midaslib, OPP.Guide.executor;
@@ -179,31 +189,52 @@ end;
 procedure TForm1.actionRunAllExecute(Sender: TObject);
 var
   ident: Variant;
+  fScripter: IOPPGuideScripter;
 begin
   ident := DataSetTreeView.FieldByName('identifier').Value;
   cxMemo1.Clear;
-  TOPPGuideExecutor.run(DataSetTreeView, ident, true,
-    procedure(AText: String)
-    begin
-      cxMemo1.Lines.Add(AText);
-    end);
+
+  fScripter := TOPPGuideScripter.Create;
+  try
+    TOPPGuideExecutor.run(DataSetTreeView, ident, true, fScripter,
+      procedure(AText: String)
+      begin
+        cxMemo1.Lines.Add(AText);
+      end);
+  finally
+    fScripter := nil;
+  end;
+end;
+
+procedure TForm1.actionRunScriptExecute(Sender: TObject);
+begin
+//
 end;
 
 procedure TForm1.actionRunSelectedExecute(Sender: TObject);
 var
   ident: Variant;
+  fScripter: IOPPGuideScripter;
+  fScriptResult: Variant;
 begin
   ident := DataSetTreeView.FieldByName('identifier').Value;
   cxMemo1.Clear;
-  TOPPGuideExecutor.run(DataSetTreeView, ident, false,
-    procedure(AText: String)
-    begin
-      cxMemo1.Lines.Add(AText);
-    end);
+
+  fScripter := TOPPGuideScripter.Create;
+  try
+    TOPPGuideExecutor.run(DataSetTreeView, ident, false, fScripter,
+      procedure(AText: String)
+      begin
+        cxMemo1.Lines.Add(AText);
+      end);
+  finally
+    fScripter := nil;
+  end;
 end;
 
-procedure TForm1.cxDBMemo1PropertiesChange(Sender: TObject);
+procedure TForm1.actionSaveScriptExecute(Sender: TObject);
 begin
+  cxDBMemo1.PostEditValue;
   if DataSetTreeView.Modified then
     DataSetTreeView.Post;
 end;
@@ -270,6 +301,16 @@ end;
 procedure TForm1.DataSetTreeViewAfterOpen(DataSet: TDataSet);
 begin
   cxDBTreeList1cxDBTreeListColumn1.Width := cxDBTreeList1.Width;
+end;
+
+procedure TForm1.DataSetTreeViewAfterPost(DataSet: TDataSet);
+begin
+  actionSaveScript.enabled := false;
+end;
+
+procedure TForm1.DataSetTreeViewBeforeEdit(DataSet: TDataSet);
+begin
+  actionSaveScript.Enabled := true;
 end;
 
 procedure TForm1.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);

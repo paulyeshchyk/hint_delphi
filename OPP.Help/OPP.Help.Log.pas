@@ -1,4 +1,4 @@
-﻿unit OPP.Help.Log;
+unit OPP.Help.Log;
 
 interface
 
