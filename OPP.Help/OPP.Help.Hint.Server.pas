@@ -72,7 +72,7 @@ type
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
 
     function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
-    procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
+    procedure SetDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -82,11 +82,11 @@ type
     fHintMapSet: TOPPHelpMapSet;
     fHintMetaDict: TDictionary<TSymbolName, String>;
     fLoaded: Boolean;
-    function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
+    function FindOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
     procedure GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
-    function getReader(AFileName: String): IOPPHelpHintDataReader;
-    procedure reloadConfigurationIfNeed(filename: String);
+    function GetReader(AFileName: String): IOPPHelpHintDataReader;
+    procedure ReloadConfigurationIfNeed(filename: String);
   public
     constructor Create;
     destructor Destroy; override;

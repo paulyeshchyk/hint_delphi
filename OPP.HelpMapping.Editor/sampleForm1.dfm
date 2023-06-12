@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 373
+  ClientHeight = 634
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,483 +14,826 @@ object SampleForm: TSampleForm
   OldCreateOrder = True
   Position = poDefault
   Visible = True
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   PixelsPerInch = 192
   TextHeight = 14
-  object Panel2: TPanel
+  object dxDockSite1: TdxDockSite
     Left = 0
     Top = 0
     Width = 1074
-    Height = 373
-    Margins.Left = 12
-    Margins.Top = 12
-    Margins.Right = 12
-    Margins.Bottom = 12
+    Height = 614
     Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 0
-    ExplicitHeight = 353
-    object Splitter1: TSplitter
-      Left = 530
-      Top = 0
-      Width = 6
-      Height = 373
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      ExplicitHeight = 900
-    end
-    object panelList: TPanel
+    ExplicitHeight = 575
+    DockingType = 5
+    OriginalWidth = 1074
+    OriginalHeight = 614
+    object dxLayoutDockSite1: TdxLayoutDockSite
       Left = 0
       Top = 0
-      Width = 530
-      Height = 373
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Align = alLeft
-      BevelOuter = bvNone
-      Caption = 'panelList'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 0
-      ExplicitHeight = 353
-      object cxListView1: TcxListView
-        AlignWithMargins = True
-        Left = 6
-        Top = 34
-        Width = 518
-        Height = 333
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
-        Align = alClient
-        ColumnClick = False
-        Columns = <
-          item
-            Width = 100
-          end>
-        HideSelection = False
-        ReadOnly = True
-        RowSelect = True
-        ShowColumnHeaders = False
-        TabOrder = 0
-        ViewStyle = vsReport
-        OnSelectItem = cxListView1SelectItem
-        ExplicitHeight = 313
-      end
-      object dxBarDockControl3: TdxBarDockControl
+      Width = 1074
+      Height = 127
+      ExplicitHeight = 88
+      DockingType = 0
+      OriginalWidth = 300
+      OriginalHeight = 200
+      object dxLayoutDockSite2: TdxLayoutDockSite
         Left = 0
         Top = 0
-        Width = 530
-        Height = 28
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
-        Align = dalTop
-        BarManager = dxBarManager1
+        Width = 537
+        Height = 127
+        DockingType = 0
+        OriginalWidth = 300
+        OriginalHeight = 200
+        object dxLayoutDockSite3: TdxLayoutDockSite
+          Left = 0
+          Top = 0
+          Width = 537
+          Height = 127
+          ExplicitHeight = 88
+          DockingType = 0
+          OriginalWidth = 300
+          OriginalHeight = 200
+        end
+        object dxDockPanelList: TdxDockPanel
+          Left = 0
+          Top = 0
+          Width = 537
+          Height = 127
+          ParentColor = True
+          OnVisibleChanged = dxDockPanelListVisibleChanged
+          AllowFloating = True
+          AutoHide = False
+          Caption = #1057#1087#1080#1089#1086#1082
+          CustomCaptionButtons.Buttons = <>
+          TabsProperties.CustomButtons.Buttons = <>
+          OnClose = dxDockPanelListClose
+          ExplicitHeight = 88
+          DockingType = 0
+          OriginalWidth = 185
+          OriginalHeight = 140
+          object dxBarDockControl1: TdxBarDockControl
+            Left = 0
+            Top = 0
+            Width = 533
+            Height = 28
+            Align = dalTop
+            BarManager = dxBarManager1
+          end
+          object cxGrid1: TcxGrid
+            AlignWithMargins = True
+            Left = 0
+            Top = 28
+            Width = 532
+            Height = 75
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 1
+            Margins.Bottom = 0
+            Align = alClient
+            BorderStyle = cxcbsNone
+            TabOrder = 1
+            OnResize = cxGrid1Resize
+            LookAndFeel.Kind = lfFlat
+            LookAndFeel.NativeStyle = False
+            ExplicitHeight = 36
+            object cxGrid1DBTableView1: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              FindPanel.ApplyInputDelay = 10
+              FindPanel.DisplayMode = fpdmManual
+              FindPanel.Position = fppBottom
+              OnCanFocusRecord = cxGrid1DBTableView1CanFocusRecord
+              OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
+              DataController.DataSource = DataSource1
+              DataController.Summary.DefaultGroupSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <>
+              DataController.Summary.SummaryGroups = <>
+              OptionsBehavior.ImmediateEditor = False
+              OptionsCustomize.ColumnFiltering = False
+              OptionsCustomize.ColumnGrouping = False
+              OptionsData.Editing = False
+              OptionsSelection.HideFocusRectOnExit = False
+              OptionsSelection.InvertSelect = False
+              OptionsView.CellEndEllipsis = True
+              OptionsView.GridLineColor = clBtnShadow
+              OptionsView.GroupByBox = False
+              OptionsView.Indicator = True
+              Styles.ContentOdd = cxStyle3
+              Styles.FindPanel = cxStyle2
+              object cxGrid1DBTableView1Column2: TcxGridDBColumn
+                Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
+                DataBinding.FieldName = 'ComponentIdentifier'
+                PropertiesClassName = 'TcxTextEditProperties'
+                Properties.ValidateOnEnter = True
+                Properties.OnValidate = cxDBTextEdit1PropertiesValidate
+                Width = 282
+              end
+            end
+            object cxGrid1Level1: TcxGridLevel
+              GridView = cxGrid1DBTableView1
+            end
+          end
+          object PanelFind: TPanel
+            AlignWithMargins = True
+            Left = 19
+            Top = 103
+            Width = 514
+            Height = 0
+            Margins.Left = 19
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 0
+            Align = alBottom
+            BevelOuter = bvNone
+            TabOrder = 2
+            ExplicitTop = 84
+          end
+        end
       end
-    end
-    object panelAddBorder: TPanel
-      Left = 536
-      Top = 0
-      Width = 538
-      Height = 373
-      Margins.Left = 6
-      Margins.Top = 6
-      Margins.Right = 6
-      Margins.Bottom = 6
-      Align = alClient
-      BevelOuter = bvNone
-      TabOrder = 1
-      ExplicitHeight = 353
-      object PageControl1: TPageControl
-        AlignWithMargins = True
-        Left = 6
-        Top = 103
-        Width = 526
-        Height = 245
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
-        ActivePage = TabSheet2
-        Align = alTop
-        Style = tsFlatButtons
-        TabOrder = 0
-        OnChange = PageControl1Change
-        object TabSheet1: TTabSheet
+      object dxDockPanelIdentifier: TdxDockPanel
+        Left = 537
+        Top = 0
+        Width = 537
+        Height = 127
+        ParentColor = True
+        OnVisibleChanged = dxDockPanelIdentifierVisibleChanged
+        AllowFloating = True
+        AutoHide = False
+        Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
+        CustomCaptionButtons.Buttons = <>
+        TabsProperties.CustomButtons.Buttons = <>
+        OnClose = dxDockPanelIdentifierClose
+        DockingType = 3
+        OriginalWidth = 537
+        OriginalHeight = 140
+        object PanelIDContainer: TPanel
+          Left = 0
+          Top = 28
+          Width = 533
+          Height = 33
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
-          Caption = #1055#1086#1084#1086#1097#1100
-          object Panel5: TPanel
-            Left = 0
-            Top = 0
-            Width = 518
-            Height = 213
+          Align = alTop
+          AutoSize = True
+          BevelOuter = bvNone
+          TabOrder = 0
+          object cxLabel5: TcxLabel
+            AlignWithMargins = True
+            Left = 8
+            Top = 8
+            Margins.Left = 8
+            Margins.Top = 8
+            Margins.Right = 8
+            Margins.Bottom = 4
+            Align = alLeft
+            Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
+            Properties.Alignment.Vert = taVCenter
+            AnchorY = 19
+          end
+          object cxDBTextEdit1: TcxDBTextEdit
+            AlignWithMargins = True
+            Left = 173
+            Top = 8
+            Margins.Left = 8
+            Margins.Top = 8
+            Margins.Right = 8
+            Margins.Bottom = 4
+            Align = alClient
+            DataBinding.DataField = 'ComponentIdentifier'
+            DataBinding.DataSource = DataSource1
+            Properties.ValidateOnEnter = True
+            Properties.OnValidate = cxDBTextEdit1PropertiesValidate
+            TabOrder = 1
+            Width = 352
+          end
+        end
+        object dxBarDockControl4: TdxBarDockControl
+          Left = 0
+          Top = 0
+          Width = 533
+          Height = 28
+          Align = dalTop
+          BarManager = dxBarManager1
+        end
+      end
+    end
+    object dxHorizContainerDockSite1: TdxHorizContainerDockSite
+      Left = 0
+      Top = 127
+      Width = 1074
+      Height = 487
+      ActiveChildIndex = -1
+      AllowFloating = True
+      AutoHide = False
+      CustomCaptionButtons.Buttons = <>
+      ExplicitTop = 88
+      DockingType = 4
+      OriginalWidth = 721
+      OriginalHeight = 487
+      object dxDockPanelHint: TdxDockPanel
+        Left = 0
+        Top = 0
+        Width = 537
+        Height = 487
+        ParentColor = True
+        OnVisibleChanged = dxDockPanelHintVisibleChanged
+        AllowFloating = True
+        AutoHide = False
+        Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1072
+        CustomCaptionButtons.Buttons = <>
+        TabsProperties.CustomButtons.Buttons = <>
+        DockingType = 1
+        OriginalWidth = 721
+        OriginalHeight = 487
+        object Panel7: TPanel
+          Left = 0
+          Top = 0
+          Width = 533
+          Height = 463
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          Align = alClient
+          BevelOuter = bvNone
+          TabOrder = 0
+          object PanelPreview: TPanel
+            AlignWithMargins = True
+            Left = 6
+            Top = 232
+            Width = 521
+            Height = 225
+            Hint = 'Wrong hint'
+            HelpType = htKeyword
+            HelpKeyword = 'Kod_OKWED'
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
             Align = alClient
-            BevelOuter = bvNone
+            BevelInner = bvRaised
+            BevelOuter = bvLowered
+            Constraints.MinHeight = 7
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
             TabOrder = 0
-            object cxLabel6: TcxLabel
-              Left = 0
-              Top = 9
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Caption = #1048#1089#1090#1086#1095#1085#1080#1082
-            end
-            object ShortcutPredicateFilenameEdit: TcxButtonEdit
-              Left = 136
+          end
+          object Panel1: TPanel
+            Left = 0
+            Top = 28
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 1
+            object cxLabel2: TcxLabel
+              AlignWithMargins = True
+              Left = 8
               Top = 8
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1048#1089#1090#1086#1095#1085#1080#1082
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object cxEditHintPredicateFilename: TcxButtonEdit
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
               Properties.Buttons = <
                 item
                   Default = True
                   Kind = bkEllipsis
+                end
+                item
+                  Glyph.SourceDPI = 96
+                  Glyph.Data = {
+                    89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+                    6100000018744558745469746C6500526F746174653B43686172743B5472616E
+                    73CB2536FB0000029F49444154785E9D906F48535F18C79FCACA4CEA452F82C2
+                    928882B27F2658593F03352BDC665698E22C8556CD54AC2CF4FE44AC11AC4C12
+                    292CAB4D9CA625987FD109A9918C25F66733CDBCA969D69B8C4CBDDBBCCEA773
+                    EEBD2B472F820E7CF89EF3BD9C0FE73E80887984169AD9E59D20B188A023A0D0
+                    3D74F57F02F4F2C1C3A948532AD76B2A5F75B7B15F910A00608E8B117E060638
+                    27F4DB0824670952040163E838915B6B9DEC1AE5B0CF3183E44C7130252FDA32
+                    8A4D29714CA12715B144D247604A3B44C1014970416FC67E6E1ADFDA9D68B139
+                    F1D3D40CF68E39B0851DC57BAD2C9ED799DEA8AE55ADA6929E0927A4EBCDEE82
+                    FFD486846397EB6CCD83DFF1F5A413D38ADA3124B50C930A9EA2F9CB38969987
+                    31B9B0BD2B24EE9297657C1A52EE98DC05D4BC3DF6E616FFE87C36BFC18247B2
+                    EB71A3E28AEFB6D85B39C1EA5247F3D038DEA8EFC1C4DCA6730030F754C17351
+                    B03F2A5910F82BEF02FDB02A2869E9DA708D5E9E59ED1AA2C7D698826CE57523
+                    EA3B3E639CD668A25D7C6E8BF40249E077F436BC27C3E99D852498EFBB2B614D
+                    D0C962AC6027305A639C229D37EDC5171C3A2B08E4598DD03DE9FCCD8420F088
+                    60EA2DB2AC468CCA6946DDBB1F48F7B2FF1B318269E81304E151A2202CBD0EAC
+                    64385672B1736C1ADABFF1C22F052AF377C4685BF99A8F3634F4DBB16690C360
+                    5509BF6267DA5E5120BD604F7215D48ED8A166D801D5C324094FC89EAC058189
+                    0F18D5FD9758C472187DD588CB033334A45FE826085055C2E3213B3C1A14A920
+                    940FD85D73F0F24F343C639A86705940A6C963F1CA25B477136C3E5E0E221534
+                    45E2C5246B9ECF6EF5BA4DCAD20F9E3E917EF4ECBDE1228882C82441F037789E
+                    6FE538AE8DA6D4E5FD12ECA32844C2146A77E467304C761A4369CAC50C254925
+                    54A0A59B7F44FB1374246B8A553DA99A0000000049454E44AE426082}
+                  Kind = bkGlyph
                 end>
-              Properties.ReadOnly = True
-              Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
+              Properties.ReadOnly = False
+              Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
+              Properties.OnEditValueChanged = OnEditValueChanged
+              Properties.OnValidate = cxEditHintPredicateFilenamePropertiesValidate
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object Panel2: TPanel
+            Left = 0
+            Top = 61
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 2
+            object cxComboBoxHintKeywordType: TcxComboBox
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.OnEditValueChanged = OnEditValueChanged
+              TabOrder = 0
+              Width = 411
+            end
+            object cxLabel3: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+          end
+          object Panel3: TPanel
+            Left = 0
+            Top = 94
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 3
+            object cxLabel4: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object cxTextEditHintPredicateValue: TcxTextEdit
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
               Properties.OnEditValueChanged = OnEditValueChanged
               TabOrder = 1
-              Width = 377
-            end
-            object cxLabel7: TcxLabel
-              Left = 0
-              Top = 42
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
-            end
-            object ShortcutKeywordTypeComboBox: TcxComboBox
-              Left = 136
-              Top = 41
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
-              TabOrder = 3
-              Width = 218
-            end
-            object cxLabel8: TcxLabel
-              Left = 0
-              Top = 75
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
-            end
-            object ShortcutPredicateValueEdit: TcxTextEdit
-              Left = 136
-              Top = 74
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
-              TabOrder = 5
-              Width = 377
-            end
-            object cxLabel10: TcxLabel
-              Left = 0
-              Top = 156
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
-            end
-            object ShortcutDetailsKeywordTypeComboBox: TcxComboBox
-              Left = 136
-              Top = 155
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
-              TabOrder = 7
-              Width = 218
-            end
-            object cxLabel9: TcxLabel
-              Left = 0
-              Top = 189
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-            end
-            object ShortcutDetailsPredicateValueEdit: TcxTextEdit
-              Left = 136
-              Top = 188
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Properties.OnEditValueChanged = OnEditValueChanged
-              TabOrder = 9
-              Width = 377
-            end
-            object cxLabel13: TcxLabel
-              Left = 0
-              Top = 126
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
+              Width = 411
             end
           end
-        end
-        object TabSheet2: TTabSheet
-          Margins.Left = 6
-          Margins.Top = 6
-          Margins.Right = 6
-          Margins.Bottom = 6
-          Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1080
-          ImageIndex = 1
           object Panel4: TPanel
             Left = 0
-            Top = 0
-            Width = 518
-            Height = 213
-            Margins.Left = 6
-            Margins.Top = 6
-            Margins.Right = 6
-            Margins.Bottom = 6
-            Align = alClient
+            Top = 127
+            Width = 533
+            Height = 33
+            Align = alTop
             BevelOuter = bvNone
-            TabOrder = 0
-            object Panel7: TPanel
-              Left = 0
-              Top = 0
-              Width = 518
-              Height = 213
-              Margins.Left = 6
-              Margins.Top = 6
-              Margins.Right = 6
-              Margins.Bottom = 6
-              Align = alClient
-              BevelOuter = bvNone
-              TabOrder = 0
-              object cxComboBoxHintDetailsKeywordType: TcxComboBox
-                Left = 136
-                Top = 155
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
-                TabOrder = 0
-                Width = 218
-              end
-              object cxLabel12: TcxLabel
-                Left = 0
-                Top = 156
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
-              end
-              object cxTextEditHintDetailsPredicateValue: TcxTextEdit
-                Left = 136
-                Top = 188
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
-                TabOrder = 2
-                Width = 377
-              end
-              object cxLabel11: TcxLabel
-                Left = 0
-                Top = 189
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-              end
-              object cxTextEditHintPredicateValue: TcxTextEdit
-                Left = 136
-                Top = 74
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
-                TabOrder = 4
-                Width = 377
-              end
-              object cxLabel4: TcxLabel
-                Left = 0
-                Top = 75
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
-              end
-              object cxComboBoxHintKeywordType: TcxComboBox
-                Left = 136
-                Top = 41
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Properties.OnEditValueChanged = OnEditValueChanged
-                TabOrder = 6
-                Width = 218
-              end
-              object cxLabel3: TcxLabel
-                Left = 0
-                Top = 42
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
-              end
-              object cxEditHintPredicateFilename: TcxButtonEdit
-                Left = 136
-                Top = 8
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Properties.Buttons = <
-                  item
-                    Default = True
-                    Kind = bkEllipsis
-                  end>
-                Properties.ReadOnly = True
-                Properties.OnButtonClick = cxButtonEdit1PropertiesButtonClick
-                Properties.OnEditValueChanged = OnEditValueChanged
-                TabOrder = 8
-                Width = 377
-              end
-              object cxLabel2: TcxLabel
-                Left = 0
-                Top = 9
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Caption = #1048#1089#1090#1086#1095#1085#1080#1082
-              end
-              object cxLabel1: TcxLabel
-                Left = 0
-                Top = 126
-                Margins.Left = 6
-                Margins.Top = 6
-                Margins.Right = 6
-                Margins.Bottom = 6
-                Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
-              end
+            TabOrder = 4
+            object cxLabel1: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
             end
+          end
+          object Panel6: TPanel
+            Left = 0
+            Top = 160
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 5
+            object cxLabel12: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object cxComboBoxHintDetailsKeywordType: TcxComboBox
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.OnEditValueChanged = OnEditValueChanged
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object Panel8: TPanel
+            Left = 0
+            Top = 193
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 6
+            object cxLabel11: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object cxTextEditHintDetailsPredicateValue: TcxTextEdit
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.OnEditValueChanged = OnEditValueChanged
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object dxBarDockControl3: TdxBarDockControl
+            Left = 0
+            Top = 0
+            Width = 533
+            Height = 28
+            Align = dalTop
+            BarManager = dxBarManager1
           end
         end
       end
-      object PanelIDContainer: TPanel
-        Left = 0
-        Top = 28
-        Width = 538
-        Height = 69
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
-        Align = alTop
-        BevelOuter = bvNone
-        TabOrder = 1
-        object cxLabel5: TcxLabel
-          Left = 8
-          Top = 8
-          Margins.Left = 6
-          Margins.Top = 6
-          Margins.Right = 6
-          Margins.Bottom = 6
-          Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072
-        end
-        object cxEditIdentifierName: TcxTextEdit
-          Left = 8
-          Top = 37
-          Margins.Left = 6
-          Margins.Top = 6
-          Margins.Right = 6
-          Margins.Bottom = 6
-          ParentShowHint = False
-          Properties.OnEditValueChanged = OnIdentificatorChanged
-          ShowHint = True
-          TabOrder = 1
-          Width = 521
-        end
-      end
-      object dxBarDockControl2: TdxBarDockControl
-        Left = 0
+      object dxDockPanelHelp: TdxDockPanel
+        Left = 537
         Top = 0
-        Width = 538
-        Height = 28
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
-        Align = dalTop
-        BarManager = dxBarManager1
-      end
-      object PanelPreview: TPanel
-        AlignWithMargins = True
-        Left = 6
-        Top = 360
-        Width = 526
-        Height = 7
-        Hint = 'Wrong hint'
-        HelpType = htKeyword
-        HelpKeyword = 'Kod_OKWED'
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
-        Align = alClient
-        BevelInner = bvRaised
-        BevelOuter = bvLowered
-        Constraints.MinHeight = 7
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 3
+        Width = 537
+        Height = 487
+        ParentColor = True
+        OnVisibleChanged = dxDockPanelHelpVisibleChanged
+        AllowFloating = True
+        AutoHide = False
+        Caption = #1055#1086#1084#1086#1097#1100
+        CustomCaptionButtons.Buttons = <>
+        TabsProperties.CustomButtons.Buttons = <>
+        DockingType = 1
+        OriginalWidth = 721
+        OriginalHeight = 487
+        object Panel5: TPanel
+          Left = 0
+          Top = 0
+          Width = 533
+          Height = 463
+          Margins.Left = 6
+          Margins.Top = 6
+          Margins.Right = 6
+          Margins.Bottom = 6
+          Align = alClient
+          BevelOuter = bvNone
+          TabOrder = 0
+          object Panel9: TPanel
+            Left = 0
+            Top = 28
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 0
+            object cxLabel6: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1048#1089#1090#1086#1095#1085#1080#1082
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object ShortcutPredicateFilenameEdit: TcxButtonEdit
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end
+                item
+                  Glyph.SourceDPI = 96
+                  Glyph.Data = {
+                    89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+                    6100000018744558745469746C6500526F746174653B43686172743B5472616E
+                    73CB2536FB0000029F49444154785E9D906F48535F18C79FCACA4CEA452F82C2
+                    928882B27F2658593F03352BDC665698E22C8556CD54AC2CF4FE44AC11AC4C12
+                    292CAB4D9CA625987FD109A9918C25F66733CDBCA969D69B8C4CBDDBBCCEA773
+                    EEBD2B472F820E7CF89EF3BD9C0FE73E80887984169AD9E59D20B188A023A0D0
+                    3D74F57F02F4F2C1C3A948532AD76B2A5F75B7B15F910A00608E8B117E060638
+                    27F4DB0824670952040163E838915B6B9DEC1AE5B0CF3183E44C7130252FDA32
+                    8A4D29714CA12715B144D247604A3B44C1014970416FC67E6E1ADFDA9D68B139
+                    F1D3D40CF68E39B0851DC57BAD2C9ED799DEA8AE55ADA6929E0927A4EBCDEE82
+                    FFD486846397EB6CCD83DFF1F5A413D38ADA3124B50C930A9EA2F9CB38969987
+                    31B9B0BD2B24EE9297657C1A52EE98DC05D4BC3DF6E616FFE87C36BFC18247B2
+                    EB71A3E28AEFB6D85B39C1EA5247F3D038DEA8EFC1C4DCA6730030F754C17351
+                    B03F2A5910F82BEF02FDB02A2869E9DA708D5E9E59ED1AA2C7D698826CE57523
+                    EA3B3E639CD668A25D7C6E8BF40249E077F436BC27C3E99D852498EFBB2B614D
+                    D0C962AC6027305A639C229D37EDC5171C3A2B08E4598DD03DE9FCCD8420F088
+                    60EA2DB2AC468CCA6946DDBB1F48F7B2FF1B318269E81304E151A2202CBD0EAC
+                    64385672B1736C1ADABFF1C22F052AF377C4685BF99A8F3634F4DBB16690C360
+                    5509BF6267DA5E5120BD604F7215D48ED8A166D801D5C324094FC89EAC058189
+                    0F18D5FD9758C472187DD588CB033334A45FE826085055C2E3213B3C1A14A920
+                    940FD85D73F0F24F343C639A86705940A6C963F1CA25B477136C3E5E0E221534
+                    45E2C5246B9ECF6EF5BA4DCAD20F9E3E917EF4ECBDE1228882C82441F037789E
+                    6FE538AE8DA6D4E5FD12ECA32844C2146A77E467304C761A4369CAC50C254925
+                    54A0A59B7F44FB1374246B8A553DA99A0000000049454E44AE426082}
+                  Kind = bkGlyph
+                end>
+              Properties.ReadOnly = False
+              Properties.OnButtonClick = cxEditShortcutPredicateFilenamePropertiesButtonClick
+              Properties.OnEditValueChanged = OnEditValueChanged
+              Properties.OnValidate = cxEditHintPredicateFilenamePropertiesValidate
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object Panel10: TPanel
+            Left = 0
+            Top = 61
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 1
+            object cxLabel7: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object ShortcutKeywordTypeComboBox: TcxComboBox
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.OnEditValueChanged = OnEditValueChanged
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object Panel11: TPanel
+            Left = 0
+            Top = 94
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 2
+            object cxLabel8: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1087#1086#1080#1089#1082#1072
+              Constraints.MaxWidth = 90
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object ShortcutPredicateValueEdit: TcxTextEdit
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.OnEditValueChanged = OnEditValueChanged
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object Panel12: TPanel
+            Left = 0
+            Top = 127
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 3
+            object cxLabel13: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1059#1090#1086#1095#1085#1077#1085#1080#1077
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+          end
+          object Panel13: TPanel
+            Left = 0
+            Top = 160
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 4
+            object cxLabel10: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1058#1080#1087' '#1087#1086#1080#1089#1082#1072
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object ShortcutDetailsKeywordTypeComboBox: TcxComboBox
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.OnEditValueChanged = OnEditValueChanged
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object Panel14: TPanel
+            Left = 0
+            Top = 193
+            Width = 533
+            Height = 33
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 5
+            object cxLabel9: TcxLabel
+              AlignWithMargins = True
+              Left = 8
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alLeft
+              Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+              Constraints.MinWidth = 90
+              Properties.Alignment.Vert = taVCenter
+              AnchorY = 19
+            end
+            object ShortcutDetailsPredicateValueEdit: TcxTextEdit
+              AlignWithMargins = True
+              Left = 114
+              Top = 8
+              Margins.Left = 8
+              Margins.Top = 8
+              Margins.Right = 8
+              Margins.Bottom = 4
+              Align = alClient
+              Properties.OnEditValueChanged = OnEditValueChanged
+              TabOrder = 1
+              Width = 411
+            end
+          end
+          object dxBarDockControl2: TdxBarDockControl
+            Left = 0
+            Top = 0
+            Width = 533
+            Height = 28
+            Align = dalTop
+            BarManager = dxBarManager1
+          end
+        end
       end
     end
+  end
+  object dxStatusBar1: TdxStatusBar
+    Left = 0
+    Top = 614
+    Width = 1074
+    Height = 20
+    Panels = <
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+        Text = #1047#1072#1087#1080#1089#1077#1081': 0'
+      end>
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ExplicitTop = 575
   end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
@@ -501,18 +844,18 @@ object SampleForm: TSampleForm
     Top = 72
   end
   object tipsRepo: TdxScreenTipRepository
-    Left = 368
-    Top = 72
+    Left = 272
+    Top = 192
     PixelsPerInch = 96
   end
   object OpenTextFileDialog1: TOpenTextFileDialog
     Filter = 'RTF|*.rtf|PDF|*.pdf'
-    Left = 209
-    Top = 176
+    Left = 201
+    Top = 120
   end
   object MainMenu1: TMainMenu
-    Left = 24
-    Top = 120
+    Left = 16
+    Top = 80
     object N1: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1086#1088
       object N5: TMenuItem
@@ -546,21 +889,48 @@ object SampleForm: TSampleForm
         Action = actionShowBuffer
       end
     end
+    object N8: TMenuItem
+      Caption = #1042#1080#1076
+      object NHint: TMenuItem
+        Caption = #1055#1072#1085#1077#1083#1100' "'#1055#1086#1076#1089#1082#1072#1079#1082#1072'"'
+        OnClick = NHintClick
+      end
+      object NHelp: TMenuItem
+        Caption = #1055#1072#1085#1077#1083#1100' "'#1055#1086#1084#1086#1097#1100'"'
+        OnClick = NHelpClick
+      end
+      object NIdentifier: TMenuItem
+        Caption = #1055#1072#1085#1077#1083#1100' "'#1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088'"'
+        OnClick = NIdentifierClick
+      end
+      object NList: TMenuItem
+        Caption = #1055#1072#1085#1077#1083#1100' "'#1057#1087#1080#1089#1086#1082'"'
+        OnClick = NListClick
+      end
+    end
   end
   object dxBarManager1: TdxBarManager
+    AllowReset = False
+    AutoAlignBars = True
+    Scaled = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
+    CanCustomize = False
     Categories.Strings = (
       'Default')
     Categories.ItemsVisibles = (
       2)
     Categories.Visibles = (
       True)
+    LookAndFeel.Kind = lfFlat
+    LookAndFeel.NativeStyle = False
     MenusShowRecentItemsFirst = False
     PopupMenuLinks = <>
+    ShowCloseButton = True
+    SunkenBorder = True
     UseSystemFont = True
     Left = 155
     Top = 73
@@ -572,8 +942,8 @@ object SampleForm: TSampleForm
       AllowReset = False
       Caption = 'main'
       CaptionButtons = <>
-      DockControl = dxBarDockControl3
-      DockedDockControl = dxBarDockControl3
+      DockControl = dxBarDockControl1
+      DockedDockControl = dxBarDockControl1
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 0
@@ -592,6 +962,10 @@ object SampleForm: TSampleForm
         item
           Visible = True
           ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton12'
         end>
       OneOnRow = True
       RotateWhenVertical = False
@@ -600,24 +974,68 @@ object SampleForm: TSampleForm
       SizeGrip = False
       UseOwnFont = False
       UseRecentItems = False
+      UseRestSpace = True
       Visible = True
       WholeRow = True
     end
     object dxBarManager1Bar2: TdxBar
-      AllowClose = False
-      AllowCustomizing = False
-      AllowQuickCustomizing = False
-      AllowReset = False
-      Caption = 'details'
+      Caption = 'help preview'
       CaptionButtons = <>
       DockControl = dxBarDockControl2
       DockedDockControl = dxBarDockControl2
       DockedLeft = 0
       DockedTop = 0
-      FloatLeft = 0
+      FloatLeft = 1108
       FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end>
+      OneOnRow = True
+      Row = 0
+      ShowMark = False
+      UseOwnFont = False
+      UseRestSpace = True
+      Visible = True
+      WholeRow = False
+    end
+    object dxBarManager1Bar3: TdxBar
+      Caption = 'hint preview'
+      CaptionButtons = <>
+      DockControl = dxBarDockControl3
+      DockedDockControl = dxBarDockControl3
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 793
+      FloatTop = 293
       FloatClientWidth = 51
-      FloatClientHeight = 48
+      FloatClientHeight = 22
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
+        end>
+      OneOnRow = True
+      Row = 0
+      ShowMark = False
+      UseOwnFont = False
+      Visible = True
+      WholeRow = True
+    end
+    object dxBarManager1Bar4: TdxBar
+      Caption = 'save undo'
+      CaptionButtons = <>
+      DockControl = dxBarDockControl4
+      DockedDockControl = dxBarDockControl4
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 1108
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
       ItemLinks = <
         item
           Visible = True
@@ -626,24 +1044,14 @@ object SampleForm: TSampleForm
         item
           Visible = True
           ItemName = 'dxBarButton8'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton7'
         end>
       OneOnRow = True
-      RotateWhenVertical = False
       Row = 0
       ShowMark = False
-      SizeGrip = False
       UseOwnFont = False
-      UseRecentItems = False
+      UseRestSpace = True
       Visible = True
-      WholeRow = True
+      WholeRow = False
     end
     object dxBarButton2: TdxBarButton
       Action = actionNewRecord
@@ -771,7 +1179,7 @@ object SampleForm: TSampleForm
       Visible = ivAlways
     end
     object dxBarButton7: TdxBarButton
-      Action = actionPreview
+      Action = actionPreviewHelp
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -839,10 +1247,73 @@ object SampleForm: TSampleForm
       Hint = 'New Button'
       Visible = ivAlways
     end
+    object dxBarButton11: TdxBarButton
+      Action = actionPreviewHint
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        6100000013744558745469746C6500507265766965773B5072696E749891A1F3
+        0000028649444154785E6D915D48D45918C67FE73FA3A649F481F6A1F831D137
+        A34562D85E440EA8A0D48D15425DB4D2D645D04D52BB4B73951521E145484448
+        A44412151951BB62178991659F1F7AA146C85C2CACB84BECEC7CFCCF396FC330
+        CC20CE73F13EE7C0737E3C2FC72B220074F58E0F23520F200822A0002BC98988
+        02B1080A30CF7E3DBE3B00E025256B6C7DC7B15A001052926C573A7B5ED4032C
+        0068B1E9802099736A480687D19645001337E9C791A8414430364511050EE4E7
+        7900D0C66401680308D60A7FCF7FE7CED30F4CCDCE6145F095ACE4606335656B
+        57E02887989BA5816B6C321CFAEB5F823D43F8FC1BD9DBBA030798FA3243F0EA
+        1382C70394971663B4CEDE4044E87F344EA57F03B575DBD8BE3A87E97943D4BF
+        152596BEC1D79C39D6905C61F8FC1EAC910C20EE1A8CB1BC9D0CD1FA4B1DFE62
+        2F112DE4E740382ED4D46CA2FBD218AE4EE6926E139E5921D5C0755D1C84AFFF
+        180A721413733A0151E42A857135565BB4B1C45DBDB0813106506CA928E2F3F8
+        04E19DDB89C42D4B721D5617787833F68192C2309158145FD972DC2F6631C051
+        8AB6961ACE5E19C4EB51EC4CD4CE4DF8FBB149869E3CE7544D88A9A11B94AF69
+        A2F5C4B8D3FF73954D03B405E538097A315D1DFBB93E3042F7D00B442CABD43C
+        ED953334057E62E2E53B66DFDD06283CDCFBF1BF85BF00388E97D275459C3BB9
+        0FAD355A1B62B138A3372FF3FCC19F045A7661A39FB8D0BCBEF3B7C73367D200
+        ABCD1FED1DF71BAD80A34044B0024A099B7D455456B531F2B80773EF190DCDD5
+        BC1A7E7F12389706DCEA3ED04446F41DAD6274641A0166510467FE778065872A
+        965E7C78F7ED8998C7B906B85EB20B3766D0A270E306048E94E6D9BE50ECFBC0
+        B7F069E077200E447F00A25E564DD5AF61520000000049454E44AE426082}
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actionShowFindWindow
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000001B744558745469746C650046696E643B49643B4C6F636174653B5365
+        61726368C8CDD75F0000030649444154785E7D917D48956718C6AFF77C7276CC
+        CF91D91F4EC630883119B431DBFA10E940DB6A30A441E8C650823111B2F6E138
+        466C8A68D4C6CC1811AB34B659C3CA5C9B6EC23A9BA1B639AC88697E24C7E6D9
+        396AE9793FCFF3BCEFBDE71CE478FEA85DF7F3E37EFEB8B92E9EE796B02A4960
+        17D8042430059620758690222282ADEEE80F10B295BFDFF2746D53D7950F9ABB
+        E59A86F33DBBCB3F2EAC3974A6E0D0177DDDFE2FFBF4BA6357BBABFDEDF900A4
+        DAA64B491387C118849C99B9051D6FEE282A7E32D383EB7F4EF84CFEFC687A76
+        06BDB6ADD09D95EE41FFC0ADD7C7B4B40C0025319D994891ADECDDC692CF5A7F
+        A250244A81A1316A6EEDA4AA8F3AE8C3233D149C7B486353613AFD6D3F55D77F
+        4315FBDB8A0148C927C4D3DDE959951B9F59074D6750748E60308CF1F109C114
+        54838320C1E57183330516B9AA00D893E98545A56B9DAE35651B84C103594754
+        D5B1ACE86006038B19C2D004B7086E8F174EBB056E626FD1CB65D9C9CFDDF5CE
+        91F68E8BC3B4B8AC11E3268DDF0BD3270D5FD3AE8A463A7AB287EE879729AAE8
+        64C418CDCECD53E7E5DFA8A5ED42AFCFE7F302B0496F541ED7DB1A2BDCD70667
+        D0F5CBDF287B7523729E3070F3CE0C466FDFC1FCFC42727B92A8D45D1259D71C
+        86CEED99E96E5C0D4C20A7740B7E1CBA8196EAAD989C0E21140A61F34B2F8228
+        310D1224CA1210F0C7C8C8369B66C8C1C999084A5F29C0D2F020B66FCAC7DDA9
+        39C8D1A507266350550DF507CA31F76F04FE8315F01F781B5E8F0B8AAA807306
+        DB42E8EEE7A73B7FC553B9AE44729E9770E6BB5ECCCE4E7771C6A1280A4CCB82
+        AE69B044AFAA6E40CD7B6F419565F01887E3F6EF67DB754571FEDC3FB08F206D
+        88694BE3F2C3FBA79E2D705E34B1BE5295E30648189826A069AAE80459159D0B
+        0300D189BFBEFF0AC0398153C005726C31DB5EF8DC5A31A82492755D17468453
+        273EC5E1A6135015159C73484484474992A4B417B6EC89E6E6AD07630CA0F859
+        FD48BBCD8EC548040E3C5E66CC3002FF0467B7AE2C0E04098943144F80C959E0
+        FF0C8CD1E1CB3B579E2521A9E49D04B1FF0031E8A6CDA38412D6000000004945
+        4E44AE426082}
+    end
   end
   object ActionList1: TActionList
-    Left = 24
-    Top = 40
+    Left = 72
+    Top = 80
     object actionNewRecord: TAction
       Caption = #1057#1086#1079#1076#1072#1090#1100
       ShortCut = 16462
@@ -861,15 +1332,8 @@ object SampleForm: TSampleForm
       OnExecute = actionReloadExecute
     end
     object actionPreviewHint: TAction
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
-      OnExecute = actionPreviewHintExecute
-    end
-    object actionPreviewShortcut: TAction
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
-      OnExecute = actionPreviewShortcutExecute
-    end
-    object actionPreview: TAction
       Caption = 'actionPreview'
+      OnExecute = actionPreviewHintExecute
     end
     object actionExit: TFileExit
       Category = 'File'
@@ -889,10 +1353,70 @@ object SampleForm: TSampleForm
       Caption = #1041#1091#1092#1077#1088
       OnExecute = actionShowBufferExecute
     end
+    object actionPreviewHelp: TAction
+      Caption = 'actionPreviewHelp'
+      OnExecute = actionPreviewHelpExecute
+    end
+    object actionShowFindWindow: TAction
+      Caption = #1053#1072#1081#1090#1080
+      ShortCut = 16454
+      OnExecute = actionShowFindWindowExecute
+    end
   end
   object JvClipboardMonitor1: TJvClipboardMonitor
     OnChange = JvClipboardMonitor1Change
     Left = 528
     Top = 224
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet1
+    OnDataChange = DataSource1DataChange
+    Left = 626
+    Top = 427
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 706
+    Top = 419
+  end
+  object dxDockingManager1: TdxDockingManager
+    Color = clBtnFace
+    DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
+    DefaultHorizContainerSiteProperties.Dockable = True
+    DefaultHorizContainerSiteProperties.ImageIndex = -1
+    DefaultVertContainerSiteProperties.CustomCaptionButtons.Buttons = <>
+    DefaultVertContainerSiteProperties.Dockable = True
+    DefaultVertContainerSiteProperties.ImageIndex = -1
+    DefaultTabContainerSiteProperties.CustomCaptionButtons.Buttons = <>
+    DefaultTabContainerSiteProperties.Dockable = True
+    DefaultTabContainerSiteProperties.ImageIndex = -1
+    DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
+    DefaultTabContainerSiteProperties.TabsProperties.TabPosition = tpTop
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    LookAndFeel.Kind = lfFlat
+    LookAndFeel.NativeStyle = False
+    Left = 496
+    Top = 440
+    PixelsPerInch = 96
+  end
+  object cxStyleRepository1: TcxStyleRepository
+    PixelsPerInch = 96
+    object cxStyle1: TcxStyle
+      AssignedValues = [svColor]
+      Color = clCream
+    end
+    object cxStyle2: TcxStyle
+      AssignedValues = [svColor]
+      Color = clBtnFace
+    end
+    object cxStyle3: TcxStyle
+      AssignedValues = [svColor]
+      Color = clBtnFace
+    end
   end
 end

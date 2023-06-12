@@ -104,6 +104,8 @@ type
     dxBarLargeButton7: TdxBarLargeButton;
     actionSetFiltered: TAction;
     cxGrid1DBTableView1Column5: TcxGridDBColumn;
+    cxStyle2: TcxStyle;
+    cxStyle3: TcxStyle;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseByPressingEscExecute(Sender: TObject);
