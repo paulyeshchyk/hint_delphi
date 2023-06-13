@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=1039,1,165,36
+Coordinates=49,78,93,58
 Visible=True
 
 [tipsRepo]
@@ -124,9 +124,6 @@ Coordinates=873,496,40,36
 
 [dxBarButton2]
 Coordinates=1039,56,92,36
-
-[PanelPreview]
-Coordinates=49,78,93,58
 
 [PanelIDContainer]
 Coordinates=287,1,116,58

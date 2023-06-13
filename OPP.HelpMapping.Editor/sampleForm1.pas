@@ -18,13 +18,16 @@ uses
   Vcl.StdCtrls, Vcl.Themes,
   Winapi.CommCtrl, Winapi.Messages, Winapi.Windows,
 
+  ShellAPI,
+  OPP.Help.Component.Enumerator,
   OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
   OPP.Help.System.Messaging,
   OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
   OPP.Help.System.Codable.TunningEditorDefaultSettings,
   SampleFormWinControlOPPInfoExtractor,
-  SampleFormSaveState, JvComponentBase, JvClipboardMonitor, cxDBEdit, cxPC, dxStatusBar;
+  SampleFormSaveState, JvComponentBase, JvClipboardMonitor, cxDBEdit, cxPC, dxStatusBar, System.ImageList, Vcl.ImgList,
+  cxImageList;
 
 type
   TRectHelper = record helper for TRect
@@ -90,7 +93,6 @@ type
     PanelIDContainer: TPanel;
     cxLabel5: TcxLabel;
     cxDBTextEdit1: TcxDBTextEdit;
-    PanelPreview: TPanel;
     dxDockingManager1: TdxDockingManager;
     Panel1: TPanel;
     cxLabel2: TcxLabel;
@@ -141,8 +143,6 @@ type
     NHelp: TMenuItem;
     NIdentifier: TMenuItem;
     NList: TMenuItem;
-    dxLayoutDockSite1: TdxLayoutDockSite;
-    dxHorizContainerDockSite1: TdxHorizContainerDockSite;
     dxBarButton12: TdxBarButton;
     actionShowFindWindow: TAction;
     PanelFind: TPanel;
@@ -150,11 +150,22 @@ type
     cxStyle1: TcxStyle;
     cxStyle2: TcxStyle;
     cxStyle3: TcxStyle;
+    cxImageList1: TcxImageList;
+    dxDockPanelPreview: TdxDockPanel;
+    NPreview: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    actionRestartApp: TAction;
+    PanelPreview: TPanel;
+    dxVertContainerDockSite1: TdxVertContainerDockSite;
+    dxTabContainerDockSite1: TdxTabContainerDockSite;
+    N12: TMenuItem;
     procedure actionDeleteRecordExecute(Sender: TObject);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionPreviewHelpExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
     procedure actionReloadExecute(Sender: TObject);
+    procedure actionRestartAppExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
     procedure actionShowBufferExecute(Sender: TObject);
     procedure actionShowFindWindowExecute(Sender: TObject);
@@ -187,6 +198,10 @@ type
     procedure NListClick(Sender: TObject);
     procedure NHintClick(Sender: TObject);
     procedure cxEditHintPredicateFilenamePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure dxDockPanelPreviewClose(Sender: TdxCustomDockControl);
+    procedure dxDockPanelPreviewVisibleChanged(Sender: TdxCustomDockControl);
+    procedure N10Click(Sender: TObject);
+    procedure NPreviewClick(Sender: TObject);
   private
     fLoadIsInProgress: Boolean;
 
@@ -232,6 +247,7 @@ type
     procedure GridAutoSize;
     property LayoutSettingsFileName: String read GetLayoutSettingsFileName;
     procedure customFilterText(AText: String);
+
   protected
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
     procedure WMHOOK(var Msg: TMessage); message WM_OPPHook;
@@ -258,7 +274,6 @@ uses
   FormTest02,
   FormTest03,
   OPP.Help.System.Types,
-  OPP.Help.Component.Enumerator,
   OPP.Help.Controls.Styler,
   OPP.Help.Hint.Reader,
   OPP.Help.Hint.Server,
@@ -355,7 +370,6 @@ begin
   finally
     fState.Free;
   end;
-
 end;
 
 procedure TSampleForm.actionNewRecordExecute(Sender: TObject);
@@ -449,6 +463,23 @@ begin
     end);
 end;
 
+procedure TSampleForm.actionRestartAppExecute(Sender: TObject);
+begin
+  if MessageDlg('Сброс настроек требует перезагрузки приложения. Продолжить?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    if FileExists(self.LayoutSettingsFileName) then
+    begin
+      try
+        TFile.Delete(self.LayoutSettingsFileName);
+      except
+      end;
+
+      ShellExecute(Handle, nil, PChar(Application.ExeName), nil, nil, SW_SHOWNORMAL);
+      Application.Terminate;
+    end;
+  end;
+end;
+
 procedure TSampleForm.actionSaveExecute(Sender: TObject);
 begin
   SaveChanges(self.fSelectedItem,
@@ -470,6 +501,7 @@ end;
 
 procedure TSampleForm.actionShowFindWindowExecute(Sender: TObject);
 begin
+  cxGrid1.SetFocus;
   cxGrid1DBTableView1.Controller.ShowFindPanel;
 end;
 
@@ -597,7 +629,9 @@ procedure TSampleForm.cxEditHintPredicateFilenamePropertiesValidate(Sender: TObj
 var
   filename: String;
 begin
-  if TFile.Exists(DisplayValue) then
+  filename := DisplayValue; // relative path
+
+  if TFile.Exists(filename) then
     exit;
   filename := TOPPHelpSystemFilesHelper.AbsolutePath(DisplayValue);
   if TFile.Exists(filename) then
@@ -823,6 +857,7 @@ begin
   NList.Checked := dxDockPanelList.Visible;
   NIdentifier.Checked := dxDockPanelIdentifier.Visible;
   NHelp.Checked := dxDockPanelHelp.Visible;
+  NPreview.Checked := dxDockPanelPreview.Visible;
 end;
 
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -853,6 +888,16 @@ begin
   begin
     actionSave.Execute;
   end;
+end;
+
+procedure TSampleForm.dxDockPanelPreviewClose(Sender: TdxCustomDockControl);
+begin
+  NPreview.Checked := dxDockPanelPreview.Visible;
+end;
+
+procedure TSampleForm.dxDockPanelPreviewVisibleChanged(Sender: TdxCustomDockControl);
+begin
+  NPreview.Checked := dxDockPanelPreview.Visible;
 end;
 
 procedure TSampleForm.FormCreate(Sender: TObject);
@@ -933,6 +978,12 @@ begin
   oppBufferManager.ReadDataFromControl(Screen.ActiveControl);
 end;
 
+procedure TSampleForm.N10Click(Sender: TObject);
+begin
+
+  actionRestartApp.Execute;
+end;
+
 procedure TSampleForm.NHelpClick(Sender: TObject);
 begin
   if dxDockPanelHelp.Visible then
@@ -955,7 +1006,6 @@ begin
     dxDockPanelIdentifier.Close
   else
     dxDockPanelIdentifier.Show;
-  NIdentifier.Checked := dxDockPanelIdentifier.Visible;
 end;
 
 procedure TSampleForm.NListClick(Sender: TObject);
@@ -964,7 +1014,6 @@ begin
     dxDockPanelList.Close
   else
     dxDockPanelList.Show;
-  NList.Checked := dxDockPanelList.Visible;
 end;
 
 procedure TSampleForm.N21Click(Sender: TObject);
@@ -983,7 +1032,14 @@ begin
     dxDockPanelHint.Close
   else
     dxDockPanelHint.Show;
-  NHint.Checked := dxDockPanelHint.Visible;
+end;
+
+procedure TSampleForm.NPreviewClick(Sender: TObject);
+begin
+  if dxDockPanelPreview.Visible then
+    dxDockPanelPreview.Close
+  else
+    dxDockPanelPreview.Show;
 end;
 
 procedure TSampleForm.onApplyHintMapDefaults(const AMap: POPPHelpMap);
