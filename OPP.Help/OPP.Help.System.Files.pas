@@ -17,6 +17,8 @@ type
     class function RelativePath(APath: String): String;
     class function AbsolutePath(APath: String): String;
     class function GetOPPSettingsPath(AFileName: String): String;
+    class function GetOPPGuidePath(AFileName: String): String;
+    class function GetOPPLogsPath(AFileName: String): String;
     class function CreateDirectoryIfNeed(AFileName: String): Boolean;
   end;
 
@@ -91,12 +93,38 @@ begin
   //eventLogger.Flow(Format('ExeFileDir: %s',[result]), 'TOPPHelpSystemFilesHelper');
 end;
 
+class function TOPPHelpSystemFilesHelper.GetOPPGuidePath(AFileName: String): String;
+var
+  fSettingsPath: String;
+begin
+  try
+    fSettingsPath := TPath.Combine(TPath.GetHomePath, 'Ascon\Gulfstream\Guide');
+    TDirectory.CreateDirectory(fSettingsPath);
+    result := fSettingsPath + TPath.DirectorySeparatorChar + AFileName;
+  except
+    result := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
+  end;
+end;
+
 class function TOPPHelpSystemFilesHelper.GetOPPSettingsPath(AFileName: String): String;
 var
   fSettingsPath: String;
 begin
   try
     fSettingsPath := TPath.Combine(TPath.GetHomePath, 'Ascon\Gulfstream\Settings');
+    TDirectory.CreateDirectory(fSettingsPath);
+    result := fSettingsPath + TPath.DirectorySeparatorChar + AFileName;
+  except
+    result := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
+  end;
+end;
+
+class function TOPPHelpSystemFilesHelper.GetOPPLogsPath(AFileName: String): String;
+var
+  fSettingsPath: String;
+begin
+  try
+    fSettingsPath := TPath.Combine(TPath.GetHomePath, 'Ascon\Gulfstream\Logs');
     TDirectory.CreateDirectory(fSettingsPath);
     result := fSettingsPath + TPath.DirectorySeparatorChar + AFileName;
   except
