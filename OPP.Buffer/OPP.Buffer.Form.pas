@@ -104,6 +104,8 @@ type
     dxBarLargeButton7: TdxBarLargeButton;
     actionSetFiltered: TAction;
     cxGrid1DBTableView1Column5: TcxGridDBColumn;
+    cxStyle2: TcxStyle;
+    cxStyle3: TcxStyle;
     procedure actionApplySelectionExecute(Sender: TObject);
     procedure actionClose1Click(Sender: TObject);
     procedure actionCloseByPressingEscExecute(Sender: TObject);
@@ -183,8 +185,6 @@ type
     property IsMultiSelectMode: Boolean read fIsMultiSelectMode write SetIsMultiSelectMode default false;
     property IsFiltered: Boolean read fIsFiltered write SetIsFiltered default false;
     property FilterValue: String read fFilterValue write SetFilterValue;
-    property BufferManager: TOPPBufferManager read fBufferManager write SetBufferManager;
-
   public
     class procedure ShowForm(AOwner: TControl; ABufferManager: TOPPBufferManager; IconRepositoryItem: TcxEditRepositoryItem); overload;
     class procedure ShowForm(AOwner: TControl; ABufferManager: TOPPBufferManager; IconRepositoryItem: TcxEditRepositoryItem; AControl: TWinControl); overload;
@@ -193,6 +193,7 @@ type
     property OnApply: TOPPBufferFormOnApply read fOnApply write SetOnApply;
     property ClipboardControl: TWinControl read fClipboardControl write SetClipboardControl;
     property IconRepositoryItem: TcxEditRepositoryItem read GetIconRepositoryItem write SetIconRepositoryItem;
+    property BufferManager: TOPPBufferManager read fBufferManager write SetBufferManager;
   end;
 
   TOPPDataControllerSortHelper = class helper for TcxGridDBTableView
@@ -462,6 +463,8 @@ end;
 
 procedure TOPPBufferForm.ColumnSortRead;
 begin
+  if not Assigned(self.Settings) then
+    exit;
   cxGrid1DBTableView1.OPPSetColumnsSort(self.Settings.GetColumnSort);
 end;
 
@@ -547,6 +550,7 @@ end;
 
 procedure TOPPBufferForm.FormActivate(Sender: TObject);
 begin
+  DataSource1.DataSet := TClientDataset(self.DataSet);
   cxGrid1.SetFocus;
   ColumnVisibilityChange;
   ColumnSortRead;
@@ -571,7 +575,6 @@ end;
 procedure TOPPBufferForm.FormCreate(Sender: TObject);
 begin
   self.IsEditMode := false;
-  DataSource1.DataSet := TClientDataset(self.DataSet);
 end;
 
 procedure TOPPBufferForm.FormResize(Sender: TObject);

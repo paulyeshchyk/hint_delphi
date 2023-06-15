@@ -28,30 +28,10 @@ package OPPHelp;
 {$IMPLICITBUILD ON}
 
 requires
-  cxGridRS28,
-  cxLibraryRS28,
-  dxBarRS28,
-  dxComnRS28,
-  dxCoreRS28,
-  dxDockingRS28,
-  dxGDIPlusRS28,
-  dxRichEditControlCoreRS28,
-  dxRichEditControlRS28,
-  dxRichEditCoreRS28,
-  dxRichEditDocumentModelRS28,
-  dxSpreadSheetCoreRS28,
-  dxSkinsCoreRS28,
-  cxTreeListRS28,
-  dxSpreadSheetCoreConditionalFormattingDialogsRS28,
-  RESTComponents,
-  dbrtl,
-  DbxCommonDriver,
-  IndyCore,
-  IndyProtocols,
-  IndySystem,
-  rtl,
-  vcl,
-  dsnap;
+  OPPVCL,
+  OPPDevEx,
+  OPPDevExAdv,
+  OPPDevExPS;
 
 contains
   OPP.Help.Map in '..\OPP.Help\OPP.Help.Map.pas',
@@ -97,7 +77,7 @@ contains
   OPP.Buffer.Manager.Settings.Data in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.Data.pas',
   OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
   OPP.Buffer.OPPInfo in '..\OPP.Buffer\OPP.Buffer.OPPInfo.pas',
-  OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm};
+  OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
+  OPP.Help.Includes in '..\OPP.Help\OPP.Help.Includes.pas';
 
 end.
-

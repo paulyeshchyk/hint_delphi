@@ -207,7 +207,11 @@ begin
   //иначе sender должен быть TWinControl
   if (not Assigned(Sender)) or (Sender is TWinControl) then begin
     result := TOPPBufferOPPInfo.Create(otWinControl);
-    result.ControlText := Sender.TextPropertyValue;
+    if Sender.TextSelectionLength <> 0 then begin
+      result.ControlText := Sender.TextSelectionPropertyValue;
+    end else begin
+      result.ControlText := Sender.TextPropertyValue;
+    end;
   end;
 
 end;

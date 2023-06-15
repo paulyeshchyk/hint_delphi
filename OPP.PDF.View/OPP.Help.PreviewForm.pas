@@ -398,7 +398,7 @@ begin
   actionFitTwoPages.Hint := 'Подобрать размер для двух страниц';
   actionGotoFirstPage.Hint := 'Перейти на первую страницу';
   actionGotoLastPage.Hint := 'Перейти на последнюю страницу';
-  actionGotoNextPage.Hint := 'Перейти на слудеющую страницу';
+  actionGotoNextPage.Hint := 'Перейти на следующую страницу';
   actionGotoPreviousPage.Hint := 'Перейти на предыдущую страницу';
   actionHide.Hint := 'Спрятать';
   actionPrint.Hint := 'Распечатать';

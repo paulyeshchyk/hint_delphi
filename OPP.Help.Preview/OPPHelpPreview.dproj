@@ -48,7 +48,6 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
-        <DCC_UsePackage>RESTBackendComponents;CloudService;soaprtl;soapmidas;RESTComponents;emsclientfiredac;FireDACIBDriver;emsclient;FireDACCommon;soapserver;FireDACCommonDriver;inet;FireDAC;FireDACSqliteDriver;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <UWP_DelphiLogo44>..\OPP.Help\icons\dev-help.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>..\OPP.Help\icons\dev-help.png</UWP_DelphiLogo150>
@@ -59,6 +58,7 @@
         <DCC_DcpOutput>..\..\..\..\Compiled\Units</DCC_DcpOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <DCC_UnitSearchPath>..\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UsePackage>OPPVCL;OPPDevEx;OPPDevExAdv;OPPDevExPS;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -71,6 +71,10 @@
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable\</DCC_ExeOutput>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <DCC_UnitSearchPath>..\..\..\..\Compiled\Units;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+        <UsePackages>true</UsePackages>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -107,13 +111,12 @@
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UsePackage>OPPVCL</DCC_UsePackage>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=ООО &quot;АСКОН - Интеграционные решения&quot;;FileDescription=ГОЛЬФСТРИМ;FileVersion=9.0.0.1;InternalName=;LegalCopyright=(C) ООО &quot;АСКОН - Интеграционные решения&quot;, 2022-2023. Все права защищены.;LegalTrademarks=ГОЛЬФСТРИМ(R) является зарегистрированным товарным знаком ООО &quot;АСКОН - Интеграционные решения&quot;.;OriginalFilename=;ProgramID=ГОЛЬФСТРИМ;ProductName=ГОЛЬФСТРИМ 9;ProductVersion=9.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=ООО &quot;АСКОН - Интеграционные решения&quot;;FileDescription=ГОЛЬФСТРИМ;FileVersion=9.0.0.27;InternalName=;LegalCopyright=(C) ООО &quot;АСКОН - Интеграционные решения&quot;, 2022-2023. Все права защищены.;LegalTrademarks=ГОЛЬФСТРИМ(R) является зарегистрированным товарным знаком ООО &quot;АСКОН - Интеграционные решения&quot;.;OriginalFilename=;ProgramID=ГОЛЬФСТРИМ;ProductName=ГОЛЬФСТРИМ 9;ProductVersion=9.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>9</VerInfo_MajorVer>
-        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Build>27</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -144,10 +147,6 @@
             <Key>Cfg_1</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>
@@ -160,7 +159,8 @@
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
                     <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>

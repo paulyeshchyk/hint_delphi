@@ -61,7 +61,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -78,6 +78,8 @@
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
+        <DCC_UnitSearchPath>..\..\..\..\Compiled\Units;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_FrameworkPath>..\..\..\..\Compiled\Units;..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -98,12 +100,11 @@
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;OPPVCL;dsnap;$(DCC_UsePackage)</DCC_UsePackage>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
+        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;OPPVCL;dsnap;cxTreeListRS25;dxSpreadSheetCoreConditionalFormattingDialogsRS25;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;dsnap;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;vcl;DbxCommonDriver;dbrtl;IndySystem;IndyProtocols;IndyCore;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxComnRS28;dxDockingRS28;dxRichEditCoreRS28;dxRichEditDocumentModelRS28;dxRichEditControlRS28;dxRichEditControlCoreRS28;dxSpreadSheetCoreRS28;cxGridRS28;dxBarRS28;dxSkinsCoreRS28;dxPDFViewerRS28;dxSkinXmas2008BlueRS28;dxSkinWhiteprintRS28;dxSkinVS2010RS28;dxSkinVisualStudio2013LightRS28;dxSkinVisualStudio2013DarkRS28;dxSkinVisualStudio2013BlueRS28;dxSkinValentineRS28;dxSkinTheAsphaltWorldRS28;dxSkinSummer2008RS28;dxSkinStardustRS28;dxSkinSpringTimeRS28;dxSkinSilverRS28;dxSkinSharpRS28;dxSkinSharpPlusRS28;dxSkinSevenRS28;dxSkinSevenClassicRS28;dxSkinPumpkinRS28;dxSkinOffice2016DarkRS28;dxSkinOffice2016ColorfulRS28;dxSkinOffice2013WhiteRS28;dxSkinOffice2013LightGrayRS28;dxSkinOffice2013DarkGrayRS28;dxSkinOffice2010SilverRS28;dxSkinOffice2010BlueRS28;dxSkinOffice2010BlackRS28;dxSkinOffice2007SilverRS28;dxSkinOffice2007PinkRS28;dxSkinOffice2007GreenRS28;dxSkinOffice2007BlueRS28;dxSkinOffice2007BlackRS28;dxSkinMoneyTwinsRS28;dxSkinMetropolisRS28;dxSkinMetropolisDarkRS28;dxSkinMcSkinRS28;dxSkinLondonLiquidSkyRS28;dxSkinLiquidSkyRS28;dxSkinLilianRS28;dxSkiniMaginaryRS28;dxSkinHighContrastRS28;dxSkinGlassOceansRS28;dxSkinFoggyRS28;dxSkinDevExpressStyleRS28;dxSkinDevExpressDarkStyleRS28;dxSkinDarkSideRS28;dxSkinDarkRoomRS28;dxSkinCoffeeRS28;dxSkinCaramelRS28;dxSkinBlueRS28;dxSkinBlueprintRS28;dxSkinBlackRS28;dxCoreRS25;cxLibraryRS25;dxGDIPlusRS25;dxComnRS25;dxSpreadSheetCoreRS25;dxBarRS25;dxSkinsCoreRS25;cxGridRS25;dxRichEditControlRS25;dxRichEditControlCoreRS25;dxRichEditDocumentModelRS25;dxRichEditCoreRS25;dxPDFViewerRS25;dxSkinBlackRS25;dxSkinBlueprintRS25;dxSkinBlueRS25;dxSkinCaramelRS25;dxSkinCoffeeRS25;dxSkinDarkRoomRS25;dxSkinDarkSideRS25;dxSkinDevExpressDarkStyleRS25;dxSkinDevExpressStyleRS25;dxSkinFoggyRS25;dxSkinGlassOceansRS25;dxSkinHighContrastRS25;dxSkiniMaginaryRS25;dxSkinLilianRS25;dxSkinLiquidSkyRS25;dxSkinLondonLiquidSkyRS25;dxSkinMcSkinRS25;dxSkinMetropolisDarkRS25;dxSkinMetropolisRS25;dxSkinMoneyTwinsRS25;dxSkinOffice2007BlackRS25;dxSkinOffice2007BlueRS25;dxSkinOffice2007GreenRS25;dxSkinOffice2007PinkRS25;dxSkinOffice2007SilverRS25;dxSkinOffice2010BlackRS25;dxSkinOffice2010BlueRS25;dxSkinOffice2010SilverRS25;dxSkinOffice2013DarkGrayRS25;dxSkinOffice2013LightGrayRS25;dxSkinOffice2013WhiteRS25;dxSkinOffice2016ColorfulRS25;dxSkinOffice2016DarkRS25;dxSkinPumpkinRS25;dxSkinSevenClassicRS25;dxSkinSevenRS25;dxSkinSharpPlusRS25;dxSkinSharpRS25;dxSkinSilverRS25;dxSkinSpringTimeRS25;dxSkinStardustRS25;dxSkinSummer2008RS25;dxSkinTheAsphaltWorldRS25;dxSkinValentineRS25;dxSkinVisualStudio2013BlueRS25;dxSkinVisualStudio2013DarkRS25;dxSkinVisualStudio2013LightRS25;dxSkinVS2010RS25;dxSkinWhiteprintRS25;dxSkinXmas2008BlueRS25;dxDockingRS25;dsnap;cxTreeListRS25;dxSpreadSheetCoreConditionalFormattingDialogsRS25;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -116,7 +117,6 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <Debugger_HostApplication>..\..\..\..\Compiled\Executable\OPPHintTunning.exe</Debugger_HostApplication>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
@@ -136,30 +136,10 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="cxGridRS28.dcp"/>
-        <DCCReference Include="cxLibraryRS28.dcp"/>
-        <DCCReference Include="dxBarRS28.dcp"/>
-        <DCCReference Include="dxComnRS28.dcp"/>
-        <DCCReference Include="dxCoreRS28.dcp"/>
-        <DCCReference Include="dxDockingRS28.dcp"/>
-        <DCCReference Include="dxGDIPlusRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlRS28.dcp"/>
-        <DCCReference Include="dxRichEditCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditDocumentModelRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreRS28.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
-        <DCCReference Include="cxTreeListRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreConditionalFormattingDialogsRS28.dcp"/>
-        <DCCReference Include="RESTComponents.dcp"/>
-        <DCCReference Include="dbrtl.dcp"/>
-        <DCCReference Include="DbxCommonDriver.dcp"/>
-        <DCCReference Include="IndyCore.dcp"/>
-        <DCCReference Include="IndyProtocols.dcp"/>
-        <DCCReference Include="IndySystem.dcp"/>
-        <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="vcl.dcp"/>
-        <DCCReference Include="dsnap.dcp"/>
+        <DCCReference Include="OPPVCL.dcp"/>
+        <DCCReference Include="OPPDevEx.dcp"/>
+        <DCCReference Include="OPPDevExAdv.dcp"/>
+        <DCCReference Include="OPPDevExPS.dcp"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Map.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
@@ -198,7 +178,6 @@
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Clipboard.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Form.pas">
             <Form>OPPBufferForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.DatasetRecord.pas"/>
@@ -208,17 +187,17 @@
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.OPPInfo.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Settings.Form.pas">
             <Form>OPPBufferSettingsForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Includes.pas"/>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>

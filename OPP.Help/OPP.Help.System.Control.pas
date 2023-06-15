@@ -2,7 +2,7 @@
 
 interface
 
-uses Vcl.Controls, System.RTTI;
+uses Vcl.Controls, System.RTTI, Math;
 
 type
   TOPPControlHelper = class helper for TControl
@@ -12,6 +12,7 @@ type
     function HasTextNonZeroLength: Boolean;
     function HasTextProp: Boolean;
     function TextSelectionLength: Integer;
+    function TextSelectionPropertyValue: String;
     function GetCustomProp(APropName: String): TValue;
     function DLG_CODE: Cardinal;
   end;
@@ -91,7 +92,8 @@ function TOPPControlHelper.TextPropertyValue: String;
 var
   fText: PWideChar;
   fLength: Integer;
-  fTextStr: String;
+  buf:array[0..254] of char;
+  s:String;
 begin
   if not(self is TWinControl) then
   begin
@@ -100,22 +102,30 @@ begin
   end;
 
   fLength := self.TextPropertyLength;
-  if (fLength = 0) then
+  if (fLength = 0) or (fLength > 255) then
   begin
     result := '';
     exit;
   end;
 
-  try
-    SetLength(fTextStr, fLength);
-    SendMessage(TWinControl(self).Handle, WM_GETTEXT, fLength + 1, LPARAM(PChar(fTextStr)));
-    result := fTextStr;
-  except
-    on E: Exception do
-    begin
-      result := '';
-    end;
-  end;
+  GetWindowText(TWinControl(self).Handle, buf, 255);
+  s:=copy(buf, 0, fLength);
+  result:=s;
+
+//  GetMem(fText, fLength + 1);
+//  try
+//    try
+//      SendMessage(TWinControl(self).Handle, WM_GETTEXT, fLength + 1, LPARAM(fText));
+//      result := WideCharToString(fText);
+//    except
+//      on E: Exception do
+//      begin
+//        result := '';
+//      end;
+//    end;
+//  finally
+//    FreeMem(fText);
+//  end;
 end;
 
 function TOPPControlHelper.TextSelectionLength: Integer;
@@ -127,6 +137,58 @@ begin
     exit;
   fDWORD := SendMessage(TWinControl(self).Handle, EM_GETSEL, 0, 0);
   result := hiword(fDWORD) - loword(fDWORD);
+end;
+
+function TOPPControlHelper.TextSelectionPropertyValue: String;
+var
+  fText: PWideChar;
+  fLength: Integer;
+  fStartSelection, fEndSelection: Integer;
+  buf:array[0..254] of char;
+  s:String;
+begin
+  if not(self is TWinControl) then
+  begin
+    result := '';
+    exit;
+  end;
+
+  fLength := Math.Min(self.TextSelectionLength, 254);
+  if (fLength = 0)then
+  begin
+    result := '';
+    exit;
+  end;
+
+  //fText := WideStrAlloc(fLength+1);
+  try
+    try
+
+      SendMessage(TWinControl(self).Handle, EM_GETSEL, WPARAM(@(fStartSelection)), LPARAM(@(fEndSelection)));
+
+      if ((fEndSelection - fStartSelection) > 0) and
+      ((fEndSelection - fStartSelection)<255)
+       then begin
+          GetWindowText(TWinControl(self).Handle, buf, 255);
+          s:=copy(buf, fStartSelection, fStartSelection+fLength);
+          result:=s;
+
+        //SendMessage(TWinControl(self).Handle, WM_GETTEXT, fLength + 1, LPARAM(fText));
+        //result := Copy(fText, fStartSelection, fStartSelection+fLength);
+        //result := Copy(fText, fStartSelection, fStartSelection+fLength);
+
+
+        //        result := WideCharToString(fText);
+      end;
+    except
+      on E: Exception do
+      begin
+        result := '';
+      end;
+    end;
+  finally
+    //StrDispose(fText);
+  end;
 end;
 
 end.

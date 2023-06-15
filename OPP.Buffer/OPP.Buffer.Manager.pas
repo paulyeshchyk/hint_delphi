@@ -218,10 +218,14 @@ var
   fFound: Boolean;
   fExtractor: TOPPInfoExtractor;
 begin
-  fFound := false;
   result := nil;
-  i := 0;
+  if Length(fOPPInfoExtractors) = 0 then begin
+    eventLogger.Warning('No extractor found', kContext);
+    exit;
+  end;
 
+  fFound := false;
+  i := 0;
   while (not fFound) and (i < Length(fOPPInfoExtractors)) do
   begin
     fExtractor := fOPPInfoExtractors[i];
