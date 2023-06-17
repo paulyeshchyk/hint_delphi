@@ -15,8 +15,9 @@ uses
   OPP.Help.System.Messaging,
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.PreviewSettings,
+  OPP.Help.System.Timer,
 
-  System.Classes, System.SysUtils, System.Variants,
+  System.Classes, System.SysUtils, System.Variants, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls, Vcl.AppEvnts,
   Winapi.Messages, Winapi.Windows,
   Vcl.ActnList, System.Actions, Vcl.StdActns, dxDBSparkline, dxNumericWheelPicker,
@@ -188,6 +189,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
+    procedure Timer1Timer(Sender: TObject);
   private
     fSettings: TOPPHelpPreviewSettings;
     fDefaultPredicate: TOPPHelpPredicate;
@@ -195,25 +197,33 @@ type
     fNavigator: IOPPNavigator;
     oppHelpView: TOPPHelpViewFullScreen;
     reloadIsInProgress: Boolean;
-    function GetInfoPanel: TdxStatusBarPanel;
-    procedure LoadContentFinished();
-    { --- }
-    procedure LoadContentStarted();
+    fOPPTimer: TOPPThreadTimer;
+    fIsProcessingOPPPredicateMessage: Boolean;
 
-    procedure ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
+    function GetPageIndexPanel: TdxStatusBarPanel;
+    function GetStatusPanel: TdxStatusBarPanel;
+    function GetProgressPanel: TdxStatusBarPanel;
+    { --- }
+
+    procedure ParsePredicate(const AStream: TReadOnlyMemoryStream);
     procedure ReloadNavigationPanel(ANavigator: IOPPNavigator);
     procedure RestoreFromBackground();
-    procedure SearchEnded();
-    procedure SearchProgress();
-    procedure SearchStarted();
+    procedure hideProgressPanel;
+    procedure showProgressPanel;
+
+    procedure ProgressiveEventsCountChanged(AValue: Integer; AEventName: String);
+    procedure ProgressStop;
+    procedure ProgressStart(AEventName: String);
     { --- }
 
     function NavigationInfo(ANavigator: IOPPNavigator): TOPPHelpPreviewNavigationPanelInfo;
     procedure applyHints();
     procedure SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
+    procedure SetIsProcessingOPPPredicateMessage(const Value: Boolean);
     property currentState: TOPPHelpPreviewFormState read fCurrentState write SetCurrentState;
-    property InfoPanel: TdxStatusBarPanel read GetInfoPanel;
+    property InfoPanel: TdxStatusBarPanel read GetPageIndexPanel;
     property Navigator: IOPPNavigator read fNavigator;
+    property IsProcessingOPPPredicateMessage: Boolean read fIsProcessingOPPPredicateMessage write SetIsProcessingOPPPredicateMessage;
     procedure ApplySettings(ASettings: TOPPHelpPreviewSettings);
   protected
     procedure OnMessageWMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
@@ -227,7 +237,7 @@ type
     { Public declarations }
     function GetContainerClassName: String;
     procedure PresentModal();
-    function RunPredicate(const APredicate: TOPPHelpPredicate): TOPPHelpShortcutViewerExecutionResult;
+    function RunPredicate(const APredicate: TOPPHelpPredicate; ACompletion: TOPPHelpPreviewFormCompletion): TOPPHelpShortcutViewerExecutionResult;
   end;
 
 var
@@ -269,13 +279,13 @@ resourcestring
   SFlowReceivedMessage = 'Received Message';
   SScalingTemplate = 'Масштаб %d %%';
   SStatusIdle = 'Idle';
-  SStatusSearchFinished = 'Поиск закончен'; // Search finished
+  SStatusSearchFinished = ''; // Search finished
   SStatusSearchProgressing = 'Поиск ...'; // Search is progressing
   SStatusSearchStarted = 'Начат поиск ...'; // Search started
   SStatusHandling = 'Handling';
   SStatusLoadContentStarted = 'Началась загрузка'; // Load content started
   SStatusLoadContentFinished = 'Загрузка завершена'; // Load content finished
-  SStatusFormCreated = 'Form Created'; // Form created
+  SStatusFormCreated = 'Документ не загружен'; // 'Form created'
 
 procedure TOPPHelpPreviewForm.actionFitPageCustomExecute(Sender: TObject);
 var
@@ -308,7 +318,10 @@ end;
 
 procedure TOPPHelpPreviewForm.actionGotoInitialTextExecute(Sender: TObject);
 begin
-  RunPredicate(fDefaultPredicate);
+  RunPredicate(fDefaultPredicate,
+    procedure()
+    begin
+    end);
 end;
 
 procedure TOPPHelpPreviewForm.actionGotoLastPageExecute(Sender: TObject);
@@ -398,7 +411,7 @@ begin
   actionFitTwoPages.Hint := 'Подобрать размер для двух страниц';
   actionGotoFirstPage.Hint := 'Перейти на первую страницу';
   actionGotoLastPage.Hint := 'Перейти на последнюю страницу';
-  actionGotoNextPage.Hint := 'Перейти на слудеющую страницу';
+  actionGotoNextPage.Hint := 'Перейти на следующую страницу';
   actionGotoPreviousPage.Hint := 'Перейти на предыдущую страницу';
   actionHide.Hint := 'Спрятать';
   actionPrint.Hint := 'Распечатать';
@@ -477,16 +490,26 @@ end;
 
 procedure TOPPHelpPreviewForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  if Assigned(fOPPTimer) then
+  begin
+    fOPPTimer.FinishThreadExecution;
+    fOPPTimer := nil;
+  end;
 
   self.SaveFormState;
 
   oppHelpView.removeStateChangeListener(self);
+
   if Assigned(fDefaultPredicate) then
-    fDefaultPredicate.Free;
+  begin
+    FreeAndNil(fDefaultPredicate);
+  end;
 end;
 
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
+
+  IsProcessingOPPPredicateMessage := false;
 
   fSettings := TOPPHelpPreviewSettings.LoadOrCreate;
 
@@ -503,13 +526,17 @@ begin
       with buttonQuickNavigation.ItemLinks.AddButton do
         Item.Action := AAction;
       with dxBarSubItem10.ItemLinks.AddButton do
-        item.Action := AAction;
+        Item.Action := AAction;
     end,
     procedure(AHelpMap: TOPPHelpMap)
     begin
       if Assigned(AHelpMap) then
       begin
-        oppHelpView.setPredicate(AHelpMap.Predicate);
+        oppHelpView.DoSearchIfPossible(AHelpMap.Predicate, siPredicate,
+          procedure()
+          begin
+            //
+          end);
       end;
     end);
 
@@ -558,50 +585,46 @@ begin
   Result := self.className;
 end;
 
-function TOPPHelpPreviewForm.GetInfoPanel: TdxStatusBarPanel;
+function TOPPHelpPreviewForm.GetPageIndexPanel: TdxStatusBarPanel;
+begin
+  Result := dxStatusBar1.Panels[0];
+end;
+
+function TOPPHelpPreviewForm.GetProgressPanel: TdxStatusBarPanel;
+begin
+  Result := dxStatusBar1.Panels[2];
+end;
+
+function TOPPHelpPreviewForm.GetStatusPanel: TdxStatusBarPanel;
 begin
   Result := dxStatusBar1.Panels[1];
 end;
 
+procedure TOPPHelpPreviewForm.hideProgressPanel;
+begin
+  cxProgressBar1.Position := 0;
+  cxProgressBar1.Visible := false;
+end;
+
 { --------- }
-
-procedure TOPPHelpPreviewForm.LoadContentFinished;
-begin
-  currentState := fsLoadContentFinished;
-  ApplySettings(fSettings);
-end;
-
-procedure TOPPHelpPreviewForm.LoadContentStarted();
-begin
-  currentState := fsLoadContentStarted;
-end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMCopyData(var Msg: TWMCopyData);
 var
   fNotificationStream: TReadOnlyMemoryStream;
 begin
+  eventLogger.Flow('Received WM_CopyData message', kContext);
 
   actionSendToForeground.Execute;
 
-  eventLogger.Flow(SEventReceivedMessageWM_COPYDATA, kContext);
-
   fNotificationStream := TReadOnlyMemoryStream.Create(Msg.CopyDataStruct.lpData, Msg.CopyDataStruct.cbData);
   try
-    try
-      ParsePredicate(fNotificationStream, fDefaultPredicate);
-    except
-      on Error: Exception do
-      begin
-        eventLogger.Error(Error, kContext);
-      end;
-    end;
+    ParsePredicate(fNotificationStream);
   finally
     fNotificationStream.Free;
   end;
 
-  PostMessage(self.Handle, WM_OPPPredicate, 0, 0);
-
-  eventLogger.Flow(SEvebtPostedSuccessResult, kContext);
+  SendMessage(self.Handle, WM_OPPPredicate, 0, 0);
+  eventLogger.Flow('Sent WM_OPPPredicate message', kContext);
 
   Msg.Result := NativeInt(TOPPMessagePipeSendResult.psrSuccess);
 
@@ -611,29 +634,55 @@ procedure TOPPHelpPreviewForm.OnMessageWMOPPPredicate(var Msg: TMessage);
 var
   fResult: TOPPHelpShortcutViewerExecutionResult;
 begin
-  fResult := RunPredicate(fDefaultPredicate);
+
+  eventLogger.Flow('Received WM_OPPPredicate message', kContext);
+
+  if IsProcessingOPPPredicateMessage then
+  begin
+    Msg.Result := NativeInt(TOPPHelpShortcutViewerExecutionResult.erFailed);
+    exit;
+  end;
+
+  oppHelpView.LockUpdates;
+  IsProcessingOPPPredicateMessage := true;
+
+  fResult := RunPredicate(fDefaultPredicate,
+    procedure
+    begin
+      IsProcessingOPPPredicateMessage := false;
+      TThread.Synchronize(nil,
+        procedure
+        begin
+        end);
+      ApplySettings(fSettings);
+      oppHelpView.UnlockUpdates;
+    end);
+
   Msg.Result := NativeInt(fResult);
 end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMScrollingType(var Msg: TMessage);
 begin
-  if Assigned(fSettings) then
-  begin
-    fSettings.ScrollingType := TOPPHelpScrollingType(msg.WParam);
-    TOPPHelpPreviewSettings.Save(fSettings);
+  eventLogger.Flow('Received WM_ScrollingType message', kContext);
+  if not Assigned(fSettings) then
+    exit;
 
-    oppHelpView.ScrollingType := fSettings.ScrollingType;
-  end;
+  fSettings.ScrollingType := TOPPHelpScrollingType(Msg.WParam);
+  TOPPHelpPreviewSettings.Save(fSettings);
+
+  oppHelpView.ScrollingType := fSettings.ScrollingType;
 end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMUserZoom(var Msg: TMessage);
 begin
+  eventLogger.Flow('Received WM_UserZoom message', kContext);
 end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMUserZoomFit(var Msg: TMessage);
 var
   fFinalZoomFactor: Integer;
 begin
+  eventLogger.Flow('Received WM_UserZoomFit message', kContext);
   fFinalZoomFactor := Integer(Msg.LParam);
 
   if Assigned(fSettings) then
@@ -649,7 +698,6 @@ begin
   end;
 
   Msg.Result := fFinalZoomFactor;
-  //
 end;
 
 procedure TOPPHelpPreviewForm.OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
@@ -659,19 +707,95 @@ begin
   zoomMenuButton.Caption := Format(SScalingTemplate, [AStatus.ZoomFactor]);
 end;
 
-procedure TOPPHelpPreviewForm.ParsePredicate(const AStream: TReadOnlyMemoryStream; out resultPredicate: TOPPHelpPredicate);
+procedure TOPPHelpPreviewForm.ParsePredicate(const AStream: TReadOnlyMemoryStream);
 begin
-  resultPredicate := TOPPHelpPredicate.Create();
+  if Assigned(fDefaultPredicate) then
+  begin
+    FreeAndNil(fDefaultPredicate);
+  end;
+
+  fDefaultPredicate := TOPPHelpPredicate.Create();
   try
-    resultPredicate.readFromStream(AStream, true);
-    eventLogger.Flow(Format(SEventParsedPredicateTemplate, [resultPredicate.asString]), OPP.Help.View.Fullscreen.kContext);
-  finally
+    fDefaultPredicate.readFromStream(AStream, true);
+    eventLogger.Flow(Format(SEventParsedPredicateTemplate, [fDefaultPredicate.asString]), OPP.Help.View.Fullscreen.kContext);
+  except
+    on Error: Exception do
+    begin
+      eventLogger.Error(Error, kContext);
+    end;
   end;
 end;
 
 procedure TOPPHelpPreviewForm.PresentModal;
 begin
   ShowModal;
+end;
+
+procedure TOPPHelpPreviewForm.ProgressiveEventsCountChanged(AValue: Integer; AEventName: String);
+begin
+  Application.ProcessMessages;
+  if AValue <= 0 then
+  begin
+    ProgressStop;
+  end else begin
+    ProgressStart(AEventName);
+  end;
+end;
+
+procedure TOPPHelpPreviewForm.ProgressStart(AEventName: String);
+var
+  panel: TdxStatusBarPanel;
+begin
+  if Assigned(fOPPTimer) then
+  begin
+    fOPPTimer.Terminate;
+    fOPPTimer := nil;
+  end;
+
+  fOPPTimer := TOPPThreadTimer.Create(true,
+    procedure()
+    begin
+      self.Timer1Timer(nil);
+    end);
+  fOPPTimer.Start();
+
+  self.showProgressPanel;
+
+  panel := GetStatusPanel;
+  if Assigned(panel) then
+  begin
+    panel.Text := AEventName;
+    panel.Visible := true;
+  end;
+
+  panel := GetPageIndexPanel;
+  if Assigned(panel) then
+    panel.Visible := false;
+  dxStatusBar1.Refresh;
+end;
+
+procedure TOPPHelpPreviewForm.ProgressStop;
+var
+  panel: TdxStatusBarPanel;
+begin
+  if Assigned(fOPPTimer) then
+  begin
+    fOPPTimer.Terminate;
+    fOPPTimer := nil;
+  end;
+
+  self.hideProgressPanel;
+
+  panel := GetStatusPanel;
+  if Assigned(panel) then
+  begin
+    panel.Visible := false;
+  end;
+
+  panel := GetPageIndexPanel;
+  if Assigned(panel) then
+    panel.Visible := true;
+  dxStatusBar1.Refresh;
 end;
 
 function TOPPHelpPreviewForm.NavigationInfo(ANavigator: IOPPNavigator): TOPPHelpPreviewNavigationPanelInfo;
@@ -689,14 +813,22 @@ end;
 procedure TOPPHelpPreviewForm.ReloadNavigationPanel(ANavigator: IOPPNavigator);
 var
   fNavigationInfo: TOPPHelpPreviewNavigationPanelInfo;
-  i: integer;
+  i: Integer;
+  panel: TdxStatusBarPanel;
 begin
   reloadIsInProgress := true;
 
   fNavigationInfo := NavigationInfo(ANavigator);
 
-  for i:= 0 to customActionList.ActionCount - 1 do begin
+  for i := 0 to customActionList.ActionCount - 1 do
+  begin
     customActionList[i].Enabled := fNavigationInfo.hasConstraints;
+  end;
+
+  panel := GetPageIndexPanel;
+  if Assigned(panel) and Assigned(ANavigator) then
+  begin
+    panel.Text := ANavigator.GetPageInfo;
   end;
 
   actionGotoInitialText.Enabled := fNavigationInfo.hasConstraints;
@@ -731,13 +863,15 @@ procedure TOPPHelpPreviewForm.RestoreFromBackground;
 begin
 end;
 
-function TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate): TOPPHelpShortcutViewerExecutionResult;
+function TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate; ACompletion: TOPPHelpPreviewFormCompletion): TOPPHelpShortcutViewerExecutionResult;
 begin
   Result := TOPPHelpShortcutViewerExecutionResult.erSuccess;
   if not Assigned(APredicate) then
   begin
     Result := TOPPHelpShortcutViewerExecutionResult.erFailed;
     eventLogger.Error(SErrorPredicateIsNotDefined, kContext);
+    if Assigned(ACompletion) then
+      ACompletion();
     exit;
   end;
 
@@ -747,29 +881,42 @@ begin
     begin
       eventLogger.Flow(Format(SEventFinishedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kContext);
       if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssError then
+      begin
+        if Assigned(ACompletion) then
+          ACompletion();
         exit;
+      end;
 
       try
-        if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssCreated then
-          oppHelpView.LoadContent(AStream);
-      finally
-        oppHelpView.setPredicate(APredicate);
+        case AStatus of
+          TOPPHelpShortcutServerLoadStreamStatus.ssCreated:
+            begin
+              oppHelpView.LoadContent(AStream,
+                procedure()
+                begin
+                  oppHelpView.DoSearchIfPossible(APredicate, siPredicate, ACompletion);
+                end);
+            end;
+          TOPPHelpShortcutServerLoadStreamStatus.ssReused:
+            begin
+              oppHelpView.DoSearchIfPossible(APredicate, siPredicate, ACompletion);
+            end
+        else
+          begin
+            if Assigned(ACompletion) then
+              ACompletion();
+          end;
+        end;
+
+      except
+        on E: Exception do
+        begin
+          eventLogger.Error(E, kContext);
+          if Assigned(ACompletion) then
+            ACompletion();
+        end;
       end;
     end);
-end;
-
-procedure TOPPHelpPreviewForm.SearchEnded();
-begin
-  currentState := fsSearchFinished;
-end;
-
-procedure TOPPHelpPreviewForm.SearchProgress();
-begin
-end;
-
-procedure TOPPHelpPreviewForm.SearchStarted();
-begin
-  currentState := fsSearchStarted;
 end;
 
 procedure TOPPHelpPreviewForm.SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
@@ -781,6 +928,26 @@ begin
   fStateStr := fCurrentState.asString;
   InfoPanel.Text := fStateStr;
   eventLogger.Flow(Format(SEventStateTemplate, [fStateStr]), kContext);
+end;
+
+procedure TOPPHelpPreviewForm.SetIsProcessingOPPPredicateMessage(const Value: Boolean);
+begin
+  fIsProcessingOPPPredicateMessage := Value;
+  actionHide.Enabled := not fIsProcessingOPPPredicateMessage;
+end;
+
+procedure TOPPHelpPreviewForm.showProgressPanel;
+begin
+  cxProgressBar1.Position := 0;
+  cxProgressBar1.Visible := true;
+end;
+
+procedure TOPPHelpPreviewForm.Timer1Timer(Sender: TObject);
+begin
+  if cxProgressBar1.Position < cxProgressBar1.Properties.Max then
+    cxProgressBar1.Position := cxProgressBar1.Position + 1
+  else
+    cxProgressBar1.Position := 0;
 end;
 
 procedure TOPPHelpPreviewForm.TrayIcon1Click(Sender: TObject);

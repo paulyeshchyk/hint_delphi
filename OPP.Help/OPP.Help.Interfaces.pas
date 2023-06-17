@@ -20,19 +20,17 @@ type
     function FindHintDataForBookmarkIdentifier(APredicate: TOPPHelpPredicate): TOPPHelpHintData;
   end;
 
+  TOPPHelpPreviewFormCompletion = reference to procedure();
+
   TOPPHelpShortcutViewerExecutionResult = (erSuccess = 10000, erFailed = 10005);
   IOPPHelpShortcutViewer = interface
     ['{097D4F69-916A-4CB4-AB5F-E88D9BA1BB76}']
-    function RunPredicate(const APredicate: TOPPHelpPredicate): TOPPHelpShortcutViewerExecutionResult;
+    function RunPredicate(const APredicate: TOPPHelpPredicate; completion: TOPPHelpPreviewFormCompletion): TOPPHelpShortcutViewerExecutionResult;
     procedure PresentModal;
   end;
 
   IOPPHelpViewEventListener = interface
-    procedure LoadContentStarted();
-    procedure LoadContentFinished();
-    procedure SearchStarted();
-    procedure SearchProgress();
-    procedure SearchEnded();
+    procedure ProgressiveEventsCountChanged(AValue: Integer; AEventName: String);
   end;
 
   IOPPHelpViewFullScreen = interface

@@ -62,13 +62,14 @@ end;
 
 function TFormSizeHelper.GetSizeSettingFileName: String;
 begin
-  result := self.ClassName + 'FormSize.settings';
+  result := Format('%s.%s',[self.ClassName,'FormSize.settings']);
 end;
 
 procedure TFormSizeHelper.ReadFormState;
 var
   fResult: TOPPHelpSystemCodableFormSizeSettings;
 begin
+
   try
     TOPPCodableHelper<TOPPHelpSystemCodableFormSizeSettings>.Decode(SizeSettingFileName, fResult);
     try
