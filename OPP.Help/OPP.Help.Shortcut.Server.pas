@@ -49,12 +49,14 @@ type
     fShortcutDataset: TOPPHelpShortcutDataset;
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
     fDefaultOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier;
+    fLoadPDFIsInProgress: Boolean;
 
     procedure openInternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
     procedure openExternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
     function sendOpenPage(AProcessHandle: THandle; Predicate: TOPPHelpPredicate): TOPPMessagePipeSendResult;
     /// <remarks> copyright https://stackoverflow.com/a/12949757 </remarks>
     function ForceForegroundWindow(hwnd: THandle): Boolean;
+    procedure SetLoadPDFIsInProgress(const Value: Boolean);
   public
     procedure LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     function exportControl(AControl: TControl): Boolean;
@@ -77,6 +79,8 @@ type
     constructor Create();
     destructor Destroy; override;
     property ShortcutDataset: TOPPHelpShortcutDataset read fShortcutDataset write fShortcutDataset;
+    property LoadPDFIsInProgress: Boolean read fLoadPDFIsInProgress write SetLoadPDFIsInProgress default false;
+
   end;
 
 function helpShortcutServer: IOPPHelpShortcutServer;
@@ -164,8 +168,8 @@ end;
 
 procedure TOPPHelpShortcutServer.LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
 var
-  fFileNameHash: String;
   fStream: TMemoryStream;
+  fFileNameHash: String;
 begin
   if not FileExists(AFileName) then
   begin
@@ -175,26 +179,38 @@ begin
     exit;
   end;
 
+  if LoadPDFIsInProgress then
+  begin
+    eventLogger.Error('Trying to load second pdf', kContext);
+    if Assigned(completion) then
+      completion(fStream, ssReused);
+    exit;
+  end;
+  LoadPDFIsInProgress := true;
+
   eventLogger.Flow(Format(SEventLoadDataFromFileTemplate, [AFileName]), kContext);
 
   fFileNameHash := AFileName.hashString;
   fPDFMemoryStream.TryGetValue(fFileNameHash, fStream);
   if Assigned(fStream) then
   begin
+    LoadPDFIsInProgress := false;
     if Assigned(completion) then
       completion(fStream, ssReused);
-  end else begin
-
-    fStream := TMemoryStream.Create;
-    try
-      fStream.loadFromFile(AFileName);
-      fStream.Position := 0;
-      fPDFMemoryStream.Add(fFileNameHash, fStream);
-    finally
-      if Assigned(completion) then
-        completion(fStream, ssCreated);
-    end;
+    exit;
   end;
+
+  fStream := TMemoryStream.Create;
+  try
+    fStream.loadFromFile(AFileName);
+    fStream.Position := 0;
+    fPDFMemoryStream.Add(fFileNameHash, fStream);
+  finally
+    LoadPDFIsInProgress := false;
+    if Assigned(completion) then
+      completion(fStream, ssCreated);
+  end;
+
 end;
 
 procedure TOPPHelpShortcutServer.NewMap(newGUID: TGUID; onApplyDefaults: TOPPHelpMapApplyDefaultsCompletion; completion: TOPPHelpMapCompletion);
@@ -247,6 +263,7 @@ begin
   begin
     fPredicate := fMapping.Predicate;
   end;
+
   if not Assigned(fPredicate) then
   begin
     fPredicate := TOPPHelpPredicate.DefaultPredicate;
@@ -303,14 +320,11 @@ begin
   end;
 
   try
-    (fViewer as IOPPHelpShortcutViewer).RunPredicate(APredicate);
+    (fViewer as IOPPHelpShortcutViewer).RunPredicate(APredicate, procedure()begin if Assigned(completion) then completion(nil); end);
     (fViewer as IOPPHelpShortcutViewer).PresentModal;
   finally
     FreeAndNil(fViewer);
   end;
-
-  if Assigned(completion) then
-    completion(nil);
 
 end;
 
@@ -386,7 +400,8 @@ function TOPPHelpShortcutServer.SaveCustomList(AList: TList<TOPPHelpMap>; AFileN
 begin
   AList.Pack;
   result := TOPPHelpMapRESTParser.saveJSON(AList, AFileName, callback);
-  if result = 0 then begin
+  if result = 0 then
+  begin
     fShortcutDataset.load(AFileName);
   end;
 end;
@@ -420,6 +435,11 @@ begin
   fDefaultOnGetIdentifier := AOnGetIdentifier;
 end;
 
+procedure TOPPHelpShortcutServer.SetLoadPDFIsInProgress(const Value: Boolean);
+begin
+  fLoadPDFIsInProgress := Value;
+end;
+
 procedure TOPPHelpShortcutServer.ShowHelp(APredicate: TOPPHelpPredicate; viewMode: TOPPHelpViewMode; completion: TOPPHelpShortcutPresentingCompletion);
 begin
   case viewMode of
@@ -451,14 +471,14 @@ begin
 
     if ((Win32Platform = VER_PLATFORM_WIN32_NT) and (Win32MajorVersion > 4)) or ((Win32Platform = VER_PLATFORM_WIN32_WINDOWS) and ((Win32MajorVersion > 4) or ((Win32MajorVersion = 4) and (Win32MinorVersion > 0)))) then
     begin
-      result := False;
+      result := false;
       ForegroundThreadID := GetWindowThreadProcessID(GetForegroundWindow, nil);
       ThisThreadID := GetWindowThreadProcessID(hwnd, nil);
       if AttachThreadInput(ThisThreadID, ForegroundThreadID, true) then
       begin
         BringWindowToTop(hwnd); // IE 5.5 related hack
         SetForegroundWindow(hwnd);
-        AttachThreadInput(ThisThreadID, ForegroundThreadID, False);
+        AttachThreadInput(ThisThreadID, ForegroundThreadID, false);
         result := (GetForegroundWindow = hwnd);
       end;
       if not result then

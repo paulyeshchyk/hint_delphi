@@ -78,6 +78,6 @@ contains
   OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
   OPP.Buffer.OPPInfo in '..\OPP.Buffer\OPP.Buffer.OPPInfo.pas',
   OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
-  OPP.Help.Includes in '..\OPP.Help\OPP.Help.Includes.pas';
+  OPP.Help.System.Timer in '..\OPP.Help\OPP.Help.System.Timer.pas';
 
 end.

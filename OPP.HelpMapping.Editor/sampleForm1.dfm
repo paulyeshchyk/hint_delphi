@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 514
+  ClientHeight = 574
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,16 +24,16 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 494
+    Height = 554
     Align = alClient
     DockingType = 5
     OriginalWidth = 1074
-    OriginalHeight = 494
+    OriginalHeight = 554
     object dxLayoutDockSite2: TdxLayoutDockSite
       Left = 0
       Top = 0
       Width = 537
-      Height = 494
+      Height = 554
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -41,7 +41,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 537
-        Height = 494
+        Height = 554
         DockingType = 0
         OriginalWidth = 300
         OriginalHeight = 200
@@ -50,7 +50,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 537
-        Height = 494
+        Height = 554
         ParentColor = True
         OnVisibleChanged = dxDockPanelListVisibleChanged
         AllowFloating = True
@@ -65,17 +65,17 @@ object SampleForm: TSampleForm
         object dxBarDockControl1: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 529
-          Height = 29
+          Width = 533
+          Height = 28
           Align = dalTop
           BarManager = dxBarManager1
         end
         object cxGrid1: TcxGrid
           AlignWithMargins = True
           Left = 0
-          Top = 29
-          Width = 528
-          Height = 435
+          Top = 28
+          Width = 532
+          Height = 502
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 1
@@ -91,6 +91,7 @@ object SampleForm: TSampleForm
             FindPanel.ApplyInputDelay = 10
             FindPanel.DisplayMode = fpdmManual
             OnCanFocusRecord = cxGrid1DBTableView1CanFocusRecord
+            OnFindPanelVisibilityChanged = cxGrid1DBTableView1FindPanelVisibilityChanged
             OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
             DataController.DataSource = DataSource1
             DataController.Summary.DefaultGroupSummaryItems = <>
@@ -124,8 +125,8 @@ object SampleForm: TSampleForm
         object PanelFind: TPanel
           AlignWithMargins = True
           Left = 19
-          Top = 464
-          Width = 510
+          Top = 530
+          Width = 514
           Height = 0
           Margins.Left = 19
           Margins.Top = 0
@@ -141,7 +142,7 @@ object SampleForm: TSampleForm
       Left = 537
       Top = 0
       Width = 537
-      Height = 494
+      Height = 554
       ActiveChildIndex = -1
       AllowFloating = True
       AutoHide = False
@@ -153,7 +154,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 537
-        Height = 138
+        Height = 78
         ParentColor = True
         OnVisibleChanged = dxDockPanelIdentifierVisibleChanged
         AllowFloating = True
@@ -164,11 +165,11 @@ object SampleForm: TSampleForm
         OnClose = dxDockPanelIdentifierClose
         DockingType = 2
         OriginalWidth = 537
-        OriginalHeight = 144
+        OriginalHeight = 86
         object PanelIDContainer: TPanel
           Left = 0
-          Top = 29
-          Width = 529
+          Top = 28
+          Width = 533
           Height = 33
           Margins.Left = 6
           Margins.Top = 6
@@ -205,23 +206,23 @@ object SampleForm: TSampleForm
             Properties.ValidateOnEnter = True
             Properties.OnValidate = cxDBTextEdit1PropertiesValidate
             TabOrder = 1
-            Width = 348
+            Width = 352
           end
         end
         object dxBarDockControl4: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 529
-          Height = 29
+          Width = 533
+          Height = 28
           Align = dalTop
           BarManager = dxBarManager1
         end
       end
       object dxTabContainerDockSite1: TdxTabContainerDockSite
         Left = 0
-        Top = 138
+        Top = 78
         Width = 537
-        Height = 356
+        Height = 476
         ActiveChildIndex = 0
         AllowFloating = True
         AutoHide = False
@@ -230,12 +231,12 @@ object SampleForm: TSampleForm
         TabsProperties.TabPosition = tpTop
         DockingType = 2
         OriginalWidth = 537
-        OriginalHeight = 370
+        OriginalHeight = 528
         object dxDockPanelHint: TdxDockPanel
           Left = 0
           Top = 0
-          Width = 529
-          Height = 302
+          Width = 533
+          Height = 431
           ParentColor = True
           OnVisibleChanged = dxDockPanelHintVisibleChanged
           AllowFloating = True
@@ -245,12 +246,12 @@ object SampleForm: TSampleForm
           TabsProperties.CustomButtons.Buttons = <>
           DockingType = 0
           OriginalWidth = 537
-          OriginalHeight = 370
+          OriginalHeight = 528
           object Panel7: TPanel
             Left = 0
             Top = 0
-            Width = 529
-            Height = 302
+            Width = 533
+            Height = 431
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -260,8 +261,8 @@ object SampleForm: TSampleForm
             TabOrder = 0
             object Panel1: TPanel
               Left = 0
-              Top = 29
-              Width = 529
+              Top = 28
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -304,13 +305,13 @@ object SampleForm: TSampleForm
                 Properties.OnEditValueChanged = OnEditValueChanged
                 Properties.OnValidate = cxEditHintPredicateFilenamePropertiesValidate
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object Panel2: TPanel
               Left = 0
-              Top = 62
-              Width = 529
+              Top = 61
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -326,7 +327,7 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 0
-                Width = 407
+                Width = 411
               end
               object cxLabel3: TcxLabel
                 AlignWithMargins = True
@@ -345,8 +346,8 @@ object SampleForm: TSampleForm
             end
             object Panel3: TPanel
               Left = 0
-              Top = 95
-              Width = 529
+              Top = 94
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -376,13 +377,13 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object Panel4: TPanel
               Left = 0
-              Top = 128
-              Width = 529
+              Top = 127
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -404,8 +405,8 @@ object SampleForm: TSampleForm
             end
             object Panel6: TPanel
               Left = 0
-              Top = 161
-              Width = 529
+              Top = 160
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -435,13 +436,13 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object Panel8: TPanel
               Left = 0
-              Top = 194
-              Width = 529
+              Top = 193
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -471,14 +472,14 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object dxBarDockControl3: TdxBarDockControl
               Left = 0
               Top = 0
-              Width = 529
-              Height = 29
+              Width = 533
+              Height = 28
               Align = dalTop
               BarManager = dxBarManager1
             end
@@ -487,8 +488,8 @@ object SampleForm: TSampleForm
         object dxDockPanelHelp: TdxDockPanel
           Left = 0
           Top = 0
-          Width = 529
-          Height = 302
+          Width = 533
+          Height = 431
           ParentColor = True
           OnVisibleChanged = dxDockPanelHelpVisibleChanged
           AllowFloating = True
@@ -498,12 +499,12 @@ object SampleForm: TSampleForm
           TabsProperties.CustomButtons.Buttons = <>
           DockingType = 0
           OriginalWidth = 537
-          OriginalHeight = 370
+          OriginalHeight = 528
           object Panel5: TPanel
             Left = 0
             Top = 0
-            Width = 529
-            Height = 302
+            Width = 533
+            Height = 431
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -513,8 +514,8 @@ object SampleForm: TSampleForm
             TabOrder = 0
             object Panel9: TPanel
               Left = 0
-              Top = 29
-              Width = 529
+              Top = 28
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -557,13 +558,13 @@ object SampleForm: TSampleForm
                 Properties.OnEditValueChanged = OnEditValueChanged
                 Properties.OnValidate = cxEditHintPredicateFilenamePropertiesValidate
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object Panel10: TPanel
               Left = 0
-              Top = 62
-              Width = 529
+              Top = 61
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -593,13 +594,13 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object Panel11: TPanel
               Left = 0
-              Top = 95
-              Width = 529
+              Top = 94
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -630,13 +631,13 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object Panel12: TPanel
               Left = 0
-              Top = 128
-              Width = 529
+              Top = 127
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -658,8 +659,8 @@ object SampleForm: TSampleForm
             end
             object Panel13: TPanel
               Left = 0
-              Top = 161
-              Width = 529
+              Top = 160
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -689,13 +690,13 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object Panel14: TPanel
               Left = 0
-              Top = 194
-              Width = 529
+              Top = 193
+              Width = 533
               Height = 33
               Align = alTop
               BevelOuter = bvNone
@@ -725,14 +726,14 @@ object SampleForm: TSampleForm
                 Align = alClient
                 Properties.OnEditValueChanged = OnEditValueChanged
                 TabOrder = 1
-                Width = 407
+                Width = 411
               end
             end
             object dxBarDockControl2: TdxBarDockControl
               Left = 0
               Top = 0
-              Width = 529
-              Height = 29
+              Width = 533
+              Height = 28
               Align = dalTop
               BarManager = dxBarManager1
             end
@@ -741,8 +742,8 @@ object SampleForm: TSampleForm
         object dxDockPanelPreview: TdxDockPanel
           Left = 0
           Top = 0
-          Width = 529
-          Height = 302
+          Width = 533
+          Height = 431
           OnVisibleChanged = dxDockPanelPreviewVisibleChanged
           AllowFloating = True
           AutoHide = False
@@ -752,13 +753,14 @@ object SampleForm: TSampleForm
           OnClose = dxDockPanelPreviewClose
           DockingType = 0
           OriginalWidth = 537
-          OriginalHeight = 370
+          OriginalHeight = 528
           object PanelPreview: TPanel
             AlignWithMargins = True
             Left = 0
             Top = 3
-            Width = 529
-            Height = 296
+            Width = 533
+            Height = 425
+            Hint = 'Wrong hint'
             HelpType = htKeyword
             HelpKeyword = 'Kod_OKWED'
             Margins.Left = 0
@@ -783,7 +785,7 @@ object SampleForm: TSampleForm
   end
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 494
+    Top = 554
     Width = 1074
     Height = 20
     Panels = <
@@ -1327,6 +1329,7 @@ object SampleForm: TSampleForm
     end
     object actionShowBuffer: TAction
       Caption = #1041#1091#1092#1077#1088
+      OnExecute = actionShowBufferExecute
     end
     object actionPreviewHelp: TAction
       Caption = 'actionPreviewHelp'
@@ -1367,7 +1370,6 @@ object SampleForm: TSampleForm
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
     DefaultTabContainerSiteProperties.TabsProperties.TabPosition = tpTop
-    DockStyle = dsVS2005
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

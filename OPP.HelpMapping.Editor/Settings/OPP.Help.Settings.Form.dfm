@@ -11,7 +11,6 @@ object OPPHelpSettingsForm: TOPPHelpSettingsForm
   Font.Height = -12
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate

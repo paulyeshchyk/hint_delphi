@@ -25,7 +25,7 @@ uses
   OPP.Help.System.References,
   OPP.Help.Predicate, OPP.Help.Shortcut.Server, OPP.Help.System.Error,
   OPP.Help.System.Codable.TunningEditorDefaultSettings,
-  // SampleFormWinControlOPPInfoExtractor,
+  SampleFormWinControlOPPInfoExtractor,
   SampleFormSaveState, JvComponentBase, JvClipboardMonitor, cxDBEdit, cxPC, dxStatusBar, System.ImageList, Vcl.ImgList,
   cxImageList;
 
@@ -166,6 +166,7 @@ type
     procedure actionReloadExecute(Sender: TObject);
     procedure actionRestartAppExecute(Sender: TObject);
     procedure actionSaveExecute(Sender: TObject);
+    procedure actionShowBufferExecute(Sender: TObject);
     procedure actionShowFindWindowExecute(Sender: TObject);
     procedure actionShowSettingsExecute(Sender: TObject);
     procedure actionUndoExecute(Sender: TObject);
@@ -175,6 +176,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
+    procedure JvClipboardMonitor1Change(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N21Click(Sender: TObject);
     procedure N31Click(Sender: TObject);
@@ -195,6 +197,8 @@ type
     procedure NListClick(Sender: TObject);
     procedure NHintClick(Sender: TObject);
     procedure cxEditHintPredicateFilenamePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure cxGrid1DBTableView1FindPanelVisibilityChanged(Sender:
+        TcxCustomGridTableView; const AVisible: Boolean);
     procedure dxDockPanelPreviewClose(Sender: TdxCustomDockControl);
     procedure dxDockPanelPreviewVisibleChanged(Sender: TdxCustomDockControl);
     procedure N10Click(Sender: TObject);
@@ -222,6 +226,7 @@ type
     procedure onApplyHintMapDefaults(const AMap: POPPHelpMap);
     procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
+    procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
     procedure ReloadListView(completion: TOPPHelpCompletion);
     procedure SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -285,10 +290,13 @@ uses
   SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
 
-  // OPP.ContextMenu.Edit,
+  OPP.ContextMenu.Edit,
 
   OPP.Help.Settings.Form,
-  OPP.Help.System.Codable.FormSizeSettings;
+  OPP.Help.System.Codable.FormSizeSettings,
+
+  OPP.Buffer.Manager,
+  OPP.Buffer.Form;
 
 resourcestring
   SSettingsReadErrorTemplate = 'Ошибка при чтении настроек: %s';
@@ -433,22 +441,16 @@ end;
 
 procedure TSampleForm.actionPreviewHintExecute(Sender: TObject);
 begin
-  TdxScreenTipStyle(self.cxHintController.HintStyle).ScreenTipLinks.Clear;
-
   helpHintServer.FindHelpMap(self.fSelectedItem,
     procedure(const AMap: TOPPHelpMap)
+    var
+      point: TPoint;
     begin
-      if not Assigned(AMap) then
-        exit;
-      self.PanelPreview.HelpKeyword := AMap.ComponentIdentifier;
-      TOPPClientHintHelper.LoadHints(self, '', self.cxHintController, self.tipsRepo,
-        procedure()
-        var
-          point: TPoint;
-        begin
-          point := ClientToScreen(PanelPreview.ClientOrigin);
-          SetCursorPos(point.x, point.y);
-        end);
+      PanelPreview.ShowHint := true;
+      PanelPreview.HelpKeyword := 'Kod_OKWED';
+      PanelPreview.Hint := 'Wrong hint2';
+      point := ClientToScreen(PanelPreview.ClientOrigin);
+      Application.ActivateHint(point);
     end);
 end;
 
@@ -488,6 +490,16 @@ begin
     end);
 end;
 
+procedure TSampleForm.actionShowBufferExecute(Sender: TObject);
+begin
+  if FindWindow('TOPPBufferForm', nil) = 0 then
+  begin
+    TOPPBufferForm.ShowForm(nil, oppBufferManager, nil, Screen.ActiveControl);
+  end
+  else
+    eventLogger.Debug('Cant run second instance');
+end;
+
 procedure TSampleForm.actionShowFindWindowExecute(Sender: TObject);
 begin
   cxGrid1.SetFocus;
@@ -498,7 +510,7 @@ procedure TSampleForm.actionShowSettingsExecute(Sender: TObject);
 var
   formSettings: TOPPHelpSettingsForm;
 begin
-  if Assigned(fDefaultSettings) then
+  if assigned(fDefaultSettings) then
     FreeAndNil(fDefaultSettings);
 
   formSettings := TOPPHelpSettingsForm.Create(self);
@@ -659,6 +671,12 @@ begin
   MessageDlg(SDoSaveChanges, mtwarning, [mbOK], 0);
 end;
 
+procedure TSampleForm.cxGrid1DBTableView1FindPanelVisibilityChanged(Sender:
+    TcxCustomGridTableView; const AVisible: Boolean);
+begin
+//
+end;
+
 procedure TSampleForm.cxGrid1DBTableView1FocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 var
   fComponentIdentifier: String;
@@ -670,7 +688,6 @@ begin
   begin
     //
   end else begin
-    self.PanelPreview.HelpKeyword := fComponentIdentifier;
     self.fSelectedItem := fComponentIdentifier;
     FindMapsById(self.fSelectedItem);
   end;
@@ -716,7 +733,7 @@ begin
     helpShortcutServer.FindHelpMap(oldIdentifier,
       procedure(const AMap: TOPPHelpMap)
       begin
-        if not Assigned(AMap) then
+        if not assigned(AMap) then
         begin
           eventLogger.Error(SErrorFindMapReturnsNilMap);
           exit;
@@ -736,7 +753,7 @@ procedure TSampleForm.doModificationCheck(ItemToSelect: TListItem; completion: T
 var
   result: Integer;
 begin
-  if not Assigned(completion) then
+  if not assigned(completion) then
     exit;
 
   if not isModified then
@@ -857,7 +874,7 @@ begin
   dxDockingManager1.SaveLayoutToIniFile(self.LayoutSettingsFileName);
 
   helpShortcutServer.killExternalViewer;
-  if Assigned(fDefaultSettings) then
+  if assigned(fDefaultSettings) then
     fDefaultSettings.Free;
 end;
 
@@ -894,6 +911,10 @@ procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
+
+  oppBufferManager.RegisterOPPInfoExtractor(TWinControlOPPInfoExtractor.Create);
+
+  cxDBTextEdit1.PopupMenu := TOPPContextMenuEdit.Create(self, nil, oppBufferManager);
 
   // settings
   fDefaultSettings := TOPPHelpSettingsForm.GetEditorDefaults();
@@ -943,7 +964,7 @@ end;
 
 function TSampleForm.GetWinControlHelpKeyword(AControl: TControl): String;
 begin
-  if not Assigned(AControl) then
+  if not assigned(AControl) then
   begin
     result := '';
     exit;
@@ -957,6 +978,11 @@ begin
   end;
 
   result := GetWinControlHelpKeyword(AControl.Parent);
+end;
+
+procedure TSampleForm.JvClipboardMonitor1Change(Sender: TObject);
+begin
+  oppBufferManager.ReadDataFromControl(Screen.ActiveControl);
 end;
 
 procedure TSampleForm.N10Click(Sender: TObject);
@@ -1025,7 +1051,7 @@ end;
 
 procedure TSampleForm.onApplyHintMapDefaults(const AMap: POPPHelpMap);
 begin
-  if not Assigned(fDefaultSettings) then
+  if not assigned(fDefaultSettings) then
   begin
     eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
     exit;
@@ -1036,7 +1062,7 @@ end;
 
 procedure TSampleForm.onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
 begin
-  if not Assigned(fDefaultSettings) then
+  if not assigned(fDefaultSettings) then
   begin
     eventLogger.Error(SWarningDefaultSettingsAreNotDefined);
     exit;
@@ -1047,7 +1073,19 @@ begin
 end;
 
 procedure TSampleForm.OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
+var
+  fHint: TOPPHelpHint;
+  fControl: TComponent;
+  fScreenTip: TdxScreenTip;
+  fScreenTipLink: TdxScreenTipLink;
 begin
+  for fHint in hints do
+  begin
+    fControl := self.FindSubControl(fHint.Meta);
+    if not assigned(fControl) then
+      exit;
+    CreateScreenTip(fHint, fControl);
+  end;
 end;
 
 procedure TSampleForm.OnEditValueChanged(Sender: TObject);
@@ -1062,6 +1100,20 @@ begin
   self.isModified := true;
 end;
 
+procedure TSampleForm.onHintViewsCreate(hints: TList<TOPPHelpHint>);
+var
+  fHint: TOPPHelpHint;
+  fControl: TComponent;
+begin
+  for fHint in hints do
+  begin
+    fControl := self.FindSubControl(fHint.Meta);
+    if not assigned(fControl) then
+      exit;
+    CreateScreenTip(fHint, fControl);
+  end;
+end;
+
 procedure TSampleForm.onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
 var
   Map: TOPPHelpMap;
@@ -1071,7 +1123,7 @@ begin
   cxGrid1DBTableView1.EndUpdate;
   UpdateButtonStates;
 
-  if Assigned(completion) then
+  if assigned(completion) then
     completion();
 end;
 
@@ -1108,7 +1160,7 @@ begin
       procedure(const AMap: TOPPHelpMap)
       begin
         fState.hintWasUpdated := true;
-        if not Assigned(AMap) then
+        if not assigned(AMap) then
         begin
           eventLogger.Error(SErrorFindMapForHintReturnsNilMap, kContext);
           fState.checkAndRunMap(AMap);
@@ -1128,7 +1180,7 @@ begin
       procedure(const AMap: TOPPHelpMap)
       begin
         fState.shortcutWasUpdated := true;
-        if not Assigned(AMap) then
+        if not assigned(AMap) then
         begin
           eventLogger.Error(SErrorFindMapForShortcutReturnsNilMap, kContext);
           fState.checkAndRunMap(AMap);
@@ -1167,14 +1219,14 @@ procedure TSampleForm.SetSelectedHintMap(const AMap: TOPPHelpMap);
 begin
   fSelectedHintMap := AMap;
   self.updateForm(AMap, cxDBTextEdit1, cxEditHintPredicateFilename, cxComboBoxHintKeywordType, cxTextEditHintPredicateValue, cxComboBoxHintDetailsKeywordType, cxTextEditHintDetailsPredicateValue);
-  actionPreviewHint.Enabled := Assigned(self.SelectedHintMap);
+  actionPreviewHint.Enabled := assigned(self.SelectedHintMap);
 end;
 
 procedure TSampleForm.SetSelectedShortcutMap(const AMap: TOPPHelpMap);
 begin
   fSelectedShortcutMap := AMap;
   self.updateForm(AMap, cxDBTextEdit1, ShortcutPredicateFilenameEdit, ShortcutKeywordTypeComboBox, ShortcutPredicateValueEdit, ShortcutDetailsKeywordTypeComboBox, ShortcutDetailsPredicateValueEdit);
-  actionPreviewHelp.Enabled := Assigned(self.SelectedShortcutMap);
+  actionPreviewHelp.Enabled := assigned(self.SelectedShortcutMap);
 end;
 
 procedure TSampleForm.UpdateButtonStates;
@@ -1184,8 +1236,8 @@ begin
   actionDeleteRecord.Enabled := self.HasRecords and (not self.isModified);
   actionReload.Enabled := self.HasRecords and (not self.isModified);
   actionUndo.Enabled := self.isModified;
-  actionPreviewHint.Enabled := Assigned(self.fSelectedHintMap) and (not self.isModified);
-  actionPreviewHelp.Enabled := Assigned(self.fSelectedShortcutMap) and (not self.isModified);
+  actionPreviewHint.Enabled := assigned(self.fSelectedHintMap) and (not self.isModified);
+  actionPreviewHelp.Enabled := assigned(self.fSelectedShortcutMap) and (not self.isModified);
 end;
 
 procedure TSampleForm.updateForm(AMap: TOPPHelpMap; newIdentifier: TcxDBTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
@@ -1193,7 +1245,7 @@ var
   fPredicate: TOPPHelpPredicate;
 begin
 
-  if (AMap = nil) or (not Assigned(AMap)) then
+  if (AMap = nil) or (not assigned(AMap)) then
   begin
     wipeFields(newIdentifier, filename, keyword, value, detailskeyword, detailsvalue);
     exit;
@@ -1203,7 +1255,7 @@ begin
     try
       newIdentifier.Text := AMap.ComponentIdentifier;
       fPredicate := AMap.Predicate;
-      if not Assigned(fPredicate) then
+      if not assigned(fPredicate) then
       begin
         eventLogger.Error(SErrorHelpMapHasNoPredicate);
       end else begin
@@ -1234,12 +1286,12 @@ procedure TSampleForm.updateMap(AMap: TOPPHelpMap; newIdentifier: TcxDBTextEdit;
 var
   fPredicate, fDetailsPredicate: TOPPHelpPredicate;
 begin
-  if not Assigned(AMap) then
+  if not assigned(AMap) then
     exit;
 
   AMap.ComponentIdentifier := newIdentifier.Text;
   fPredicate := AMap.Predicate;
-  if Assigned(fPredicate) then
+  if assigned(fPredicate) then
   begin
     fPredicate.filename := filename.Text;
     fPredicate.keywordType := TOPPKeywordType(keyword.ItemIndex);
@@ -1282,7 +1334,7 @@ end;
 
 function GetWinControlHelpKeyword(AControl: TControl): String;
 begin
-  if not Assigned(AControl) then
+  if not assigned(AControl) then
   begin
     result := '';
     exit;
@@ -1326,7 +1378,7 @@ begin
 
   RecreateDataSet;
 
-  if (not Assigned(AList)) or (AList.Count = 0) then
+  if (not assigned(AList)) or (AList.Count = 0) then
   begin
     exit;
   end;

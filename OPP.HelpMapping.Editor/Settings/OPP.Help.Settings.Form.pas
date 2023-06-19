@@ -63,7 +63,7 @@ const
   kHintsFilePathPropertyName = 'HintsFilePath';
 
 const
-  SSettingsFileName = 'TSampleForm.Default.settings';
+  SSettingsFileName = 'OPPHintTunning.settings';
 
 resourcestring
   SEventSettingsWasSaved = 'settings was saved';

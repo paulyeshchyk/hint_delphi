@@ -28,6 +28,15 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Margins.Bottom = 7
     Panels = <
       item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+        Width = 150
+      end
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+        Visible = False
+        Width = 150
+      end
+      item
         PanelStyleClassName = 'TdxStatusBarContainerPanelStyle'
         PanelStyle.Container = dxStatusBar1Container0
         Width = 282
@@ -35,17 +44,13 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       item
         PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
         Visible = False
-        Width = 2000
-      end
-      item
-        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
         Width = 40
       end>
     ParentFont = True
     object dxStatusBar1Container0: TdxStatusBarContainerControl
-      Left = 2
+      Left = 156
       Top = 4
-      Width = 280
+      Width = 690
       Height = 13
       Margins.Left = 7
       Margins.Top = 7
@@ -74,8 +79,9 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         Style.IsFontAssigned = True
         StyleHot.Color = clBtnFace
         TabOrder = 0
+        Visible = False
         Height = 13
-        Width = 280
+        Width = 690
       end
     end
   end

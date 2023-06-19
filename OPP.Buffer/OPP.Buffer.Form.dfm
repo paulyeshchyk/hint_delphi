@@ -374,14 +374,6 @@ object OPPBufferForm: TOPPBufferForm
       AssignedValues = [svColor]
       Color = clBtnFace
     end
-    object cxStyle2: TcxStyle
-      AssignedValues = [svColor]
-      Color = clRed
-    end
-    object cxStyle3: TcxStyle
-      AssignedValues = [svColor]
-      Color = clLime
-    end
   end
   object dxBarManager1: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
