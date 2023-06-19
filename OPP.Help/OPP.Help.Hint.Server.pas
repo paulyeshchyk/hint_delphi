@@ -292,7 +292,7 @@ begin
 
   fPredicateFileName := TOPPHelpSystemFilesHelper.AbsolutePath(fMap.Predicate.filename);
 
-  result := getReader(fPredicateFileName);
+  result := self.GetReader(fPredicateFileName);
   if Assigned(result) then
   begin
     eventLogger.Debug(Format('reader was found for:[%s]', [fPredicateFileName]));

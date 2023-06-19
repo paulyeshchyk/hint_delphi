@@ -28,30 +28,10 @@ package OPPHelp;
 {$IMPLICITBUILD ON}
 
 requires
-  cxGridRS28,
-  cxLibraryRS28,
-  dxBarRS28,
-  dxComnRS28,
-  dxCoreRS28,
-  dxDockingRS28,
-  dxGDIPlusRS28,
-  dxRichEditControlCoreRS28,
-  dxRichEditControlRS28,
-  dxRichEditCoreRS28,
-  dxRichEditDocumentModelRS28,
-  dxSpreadSheetCoreRS28,
-  dxSkinsCoreRS28,
-  cxTreeListRS28,
-  dxSpreadSheetCoreConditionalFormattingDialogsRS28,
-  RESTComponents,
-  dbrtl,
-  DbxCommonDriver,
-  IndyCore,
-  IndyProtocols,
-  IndySystem,
-  rtl,
-  vcl,
-  dsnap;
+  OPPVCL,
+  OPPDevEx,
+  OPPDevExAdv,
+  OPPDevExPS;
 
 contains
   OPP.Help.Map in '..\OPP.Help\OPP.Help.Map.pas',
@@ -101,4 +81,3 @@ contains
   OPP.Help.System.Timer in '..\OPP.Help\OPP.Help.System.Timer.pas';
 
 end.
-

@@ -61,7 +61,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -78,6 +78,8 @@
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
+        <DCC_UnitSearchPath>..\..\..\..\Compiled\Units;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_FrameworkPath>..\..\..\..\Compiled\Units;..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -116,7 +118,6 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Help</DCC_DcuOutput>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <Debugger_HostApplication>..\..\..\..\Compiled\Executable\OPPHintTunning.exe</Debugger_HostApplication>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
@@ -136,30 +137,10 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="cxGridRS28.dcp"/>
-        <DCCReference Include="cxLibraryRS28.dcp"/>
-        <DCCReference Include="dxBarRS28.dcp"/>
-        <DCCReference Include="dxComnRS28.dcp"/>
-        <DCCReference Include="dxCoreRS28.dcp"/>
-        <DCCReference Include="dxDockingRS28.dcp"/>
-        <DCCReference Include="dxGDIPlusRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlRS28.dcp"/>
-        <DCCReference Include="dxRichEditCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditDocumentModelRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreRS28.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
-        <DCCReference Include="cxTreeListRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreConditionalFormattingDialogsRS28.dcp"/>
-        <DCCReference Include="RESTComponents.dcp"/>
-        <DCCReference Include="dbrtl.dcp"/>
-        <DCCReference Include="DbxCommonDriver.dcp"/>
-        <DCCReference Include="IndyCore.dcp"/>
-        <DCCReference Include="IndyProtocols.dcp"/>
-        <DCCReference Include="IndySystem.dcp"/>
-        <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="vcl.dcp"/>
-        <DCCReference Include="dsnap.dcp"/>
+        <DCCReference Include="OPPVCL.dcp"/>
+        <DCCReference Include="OPPDevEx.dcp"/>
+        <DCCReference Include="OPPDevExAdv.dcp"/>
+        <DCCReference Include="OPPDevExPS.dcp"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Map.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Hint.Server.pas"/>
@@ -198,7 +179,6 @@
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Clipboard.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Form.pas">
             <Form>OPPBufferForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.Dataset.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Manager.DatasetRecord.pas"/>
@@ -208,7 +188,6 @@
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.OPPInfo.pas"/>
         <DCCReference Include="..\OPP.Buffer\OPP.Buffer.Settings.Form.pas">
             <Form>OPPBufferSettingsForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Timer.pas"/>
         <BuildConfiguration Include="Release">

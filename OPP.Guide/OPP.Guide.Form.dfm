@@ -108,7 +108,6 @@ object Form1: TForm1
             Caption = 'dxDockPanel5'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
-            TabsProperties.Style = 11
             DockingType = 2
             OriginalWidth = 642
             OriginalHeight = 280
@@ -129,7 +128,6 @@ object Form1: TForm1
             Caption = 'dxDockPanel6'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
-            TabsProperties.Style = 11
             DockingType = 2
             OriginalWidth = 642
             OriginalHeight = 280
@@ -172,7 +170,6 @@ object Form1: TForm1
           Caption = 'Hierarchy'
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
-          TabsProperties.Style = 11
           DockingType = 2
           OriginalWidth = 642
           OriginalHeight = 280
@@ -180,7 +177,7 @@ object Form1: TForm1
             Left = 0
             Top = 0
             Width = 638
-            Height = 239
+            Height = 243
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -213,6 +210,7 @@ object Form1: TForm1
             OnFocusedNodeChanged = cxDBTreeList1FocusedNodeChanged
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
+            ExplicitHeight = 239
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
               MinWidth = 40
@@ -250,7 +248,7 @@ object Form1: TForm1
           Margins.Bottom = 6
           ManagerFont = False
           ParentFont = True
-          ActiveChildIndex = 1
+          ActiveChildIndex = 0
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
@@ -263,7 +261,7 @@ object Form1: TForm1
             Left = 0
             Top = 0
             Width = 638
-            Height = 219
+            Height = 221
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -275,7 +273,7 @@ object Form1: TForm1
             Caption = 'Properties'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
-            TabsProperties.Style = 11
+            ExplicitHeight = 219
             DockingType = 0
             OriginalWidth = 642
             OriginalHeight = 280
@@ -283,7 +281,7 @@ object Form1: TForm1
               Left = 0
               Top = 0
               Width = 638
-              Height = 219
+              Height = 221
               Margins.Left = 6
               Margins.Top = 6
               Margins.Right = 6
@@ -308,6 +306,7 @@ object Form1: TForm1
               Navigator.InfoPanel.Visible = True
               TabOrder = 0
               DataController.DataSource = DataSourceTreeView
+              ExplicitHeight = 219
               Version = 1
               object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
                 Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -360,7 +359,7 @@ object Form1: TForm1
             Left = 0
             Top = 0
             Width = 638
-            Height = 219
+            Height = 221
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -372,7 +371,7 @@ object Form1: TForm1
             Caption = 'Script'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
-            TabsProperties.Style = 11
+            ExplicitHeight = 219
             DockingType = 0
             OriginalWidth = 642
             OriginalHeight = 280
@@ -393,7 +392,8 @@ object Form1: TForm1
               Properties.WantTabs = True
               Style.BorderStyle = ebsNone
               TabOrder = 1
-              Height = 191
+              ExplicitHeight = 191
+              Height = 193
               Width = 638
             end
           end
@@ -416,7 +416,6 @@ object Form1: TForm1
       Caption = 'Log'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      TabsProperties.Style = 11
       DockingType = 4
       OriginalWidth = 370
       OriginalHeight = 496
@@ -432,7 +431,8 @@ object Form1: TForm1
         Properties.ScrollBars = ssBoth
         Style.BorderStyle = ebsNone
         TabOrder = 0
-        Height = 468
+        ExplicitHeight = 468
+        Height = 472
         Width = 2238
       end
     end
@@ -459,12 +459,14 @@ object Form1: TForm1
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
-    DefaultTabContainerSiteProperties.TabsProperties.Style = 11
+    DockStyle = dsVS2005
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
+    LookAndFeel.Kind = lfFlat
+    LookAndFeel.NativeStyle = False
     Left = 736
     Top = 304
     PixelsPerInch = 96
@@ -925,7 +927,7 @@ object Form1: TForm1
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101030008001C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -21,62 +21,62 @@ type
 implementation
 
 uses
-  System.SysUtils,
-  dcscript, dcPascal;
+  //dcscript, dcPascal,
+  System.SysUtils;
 
 { TOPPGuideScripter }
 
 function TOPPGuideScripter.RunScript(AScriptText: String): Variant;
-var
-  fDCScripter: TDCScripter;
+//var
+//  fDCScripter: TDCScripter;
 begin
-  fDCScripter := TDCScripter.Create(nil);
-  try
-    fDCScripter.Language := 'DelphiScript';
-    fDCScripter.UseModule := true;
-    fDCScripter.UseExceptions := true;
-    fDCScripter.Project := THandle(fDCScripter);
-    fDCScripter.Script.Text := AScriptText;
-    try
-      //result := fDCScripter.CallNoParamsMethod('Execute');
-      result := fDCScripter.DispatchMethod('Execute',[998]);
-    except
-      on E: Exception do
-      begin
-        //
-      end;
-    end;
-  finally
-    fDCScripter.Free;
-  end;
+//  fDCScripter := TDCScripter.Create(nil);
+//  try
+//    fDCScripter.Language := 'DelphiScript';
+//    fDCScripter.UseModule := true;
+//    fDCScripter.UseExceptions := true;
+//    fDCScripter.Project := THandle(fDCScripter);
+//    fDCScripter.Script.Text := AScriptText;
+//    try
+//      //result := fDCScripter.CallNoParamsMethod('Execute');
+//      result := fDCScripter.DispatchMethod('Execute',[998]);
+//    except
+//      on E: Exception do
+//      begin
+//        //
+//      end;
+//    end;
+//  finally
+//    fDCScripter.Free;
+//  end;
 
 end;
 
 function TOPPGuideScripter.RunScript(AStream: TMemoryStream): Variant;
-var
-  fDCScripter: TDCScripter;
+//var
+//  fDCScripter: TDCScripter;
 begin
-  fDCScripter := TDCScripter.Create(nil);
-  try
-    fDCScripter.Language := 'DelphiScript';
-    fDCScripter.UseModule := true;
-    fDCScripter.UseExceptions := true;
-    fDCScripter.Project := THandle(fDCScripter);
-    fDCScripter.FilerID := 'DB';
-
-    AStream.Position := 0;
-    fDCScripter.Script.LoadFromStream(AStream);
-    try
-      result := fDCScripter.CallNoParamsMethod('Execute');
-    except
-      on E: Exception do
-      begin
-        //
-      end;
-    end;
-  finally
-    fDCScripter.Free;
-  end;
+//  fDCScripter := TDCScripter.Create(nil);
+//  try
+//    fDCScripter.Language := 'DelphiScript';
+//    fDCScripter.UseModule := true;
+//    fDCScripter.UseExceptions := true;
+//    fDCScripter.Project := THandle(fDCScripter);
+//    fDCScripter.FilerID := 'DB';
+//
+//    AStream.Position := 0;
+//    fDCScripter.Script.LoadFromStream(AStream);
+//    try
+//      result := fDCScripter.CallNoParamsMethod('Execute');
+//    except
+//      on E: Exception do
+//      begin
+//        //
+//      end;
+//    end;
+//  finally
+//    fDCScripter.Free;
+//  end;
 end;
 
 end.

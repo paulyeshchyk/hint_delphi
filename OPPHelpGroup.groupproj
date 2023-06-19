@@ -22,12 +22,15 @@
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Help.Preview\OPPHelpPreview.dproj">
-            <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
+            <Dependencies/>
         </Projects>
-        <Projects Include="OPP.HelpMapping.Editor\OPPHintTunning.dproj">
+        <Projects Include="OPP.HelpMapping.Editor\OPP.HelpEditor.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Guide\OPP.Guide.dproj">
+            <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
+        </Projects>
+        <Projects Include="OPP.Buffer\OPP.BufferManager.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -92,41 +95,50 @@
     <Target Name="OPPHelp:Make">
         <MSBuild Projects="OPP.Help.Package\OPPHelp.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPHelpPreview" DependsOnTargets="OPPHelp">
+    <Target Name="OPPHelpPreview">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj"/>
     </Target>
-    <Target Name="OPPHelpPreview:Clean" DependsOnTargets="OPPHelp:Clean">
+    <Target Name="OPPHelpPreview:Clean">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHelpPreview:Make" DependsOnTargets="OPPHelp:Make">
+    <Target Name="OPPHelpPreview:Make">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPHintTunning">
-        <MSBuild Projects="OPP.HelpMapping.Editor\OPPHintTunning.dproj"/>
+    <Target Name="OPP_HelpEditor">
+        <MSBuild Projects="OPP.HelpMapping.Editor\OPP.HelpEditor.dproj"/>
     </Target>
-    <Target Name="OPPHintTunning:Clean">
-        <MSBuild Projects="OPP.HelpMapping.Editor\OPPHintTunning.dproj" Targets="Clean"/>
+    <Target Name="OPP_HelpEditor:Clean">
+        <MSBuild Projects="OPP.HelpMapping.Editor\OPP.HelpEditor.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPHintTunning:Make">
-        <MSBuild Projects="OPP.HelpMapping.Editor\OPPHintTunning.dproj" Targets="Make"/>
+    <Target Name="OPP_HelpEditor:Make">
+        <MSBuild Projects="OPP.HelpMapping.Editor\OPP.HelpEditor.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPP_Guide">
+    <Target Name="OPP_Guide" DependsOnTargets="OPPHelp">
         <MSBuild Projects="OPP.Guide\OPP.Guide.dproj"/>
     </Target>
-    <Target Name="OPP_Guide:Clean">
+    <Target Name="OPP_Guide:Clean" DependsOnTargets="OPPHelp:Clean">
         <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPP_Guide:Make">
+    <Target Name="OPP_Guide:Make" DependsOnTargets="OPPHelp:Make">
         <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Make"/>
     </Target>
+    <Target Name="OPP_BufferManager">
+        <MSBuild Projects="OPP.Buffer\OPP.BufferManager.dproj"/>
+    </Target>
+    <Target Name="OPP_BufferManager:Clean">
+        <MSBuild Projects="OPP.Buffer\OPP.BufferManager.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPP_BufferManager:Make">
+        <MSBuild Projects="OPP.Buffer\OPP.BufferManager.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPVCL;OPPDevEx;OPPDevExAdv;OPPDevExPS;dreamInit;OPPHelp;OPPHelpPreview;OPPHintTunning;OPP_Guide"/>
+        <CallTarget Targets="OPPVCL;OPPDevEx;OPPDevExAdv;OPPDevExPS;dreamInit;OPPHelp;OPPHelpPreview;OPP_HelpEditor;OPP_Guide;OPP_BufferManager"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPVCL:Clean;OPPDevEx:Clean;OPPDevExAdv:Clean;OPPDevExPS:Clean;dreamInit:Clean;OPPHelp:Clean;OPPHelpPreview:Clean;OPPHintTunning:Clean;OPP_Guide:Clean"/>
+        <CallTarget Targets="OPPVCL:Clean;OPPDevEx:Clean;OPPDevExAdv:Clean;OPPDevExPS:Clean;dreamInit:Clean;OPPHelp:Clean;OPPHelpPreview:Clean;OPP_HelpEditor:Clean;OPP_Guide:Clean;OPP_BufferManager:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPVCL:Make;OPPDevEx:Make;OPPDevExAdv:Make;OPPDevExPS:Make;dreamInit:Make;OPPHelp:Make;OPPHelpPreview:Make;OPPHintTunning:Make;OPP_Guide:Make"/>
+        <CallTarget Targets="OPPVCL:Make;OPPDevEx:Make;OPPDevExAdv:Make;OPPDevExPS:Make;dreamInit:Make;OPPHelp:Make;OPPHelpPreview:Make;OPP_HelpEditor:Make;OPP_Guide:Make;OPP_BufferManager:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
