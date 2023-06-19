@@ -1,7 +1,7 @@
 [GeneralSettings]
 MesVersion=4
 HandleExceptions=1
-LinkInCode=1
+LinkInCode=0
 AppendMapFileToBinary=1
 NoOwnMadExceptSettings=0
 CheckFileCrc=1

@@ -45,6 +45,7 @@ class procedure TOPPClientHintHelper.LoadHints(AForm: TControl; AFilename: Strin
 var
   fRequest: TOPPHelpHintMappingLoadRequest;
 begin
+
   fMetaFactory := TSampleOnlyHelpMetaExtractor.Create;
   try
     fRequest := TOPPHelpHintMappingLoadRequest.Create(AForm, AFilename);

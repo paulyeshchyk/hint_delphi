@@ -28,10 +28,30 @@ package OPPHelp;
 {$IMPLICITBUILD ON}
 
 requires
-  OPPVCL,
-  OPPDevEx,
-  OPPDevExAdv,
-  OPPDevExPS;
+  cxGridRS25,
+  cxLibraryRS25,
+  dxBarRS25,
+  dxComnRS25,
+  dxCoreRS25,
+  dxDockingRS25,
+  dxGDIPlusRS25,
+  dxRichEditControlCoreRS25,
+  dxRichEditControlRS25,
+  dxRichEditCoreRS25,
+  dxRichEditDocumentModelRS25,
+  dxSpreadSheetCoreRS25,
+  dxSkinsCoreRS25,
+  cxTreeListRS25,
+  dxSpreadSheetCoreConditionalFormattingDialogsRS25,
+  RESTComponents,
+  dbrtl,
+  DbxCommonDriver,
+  IndyCore,
+  IndyProtocols,
+  IndySystem,
+  rtl,
+  vcl,
+  dsnap;
 
 contains
   OPP.Help.Map in '..\OPP.Help\OPP.Help.Map.pas',
@@ -78,6 +98,8 @@ contains
   OPP.Buffer.Manager.Settings in '..\OPP.Buffer\OPP.Buffer.Manager.Settings.pas',
   OPP.Buffer.OPPInfo in '..\OPP.Buffer\OPP.Buffer.OPPInfo.pas',
   OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
-  OPP.Help.System.Timer in '..\OPP.Help\OPP.Help.System.Timer.pas';
+  OPP.Help.System.Timer in '..\OPP.Help\OPP.Help.System.Timer.pas',
+  FDC.CommandLine in '..\FDC\FDC.CommandLine.pas';
 
 end.
+

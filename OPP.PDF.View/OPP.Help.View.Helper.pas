@@ -42,6 +42,14 @@ begin
   TTask.Run(
     procedure
     begin
+
+      if not Assigned(self) then
+        exit;
+      if not Assigned(self.Document) then
+        exit;
+      if not Assigned(APredicate) then
+        exit;
+
       case APredicate.keywordType of
         ktSearch:
           begin

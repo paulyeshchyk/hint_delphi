@@ -100,7 +100,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Height = 392
     Align = dalRight
     BarManager = dxBarManager1
-    ExplicitLeft = 857
+    ExplicitLeft = 855
   end
   object dxBarDockControl3: TdxBarDockControl
     Left = 0
@@ -109,7 +109,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     Height = 3
     Align = dalBottom
     BarManager = dxBarManager1
-    ExplicitTop = 471
+    ExplicitTop = 469
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace

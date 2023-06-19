@@ -34,8 +34,7 @@ type
     class function GetHWndByPID(const hPID: THandle): THandle;
     class function GetWindowClassHandleList(AWindowClassName: String): TList<THandle>;
     class function GetProcessHandleList(AProcessName: String): TList<THandle>;
-    class procedure RunScript(AScript: PWideChar; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion); overload;
-    class procedure RunProcess(AProcessName: String; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion); overload;
+    class procedure RunProcess(AProcessName: String; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion);
     class function KillProcess(ExeFileName: string): Integer;
   end;
 
@@ -163,56 +162,6 @@ begin
     if assigned(completion) then
     begin
       error := Exception.Create(Format('Process [%s] was not created', [AProcessName]));
-      try
-        completion(error);
-      finally
-        error.Free;
-      end;
-    end;
-    exit;
-  end;
-
-  WinAPI.Windows.CloseHandle(tmpProcessInformation.hThread);
-
-  // TODO: implement callback or use postmessage to determine if app was executed in time
-  WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, ActivationDelay);
-
-  WinAPI.Windows.CloseHandle(tmpProcessInformation.hProcess);
-
-  if assigned(completion) then
-    completion(nil);
-
-end;
-
-{
-  * cmd.exe /C start mailto:test@test.com?subject=A
-  * cmd.exe /C start D:\Compiled\Executable\OPPHelpPreview.exe
-  * cmd.exe /C D:\Compiled\Executable\OPPHelpPreview.exe
-  * D:\Compiled\Executable\OPPHelpPreview.exe
-  * rundll32.exe user32.dll,SendMessage 65535 0 0 "Test"
-}
-
-class procedure TOPPSystemMessageHelper.RunScript(AScript: PWideChar; AHandle: THandle; ActivationDelay: Cardinal; completion: TOPPSystemMessageRunCompletion);
-var
-  tmpStartupInfo: TStartupInfo;
-  tmpProcessInformation: TProcessInformation;
-  fCreateProcessResult: Boolean;
-  error: Exception;
-begin
-
-  System.FillChar(tmpStartupInfo, Sizeof(tmpStartupInfo), 0);
-  with tmpStartupInfo do
-  begin
-    cb := Sizeof(TStartupInfo);
-    wShowWindow := SW_SHOWMINIMIZED;
-  end;
-
-  fCreateProcessResult := WinAPI.Windows.CreateProcess(nil, AScript, nil, nil, true, CREATE_NEW_PROCESS_GROUP, nil, nil, tmpStartupInfo, tmpProcessInformation);
-  if not fCreateProcessResult then
-  begin
-    if assigned(completion) then
-    begin
-      error := Exception.Create('Script was not executed');
       try
         completion(error);
       finally

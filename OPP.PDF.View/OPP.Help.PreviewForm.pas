@@ -10,6 +10,7 @@ uses
   dxDockControl, dxDockPanel, dxStatusBar,
 
   OPP.Help.Interfaces, OPP.Help.Predicate,
+  OPP.Help.View.CommandLine,
   OPP.Help.View.Fullscreen,
   OPP.Help.System.Stream,
   OPP.Help.System.Messaging,
@@ -490,6 +491,7 @@ end;
 
 procedure TOPPHelpPreviewForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+
   if Assigned(fOPPTimer) then
   begin
     fOPPTimer.FinishThreadExecution;
@@ -508,7 +510,6 @@ end;
 
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
-
   IsProcessingOPPPredicateMessage := false;
 
   fSettings := TOPPHelpPreviewSettings.LoadOrCreate;
@@ -570,6 +571,25 @@ begin
   oppHelpView.addStateChangeListener(self);
   ReloadNavigationPanel(nil);
   applyHints();
+
+
+
+  TOPPHelpViewCommandLine.ReadFromCommandLine(
+    procedure(const AValue: TOPPHelpPredicate)
+    begin
+
+      eventLogger.Flow('Parsed command-line', kContext);
+
+      if Assigned(AValue) then
+      begin
+        eventLogger.Flow('Executed predicate from command-line', kContext);
+
+        RunPredicate(AValue,
+          procedure()
+          begin
+          end);
+      end;
+    end);
 end;
 
 procedure TOPPHelpPreviewForm.FormDestroy(Sender: TObject);
