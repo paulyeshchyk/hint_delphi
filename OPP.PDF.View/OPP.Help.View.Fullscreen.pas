@@ -18,6 +18,7 @@ uses
 
   {resources}
   dxPDFViewerDialogsStrs,
+  dxCustomPreviewStrs,
   dxCore,
 
   {print}
@@ -52,13 +53,14 @@ type
     procedure GotoPreviousPage();
     procedure GotoNextPage();
     procedure GotoLastPage();
+    function GetPageInfo: String;
     function NavigatorConstraints(): TOPPNavigatorConstraints;
     function GetPageIndex(): Integer;
     procedure SetPageIndex(AValue: Integer);
     function PagesCount(): Integer;
     procedure SetNavigatorStatusChangesCompletion(ACompletion: TOPPNavigatorStatusChangedCompletion);
-
     property PageIndex: Integer read GetPageIndex write SetPageIndex;
+    property PageInfo: String read GetPageInfo;
   end;
 
   TOPPHelpViewFullScreen = class(TPanel, IOPPNavigator)
@@ -70,10 +72,9 @@ type
     fOnFindPanelVisiblityChange: TOPPHelpBooleanCompletion;
     fOnStatusChanged: TOPPHelpViewOnStatusChanged;
     fPDFViewer: TOPPPdfViewer;
-    fPredicate: TOPPHelpPredicate;
-    fSearchIsInProgress: Boolean;
+    fProgressiveEventsCount: Integer;
     fScrollingType: TOPPHelpScrollingType;
-    procedure DoSearchIfPossible(AInstanciator: TOPPHelpViewSearchInstanciator);
+    fCurrentEvent: String;
     function GetEventListeners(): TList<IOPPHelpViewEventListener>;
     function GetIsFindPanelVisible(): Boolean;
     function getPDFDocument(): TdxPDFDocument;
@@ -85,14 +86,14 @@ type
     procedure OnShowFindPanelEvent(Sender: TObject);
     procedure SetHasLoadedDocument(AHasLoadedDocument: Boolean);
     procedure SetIsFindPanelVisible(AValue: Boolean);
-    procedure SetSearchIsInProgress(const Value: Boolean);
+    procedure SetProgressiveEventsCount(const Value: Integer);
     function GetZoomFactor: Integer;
     procedure SetZoomFactor(const Value: Integer);
     procedure SetScrollingType(const Value: TOPPHelpScrollingType);
     property EventListeners: TList<IOPPHelpViewEventListener> read GetEventListeners;
     property HasLoadedDocument: Boolean read fHasLoadedDocument write SetHasLoadedDocument;
     property pdfDocument: TdxPDFDocument read getPDFDocument;
-    property SearchIsInProgress: Boolean read fSearchIsInProgress write SetSearchIsInProgress;
+    property ProgressiveEventsCount: Integer read fProgressiveEventsCount write SetProgressiveEventsCount;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -106,18 +107,22 @@ type
     procedure GotoLastPage();
     procedure GotoNextPage();
     procedure GotoPreviousPage();
-    procedure LoadContent(AStream: TMemoryStream);
+    procedure LoadContent(AStream: TMemoryStream; completion: TOPPHelpPreviewFormCompletion);
     procedure LoadDefaultResource(AResourceName: String = '');
     function NavigatorConstraints(): TOPPNavigatorConstraints;
     procedure OnZoomFactorChanged(Sender: TObject);
     function PagesCount(): Integer;
+    function GetPageInfo(): String;
     procedure PrintCurrentPage(APrinterComponent: TCustomdxComponentPrinter);
     procedure removeStateChangeListener(AListener: IOPPHelpViewEventListener);
-    procedure searchWork();
+    procedure searchWork(APredicate: TOPPHelpPredicate; ACompletion: TOPPHelpPreviewFormCompletion);
     procedure SetNavigatorStatusChangesCompletion(ACompletion: TOPPNavigatorStatusChangedCompletion);
     procedure SetPageIndex(AValue: Integer);
-    procedure setPredicate(const APredicate: TOPPHelpPredicate);
     procedure ShowPrintDialog(APrinterComponent: TCustomdxComponentPrinter);
+    procedure DoSearchIfPossible(APredicate: TOPPHelpPredicate; AInstanciator: TOPPHelpViewSearchInstanciator;ACompletion: TOPPHelpPreviewFormCompletion);
+    procedure LockUpdates;
+    procedure UnlockUpdates;
+
     property IsFindPanelVisible: Boolean read GetIsFindPanelVisible write SetIsFindPanelVisible;
     property PageIndex: Integer read GetPageIndex write SetPageIndex;
     property Status: TOPPHelpViewFullScreenStatus read GetStatus;
@@ -133,7 +138,7 @@ const
 
 implementation
 
-uses System.SysUtils,
+uses System.SysUtils, System.Threading,
   OPP.Help.Log, OPP.Help.System.Types,
   OPP.Help.View.Helper,
   {customization}
@@ -145,7 +150,7 @@ uses System.SysUtils,
 
 resourcestring
   SEventPrinterComponentWasNotDefined = 'Printer component was not defined';
-  SWarningPredicateIsNotDefined = 'Predicate is not defined';
+  SWarningPredicateIsNotDefined = 'AfterLoad event: Predicate is not defined';
   SWarningDocumentIsNotLoaded = 'Document is not loaded';
   SWarningSearchIsStillInProgress = 'Search is still in progress';
   SWarningStreamWasNotDefined = 'Stream was not defined';
@@ -168,7 +173,7 @@ begin
   fPDFViewer.OnZoomFactorChanged := OnZoomFactorChanged;
 
   fHasLoadedDocument := false;
-  fSearchIsInProgress := false;
+  fProgressiveEventsCount := 0;
 
   fEventListeners := TList<IOPPHelpViewEventListener>.Create();
 end;
@@ -176,7 +181,10 @@ end;
 destructor TOPPHelpViewFullScreen.Destroy;
 begin
   fEventListeners.Free;
-
+  if Assigned(fPDFViewer) then
+  begin
+    fPDFViewer.parent := nil;
+  end;
   inherited;
 end;
 
@@ -185,27 +193,38 @@ begin
   EventListeners.add(AListener);
 end;
 
-procedure TOPPHelpViewFullScreen.DoSearchIfPossible(AInstanciator: TOPPHelpViewSearchInstanciator);
+procedure TOPPHelpViewFullScreen.DoSearchIfPossible(APredicate: TOPPHelpPredicate; AInstanciator: TOPPHelpViewSearchInstanciator;ACompletion: TOPPHelpPreviewFormCompletion);
 begin
-  if fSearchIsInProgress then
+  if fProgressiveEventsCount > 0 then
   begin
     eventLogger.Warning(SWarningSearchIsStillInProgress, kContext);
+    if Assigned(ACompletion) then
+      ACompletion();
     exit;
   end;
 
   if not HasLoadedDocument then
   begin
     eventLogger.Warning(SWarningDocumentIsNotLoaded, kContext);
+    if Assigned(ACompletion) then
+      ACompletion();
     exit;
   end;
 
-  if not assigned(fPredicate) then
+  if not Assigned(APredicate) then
   begin
     eventLogger.Warning(SWarningPredicateIsNotDefined, kContext);
+    if Assigned(ACompletion) then
+      ACompletion();
     exit;
   end;
 
-  searchWork();
+  TTask.Run(
+    procedure
+    begin
+      searchWork(APredicate, ACompletion);
+    end);
+
 end;
 
 procedure TOPPHelpViewFullScreen.FitCustom(AFactor: Integer);
@@ -232,7 +251,7 @@ end;
 
 function TOPPHelpViewFullScreen.GetEventListeners: TList<IOPPHelpViewEventListener>;
 begin
-  if not assigned(fEventListeners) then
+  if not Assigned(fEventListeners) then
     fEventListeners := TList<IOPPHelpViewEventListener>.Create();
   result := fEventListeners;
 end;
@@ -245,8 +264,18 @@ end;
 function TOPPHelpViewFullScreen.GetPageIndex: Integer;
 begin
   result := 0;
-  if assigned(fPDFViewer) then
+  if Assigned(fPDFViewer) then
     result := fPDFViewer.CurrentPageIndex;
+end;
+
+function TOPPHelpViewFullScreen.GetPageInfo: String;
+begin
+  if PagesCount = 0 then
+  begin
+    result := '';
+  end else begin
+    result := Format('Страница %d из %d', [1 + self.PageIndex, self.PagesCount]);
+  end;
 end;
 
 function TOPPHelpViewFullScreen.getPDFDocument(): TdxPDFDocument;
@@ -279,40 +308,52 @@ begin
   PageIndex := (fPDFViewer.CurrentPageIndex - 1);
 end;
 
-procedure TOPPHelpViewFullScreen.LoadContent(AStream: TMemoryStream);
-var
-  fListener: IOPPHelpViewEventListener;
+procedure TOPPHelpViewFullScreen.LoadContent(AStream: TMemoryStream; completion: TOPPHelpPreviewFormCompletion);
 begin
+  fCurrentEvent := 'Загрузка';
 
-  for fListener in EventListeners do
-  begin
-    if assigned(fListener) then
-      fListener.LoadContentStarted;
-  end;
+  TTask.Run(
+    procedure()
+    begin
+      TThread.Synchronize(nil,
+        procedure()
+        begin
+          self.ProgressiveEventsCount := self.ProgressiveEventsCount + 1;
+        end);
 
-  if assigned(AStream) then
-  begin
-    fPDFViewer.LoadFromStream(AStream);
-  end else begin
-    eventLogger.Warning(SWarningStreamWasNotDefined, kContext);
-  end;
+      if Assigned(AStream) then
+      begin
+        try
+          fPDFViewer.LoadFromStream(AStream);
+        except
+          on E: Exception do
+          begin
+            eventLogger.Error(E, kContext);
+          end;
+        end;
+      end else begin
+        eventLogger.Warning(SWarningStreamWasNotDefined, kContext);
+      end;
 
-  for fListener in EventListeners do
-  begin
-    if assigned(fListener) then
-      fListener.LoadContentFinished;
-  end;
-
-  if assigned(fNavigatorStatusChangesCompletion) then
-  begin
-    fNavigatorStatusChangesCompletion(self);
-  end;
+      TThread.Synchronize(nil,
+        procedure()
+        begin
+          // step 1: notify listeners
+          if Assigned(fNavigatorStatusChangesCompletion) then
+          begin
+            fNavigatorStatusChangesCompletion(self);
+          end;
+          // step2: tell about finish
+          if Assigned(completion) then
+            completion();
+        end);
+    end);
 end;
 
 function TOPPHelpViewFullScreen.NavigatorConstraints: TOPPNavigatorConstraints;
 begin
   result := [];
-  if not assigned(fPDFViewer) then
+  if not Assigned(fPDFViewer) then
     exit;
 
   if fPDFViewer.CurrentPageIndex <> 0 then
@@ -330,14 +371,15 @@ end;
 
 procedure TOPPHelpViewFullScreen.OnHideFindPanelEvent(Sender: TObject);
 begin
-  if assigned(fOnFindPanelVisiblityChange) then
+  if Assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(false);
 end;
 
 procedure TOPPHelpViewFullScreen.OnPDFViewer1DocumentLoaded(Sender: TdxPDFDocument; const AInfo: TdxPDFDocumentLoadInfo);
 begin
   HasLoadedDocument := true;
-  DoSearchIfPossible(siDocumentLoad);
+
+  self.ProgressiveEventsCount := self.ProgressiveEventsCount - 1;
 end;
 
 function TOPPHelpViewFullScreen.OnPDFViewerScrollEvent(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean;
@@ -352,7 +394,7 @@ begin
       end;
     stPages:
       begin
-        if assigned(fPDFViewer) then
+        if Assigned(fPDFViewer) then
         begin
           cnt := (-1) * Round(Extended(WheelDelta) / WHEEL_DELTA);
           fPDFViewer.CurrentPageIndex := fPDFViewer.CurrentPageIndex + cnt;
@@ -363,26 +405,26 @@ end;
 
 procedure TOPPHelpViewFullScreen.OnSelectedPageChanged(Sender: TObject; APageIndex: Integer);
 begin
-  if assigned(fNavigatorStatusChangesCompletion) then
+  if Assigned(fNavigatorStatusChangesCompletion) then
     fNavigatorStatusChangesCompletion(self);
 end;
 
 procedure TOPPHelpViewFullScreen.OnZoomFactorChanged(Sender: TObject);
 begin
-  if assigned(fOnStatusChanged) then
+  if Assigned(fOnStatusChanged) then
     fOnStatusChanged(Status);
 end;
 
 procedure TOPPHelpViewFullScreen.OnShowFindPanelEvent(Sender: TObject);
 begin
-  if assigned(fOnFindPanelVisiblityChange) then
+  if Assigned(fOnFindPanelVisiblityChange) then
     fOnFindPanelVisiblityChange(true);
 end;
 
 function TOPPHelpViewFullScreen.PagesCount: Integer;
 begin
   result := 0;
-  if assigned(fPDFViewer) then
+  if Assigned(fPDFViewer) then
     result := fPDFViewer.PageCount;
 end;
 
@@ -393,7 +435,7 @@ var
   pages: TIntegers;
 begin
 
-  if not assigned(APrinterComponent) then
+  if not Assigned(APrinterComponent) then
   begin
     eventLogger.Error(SEventPrinterComponentWasNotDefined, kContext);
     exit;
@@ -417,14 +459,39 @@ begin
   EventListeners.Remove(AListener);
 end;
 
-procedure TOPPHelpViewFullScreen.searchWork();
+procedure TOPPHelpViewFullScreen.searchWork(APredicate: TOPPHelpPredicate; ACompletion: TOPPHelpPreviewFormCompletion);
+var
+  searchWorkSubject: String;
 begin
-  self.SearchIsInProgress := true;
-  fPDFViewer.RunPredicate(fPredicate, 0,
+
+  fCurrentEvent := 'Поиск';
+
+  if Assigned(APredicate) then
+    searchWorkSubject := APredicate.asString
+  else
+    searchWorkSubject := 'nothing';
+  eventLogger.Flow(Format('Started SearchWork: [%s]', [searchWorkSubject]), kContext);
+
+  TThread.Synchronize(nil,
+    procedure
+    begin
+      self.ProgressiveEventsCount := self.ProgressiveEventsCount + 1;
+    end);
+
+  // !! Thread CreateAnonymousThread
+  fPDFViewer.RunPredicate(APredicate, 0,
     procedure(AResult: TOPPHelpViewPredicateExecutionResult; ALevel: Integer)
     begin
-      self.SearchIsInProgress := false;
+      // !! Thread safe
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          self.ProgressiveEventsCount := self.ProgressiveEventsCount - 1;
+          if Assigned(ACompletion) then
+            ACompletion();
+        end);
     end);
+
 end;
 
 procedure TOPPHelpViewFullScreen.SetHasLoadedDocument(AHasLoadedDocument: Boolean);
@@ -452,16 +519,10 @@ begin
     fPDFViewer.CurrentPageIndex := AValue;
   end;
 
-  if assigned(fNavigatorStatusChangesCompletion) then
+  if Assigned(fNavigatorStatusChangesCompletion) then
   begin
     fNavigatorStatusChangesCompletion(self);
   end;
-end;
-
-procedure TOPPHelpViewFullScreen.setPredicate(const APredicate: TOPPHelpPredicate);
-begin
-  fPredicate := APredicate;
-  DoSearchIfPossible(siPredicate);
 end;
 
 procedure TOPPHelpViewFullScreen.SetScrollingType(const Value: TOPPHelpScrollingType);
@@ -469,21 +530,19 @@ begin
   fScrollingType := Value;
 end;
 
-procedure TOPPHelpViewFullScreen.SetSearchIsInProgress(const Value: Boolean);
+procedure TOPPHelpViewFullScreen.SetProgressiveEventsCount(const Value: Integer);
 var
   fListener: IOPPHelpViewEventListener;
 begin
 
-  fSearchIsInProgress := Value;
+  fProgressiveEventsCount := Value;
 
+  // !! Thread safe
   for fListener in EventListeners do
   begin
-    if assigned(fListener) then
+    if Assigned(fListener) then
     begin
-      if fSearchIsInProgress then
-        fListener.SearchStarted
-      else
-        fListener.SearchEnded;
+      fListener.ProgressiveEventsCountChanged(fProgressiveEventsCount, fCurrentEvent);
     end;
   end;
 end;
@@ -498,7 +557,7 @@ var
   lnk: TdxPDFViewerReportLink;
 begin
 
-  if not assigned(APrinterComponent) then
+  if not Assigned(APrinterComponent) then
   begin
     eventLogger.Error(SEventPrinterComponentWasNotDefined, kContext);
     exit;
@@ -512,6 +571,11 @@ begin
   finally
     lnk.Free;
   end;
+end;
+
+procedure TOPPHelpViewFullScreen.UnlockUpdates;
+begin
+  fPDFViewer.EndUpdate;
 end;
 
 procedure TOPPHelpViewFullScreen.LoadDefaultResource(AResourceName: String = '');
@@ -533,7 +597,10 @@ begin
   try
     stream := TResourceStream.Create(hInstance, fResourceName, RT_RCDATA);
     try
+      self.ProgressiveEventsCount := self.ProgressiveEventsCount + 1;
+
       fPDFViewer.LoadFromStream(stream);
+
       fPDFViewer.OptionsZoom.zoomMode := pzmPageWidth;
     finally
       stream.Free;
@@ -544,6 +611,11 @@ begin
       eventLogger.Error(E, kContext);
     end;
   end;
+end;
+
+procedure TOPPHelpViewFullScreen.LockUpdates;
+begin
+  fPDFViewer.BeginUpdate;
 end;
 
 function TOPPHelpViewFullScreen.GetStatus: TOPPHelpViewFullScreenStatus;
@@ -574,7 +646,7 @@ var
   ftobeHandled: Boolean;
 begin
   ftobeHandled := true;
-  if not assigned(fOnScrollEvent) then
+  if not Assigned(fOnScrollEvent) then
   begin
     ftobeHandled := true;
   end else begin
@@ -599,6 +671,7 @@ cxSetResourceString(@sdxPDFViewerTextSearchingNoMatchesFoundMessage, 'Поиск
 cxSetResourceString(@sdxPDFViewerTextSearchingCompleteMessage, 'Поиск закончен.');
 cxSetResourceString(@sdxPDFViewerFindPanelPopupMenuCaseSensitive, 'Зависимость от регистра');
 cxSetResourceString(@sdxPDFViewerFindPanelPopupMenuWholeWords, 'Слова целиком');
+cxSetResourceString(@sdxPreviewNoPages, ''); // 'There are no pages to display'
 
 finalization
 

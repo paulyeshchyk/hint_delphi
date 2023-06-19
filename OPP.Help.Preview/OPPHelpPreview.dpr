@@ -3,6 +3,11 @@
 {$R 'OPPHelpPreviewCustom.res' 'OPPHelpPreviewCustom.rc'}
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madListHardware,
+  madListProcesses,
+  madListModules,
   Vcl.Forms,
   OPP.Help.PreviewForm in '..\OPP.PDF.View\OPP.Help.PreviewForm.pas' {OPPHelpPreviewForm},
   OPP.Help.View.Fullscreen in '..\OPP.PDF.View\OPP.Help.View.Fullscreen.pas',

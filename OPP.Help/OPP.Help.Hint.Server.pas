@@ -72,7 +72,7 @@ type
     procedure SaveHints(ARequest: TOPPHelpHintMappingSaveRequest; useGlobal: Boolean; completion: TOPPHelpMapGenerationCompletion);
 
     function GetHint(hintMeta: TOPPHelpMeta): TOPPHelpHint;
-    procedure SetDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
+    procedure setDefaultOnHintReaderCreator(ACreator: TOPPHelpHintViewCreator);
   end;
 
   TOPPHelpHintServer = class(TInterfacedObject, IOPPHelpHintServer)
@@ -82,11 +82,11 @@ type
     fHintMapSet: TOPPHelpMapSet;
     fHintMetaDict: TDictionary<TSymbolName, String>;
     fLoaded: Boolean;
-    function FindOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
+    function findOrCreateReader(AMetaIdentifier: TOPPHelpHintMapIdentifier): IOPPHelpHintDataReader;
     function GetHintData(AHintIdentifier: TOPPHelpHintMapIdentifier): TOPPHelpHintData;
     procedure GetHints(ARequest: TOPPHelpHintMappingLoadRequest; hintsMetaList: TOPPHintIdList; completion: TOPPHelpHintLoadCompletion); overload;
-    function GetReader(AFileName: String): IOPPHelpHintDataReader;
-    procedure ReloadConfigurationIfNeed(filename: String);
+    function getReader(AFileName: String): IOPPHelpHintDataReader;
+    procedure reloadConfigurationIfNeed(filename: String);
   public
     constructor Create;
     destructor Destroy; override;
@@ -270,7 +270,7 @@ begin
 
   if Length(AMetaIdentifier) = 0 then
   begin
-    eventLogger.Warning(Format('MetaIdentifier is empty', [AMetaIdentifier]));
+    //  eventLogger.Warning(Format('MetaIdentifier is empty', [AMetaIdentifier]));
     exit;
   end;
 
@@ -364,7 +364,7 @@ begin
     for fHintMeta in hintsMetaList do
     begin
       fHint := GetHint(fHintMeta);
-      if not fHint.Data.isEmpty() then
+      if not fHint.Data.isEmpty() and (fHint.Meta.isValid) then
       begin
         fHintTexts.Add(fHint);
       end;
@@ -440,7 +440,9 @@ begin
     for fChildHelpMeta in fChildrenHelpMetaList do
     begin
       fMetaIdentifier := fChildHelpMeta.Identifier;
-      self.findOrCreateReader(fMetaIdentifier);
+      if Length(fMetaIdentifier) > 0 then begin
+        self.findOrCreateReader(fMetaIdentifier);
+      end;
     end;
 
     eventLogger.Flow(Format('Will create hints for [%s]', [ARequest.Control.ClassName]), kContext);
