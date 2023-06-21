@@ -13,7 +13,7 @@ type
   TOPPHelpShortcutDataset = class
   private
     fShortcutHelpMatrix: TOPPHelpShortcutDatasetType;
-    procedure Merge(AList: TList<TOPPHelpMap>);
+    procedure Merge(AList: TOPPHelpMapList);
     procedure SetNewList(Mapset: TOPPHelpMapSet; error: Exception);
     procedure wipeIndicies();
   public
@@ -23,7 +23,7 @@ type
     function GetMapping(const key: String): TOPPHelpMap;
     function AddMap(const AMap: TOPPHelpMap): Integer;
     procedure RemoveMap(const AIdentifier: String);
-    function List(): TList<TOPPHelpMap>;
+    function List(): TOPPHelpMapList;
   end;
 
 implementation
@@ -74,7 +74,7 @@ begin
   fShortcutHelpMatrix.Clear;
 end;
 
-procedure TOPPHelpShortcutDataset.Merge(AList: TList<TOPPHelpMap>);
+procedure TOPPHelpShortcutDataset.Merge(AList: TOPPHelpMapList);
 var
   fMap: TOPPHelpMap;
 begin
@@ -127,11 +127,11 @@ begin
   end;
 end;
 
-function TOPPHelpShortcutDataset.List: TList<TOPPHelpMap>;
+function TOPPHelpShortcutDataset.List: TOPPHelpMapList;
 var
   pair: TPair<String, TOPPHelpMap>;
 begin
-  result := TList<TOPPHelpMap>.Create();
+  result := TOPPHelpMapList.Create();
   for pair in fShortcutHelpMatrix.ToArray do
   begin
     result.Add(pair.Value)

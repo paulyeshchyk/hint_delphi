@@ -12,7 +12,7 @@ uses
   OPP.Help.Hint.Server;
 
 type
-  TOPPOnMapsLoadedEvent = reference to procedure(AList: TList<TOPPHelpMap>; completion: TOPPHelpMapsCompletion);
+  TOPPOnMapsLoadedEvent = reference to procedure(AList: TOPPHelpMapList; completion: TOPPHelpMapsCompletion);
 
   TOPPClientHintHelper = class
   private

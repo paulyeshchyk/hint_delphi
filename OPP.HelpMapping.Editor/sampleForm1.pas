@@ -226,7 +226,7 @@ type
     procedure onApplyShortcutMapDefaults(const AMap: POPPHelpMap);
     procedure OnCreateHintViewsCreate(hints: TList<TOPPHelpHint>);
     procedure onHintViewsCreate(hints: TList<TOPPHelpHint>);
-    procedure onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
+    procedure onMapsLoaded(AList: TOPPHelpMapList; completion: TOPPHelpCompletion);
     procedure ReloadListView(completion: TOPPHelpCompletion);
     procedure SaveChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
     procedure setIsIdentifierValid(AValue: Boolean);
@@ -254,7 +254,7 @@ type
   end;
 
   TOPPObjectDataSetHelper = class helper for TClientDataSet
-    function ReadList(AList: TList<TOPPHelpMap>): Boolean; // TOPPHelpMap
+    function ReadList(AList: TOPPHelpMapList): Boolean; // TOPPHelpMap
     procedure RecreateDataSet;
   end;
 
@@ -1131,7 +1131,7 @@ begin
   end;
 end;
 
-procedure TSampleForm.onMapsLoaded(AList: TList<TOPPHelpMap>; completion: TOPPHelpCompletion);
+procedure TSampleForm.onMapsLoaded(AList: TOPPHelpMapList; completion: TOPPHelpCompletion);
 var
   Map: TOPPHelpMap;
 begin
@@ -1146,7 +1146,7 @@ end;
 
 procedure TSampleForm.ReloadListView(completion: TOPPHelpCompletion);
 var
-  maps: TList<TOPPHelpMap>;
+  maps: TOPPHelpMapList;
 begin
   maps := helpHintServer.GetAvailableMaps;
   onMapsLoaded(maps, completion);
@@ -1388,7 +1388,7 @@ end;
 
 { TOPPObjectDataSetHelper }
 
-function TOPPObjectDataSetHelper.ReadList(AList: TList<TOPPHelpMap>): Boolean;
+function TOPPObjectDataSetHelper.ReadList(AList: TOPPHelpMapList): Boolean;
 var
   fMap: TOPPHelpMap;
 begin

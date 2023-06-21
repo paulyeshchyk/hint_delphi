@@ -18,7 +18,7 @@ type
     class procedure deserializeExtendedJSON(AJSON: TJSONObject; callback: TOPPHelpMapParserJSONCallback);
   public
     class procedure readExtendedJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
-    class function saveExtendedJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    class function saveExtendedJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
   TOPPHelpMapRESTParser = class
@@ -28,7 +28,7 @@ type
   public
     class procedure readStream(AStream: TCustomMemoryStream; callback: TOPPHelpMapParserJSONCallback);
     class procedure readJSON(AFileName: String; callback: TOPPHelpMapParserJSONCallback);
-    class function saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+    class function saveJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
   end;
 
 implementation
@@ -231,7 +231,7 @@ begin
   end;
 end;
 
-class function TOPPHelpMapRESTParserExtended.saveExtendedJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+class function TOPPHelpMapRESTParserExtended.saveExtendedJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;
@@ -265,7 +265,7 @@ begin
 
 end;
 
-class function TOPPHelpMapRESTParser.saveJSON(AList: TList<TOPPHelpMap>; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
+class function TOPPHelpMapRESTParser.saveJSON(AList: TOPPHelpMapList; AFileName: String; callback: TOPPHelpErrorCompletion): Integer;
 var
   serializer: TJSONMarshal;
   jsonObj: TJSONObject;

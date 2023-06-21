@@ -101,9 +101,9 @@ end;
 
 class procedure TSampleFormStubsHelper.readPredicateFromFile;
 var
-  fList: TList<TOPPHelpMap>;
+  fList: TOPPHelpMapList;
 begin
-  fList := TList<TOPPHelpMap>.Create();
+  fList := TOPPHelpMapList.Create();
   try
     TOPPHelpMapRESTParser.readJSON('.\help\tests\predicates.json',
       procedure(Mapset: TOPPHelpMapSet; error: Exception)
@@ -122,10 +122,10 @@ class procedure TSampleFormStubsHelper.savePredicateToFile;
 var
   fMap: TOPPHelpMap;
   fPredicate, fChild: TOPPHelpPredicate;
-  fList: TList<TOPPHelpMap>;
+  fList: TOPPHelpMapList;
 begin
 
-  fList := TList<TOPPHelpMap>.Create();
+  fList := TOPPHelpMapList.Create();
   try
 
     fPredicate := TOPPHelpPredicate.Create;

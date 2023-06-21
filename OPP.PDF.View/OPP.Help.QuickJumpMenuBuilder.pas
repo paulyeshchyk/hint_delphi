@@ -24,15 +24,8 @@ type
 
   TOPPHelpQuickJumpMenuBuilder = class
     class procedure Build(AOwner: TComponent; completion: TOPPHelpQuickJumpMenuBuilderCompletion; invocation: TOPPHelpJumpActionCompletion);
-    class procedure LoadResource(AResourceName: String; completion: TOPPHelpLoadResourceCompletion);
+    class procedure LoadResource(AResourceName: PChar; completion: TOPPHelpLoadResourceCompletion);
   end;
-
-  {
-    // dropdown menu list
-    //    fHelpDropdownMenuContent: TList<TOPPHelpMap>;
-    //    property HelpDropdownMenuContent:TList<TOPPHelpMap> read fHelpDropdownMenuContent write fHelpDropdownMenuContent;
-
-  }
 
 implementation
 
@@ -49,7 +42,7 @@ const
 
 class procedure TOPPHelpQuickJumpMenuBuilder.Build(AOwner: TComponent; completion: TOPPHelpQuickJumpMenuBuilderCompletion; invocation: TOPPHelpJumpActionCompletion);
 begin
-  TOPPHelpQuickJumpMenuBuilder.LoadResource('RC_HELP_DROPDOWN_MENU',
+  TOPPHelpQuickJumpMenuBuilder.LoadResource(PChar('RC_HELP_DROPDOWN_MENU'),
     procedure(AStream: TCustomMemoryStream)
     var
       fBarLink: TdxBarItemLink;
@@ -77,11 +70,11 @@ begin
     end);
 end;
 
-class procedure TOPPHelpQuickJumpMenuBuilder.LoadResource(AResourceName: String; completion: TOPPHelpLoadResourceCompletion);
+class procedure TOPPHelpQuickJumpMenuBuilder.LoadResource(AResourceName: PChar; completion: TOPPHelpLoadResourceCompletion);
 var
   stream: TResourceStream;
 begin
-  if (FindResource(hInstance, PChar(AResourceName), RT_RCDATA) = 0) then
+  if (FindResource(hInstance, AResourceName, RT_RCDATA) = 0) then
   begin
     eventLogger.Error(Format('Resource ''%s'' not found', [AResourceName]), kContext);
     if Assigned(completion) then
