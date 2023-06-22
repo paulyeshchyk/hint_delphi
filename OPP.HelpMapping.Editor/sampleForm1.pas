@@ -18,6 +18,7 @@ uses
   Vcl.StdCtrls, Vcl.Themes,
   Winapi.CommCtrl, Winapi.Messages, Winapi.Windows,
 
+  System.Threading,
   ShellAPI,
   OPP.Help.Component.Enumerator,
   OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
@@ -27,7 +28,7 @@ uses
   OPP.Help.System.Codable.TunningEditorDefaultSettings,
   SampleFormWinControlOPPInfoExtractor,
   SampleFormSaveState, JvComponentBase, JvClipboardMonitor, cxDBEdit, cxPC, dxStatusBar, System.ImageList, Vcl.ImgList,
-  cxImageList;
+  cxImageList, dxtree, dxdbtree, cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL;
 
 type
   TRectHelper = record helper for TRect
@@ -110,23 +111,6 @@ type
     Panel8: TPanel;
     cxLabel11: TcxLabel;
     cxTextEditHintDetailsPredicateValue: TcxTextEdit;
-    Panel9: TPanel;
-    cxLabel6: TcxLabel;
-    ShortcutPredicateFilenameEdit: TcxButtonEdit;
-    Panel10: TPanel;
-    cxLabel7: TcxLabel;
-    ShortcutKeywordTypeComboBox: TcxComboBox;
-    Panel11: TPanel;
-    cxLabel8: TcxLabel;
-    ShortcutPredicateValueEdit: TcxTextEdit;
-    Panel12: TPanel;
-    cxLabel13: TcxLabel;
-    Panel13: TPanel;
-    cxLabel10: TcxLabel;
-    ShortcutDetailsKeywordTypeComboBox: TcxComboBox;
-    Panel14: TPanel;
-    cxLabel9: TcxLabel;
-    ShortcutDetailsPredicateValueEdit: TcxTextEdit;
     dxBarDockControl2: TdxBarDockControl;
     dxBarManager1Bar2: TdxBar;
     dxBarManager1Bar3: TdxBar;
@@ -159,7 +143,37 @@ type
     dxVertContainerDockSite1: TdxVertContainerDockSite;
     dxTabContainerDockSite1: TdxTabContainerDockSite;
     N12: TMenuItem;
+    cxGrid1DBTableView1Column1: TcxGridDBColumn;
+    cxGrid1DBTableView1Column3: TcxGridDBColumn;
+    PopupMenu1: TPopupMenu;
+    actionConvertToRelative: TAction;
+    actionConvertToAbsolute: TAction;
+    actionConvertToAbsolute1: TMenuItem;
+    actionConvertToRelative1: TMenuItem;
+    Panel17: TPanel;
+    Panel9: TPanel;
+    Panel10: TPanel;
+    cxLabel7: TcxLabel;
+    ShortcutKeywordTypeComboBox: TcxComboBox;
+    Panel11: TPanel;
+    cxLabel8: TcxLabel;
+    ShortcutPredicateValueEdit: TcxTextEdit;
+    Panel15: TPanel;
+    cxLabel6: TcxLabel;
+    ShortcutPredicateFilenameEdit: TcxButtonEdit;
+    Panel12: TPanel;
+    Panel13: TPanel;
+    cxLabel13: TcxLabel;
+    Panel14: TPanel;
+    cxLabel10: TcxLabel;
+    ShortcutDetailsKeywordTypeComboBox: TcxComboBox;
+    Panel16: TPanel;
+    cxLabel9: TcxLabel;
+    ShortcutDetailsPredicateValueEdit: TcxTextEdit;
+    procedure actionConvertToAbsoluteExecute(Sender: TObject);
+    procedure actionConvertToRelativeExecute(Sender: TObject);
     procedure actionDeleteRecordExecute(Sender: TObject);
+    procedure ActionList1Execute(Action: TBasicAction; var Handled: Boolean);
     procedure actionNewRecordExecute(Sender: TObject);
     procedure actionPreviewHelpExecute(Sender: TObject);
     procedure actionPreviewHintExecute(Sender: TObject);
@@ -202,6 +216,7 @@ type
     procedure dxDockPanelPreviewVisibleChanged(Sender: TdxCustomDockControl);
     procedure N10Click(Sender: TObject);
     procedure NPreviewClick(Sender: TObject);
+    procedure cxEditHintPredicateFilenamePropertiesEditValueChanged(Sender: TObject);
   private
     fLoadIsInProgress: Boolean;
 
@@ -253,9 +268,14 @@ type
     procedure WMHOOK(var Msg: TMessage); message WM_OPPHook;
   end;
 
+  TOPPObjectDataSetHelperCompletion = reference to procedure();
+
   TOPPObjectDataSetHelper = class helper for TClientDataSet
+    procedure DeleteCurrentRecord(completion: TOPPObjectDataSetHelperCompletion = nil);
     function ReadList(AList: TOPPHelpMapList): Boolean; // TOPPHelpMap
     procedure RecreateDataSet;
+    procedure RunHintTestTask(AIdent: string = ''; completion: TOPPObjectDataSetHelperCompletion = nil);
+    procedure RunHelpTestTask(AIdent: string = ''; completion: TOPPObjectDataSetHelperCompletion = nil);
   end;
 
 var
@@ -330,46 +350,52 @@ const
   kShortcutDropdownItemsArray: array [1 .. 2] of string = (SktSearch, SktPage);
   kHintDropdownItemsArray: array [1 .. 3] of string = (SktSearch, SktPage, SktBookmark);
 
-procedure TSampleForm.actionDeleteRecordExecute(Sender: TObject);
+procedure TSampleForm.actionConvertToAbsoluteExecute(Sender: TObject);
 var
-  fState: TSampleFormSaveState;
-  fComponentIdentifier: String;
+  text: String;
+  tag: NativeInt;
+  ptr: ^TcxButtonEdit;
 begin
+  if not(Sender is TAction) then
+    exit;
+  tag := TAction(Sender).tag;
+  if tag = 0 then
+    exit;
+  ptr := Pointer(tag);
+  text := ptr^.text;
+  ptr^.text := TOPPHelpSystemFilesHelper.AbsolutePath(text);
+end;
 
+procedure TSampleForm.actionConvertToRelativeExecute(Sender: TObject);
+var
+  text: String;
+  tag: NativeInt;
+  ptr: ^TcxButtonEdit;
+begin
+  if not(Sender is TAction) then
+    exit;
+  tag := TAction(Sender).tag;
+  if tag = 0 then
+    exit;
+  ptr := Pointer(tag);
+  text := ptr^.text;
+  ptr^.text := TOPPHelpSystemFilesHelper.RelativePath(text);
+end;
+
+procedure TSampleForm.actionDeleteRecordExecute(Sender: TObject);
+begin
   self.isModified := false;
 
-  fState := TSampleFormSaveState.Create;
-  try
-    fState.completion := procedure(AIdentifier: String)
-      begin
-        eventLogger.Flow(SEventDidRemovedRecord, kContext);
-        ReloadListView(
-          procedure
-          begin
-            // changeItemIndex(self.preferableIndexToJump(fItemIndexToJump));
-          end);
-      end;
-    fState.shortcutWasUpdated := false;
-    fState.hintWasUpdated := false;
-    fComponentIdentifier := ClientDataSet1.FieldByName('ComponentIdentifier').AsString;
+  ClientDataSet1.DeleteCurrentRecord(procedure()
+  begin
+    eventLogger.Flow('Has deleted record',kContext)
+  end);
 
-    helpHintServer.RemoveHelpMap(fComponentIdentifier,
-      procedure(AError: Exception)
-      begin
-        eventLogger.Flow(SEventDidRemovedHint, kContext);
-        fState.hintWasUpdated := true;
-        fState.checkAndRunMapId(SEmpty)
-      end);
-    helpShortcutServer.RemoveHelpMap(fComponentIdentifier,
-      procedure(AError: Exception)
-      begin
-        eventLogger.Flow(SEventDidRemovedShortcut, kContext);
-        fState.shortcutWasUpdated := true;
-        fState.checkAndRunMapId(SEmpty)
-      end);
-  finally
-    fState.Free;
-  end;
+end;
+
+procedure TSampleForm.ActionList1Execute(Action: TBasicAction; var Handled: Boolean);
+begin
+  //
 end;
 
 procedure TSampleForm.actionNewRecordExecute(Sender: TObject);
@@ -389,6 +415,8 @@ begin
         ClientDataSet1.Insert;
         ClientDataSet1.FieldByName('ComponentIdentifier').AsString := ANewIdentifier;
         ClientDataSet1.FieldByName('Identifier').AsString := ANewIdentifier;
+        ClientDataSet1.FieldByName('hasHint').AsBoolean := false;
+        ClientDataSet1.FieldByName('hasHelp').AsBoolean := false;
         ClientDataSet1.Post;
 
         cxDBTextEdit1.SetFocus;
@@ -465,7 +493,7 @@ begin
           point := SampleForm.ClientToScreen(PanelPreview.ClientOrigin);
           point.x := point.x + Integer(PanelPreview.Width div 2);
           point.y := point.y + Integer(PanelPreview.Height div 2);
-          SetCursorPos(point.X, point.Y);
+          SetCursorPos(point.x, point.y);
           Application.ActivateHint(point);
         end);
 
@@ -505,6 +533,7 @@ begin
     procedure(ANewIdentifier: String)
     begin
       self.isModified := false;
+      cxGrid1DBTableView1.DataController.UpdateData;
     end);
 end;
 
@@ -568,10 +597,10 @@ begin
   fScreenTip.Width := 789;
 
   fScreenTip.Header.PlainText := true;
-  fScreenTip.Header.Text := ''; // Заголовок
+  fScreenTip.Header.text := ''; // Заголовок
 
   fScreenTip.Description.PlainText := false;
-  fScreenTip.Description.Text := fHint.Data.rtf;
+  fScreenTip.Description.text := fHint.Data.rtf;
 
   fScreenTipLink := TdxScreenTipStyle(cxHintController.HintStyle).ScreenTipLinks.Add;
   fScreenTipLink.ScreenTip := fScreenTip;
@@ -606,6 +635,9 @@ begin
 end;
 
 procedure TSampleForm.cxButtonEdit1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var
+  point: TPoint;
+  isRelative: Boolean;
 begin
   case AButtonIndex of
     0:
@@ -616,13 +648,19 @@ begin
         begin
           if FileExists(OpenTextFileDialog1.filename) then
           begin
-            cxEditHintPredicateFilename.Text := TOPPHelpSystemFilesHelper.RelativePath(OpenTextFileDialog1.filename);
+            cxEditHintPredicateFilename.text := TOPPHelpSystemFilesHelper.RelativePath(OpenTextFileDialog1.filename);
           end;
         end;
       end;
     1:
       begin
-        TcxButtonEdit(Sender).ValidateEdit(true);
+        isRelative := TOPPHelpSystemFilesHelper.IsRelativePath(cxEditHintPredicateFilename.text);
+        actionConvertToRelative.Enabled := not isRelative;
+        actionConvertToAbsolute.Enabled := isRelative;
+        GetCursorPos(point);
+        actionConvertToRelative.tag := NativeInt(@cxEditHintPredicateFilename);
+        actionConvertToAbsolute.tag := NativeInt(@cxEditHintPredicateFilename);
+        PopupMenu1.Popup(point.x, point.y);
       end;
   end;
 end;
@@ -636,12 +674,17 @@ begin
   if (nsFind in NavigationState) then
     exit;
 
-  helpHintServer.ValidateHelpMapIdentifier(self.fSelectedItem, cxDBTextEdit1.Text,
+  helpHintServer.ValidateHelpMapIdentifier(self.fSelectedItem, cxDBTextEdit1.text,
     procedure(isValid: Boolean)
     begin
       self.isIdentifierValid := isValid;
       self.isModified := true;
     end);
+end;
+
+procedure TSampleForm.cxEditHintPredicateFilenamePropertiesEditValueChanged(Sender: TObject);
+begin
+  //
 end;
 
 procedure TSampleForm.cxEditHintPredicateFilenamePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
@@ -650,16 +693,25 @@ var
 begin
   filename := DisplayValue; // relative path
 
+  TcxButtonEdit(Sender).Properties.Buttons[1].Enabled := true;
+
   if TFile.Exists(filename) then
     exit;
   filename := TOPPHelpSystemFilesHelper.AbsolutePath(DisplayValue);
+
   if TFile.Exists(filename) then
     exit;
+
+  TcxButtonEdit(Sender).Properties.Buttons[1].Enabled := false;
+
   ErrorText := 'Файл указан неверно.';
   Error := true;
 end;
 
 procedure TSampleForm.cxEditShortcutPredicateFilenamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var
+  point: TPoint;
+  isRelative: Boolean;
 begin
   case AButtonIndex of
     0:
@@ -670,13 +722,19 @@ begin
         begin
           if FileExists(OpenTextFileDialog1.filename) then
           begin
-            ShortcutPredicateFilenameEdit.Text := TOPPHelpSystemFilesHelper.RelativePath(OpenTextFileDialog1.filename);
+            ShortcutPredicateFilenameEdit.text := TOPPHelpSystemFilesHelper.RelativePath(OpenTextFileDialog1.filename);
           end;
         end;
       end;
     1:
       begin
-        TcxButtonEdit(Sender).ValidateEdit(true);
+        isRelative := TOPPHelpSystemFilesHelper.IsRelativePath(ShortcutPredicateFilenameEdit.text);
+        actionConvertToRelative.Enabled := not isRelative;
+        actionConvertToAbsolute.Enabled := isRelative;
+        GetCursorPos(point);
+        actionConvertToRelative.tag := NativeInt(@ShortcutPredicateFilenameEdit);
+        actionConvertToAbsolute.tag := NativeInt(@ShortcutPredicateFilenameEdit);
+        PopupMenu1.Popup(point.x, point.y);
       end;
   end;
 end;
@@ -717,7 +775,7 @@ end;
 
 procedure TSampleForm.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
-  dxStatusBar1.Panels[0].Text := Format('Запись: %d/%d', [ClientDataSet1.RecNo, ClientDataSet1.RecordCount]);
+  dxStatusBar1.Panels[0].text := Format('Запись: %d/%d', [ClientDataSet1.RecNo, ClientDataSet1.RecordCount]);
 end;
 
 procedure TSampleForm.DiscardChanges(ItemCaption: String; completion: THelpMapSaveCompletion);
@@ -850,7 +908,7 @@ begin
   if cxGrid1DBTableView1.OptionsView.Indicator then
     indicatorWidth := cxGrid1DBTableView1.OptionsView.indicatorWidth;
   scrollIndicatorWidth := 0; // cxGrid1DBTableView1.Site.VScrollBar.Width;
-  cxGrid1DBTableView1Column2.Width := cxGrid1.Width - indicatorWidth - scrollIndicatorWidth;
+  cxGrid1DBTableView1Column2.Width := cxGrid1.Width - indicatorWidth - scrollIndicatorWidth - cxGrid1DBTableView1Column1.Width - cxGrid1DBTableView1Column3.Width;
 end;
 
 procedure TSampleForm.FindMapsById(ItemCaption: String);
@@ -1230,6 +1288,12 @@ procedure TSampleForm.setIsModified(AValue: Boolean);
 begin
   fIsModified := AValue;
   self.UpdateButtonStates;
+
+  if not fIsModified then
+  begin
+    ClientDataSet1.RunHintTestTask();
+    ClientDataSet1.RunHelpTestTask();
+  end;
 end;
 
 procedure TSampleForm.SetSelectedHintMap(const AMap: TOPPHelpMap);
@@ -1270,21 +1334,21 @@ begin
 
   try
     try
-      newIdentifier.Text := AMap.ComponentIdentifier;
+      newIdentifier.text := AMap.ComponentIdentifier;
       fPredicate := AMap.Predicate;
       if not assigned(fPredicate) then
       begin
         eventLogger.Error(SErrorHelpMapHasNoPredicate);
       end else begin
-        filename.Text := fPredicate.filename;
+        filename.text := fPredicate.filename;
         keyword.ItemIndex := Integer(fPredicate.keywordType);
-        value.Text := fPredicate.value;
+        value.text := fPredicate.value;
         if fPredicate.predicates.Count > 0 then
         begin
-          detailsvalue.Text := fPredicate.predicates[0].value;
+          detailsvalue.text := fPredicate.predicates[0].value;
           detailskeyword.ItemIndex := Integer(fPredicate.predicates[0].keywordType);
         end else begin
-          detailsvalue.Text := '';
+          detailsvalue.text := '';
           detailskeyword.SelectedItem := 0;
         end;
       end;
@@ -1306,20 +1370,20 @@ begin
   if not assigned(AMap) then
     exit;
 
-  AMap.ComponentIdentifier := newIdentifier.Text;
+  AMap.ComponentIdentifier := newIdentifier.text;
   fPredicate := AMap.Predicate;
   if assigned(fPredicate) then
   begin
-    fPredicate.filename := filename.Text;
+    fPredicate.filename := filename.text;
     fPredicate.keywordType := TOPPKeywordType(keyword.ItemIndex);
-    fPredicate.value := value.Text;
+    fPredicate.value := value.text;
     fPredicate.predicates.Clear;
-    if Length(detailsvalue.Text) <> 0 then
+    if Length(detailsvalue.text) <> 0 then
     begin
       fDetailsPredicate := TOPPHelpPredicate.Create;
-      fDetailsPredicate.value := detailsvalue.Text;
+      fDetailsPredicate.value := detailsvalue.text;
       fDetailsPredicate.keywordType := TOPPKeywordType(detailskeyword.ItemIndex);
-      fDetailsPredicate.filename := filename.Text;
+      fDetailsPredicate.filename := filename.text;
       fPredicate.predicates.Add(fDetailsPredicate);
     end;
   end;
@@ -1329,12 +1393,12 @@ end;
 
 procedure TSampleForm.wipeFields(identifier: TcxDBTextEdit; filename: TcxButtonEdit; keyword: TcxComboBox; value: TcxTextEdit; detailskeyword: TcxComboBox; detailsvalue: TcxTextEdit);
 begin
-  identifier.Text := '';
-  filename.Text := '';
+  identifier.text := '';
+  filename.text := '';
   keyword.ItemIndex := -1;
-  value.Text := '';
+  value.text := '';
   detailskeyword.ItemIndex := -1;
-  detailsvalue.Text := '';
+  detailsvalue.text := '';
 end;
 
 procedure TSampleForm.WMHELP(var Msg: TWMHelp);
@@ -1388,9 +1452,51 @@ end;
 
 { TOPPObjectDataSetHelper }
 
+procedure TOPPObjectDataSetHelper.DeleteCurrentRecord(completion: TOPPObjectDataSetHelperCompletion);
+var
+  fState: TSampleFormSaveState;
+  fComponentIdentifier: String;
+begin
+  fState := TSampleFormSaveState.Create;
+  try
+    fState.completion := procedure(AIdentifier: String)
+      begin
+        eventLogger.Flow(SEventDidRemovedRecord, kContext);
+        self.DisableControls;
+        self.Delete;
+        self.EnableControls;
+        if Assigned(completion) then
+          completion();
+      end;
+    fState.shortcutWasUpdated := false;
+    fState.hintWasUpdated := false;
+    fComponentIdentifier := self.FieldByName('ComponentIdentifier').AsString;
+
+    helpHintServer.RemoveHelpMap(fComponentIdentifier,
+      procedure(AError: Exception)
+      begin
+        eventLogger.Flow(SEventDidRemovedHint, kContext);
+        fState.hintWasUpdated := true;
+        fState.checkAndRunMapId(SEmpty)
+      end);
+    helpShortcutServer.RemoveHelpMap(fComponentIdentifier,
+      procedure(AError: Exception)
+      begin
+        eventLogger.Flow(SEventDidRemovedShortcut, kContext);
+        fState.shortcutWasUpdated := true;
+        fState.checkAndRunMapId(SEmpty)
+      end);
+  finally
+    fState.Free;
+  end;
+
+//
+end;
+
 function TOPPObjectDataSetHelper.ReadList(AList: TOPPHelpMapList): Boolean;
 var
   fMap: TOPPHelpMap;
+  ident: String;
 begin
 
   RecreateDataSet;
@@ -1406,18 +1512,154 @@ begin
     self.FieldByName('identifier').AsString := fMap.identifier;
     self.FieldByName('ComponentIdentifier').AsString := fMap.ComponentIdentifier;
     self.Post;
+
+    self.RunHintTestTask(fMap.ComponentIdentifier);
+    self.RunHelpTestTask(fMap.ComponentIdentifier);
+
   end;
 
 end;
 
 procedure TOPPObjectDataSetHelper.RecreateDataSet;
+var
+  fBooleanField: TBooleanField;
+  fStringField: TStringField;
 begin
   self.Close;
   self.FieldDefs.Clear;
+  self.IndexName := '';
+  self.IndexDefs.Clear;
 
-  self.FieldDefs.Add('identifier', ftString, 255);
-  self.FieldDefs.Add('ComponentIdentifier', ftString, 255);
+  self.Fields.Clear;
+
+
+  fStringField := TStringField.Create(self);
+  fStringField.FieldName := 'identifier';
+  fStringField.Size := 255;
+  fStringField.DataSet := self;
+
+  self.IndexDefs.Add('idx', 'ComponentIdentifier', []);
+
+  fStringField := TStringField.Create(self);
+  fStringField.FieldName := 'ComponentIdentifier';
+  fStringField.Size := 255;
+  fStringField.DataSet := self;
+
+  fBooleanField := TBooleanField.Create(self);
+  fBooleanField.FieldName := 'hasHint';
+  fBooleanField.DataSet := self;
+
+  fBooleanField := TBooleanField.Create(self);
+  fBooleanField.FieldName := 'hasHelp';
+  fBooleanField.DataSet := self;
+
   self.CreateDataSet;
+
+end;
+
+procedure TOPPObjectDataSetHelper.RunHelpTestTask(AIdent: string; completion: TOPPObjectDataSetHelperCompletion);
+var
+  AValue: Boolean;
+  fThread: TThread;
+  fIdent: String;
+begin
+  if not self.Active then
+    exit;
+
+  if Length(AIdent) = 0 then
+    fIdent := self.FieldByName('ComponentIdentifier').AsString
+  else
+    fIdent := AIdent;
+
+  fThread := TThread.Current;
+
+  TTask.Run(
+    procedure()
+    begin
+      helpShortcutServer.FindHelpMap(fIdent,
+        procedure(const AMap: TOPPHelpMap)
+        var
+          fresult: Boolean;
+        begin
+          fresult := false;
+          if assigned(AMap) then
+          begin
+            fresult := AMap.IsRunnable;
+          end;
+
+          TThread.Synchronize(fThread,
+            procedure()
+            begin
+              self.DisableControls;
+              self.IndexName := 'idx';
+
+              if self.Locate('ComponentIdentifier', fIdent, [loCaseInsensitive]) then
+              begin
+                self.Edit;
+                self.FieldByName('hasHelp').AsBoolean := fresult;
+                self.Post;
+              end;
+              self.IndexName := '';
+              self.EnableControls;
+              if assigned(completion) then
+                completion();
+            end);
+
+        end);
+
+    end);
+
+end;
+
+procedure TOPPObjectDataSetHelper.RunHintTestTask(AIdent: string; completion: TOPPObjectDataSetHelperCompletion);
+var
+  AValue: Boolean;
+  fThread: TThread;
+  fIdent: String;
+begin
+  if not self.Active then
+    exit;
+
+  if Length(AIdent) = 0 then
+    fIdent := self.FieldByName('ComponentIdentifier').AsString
+  else
+    fIdent := AIdent;
+
+  fThread := TThread.Current;
+
+  TTask.Run(
+    procedure()
+    begin
+      helpHintServer.FindHelpMap(fIdent,
+        procedure(const AMap: TOPPHelpMap)
+        var
+          fresult: Boolean;
+        begin
+          fresult := false;
+          if assigned(AMap) then
+          begin
+            fresult := AMap.IsRunnable;
+          end;
+
+          TThread.Synchronize(fThread,
+            procedure()
+            begin
+              self.DisableControls;
+              self.IndexName := 'idx';
+
+              if self.Locate('ComponentIdentifier', fIdent, [loCaseInsensitive]) then
+              begin
+                self.Edit;
+                self.FieldByName('hasHint').AsBoolean := fresult;
+                self.Post;
+              end;
+              self.IndexName := '';
+              self.EnableControls;
+              if assigned(completion) then
+                completion();
+            end);
+        end);
+    end);
 end;
 
 { TRectHelper }

@@ -16,6 +16,7 @@ type
     fFileName: String;
     fPredicates: TList<TOPPHelpPredicate>;
     procedure SetValue(AValue: String);
+    function GetIsRunnable: Boolean;
   public
     constructor Create;overload;
     constructor Create(AFileName: String; AKeywordType: TOPPKeywordType; AValue: String);overload;
@@ -25,6 +26,7 @@ type
     property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
     property filename: String read fFileName write fFileName;
     property predicates: TList<TOPPHelpPredicate> read fPredicates;
+    property isRunnable: Boolean read GetIsRunnable;
   end;
 
   TOPPHelpPredicateStreamHelper = class helper for TOPPHelpPredicate
@@ -126,6 +128,15 @@ begin
   fPredicates.Clear;
   FreeAndNil(fPredicates);
   inherited Destroy;
+end;
+
+function TOPPHelpPredicate.GetIsRunnable: Boolean;
+begin
+  //TODO: make the same test for children
+  result := false;
+  if (length(fFileName) > 0) then begin
+    result := Length(fValue) > 0;
+  end;
 end;
 
 procedure TOPPHelpPredicate.SetValue(AValue: String);

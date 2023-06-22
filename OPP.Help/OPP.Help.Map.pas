@@ -20,17 +20,20 @@ type
     fIdentifier: TOPPHelpHintMapIdentifier;
     fPredicate: TOPPHelpPredicate;
     function GetIsValid: Boolean;
+    function GetIsRunnable: Boolean;
   public
     constructor Create; overload;
     constructor Create(AIdentifier: String); overload;
     destructor Destroy; override;
+
     property ComponentIdentifier: TOPPHelpHintMapIdentifier read fComponentIdentifier write fComponentIdentifier;
     property Identifier: TOPPHelpHintMapIdentifier read fIdentifier write fIdentifier;
     property IsValid: Boolean read GetIsValid;
+    property IsRunnable: Boolean read GetIsRunnable;
     property Predicate: TOPPHelpPredicate read fPredicate write fPredicate;
   end;
 
-  TOPPHelpMapList = class (TList<TOPPHelpMap>)
+  TOPPHelpMapList = class(TList<TOPPHelpMap>)
   end;
 
   TOPPHelpMapApplyDefaultsCompletion = reference to procedure(const AMap: POPPHelpMap);
@@ -76,6 +79,13 @@ begin
   inherited;
 end;
 
+function TOPPHelpMap.GetIsRunnable: Boolean;
+begin
+  result := false;
+  if Assigned(fPredicate) then
+    result := fPredicate.isRunnable;
+end;
+
 function TOPPHelpMap.GetIsValid: Boolean;
 begin
   result := Length(fComponentIdentifier) <> 0;
@@ -85,7 +95,7 @@ constructor TOPPHelpMapSet.Create(AList: TOPPHelpMapList = nil);
 begin
   inherited Create;
   fList := TOPPHelpMapList.Create;
-  if assigned(AList) then
+  if Assigned(AList) then
   begin
     fList.AddRange(AList);
   end;
@@ -99,7 +109,7 @@ end;
 
 procedure TOPPHelpMapSet.AddMap(AMap: TOPPHelpMap);
 begin
-  if not assigned(AMap) then
+  if not Assigned(AMap) then
   begin
     exit;
   end;
@@ -111,7 +121,7 @@ procedure TOPPHelpMapSet.AddMaps(AList: TOPPHelpMapList);
 var
   fItem: TOPPHelpMap;
 begin
-  if not assigned(AList) then
+  if not Assigned(AList) then
     exit;
 
   for fItem in AList do
@@ -143,7 +153,7 @@ var
   fItem: TOPPHelpMap;
   fDictionary: TDictionary<String, TOPPHelpMap>;
 begin
-  if not assigned(AList) then
+  if not Assigned(AList) then
     exit;
 
   fDictionary := TDictionary<String, TOPPHelpMap>.Create;

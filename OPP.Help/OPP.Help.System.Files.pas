@@ -20,6 +20,7 @@ type
     class function GetOPPGuidePath(AFileName: String): String;
     class function GetOPPLogsPath(AFileName: String): String;
     class function CreateDirectoryIfNeed(AFileName: String): Boolean;
+    class function IsRelativePath(APath: String): Boolean;
   end;
 
 implementation
@@ -90,7 +91,6 @@ end;
 class function TOPPHelpSystemFilesHelper.ExeFileDir: String;
 begin
   result := ExtractFileDir(Application.ExeName);
-  //eventLogger.Flow(Format('ExeFileDir: %s',[result]), 'TOPPHelpSystemFilesHelper');
 end;
 
 class function TOPPHelpSystemFilesHelper.GetOPPGuidePath(AFileName: String): String;
@@ -117,6 +117,14 @@ begin
   except
     result := TOPPHelpSystemFilesHelper.AbsolutePath(AFileName);
   end;
+end;
+
+class function TOPPHelpSystemFilesHelper.IsRelativePath(APath: String): Boolean;
+var
+  valueToCompare: String;
+begin
+  valueToCompare := RelToAbs(APath, ExeFileDir);
+  result := TFile.Exists(valueToCompare)
 end;
 
 class function TOPPHelpSystemFilesHelper.GetOPPLogsPath(AFileName: String): String;
