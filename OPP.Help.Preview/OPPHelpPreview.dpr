@@ -17,7 +17,7 @@ uses
 
 begin
 
-  Application.Title := 'ГОЛЬФСТРИМ Помощь';
+  Application.Title := TOPPHelpPreviewForm.ApplicationTitle;
   Application.Initialize;
   Application.MainFormOnTaskbar := true;
   Application.CreateForm(TOPPHelpPreviewForm, OPPHelpPreviewForm);

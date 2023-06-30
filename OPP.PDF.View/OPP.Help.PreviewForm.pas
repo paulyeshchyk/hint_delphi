@@ -221,6 +221,7 @@ type
     procedure applyHints();
     procedure SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     procedure SetIsProcessingOPPPredicateMessage(const Value: Boolean);
+    class function GetApplicationTitle: String; static;
     property currentState: TOPPHelpPreviewFormState read fCurrentState write SetCurrentState;
     property InfoPanel: TdxStatusBarPanel read GetPageIndexPanel;
     property Navigator: IOPPNavigator read fNavigator;
@@ -239,6 +240,7 @@ type
     function GetContainerClassName: String;
     procedure PresentModal();
     function RunPredicate(const APredicate: TOPPHelpPredicate; ACompletion: TOPPHelpPreviewFormCompletion): TOPPHelpShortcutViewerExecutionResult;
+    class property ApplicationTitle: String read GetApplicationTitle;
   end;
 
 var
@@ -249,6 +251,7 @@ implementation
 {$R *.dfm}
 
 uses
+  System.IOUtils,
   dxCustomPreview,
   OPP.Help.Shortcut.Server,
   OPP.Help.View.ZoomSettings,
@@ -263,9 +266,6 @@ uses
 
 const
   kContext = 'TOPPHelpPreviewForm';
-  kGulfstreamContentsPageIndex = '2';
-  kGulfstreamTermsPageIndex = '1077';
-  kGulfstreamTermsAndDefinitionsPageIndex = '1089';
   kZoomTwoPagesFactor = 81;
   kZoomDefaultIncrement = 5;
 
@@ -287,6 +287,23 @@ resourcestring
   SStatusLoadContentStarted = 'Началась загрузка'; // Load content started
   SStatusLoadContentFinished = 'Загрузка завершена'; // Load content finished
   SStatusFormCreated = 'Документ не загружен'; // 'Form created'
+  SDefaultCaption = 'ГОЛЬФСТРИМ Помощь';
+  SActionCloseWindowHint = 'Спрятать окно';
+  SActionFitPageCustomHint = 'Подобрать размер';
+  SActionFitPageHeightHint = 'Подобрать размер по высоте';
+  SActionFitPageWidthHint = 'Подобрать размер по ширине';
+  SActionFitTwoPagesHint = 'Подобрать размер для двух страниц';
+  SActionGotoFirstPageHint = 'Перейти на первую страницу';
+  SActionGotoLastPageHint = 'Перейти на последнюю страницу';
+  SActionGotoNextPageHint = 'Перейти на следующую страницу';
+  SActionGotoPreviousPageHint = 'Перейти на предыдущую страницу';
+  SActionHideHint = 'Спрятать';
+  SActionPrintHint = 'Распечатать';
+  SActionPrintDialogHint = 'Распечатать, используя диалог';
+  SActionToggleFindPanelHint = 'Найти текст';
+  SActionZoomDecreaseHint = 'Уменьшить масштаб';
+  SActionZoomIncreaseHint = 'Увеличить масштаб';
+  SActionGotoInitialTextHint = 'Изначальная страница';
 
 procedure TOPPHelpPreviewForm.actionFitPageCustomExecute(Sender: TObject);
 var
@@ -405,22 +422,22 @@ end;
 
 procedure TOPPHelpPreviewForm.applyHints;
 begin
-  actionCloseWindow.Hint := 'Спрятать окно';
-  actionFitPageCustom.Hint := 'Подобрать размер';
-  actionFitPageHeight.Hint := 'Подобрать размер по высоте';
-  actionFitPageWidth.Hint := 'Подобрать размер по ширине';
-  actionFitTwoPages.Hint := 'Подобрать размер для двух страниц';
-  actionGotoFirstPage.Hint := 'Перейти на первую страницу';
-  actionGotoLastPage.Hint := 'Перейти на последнюю страницу';
-  actionGotoNextPage.Hint := 'Перейти на следующую страницу';
-  actionGotoPreviousPage.Hint := 'Перейти на предыдущую страницу';
-  actionHide.Hint := 'Спрятать';
-  actionPrint.Hint := 'Распечатать';
-  actionPrintDialog.Hint := 'Распечатать, используя диалог';
-  actionToggleFindPanel.Hint := 'Найти текст';
-  actionZoomDecrease.Hint := 'Уменьшить масштаб';
-  actionZoomIncrease.Hint := 'Увеличить масштаб';
-  actionGotoInitialText.Hint := 'Изначальная страница';
+  actionCloseWindow.Hint := SActionCloseWindowHint;
+  actionFitPageCustom.Hint := SActionFitPageCustomHint;
+  actionFitPageHeight.Hint := SActionFitPageHeightHint;
+  actionFitPageWidth.Hint := SActionFitPageWidthHint;
+  actionFitTwoPages.Hint := SActionFitTwoPagesHint;
+  actionGotoFirstPage.Hint := SActionGotoFirstPageHint;
+  actionGotoLastPage.Hint := SActionGotoLastPageHint;
+  actionGotoNextPage.Hint := SActionGotoNextPageHint;
+  actionGotoPreviousPage.Hint := SActionGotoPreviousPageHint;
+  actionHide.Hint := SActionHideHint;
+  actionPrint.Hint := SActionPrintHint;
+  actionPrintDialog.Hint := SActionPrintDialogHint;
+  actionToggleFindPanel.Hint := SActionToggleFindPanelHint;
+  actionZoomDecrease.Hint := SActionZoomDecreaseHint;
+  actionZoomIncrease.Hint := SActionZoomIncreaseHint;
+  actionGotoInitialText.Hint := SActionGotoInitialTextHint;
 end;
 
 procedure TOPPHelpPreviewForm.ApplySettings(ASettings: TOPPHelpPreviewSettings);
@@ -572,23 +589,26 @@ begin
   ReloadNavigationPanel(nil);
   applyHints();
 
-
-
   TOPPHelpViewCommandLine.ReadFromCommandLine(
     procedure(const AValue: TOPPHelpPredicate)
     begin
 
-      eventLogger.Flow('Parsed command-line', kContext);
-
-      if Assigned(AValue) then
+      if not Assigned(AValue) then
       begin
-        eventLogger.Flow('Executed predicate from command-line', kContext);
-
-        RunPredicate(AValue,
-          procedure()
-          begin
-          end);
+        eventLogger.Flow('Parsed command-line: no predicate', kContext);
+        exit;
       end;
+      if not AValue.isRunnable then
+      begin
+        eventLogger.Flow('Parsed command-line: predicate is not runnable', kContext);
+        exit;
+      end;
+
+      RunPredicate(AValue,
+        procedure()
+        begin
+          eventLogger.Flow('Parsed command-line: finished predicate execution', kContext);
+        end);
     end);
 end;
 
@@ -600,24 +620,29 @@ begin
   end;
 end;
 
+class function TOPPHelpPreviewForm.GetApplicationTitle: String;
+begin
+  result := SDefaultCaption;
+end;
+
 function TOPPHelpPreviewForm.GetContainerClassName: String;
 begin
-  Result := self.className;
+  result := self.className;
 end;
 
 function TOPPHelpPreviewForm.GetPageIndexPanel: TdxStatusBarPanel;
 begin
-  Result := dxStatusBar1.Panels[0];
+  result := dxStatusBar1.Panels[0];
 end;
 
 function TOPPHelpPreviewForm.GetProgressPanel: TdxStatusBarPanel;
 begin
-  Result := dxStatusBar1.Panels[2];
+  result := dxStatusBar1.Panels[2];
 end;
 
 function TOPPHelpPreviewForm.GetStatusPanel: TdxStatusBarPanel;
 begin
-  Result := dxStatusBar1.Panels[1];
+  result := dxStatusBar1.Panels[1];
 end;
 
 procedure TOPPHelpPreviewForm.hideProgressPanel;
@@ -646,7 +671,7 @@ begin
   SendMessage(self.Handle, WM_OPPPredicate, 0, 0);
   eventLogger.Flow('Sent WM_OPPPredicate message', kContext);
 
-  Msg.Result := NativeInt(TOPPMessagePipeSendResult.psrSuccess);
+  Msg.result := NativeInt(TOPPMessagePipeSendResult.psrSuccess);
 
 end;
 
@@ -659,7 +684,7 @@ begin
 
   if IsProcessingOPPPredicateMessage then
   begin
-    Msg.Result := NativeInt(TOPPHelpShortcutViewerExecutionResult.erFailed);
+    Msg.result := NativeInt(TOPPHelpShortcutViewerExecutionResult.erFailed);
     exit;
   end;
 
@@ -678,7 +703,7 @@ begin
       oppHelpView.UnlockUpdates;
     end);
 
-  Msg.Result := NativeInt(fResult);
+  Msg.result := NativeInt(fResult);
 end;
 
 procedure TOPPHelpPreviewForm.OnMessageWMScrollingType(var Msg: TMessage);
@@ -717,7 +742,7 @@ begin
     TOPPHelpPreviewSettings.Save(fSettings);
   end;
 
-  Msg.Result := fFinalZoomFactor;
+  Msg.result := fFinalZoomFactor;
 end;
 
 procedure TOPPHelpPreviewForm.OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
@@ -822,11 +847,11 @@ function TOPPHelpPreviewForm.NavigationInfo(ANavigator: IOPPNavigator): TOPPHelp
 begin
   if Assigned(ANavigator) then
   begin
-    Result.constraints := ANavigator.NavigatorConstraints;
-    Result.gotopage := (ANavigator.GetPageIndex + 1);
+    result.constraints := ANavigator.NavigatorConstraints;
+    result.gotopage := (ANavigator.GetPageIndex + 1);
   end else begin
-    Result.constraints := [];
-    Result.gotopage := null;
+    result.constraints := [];
+    result.gotopage := null;
   end;
 end;
 
@@ -885,10 +910,10 @@ end;
 
 function TOPPHelpPreviewForm.RunPredicate(const APredicate: TOPPHelpPredicate; ACompletion: TOPPHelpPreviewFormCompletion): TOPPHelpShortcutViewerExecutionResult;
 begin
-  Result := TOPPHelpShortcutViewerExecutionResult.erSuccess;
+  result := TOPPHelpShortcutViewerExecutionResult.erSuccess;
   if not Assigned(APredicate) then
   begin
-    Result := TOPPHelpShortcutViewerExecutionResult.erFailed;
+    result := TOPPHelpShortcutViewerExecutionResult.erFailed;
     eventLogger.Error(SErrorPredicateIsNotDefined, kContext);
     if Assigned(ACompletion) then
       ACompletion();
@@ -902,10 +927,13 @@ begin
       eventLogger.Flow(Format(SEventFinishedPDFLoadTemplate, [APredicate.filename]), OPP.Help.View.Fullscreen.kContext);
       if AStatus = TOPPHelpShortcutServerLoadStreamStatus.ssError then
       begin
+        self.Caption := Format('%s', [TOPPHelpPreviewForm.ApplicationTitle]);
         if Assigned(ACompletion) then
           ACompletion();
         exit;
       end;
+
+      self.Caption := Format('%s: %s', [TOPPHelpPreviewForm.ApplicationTitle, TPath.GetFileNameWithoutExtension(APredicate.filename)]);
 
       try
         case AStatus of
@@ -992,24 +1020,24 @@ end;
 
 function TOPPHelpPreviewFormStateHelper.asString: String;
 begin
-  Result := '';
+  result := '';
   case self of
     fsFormCreated:
-      Result := SStatusFormCreated;
+      result := SStatusFormCreated;
     fsLoadContentStarted:
-      Result := SStatusLoadContentStarted;
+      result := SStatusLoadContentStarted;
     fsLoadContentFinished:
-      Result := SStatusLoadContentFinished;
+      result := SStatusLoadContentFinished;
     fsHandlingMessage:
-      Result := SStatusHandling;
+      result := SStatusHandling;
     fsSearchStarted:
-      Result := SStatusSearchStarted;
+      result := SStatusSearchStarted;
     fsSearchProgressing:
-      Result := SStatusSearchProgressing;
+      result := SStatusSearchProgressing;
     fsSearchFinished:
-      Result := SStatusSearchFinished;
+      result := SStatusSearchFinished;
     fsIdle:
-      Result := SStatusIdle;
+      result := SStatusIdle;
   end;
 end;
 
@@ -1017,7 +1045,7 @@ end;
 
 function TOPPHelpPreviewNavigationPanelInfoHelper.hasConstraints: Boolean;
 begin
-  Result := (self.constraints <> []);
+  result := (self.constraints <> []);
 end;
 
 end.

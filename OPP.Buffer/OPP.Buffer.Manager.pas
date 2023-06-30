@@ -7,6 +7,8 @@ uses
   Vcl.Clipbrd, Vcl.Controls,
   Datasnap.dbclient, Data.DB,
 
+  IdHashMessageDigest,
+
   OPP.Help.System.Codable,
   OPP.Help.System.Codable.Helper,
 
@@ -30,6 +32,27 @@ type
     procedure SetOPPInfo(OPPInfo: TOPPBufferOPPInfo; AText: String; AControl: TWinControl); virtual;
   end;
 
+  TClientDatasetMigrateCompletion = reference to procedure(AStatus: Boolean);
+
+  TOPPMetadataCompare = class helper for TClientDataSet
+  private
+    function GetMetadataHash: String;
+  protected
+    function ValidateFile(AFileName: String): Boolean;
+    procedure Migrate(AFileName: String; completion: TClientDatasetMigrateCompletion);
+    property MetadataHash: String read GetMetadataHash;
+  end;
+
+  TOPPBufferManagerLoadStatus = (lsCompleted, lsMigrated, lsFailure);
+
+  TOPPBufferManagerLoadResult = record
+    status: TOPPBufferManagerLoadStatus;
+    text: String;
+    constructor Create(AStatus: TOPPBufferManagerLoadStatus; AText: String = '');
+  end;
+
+  TOPPBufferManagerLoadCompletion = reference to procedure(AResult: TOPPBufferManagerLoadResult);
+
   TOPPBufferManager = class
   private
     fIgnoreClipboardMessages: Boolean;
@@ -43,9 +66,9 @@ type
     function GetRecordsStorageFileName(AFileName: String = ''): String;
     function GetSettings: IOPPBufferManagerSettings;
 
+    procedure MigrateStorage(AFileName: String; completion: TOPPBufferManagerLoadCompletion);
     procedure OnCalcFields(ADataset: TDataset);
     property CanAcceptRecord: Boolean read GetCanAcceptRecord;
-
   public
     constructor Create;
     destructor Destroy; override;
@@ -58,10 +81,10 @@ type
     procedure WriteDataIntoControl(Sender: TWinControl; AData: TOPPBufferManagerRecord);
 
     procedure AddEmpty();
-    procedure AddOPPInfoAndSave(AText: String; const AOPPInfo:TOPPBufferOPPInfo);
+    procedure AddOPPInfoAndSave(AText: String; const AOPPInfo: TOPPBufferOPPInfo);
     function AddRecord(const ARecord: TOPPBufferManagerRecord): Boolean;
     function DeleteFocused(): Boolean;
-    procedure LoadRecords();
+    procedure LoadRecords(completion: TOPPBufferManagerLoadCompletion = nil);
     procedure SaveRecords(AFileName: String = '');
     procedure RemoveRecordsAfter(AAfter: Integer);
     property Settings: IOPPBufferManagerSettings read GetSettings;
@@ -82,6 +105,7 @@ uses
   Vcl.Dialogs,
   Vcl.Forms,
 
+  WinAPI.Messages,
   WinAPI.Windows;
 
 resourcestring
@@ -89,6 +113,10 @@ resourcestring
   SWarningClipboardChangedButNothingCopied = 'Clipboard changed, but nothing copied';
   SBufferManagerRecordsFileWasDamaged = 'Файл записей буфера обмена был повреждён!';
   SNotAbleToDeleteDamagedFileTemplate = 'При попытке восстановить файл записей произошла ошибка:'#13#10#13#10'%s'#13#10#13#10'Обратитесь к администратору';
+  SErrorIncorrectVersion = 'Текущая версия буфера обмена не соответствует версии ГОЛЬФСТРИМ.';
+  SHintVersionWasUpdated = 'Версия буфера обмена будет обновлена.';
+  SFileLimitedAccess = 'Доступ к файлу буфера обмена ограничен.';
+  SAdministratorSupportIsNeed = 'Обратитесь за помощью к администратору.';
 
 const
   kContext = 'TOPPBufferManager';
@@ -127,7 +155,24 @@ begin
   fDataset.Rebuild;
   fIgnoreClipboardMessages := false;
 
-  LoadRecords();
+  LoadRecords(
+    procedure(AResult: TOPPBufferManagerLoadResult)
+    begin
+      case AResult.status of
+        lsCompleted, lsMigrated:
+          begin
+            if Length(AResult.text) = 0 then
+              exit;
+            eventLogger.Flow(AResult.text, kContext);
+          end;
+        lsFailure:
+          begin
+            if Length(AResult.text) = 0 then
+              exit;
+            eventLogger.Error(AResult.text, kContext);
+          end;
+      end;
+    end);
 end;
 
 destructor TOPPBufferManager.Destroy;
@@ -158,7 +203,7 @@ begin
   fRecord := TOPPBufferManagerRecord.Create;
   try
     fRecord.OPPInfo := AOPPInfo;
-    fRecord.Text := AText;
+    fRecord.text := AText;
     self.AddRecordAndSave(fRecord);
   finally
     fRecord.Free;
@@ -219,7 +264,8 @@ var
   fExtractor: TOPPInfoExtractor;
 begin
   result := nil;
-  if Length(fOPPInfoExtractors) = 0 then begin
+  if Length(fOPPInfoExtractors) = 0 then
+  begin
     eventLogger.Warning('No extractor found', kContext);
     exit;
   end;
@@ -287,39 +333,94 @@ begin
   result := fSettings;
 end;
 
-procedure TOPPBufferManager.LoadRecords();
+procedure TOPPBufferManager.LoadRecords(completion: TOPPBufferManagerLoadCompletion);
 var
   fFileName: String;
 begin
   fFileName := GetRecordsStorageFileName();
   if not TFile.Exists(fFileName) then
   begin
-    eventLogger.Error(Format(SErrorFileNotFoundTemplate, [fFileName]), kContext);
+    if assigned(completion) then
+      completion(TOPPBufferManagerLoadResult.Create(lsFailure, Format(SErrorFileNotFoundTemplate, [fFileName])));
     exit;
   end;
 
-  eventLogger.Debug(Format('Load content from file: %s', [fFileName]), 'TOPPBufferManager');
+  eventLogger.Debug(Format('Load content from file: %s', [fFileName]), kContext);
+
+  if not self.fDataset.ValidateFile(fFileName) then
+  begin
+    MigrateStorage(fFileName, completion);
+    exit;
+  end;
+
   try
     fDataset.LoadFromFile(fFileName);
+    if assigned(completion) then
+      completion(TOPPBufferManagerLoadResult.Create(lsCompleted, ''));
   except
     on E: EDBClient do
     begin
-      ShowMessage(SBufferManagerRecordsFileWasDamaged);
       try
         TFile.Delete(fFileName);
         fDataset.Rebuild;
+        if assigned(completion) then
+          completion(TOPPBufferManagerLoadResult.Create(lsCompleted, 'File was deleted'));
       except
         on E: Exception do
         begin
-          ShowMessage(Format(SNotAbleToDeleteDamagedFileTemplate, [E.Message]));
+          if assigned(completion) then
+            completion(TOPPBufferManagerLoadResult.Create(lsFailure, E.Message));
         end;
       end;
     end;
     on E: Exception do
     begin
-      eventLogger.Error(E, kContext);
+      if assigned(completion) then
+        completion(TOPPBufferManagerLoadResult.Create(lsFailure, E.Message));
     end;
   end;
+end;
+
+procedure TOPPBufferManager.MigrateStorage(AFileName: String; completion: TOPPBufferManagerLoadCompletion);
+begin
+
+  try
+
+    TFile.Delete(AFileName);
+
+    eventLogger.Flow('Started dataset migration', kContext);
+
+    self.fDataset.Migrate(AFileName,
+      procedure(AStatus: Boolean)
+      var
+        fCompletionResult: TOPPBufferManagerLoadResult;
+      begin
+        eventLogger.Flow('Finished dataset migration', kContext);
+
+        try
+          self.fDataset.SaveToFile(AFileName);
+          fCompletionResult.status := lsMigrated;
+          fCompletionResult.text := Format('%s' + #13#10 + #13#10 + '%s', [SErrorIncorrectVersion, SHintVersionWasUpdated]);
+          if assigned(completion) then
+            completion(fCompletionResult);
+        except
+          on E: Exception do
+          begin
+            eventLogger.Error(E, kContext);
+            if assigned(completion) then
+              completion(TOPPBufferManagerLoadResult.Create(lsFailure, E.Message));
+          end;
+        end;
+      end);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+      if assigned(completion) then
+        completion(TOPPBufferManagerLoadResult.Create(lsFailure, Format('%s' + #13#10 + #13#10 + '%s' + #13#10 + #13#10 + #13#10 + '%s', [SFileLimitedAccess, AFileName, SAdministratorSupportIsNeed])));
+    end;
+  end;
+
 end;
 
 procedure TOPPBufferManager.OnCalcFields(ADataset: TDataset);
@@ -349,7 +450,7 @@ begin
       fOPPInfo.Free;
     end;
   end else begin
-    eventLogger.warning(SWarningClipboardChangedButNothingCopied, kContext);
+    eventLogger.Warning(SWarningClipboardChangedButNothingCopied, kContext);
   end;
 
   fIgnoreClipboardMessages := false;
@@ -376,7 +477,7 @@ begin
   fExtractor := GetOPPInfoExtractor(Sender);
   if not assigned(fExtractor) then
   begin
-    eventLogger.warning('Extractor is not defined', 'TOPPBufferManager');
+    eventLogger.Warning('Extractor is not defined', kContext);
     exit;
   end;
   fExtractor.SetOPPInfo(AData.OPPInfo, AData.text, Sender);
@@ -458,6 +559,130 @@ end;
 procedure TOPPInfoExtractor.SetOPPInfo(OPPInfo: TOPPBufferOPPInfo; AText: String; AControl: TWinControl);
 begin
   //
+end;
+
+{ TOPPMetadataCompare }
+
+function TOPPMetadataCompare.GetMetadataHash: String;
+var
+  fField: TField;
+  fList: TStringList;
+  fItem: String;
+  fStream: TMemoryStream;
+  md5: TIdHashMessageDigest5;
+begin
+  result := '';
+
+  fList := TStringList.Create;
+  try
+
+    for fField in self.Fields do
+    begin
+      fItem := Format('%s-%d-%d', [fField.FieldName, Integer(fField.DataType), fField.DataSize]);
+      fList.Add(fItem);
+    end;
+
+    fStream := TMemoryStream.Create;
+    try
+      fList.SaveToStream(fStream);
+      fStream.Position := 0;
+      md5 := TIdHashMessageDigest5.Create;
+      try
+        result := md5.HashStreamAsHex(fStream);
+      finally
+        md5.Free;
+      end;
+    finally
+      fStream.Free;
+    end;
+  finally
+    fList.Free;
+  end;
+end;
+
+procedure TOPPMetadataCompare.Migrate(AFileName: String; completion: TClientDatasetMigrateCompletion);
+var
+  fFieldDestination, fFieldSource: TField;
+  fSourceDataset: TClientDataSet;
+begin
+
+  fSourceDataset := TClientDataSet.Create(nil);
+  try
+    try
+      fSourceDataset.LoadFromFile(AFileName);
+      fSourceDataset.First;
+      while not fSourceDataset.Eof do
+      begin
+        self.Insert;
+        for fFieldDestination in self.Fields do
+        begin
+          fFieldSource := fSourceDataset.Fields.FindField(fFieldDestination.FieldName);
+          if not assigned(fFieldSource) then
+          begin
+            eventLogger.Debug(Format('Skipping field %s', [fFieldDestination.FieldName]), Format('%s-%s', ['Import', kContext]));
+            continue;
+          end;
+
+          try
+            fFieldDestination.Value := fFieldSource.Value;
+          except
+            on E: Exception do
+            begin
+              eventLogger.Error(E, Format('%s-%s', ['Import', kContext]));
+            end;
+          end;
+        end;
+        self.Post;
+        fSourceDataset.Next;
+      end;
+
+      if assigned(completion) then
+        completion(true);
+    except
+      on E: Exception do
+      begin
+        eventLogger.Error(E, kContext);
+        if assigned(completion) then
+          completion(false);
+      end;
+    end;
+  finally
+    fSourceDataset.Free;
+  end;
+end;
+
+function TOPPMetadataCompare.ValidateFile(AFileName: String): Boolean;
+var
+  ds: TClientDataSet;
+  hash1, hash2: String;
+begin
+
+  result := false;
+  ds := TClientDataSet.Create(nil);
+  try
+    try
+      ds.LoadFromFile(AFileName);
+      hash1 := ds.MetadataHash;
+      hash2 := self.MetadataHash;
+      result := (hash1 = hash2);
+
+    except
+      on E: Exception do
+      begin
+        eventLogger.Error(E, kContext);
+      end;
+    end;
+  finally
+    ds.Free;
+  end;
+end;
+
+{ TOPPBufferManagerLoadResult }
+
+constructor TOPPBufferManagerLoadResult.Create(AStatus: TOPPBufferManagerLoadStatus; AText: String);
+begin
+  self.status := AStatus;
+  self.text := AText;
 end;
 
 initialization

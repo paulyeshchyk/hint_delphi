@@ -50,6 +50,7 @@ type
     fPDFMemoryStream: TDictionary<String, TMemoryStream>;
     fDefaultOnGetIdentifier: TOPPHelpShortcutOnGetIdentifier;
     fLoadPDFIsInProgress: Boolean;
+    fSelectedFilename_hash: String;
 
     procedure openInternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
     procedure openExternalViewer(APredicate: TOPPHelpPredicate; completion: TOPPHelpShortcutPresentingCompletion);
@@ -57,6 +58,7 @@ type
     /// <remarks> copyright https://stackoverflow.com/a/12949757 </remarks>
     function ForceForegroundWindow(hwnd: THandle): Boolean;
     procedure SetLoadPDFIsInProgress(const Value: Boolean);
+    property SelectedFilename_hash: String read fSelectedFilename_hash write fSelectedFilename_hash;
   public
     procedure LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
     function exportControl(AControl: TControl): Boolean;
@@ -169,7 +171,9 @@ end;
 procedure TOPPHelpShortcutServer.LoadPDF(AFileName: String; completion: TOPPHelpShortcutServerLoadStreamCompletion);
 var
   fStream: TMemoryStream;
-  fFileNameHash: String;
+  fFileName_hash: String;
+  fIsAlreadyLoaded: Boolean;
+  fStatus: TOPPHelpShortcutServerLoadStreamStatus;
 begin
   if not FileExists(AFileName) then
   begin
@@ -190,21 +194,32 @@ begin
 
   eventLogger.Flow(Format(SEventLoadDataFromFileTemplate, [AFileName]), kContext);
 
-  fFileNameHash := AFileName.hashString;
-  fPDFMemoryStream.TryGetValue(fFileNameHash, fStream);
+  fFileName_hash := AFileName.hashString;
+  fPDFMemoryStream.TryGetValue(fFileName_hash, fStream);
   if Assigned(fStream) then
   begin
+
+    fIsAlreadyLoaded := AnsiCompareStr(fFileName_hash, fSelectedFilename_hash) = 0;
+    if fIsAlreadyLoaded then
+      fStatus := ssReused
+    else
+      fStatus := ssCreated;
+
+    fSelectedFilename_hash := fFileName_hash;
+
     LoadPDFIsInProgress := false;
     if Assigned(completion) then
-      completion(fStream, ssReused);
+      completion(fStream, fStatus);
     exit;
   end;
+
+  fSelectedFilename_hash := fFileName_hash;
 
   fStream := TMemoryStream.Create;
   try
     fStream.loadFromFile(AFileName);
     fStream.Position := 0;
-    fPDFMemoryStream.Add(fFileNameHash, fStream);
+    fPDFMemoryStream.Add(fSelectedFilename_hash, fStream);
   finally
     LoadPDFIsInProgress := false;
     if Assigned(completion) then

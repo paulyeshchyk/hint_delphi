@@ -20,9 +20,9 @@ object OPPBufferForm: TOPPBufferForm
   TextHeight = 13
   object cxGrid1: TcxGrid
     Left = 0
-    Top = 81
+    Top = 82
     Width = 1002
-    Height = 348
+    Height = 347
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -32,6 +32,8 @@ object OPPBufferForm: TOPPBufferForm
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 81
+    ExplicitHeight = 348
     object cxGrid1DBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       FilterBox.Visible = fvNever
@@ -395,7 +397,7 @@ object OPPBufferForm: TOPPBufferForm
     DockControlHeights = (
       0
       0
-      78
+      79
       0)
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
@@ -407,7 +409,7 @@ object OPPBufferForm: TOPPBufferForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 24
+      DockedTop = 25
       DockingStyle = dsTop
       FloatLeft = 0
       FloatTop = 8
@@ -459,7 +461,7 @@ object OPPBufferForm: TOPPBufferForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 861
-      DockedTop = 24
+      DockedTop = 25
       DockingStyle = dsTop
       FloatLeft = 0
       FloatTop = 8

@@ -22,7 +22,7 @@ type
 
   TOPPBlobToStreamCompletion = reference to procedure(AStream: TStream; userInfo: Variant);
 
-  TOPPClientDataSetHelper = class helper for TClientDataSet
+  TOPPClientDataSetHelper = class helper for TDataSet
     procedure BlobToStream(AFieldName: String; completion: TOPPBlobToStreamCompletion); overload;
   end;
 
@@ -164,11 +164,19 @@ begin
         completion(Format('Started: %s', [VarToStr(userInfo)]));
 
       { --- }
-      fScriptExecutionResult := AScripter.RunScript(fScript);
+      try
+        fScriptExecutionResult := AScripter.RunScript(fScript);
+        if Assigned(completion) then
+          completion(Format('Finished: %s with result %s', [VarToStr(userInfo), VarToStr(fScriptExecutionResult)]));
+      except
+        on E: Exception do
+        begin
+          if Assigned(completion) then
+            completion(Format('Finished: %s with error: %s', [VarToStr(userInfo), E.Message]));
+        end;
+      end;
       { --- }
 
-      if Assigned(completion) then
-        completion(Format('Finished: %s with result %s', [VarToStr(userInfo), VarToStr(fScriptExecutionResult)]));
     except
       on E: Exception do
         if Assigned(completion) then

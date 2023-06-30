@@ -2,7 +2,11 @@ unit OPP.Help.Log;
 
 interface
 
-uses System.SysUtils;
+uses
+  System.SysUtils,
+  System.Classes,
+  System.Generics.Collections,
+  OPP.Stream.Observer;
 
 type
   TOPPLogMessageType = (lmInfo, lmError, lmWarning, lmDebug, lmFlow);
@@ -15,26 +19,37 @@ type
     procedure Flow(AString: String; AFlowName: String = '');
   end;
 
-  TOPPHelpLog = class(TInterfacedObject, IOPPHelpLog)
+  TOPPHelpLog = class(TInterfacedObject, IOPPHelpLog, IOPPStreamable)
   private
+    fStreamObservers: TList<IOPPStreamObserver>;
+    fStream: TStream;
     procedure Log(AString: String; postfix: String = ''; messageType: TOPPLogMessageType = lmInfo);
   public
+
+    constructor Create;
     destructor Destroy; override;
     procedure Error(AString: String; AFlowName: String = ''); overload;
     procedure Error(AError: Exception; AFlowName: String = ''); overload;
     procedure Warning(AString: String; AFlowName: String = '');
     procedure Debug(AString: String; AFlowName: String = '');
     procedure Flow(AString: String; AFlowName: String = '');
+    // IOPPStreamable
+    procedure RegisterObserver(AObserver: IOPPStreamObserver);
+    procedure UnregisterObserver(AObserver: IOPPStreamObserver);
+    procedure WillChangeStream(AStream: TStream);
+    procedure DidChangeStream(AStream: TStream);
+    function GetStream: TStream;
   end;
 
-function eventLogger: IOPPHelpLog;
+function eventLogger: TOPPHelpLog;
 
 implementation
 
 uses
   System.SyncObjs,
   WinAPI.Windows,
-  OPP.Help.System.Str;
+  OPP.Help.System.Str,
+  OPP.Output.Console;
 
 resourcestring
   SFlow = 'Flow';
@@ -45,6 +60,13 @@ resourcestring
   SErrorNoFlowTemplate = '[Error]: %s';
   SErrorNoFlowPrefix = '%s';
   SErrorAndFlowPrefix = '[%s] - %s';
+
+constructor TOPPHelpLog.Create;
+begin
+  inherited;
+  fStream := TMemoryStream.Create;
+  fStreamObservers := TList<IOPPStreamObserver>.Create;
+end;
 
 procedure TOPPHelpLog.Debug(AString: string; AFlowName: String = '');
 begin
@@ -60,10 +82,27 @@ begin
   self.Log(AString, AFlowName, lmFlow);
 end;
 
+function TOPPHelpLog.GetStream: TStream;
+begin
+  result := fStream;
+end;
+
 destructor TOPPHelpLog.Destroy;
 begin
-  //
+  fStream.Free;
+  fStreamObservers.Clear;
+  fStreamObservers.Free;
   inherited;
+end;
+
+procedure TOPPHelpLog.DidChangeStream(AStream: TStream);
+var
+  fObserver: IOPPStreamObserver;
+begin
+  for fObserver in fStreamObservers do
+  begin
+    fObserver.DidChangeStream(fStream);
+  end;
 end;
 
 procedure TOPPHelpLog.Error(AString: string; AFlowName: String = '');
@@ -89,11 +128,21 @@ begin
     self.Log(Format(SErrorNoFlowPrefix, [AString]), '', lmWarning);
 end;
 
+procedure TOPPHelpLog.WillChangeStream(AStream: TStream);
+var
+  fObserver: IOPPStreamObserver;
+begin
+  for fObserver in fStreamObservers do
+  begin
+    fObserver.WillChangeStream(fStream);
+  end;
+end;
+
 procedure TOPPHelpLog.Log(AString: string; postfix: String; messageType: TOPPLogMessageType);
 var
   outresult: String;
   completeString: String;
-  fWideChar: PWideChar;
+  fUTF8String: UTF8String;
 begin
   case messageType of
     lmDebug:
@@ -114,20 +163,38 @@ begin
       end;
   end;
 
-  fWideChar := outresult.toWideChar;
-  try
-    OutputDebugString(fWideChar);
-  finally
-    FreeMem(fWideChar);
-  end;
+  fUTF8String := UTF8Encode(outResult);
+
+  WillChangeStream(fStream);
+  fStream.WriteString(fUTF8String);
+  DidChangeStream(fStream);
+
+end;
+
+procedure TOPPHelpLog.RegisterObserver(AObserver: IOPPStreamObserver);
+begin
+  if not assigned(AObserver) then
+    exit;
+  if fStreamObservers.IndexOf(AObserver) = -1 then
+    fStreamObservers.Add(AObserver);
+  AObserver.StartListenStream(fStream);
+end;
+
+procedure TOPPHelpLog.UnregisterObserver(AObserver: IOPPStreamObserver);
+begin
+  if not assigned(AObserver) then
+    exit;
+  AObserver.StopListenStream(fStream);
+  if fStreamObservers.IndexOf(AObserver) <> -1 then
+    fStreamObservers.Remove(AObserver);
 end;
 
 { ------------ }
 var
   fInfoLogLock: TCriticalSection;
-  fInfoLog: IOPPHelpLog;
+  fInfoLog: TOPPHelpLog;
 
-function eventLogger: IOPPHelpLog;
+function eventLogger: TOPPHelpLog;
 begin
   fInfoLogLock.Acquire;
   try
@@ -141,11 +208,28 @@ begin
   end;
 end;
 
+var
+  fConsoleOutput: IOPPStreamObserver;
+  fFileOutput: IOPPStreamObserver;
+
+
 initialization
 
 fInfoLogLock := TCriticalSection.Create;
 
+fConsoleOutput := TOPPConsoleOutput.Create;
+eventLogger.RegisterObserver(fConsoleOutput);
+
+fFileOutput := TOPPFileOutput.Create;
+eventLogger.RegisterObserver(fFileOutput);
+
 finalization
+
+eventLogger.UnregisterObserver(fFileOutput);
+fFileOutput := nil;
+
+eventLogger.UnregisterObserver(fConsoleOutput);
+fConsoleOutput := nil;
 
 fInfoLogLock.Free;
 

@@ -40,7 +40,6 @@ var
   CL: TCommandLine;
   fMap: TOPPHelpPredicate;
   fStream: TMemoryStream;
-  fBuffer: System.TArray<System.Byte>;
   jsonObject: TJSONObject;
 begin
 

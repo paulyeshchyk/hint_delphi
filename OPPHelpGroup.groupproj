@@ -3,19 +3,10 @@
         <ProjectGuid>{A4A020B5-FF25-4816-955B-D5040C13A0D0}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="..\..\VCL\OPPVCL.dproj">
+        <Projects Include="D:\projects\DreamControls\OPP.Guide.DC.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\..\DevEx\OPPDevEx.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\..\DevExAdv\OPPDevExAdv.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\..\DevExPS\OPPDevExPS.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\..\DreamControls\dreamInit.dproj">
+        <Projects Include="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Help.Package\OPPHelp.dproj">
@@ -27,11 +18,11 @@
         <Projects Include="OPP.HelpMapping.Editor\OPP.HelpEditor.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="OPP.Guide\OPP.Guide.dproj">
-            <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
-        </Projects>
         <Projects Include="OPP.Buffer\OPP.BufferManager.dproj">
             <Dependencies/>
+        </Projects>
+        <Projects Include="OPP.Guide\OPP.Guide.dproj">
+            <Dependencies>D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -41,50 +32,23 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="OPPVCL">
-        <MSBuild Projects="..\..\VCL\OPPVCL.dproj"/>
+    <Target Name="OPP_Guide_DC">
+        <MSBuild Projects="D:\projects\DreamControls\OPP.Guide.DC.dproj"/>
     </Target>
-    <Target Name="OPPVCL:Clean">
-        <MSBuild Projects="..\..\VCL\OPPVCL.dproj" Targets="Clean"/>
+    <Target Name="OPP_Guide_DC:Clean">
+        <MSBuild Projects="D:\projects\DreamControls\OPP.Guide.DC.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPVCL:Make">
-        <MSBuild Projects="..\..\VCL\OPPVCL.dproj" Targets="Make"/>
+    <Target Name="OPP_Guide_DC:Make">
+        <MSBuild Projects="D:\projects\DreamControls\OPP.Guide.DC.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPPDevEx">
-        <MSBuild Projects="..\..\DevEx\OPPDevEx.dproj"/>
+    <Target Name="OPP_Guide_TMS">
+        <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj"/>
     </Target>
-    <Target Name="OPPDevEx:Clean">
-        <MSBuild Projects="..\..\DevEx\OPPDevEx.dproj" Targets="Clean"/>
+    <Target Name="OPP_Guide_TMS:Clean">
+        <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPPDevEx:Make">
-        <MSBuild Projects="..\..\DevEx\OPPDevEx.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="OPPDevExAdv">
-        <MSBuild Projects="..\..\DevExAdv\OPPDevExAdv.dproj"/>
-    </Target>
-    <Target Name="OPPDevExAdv:Clean">
-        <MSBuild Projects="..\..\DevExAdv\OPPDevExAdv.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="OPPDevExAdv:Make">
-        <MSBuild Projects="..\..\DevExAdv\OPPDevExAdv.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="OPPDevExPS">
-        <MSBuild Projects="..\..\DevExPS\OPPDevExPS.dproj"/>
-    </Target>
-    <Target Name="OPPDevExPS:Clean">
-        <MSBuild Projects="..\..\DevExPS\OPPDevExPS.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="OPPDevExPS:Make">
-        <MSBuild Projects="..\..\DevExPS\OPPDevExPS.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="dreamInit">
-        <MSBuild Projects="..\..\DreamControls\dreamInit.dproj"/>
-    </Target>
-    <Target Name="dreamInit:Clean">
-        <MSBuild Projects="..\..\DreamControls\dreamInit.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="dreamInit:Make">
-        <MSBuild Projects="..\..\DreamControls\dreamInit.dproj" Targets="Make"/>
+    <Target Name="OPP_Guide_TMS:Make">
+        <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Make"/>
     </Target>
     <Target Name="OPPHelp">
         <MSBuild Projects="OPP.Help.Package\OPPHelp.dproj"/>
@@ -113,15 +77,6 @@
     <Target Name="OPP_HelpEditor:Make">
         <MSBuild Projects="OPP.HelpMapping.Editor\OPP.HelpEditor.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPP_Guide" DependsOnTargets="OPPHelp">
-        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj"/>
-    </Target>
-    <Target Name="OPP_Guide:Clean" DependsOnTargets="OPPHelp:Clean">
-        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="OPP_Guide:Make" DependsOnTargets="OPPHelp:Make">
-        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Make"/>
-    </Target>
     <Target Name="OPP_BufferManager">
         <MSBuild Projects="OPP.Buffer\OPP.BufferManager.dproj"/>
     </Target>
@@ -131,14 +86,23 @@
     <Target Name="OPP_BufferManager:Make">
         <MSBuild Projects="OPP.Buffer\OPP.BufferManager.dproj" Targets="Make"/>
     </Target>
+    <Target Name="OPP_Guide" DependsOnTargets="OPP.Guide.TMS">
+        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj"/>
+    </Target>
+    <Target Name="OPP_Guide:Clean" DependsOnTargets="OPP.Guide.TMS:Clean">
+        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPP_Guide:Make" DependsOnTargets="OPP.Guide.TMS:Make">
+        <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPVCL;OPPDevEx;OPPDevExAdv;OPPDevExPS;dreamInit;OPPHelp;OPPHelpPreview;OPP_HelpEditor;OPP_Guide;OPP_BufferManager"/>
+        <CallTarget Targets="OPP_Guide_DC;OPP_Guide_TMS;OPPHelp;OPPHelpPreview;OPP_HelpEditor;OPP_BufferManager;OPP_Guide"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPVCL:Clean;OPPDevEx:Clean;OPPDevExAdv:Clean;OPPDevExPS:Clean;dreamInit:Clean;OPPHelp:Clean;OPPHelpPreview:Clean;OPP_HelpEditor:Clean;OPP_Guide:Clean;OPP_BufferManager:Clean"/>
+        <CallTarget Targets="OPP_Guide_DC:Clean;OPP_Guide_TMS:Clean;OPPHelp:Clean;OPPHelpPreview:Clean;OPP_HelpEditor:Clean;OPP_BufferManager:Clean;OPP_Guide:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPVCL:Make;OPPDevEx:Make;OPPDevExAdv:Make;OPPDevExPS:Make;dreamInit:Make;OPPHelp:Make;OPPHelpPreview:Make;OPP_HelpEditor:Make;OPP_Guide:Make;OPP_BufferManager:Make"/>
+        <CallTarget Targets="OPP_Guide_DC:Make;OPP_Guide_TMS:Make;OPPHelp:Make;OPPHelpPreview:Make;OPP_HelpEditor:Make;OPP_BufferManager:Make;OPP_Guide:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -8,26 +8,16 @@ uses
   Data.DB, Datasnap.DBClient, dxdbtree, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, cxCustomData, cxStyles, cxTL,
   cxMaskEdit, cxTLdxBarBuiltInMenu, cxDataControllerConditionalFormattingRulesManagerDialog, cxInplaceContainer, cxDBTL,
   cxTLData, cxEdit, cxVGrid, cxDBVGrid, dxBar, System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, cxContainer,
-  cxTextEdit, cxMemo, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit;
+  cxTextEdit, cxMemo, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit, ScrMemo, ScrMps, IDEMain, atScript,
+  atPascal;
 
 type
-  TForm1 = class(TForm)
+  TOPPGuideForm = class(TForm)
     dxDockingManager1: TdxDockingManager;
-    dxDockSite1: TdxDockSite;
-    dxDockPanelProperties: TdxDockPanel;
-    dxDockPanelTreeView: TdxDockPanel;
-    dxLayoutDockSite3: TdxLayoutDockSite;
     DataSourceTreeView: TDataSource;
     DataSetTreeView: TClientDataSet;
     DataSetTreeViewActionText: TStringField;
     DataSetTreeViewNodeType: TIntegerField;
-    cxDBTreeList1: TcxDBTreeList;
-    cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBVerticalGrid1: TcxDBVerticalGrid;
-    cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow;
-    cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow;
-    cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow;
-    cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow;
     dxBarDockControl1: TdxBarDockControl;
     dxBarManager1: TdxBarManager;
     ActionList1: TActionList;
@@ -50,37 +40,48 @@ type
     FileOpenDialog1: TFileOpenDialog;
     actionOpen: TAction;
     DataSetTreeViewOrder: TIntegerField;
-    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
-    dxDockPanelScript: TdxDockPanel;
-    dxDockPanel5: TdxDockPanel;
-    dxDockPanel6: TdxDockPanel;
-    cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow;
-    dxVertContainerDockSite1: TdxVertContainerDockSite;
-    dxTabContainerDockSite1: TdxTabContainerDockSite;
-    dxLayoutDockSite1: TdxLayoutDockSite;
-    dxVertContainerDockSite2: TdxVertContainerDockSite;
     dxBarButton5: TdxBarButton;
     actionNew: TAction;
     actionRunSelected: TAction;
     actionRunAll: TAction;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
-    dxDockPanelOutputLog: TdxDockPanel;
-    cxMemo1: TcxMemo;
-    dxLayoutDockSite2: TdxLayoutDockSite;
     DataSetTreeViewCaption: TWideStringField;
     DataSourceNodeType: TDataSource;
     DataSetNodeType: TClientDataSet;
     DataSetNodeTypeid: TIntegerField;
     DataSetNodeTypecaption: TWideStringField;
     DataSetTreeViewScript: TBlobField;
-    dxBarDockControl2: TdxBarDockControl;
-    cxDBMemo1: TcxDBMemo;
     dxBarManager1Bar2: TdxBar;
     dxBarButton8: TdxBarButton;
     dxBarButton9: TdxBarButton;
     actionSaveScript: TAction;
     actionRunScript: TAction;
+    dxBarButton10: TdxBarButton;
+    dxDockSite1: TdxDockSite;
+    dxLayoutDockSite2: TdxLayoutDockSite;
+    dxLayoutDockSite3: TdxLayoutDockSite;
+    dxLayoutDockSite1: TdxLayoutDockSite;
+    dxVertContainerDockSite2: TdxVertContainerDockSite;
+    dxDockPanel5: TdxDockPanel;
+    dxDockPanel6: TdxDockPanel;
+    dxVertContainerDockSite1: TdxVertContainerDockSite;
+    dxDockPanelTreeView: TdxDockPanel;
+    cxDBTreeList1: TcxDBTreeList;
+    cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
+    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
+    dxDockPanelScript: TdxDockPanel;
+    dxBarDockControl2: TdxBarDockControl;
+    dxDockPanelProperties: TdxDockPanel;
+    cxDBVerticalGrid1: TcxDBVerticalGrid;
+    cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow;
+    cxDBVerticalGrid1DBEditorRow1: TcxDBEditorRow;
+    cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow;
+    cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow;
+    cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow;
+    dxDockPanelOutputLog: TdxDockPanel;
+    cxMemo1: TcxMemo;
+    cxDBMemo1: TcxDBMemo;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -111,7 +112,7 @@ type
     procedure swapValues(AFieldName: String; AIDFieldName: String; sourceId, destinationId: Variant);
   end;
 
-  TForm1Helper = class helper for TForm1
+  TForm1Helper = class helper for TOPPGuideForm
     procedure AddChild(AParentIdentifier: Variant);
     function subsCount(AIdentifier: Variant): Integer;
     function selectedNodeSubsCount: Integer;
@@ -119,7 +120,7 @@ type
   end;
 
 var
-  Form1: TForm1;
+  OPPGuideForm: TOPPGuideForm;
 
 implementation
 
@@ -127,11 +128,14 @@ uses
   OPP.Guide.Scripter,
   OPP.Help.System.Str,
   OPP.Help.System.Files,
+
+  OPP.Guide.Scripter.TMS,
+
   midaslib, OPP.Guide.executor;
 
 {$R *.dfm}
 
-procedure TForm1.actionAddChildRecordExecute(Sender: TObject);
+procedure TOPPGuideForm.actionAddChildRecordExecute(Sender: TObject);
 var
   pid: Variant;
 begin
@@ -139,7 +143,7 @@ begin
   AddChild(pid);
 end;
 
-procedure TForm1.actionAddRecordExecute(Sender: TObject);
+procedure TOPPGuideForm.actionAddRecordExecute(Sender: TObject);
 var
   pid: Variant;
 begin
@@ -147,7 +151,7 @@ begin
   AddChild(pid);
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TOPPGuideForm.FormCreate(Sender: TObject);
 var
   fIniFile: String;
   fDatasetXMLFile: String;
@@ -162,7 +166,7 @@ begin
   cxDBTreeList1.EndUpdate;
 end;
 
-procedure TForm1.actionExportExecute(Sender: TObject);
+procedure TOPPGuideForm.actionExportExecute(Sender: TObject);
 begin
   if SaveDialog1.Execute(self.handle) then
   begin
@@ -170,7 +174,7 @@ begin
   end;
 end;
 
-procedure TForm1.actionNewExecute(Sender: TObject);
+procedure TOPPGuideForm.actionNewExecute(Sender: TObject);
 begin
   DataSetTreeView.DisableControls;
   try
@@ -180,13 +184,13 @@ begin
   end;
 end;
 
-procedure TForm1.actionReloadExecute(Sender: TObject);
+procedure TOPPGuideForm.actionReloadExecute(Sender: TObject);
 begin
   if FileOpenDialog1.Execute then
     DataSetTreeView.LoadFromFile(FileOpenDialog1.FileName);
 end;
 
-procedure TForm1.actionRunAllExecute(Sender: TObject);
+procedure TOPPGuideForm.actionRunAllExecute(Sender: TObject);
 var
   ident: Variant;
   fScripter: IOPPGuideScripter;
@@ -194,7 +198,7 @@ begin
   ident := DataSetTreeView.FieldByName('identifier').Value;
   cxMemo1.Clear;
 
-  fScripter := TOPPGuideScripter.Create;
+  fScripter := TOPPGuideScripterTMS.Create;
   try
     TOPPGuideExecutor.run(DataSetTreeView, ident, true, fScripter,
       procedure(AText: String)
@@ -204,14 +208,26 @@ begin
   finally
     fScripter := nil;
   end;
+
+  // fScripter := TOPPGuideScripter.Create;
+  // try
+  // TOPPGuideExecutor.run(DataSetTreeView, ident, true, fScripter,
+  // procedure(AText: String)
+  // begin
+  // cxMemo1.Lines.Add(AText);
+  // end);
+  // finally
+  // fScripter := nil;
+  // end;
 end;
 
-procedure TForm1.actionRunScriptExecute(Sender: TObject);
+procedure TOPPGuideForm.actionRunScriptExecute(Sender: TObject);
 begin
-//
+  actionSaveScript.Execute;
+  actionRunSelected.Execute;
 end;
 
-procedure TForm1.actionRunSelectedExecute(Sender: TObject);
+procedure TOPPGuideForm.actionRunSelectedExecute(Sender: TObject);
 var
   ident: Variant;
   fScripter: IOPPGuideScripter;
@@ -220,7 +236,7 @@ begin
   ident := DataSetTreeView.FieldByName('identifier').Value;
   cxMemo1.Clear;
 
-  fScripter := TOPPGuideScripter.Create;
+  fScripter := TOPPGuideScripterTMS.Create;
   try
     TOPPGuideExecutor.run(DataSetTreeView, ident, false, fScripter,
       procedure(AText: String)
@@ -232,30 +248,29 @@ begin
   end;
 end;
 
-procedure TForm1.actionSaveScriptExecute(Sender: TObject);
+procedure TOPPGuideForm.actionSaveScriptExecute(Sender: TObject);
 begin
-  cxDBMemo1.PostEditValue;
-  if DataSetTreeView.Modified then
-    DataSetTreeView.Post;
+  if DataSourceTreeView.DataSet.State in [dsEdit, dsInsert, dsNewValue] then
+    DataSourceTreeView.DataSet.Post;
 end;
 
-procedure TForm1.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
+procedure TOPPGuideForm.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
 begin
   //
 end;
 
-procedure TForm1.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   OutputDebugString(Format('%d', [Integer(State)]).toWideChar);
 end;
 
-procedure TForm1.cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
+procedure TOPPGuideForm.cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
 begin
   actionRunAll.Enabled := (selectedNodeSubsCount > 0);
   dxDockPanelScript.Visible := selectedNodeIsRunnable();
 end;
 
-procedure TForm1.cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
+procedure TOPPGuideForm.cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
 var
   fGUID: TGuid;
 begin
@@ -264,7 +279,7 @@ begin
   AHandled := true;
 end;
 
-procedure TForm1.cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TOPPGuideForm.cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
   node, nodeToReplace: TcxTreeListNode;
   kv1, kv2: Variant;
@@ -298,27 +313,27 @@ begin
   end;
 end;
 
-procedure TForm1.DataSetTreeViewAfterOpen(DataSet: TDataSet);
+procedure TOPPGuideForm.DataSetTreeViewAfterOpen(DataSet: TDataSet);
 begin
   cxDBTreeList1cxDBTreeListColumn1.Width := cxDBTreeList1.Width;
 end;
 
-procedure TForm1.DataSetTreeViewAfterPost(DataSet: TDataSet);
+procedure TOPPGuideForm.DataSetTreeViewAfterPost(DataSet: TDataSet);
 begin
-  actionSaveScript.enabled := false;
+  actionSaveScript.Enabled := false;
 end;
 
-procedure TForm1.DataSetTreeViewBeforeEdit(DataSet: TDataSet);
+procedure TOPPGuideForm.DataSetTreeViewBeforeEdit(DataSet: TDataSet);
 begin
   actionSaveScript.Enabled := true;
 end;
 
-procedure TForm1.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
+procedure TOPPGuideForm.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
 begin
   actionAddChildRecord.Enabled := (DataSourceTreeView.DataSet.RecordCount <> 0) and (not DataSourceTreeView.DataSet.FieldByName('identifier').IsNull);
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TOPPGuideForm.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   fIniFile: String;
 begin

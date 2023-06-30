@@ -211,6 +211,8 @@
         </DCCReference>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Timer.pas"/>
         <DCCReference Include="..\FDC\FDC.CommandLine.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Output.Console.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Stream.Observer.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

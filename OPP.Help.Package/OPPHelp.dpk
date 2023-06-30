@@ -99,7 +99,10 @@ contains
   OPP.Buffer.OPPInfo in '..\OPP.Buffer\OPP.Buffer.OPPInfo.pas',
   OPP.Buffer.Settings.Form in '..\OPP.Buffer\OPP.Buffer.Settings.Form.pas' {OPPBufferSettingsForm},
   OPP.Help.System.Timer in '..\OPP.Help\OPP.Help.System.Timer.pas',
-  FDC.CommandLine in '..\FDC\FDC.CommandLine.pas';
+  FDC.CommandLine in '..\FDC\FDC.CommandLine.pas',
+  OPP.Output.Console in '..\OPP.Help\OPP.Output.Console.pas',
+  OPP.Stream.Observer in '..\OPP.Help\OPP.Stream.Observer.pas';
 
 end.
+
 

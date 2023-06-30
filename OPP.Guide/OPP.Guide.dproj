@@ -46,14 +46,14 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units</DCC_DcuOutput>
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
-        <DCC_UsePackage>OPPVCL;OPPDevEx;OPPDevExAdv;OPPDevExPS;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>OPP.Guide.TMS;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
@@ -61,8 +61,10 @@
         <SanitizedProjectName>OPP_Guide</SanitizedProjectName>
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_DcpOutput>..\..\..\..\Compiled\Units</DCC_DcpOutput>
-        <DCC_UnitSearchPath>..\..\..\..\Compiled\Units;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
+        <UsePackages>true</UsePackages>
+        <DCC_FrameworkPath>..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
+        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -87,12 +89,12 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
-        <DCC_UnitSearchPath>..\..\..\DreamControls\units;..\..\..\Common\Constants;..\..\..\Common\Loodsman_Units1;..\..\..\Common\Loodsman_Units1\ConnectToServer;..\..\..\Common\Loodsman_Units1\ConnectToDB;..\..\..\Common\Loodsman_Units1\BlobEditor;..\..\..\Common\Utils;..\..\..\Designer;..\..\..\Designer\OppForm1;..\..\..\Controls1;..\..\..\GreenConf\Forms\Measurement;..\..\..\Common\Forms;..\..\..\Common\StatusBar;..\..\..\Common\Libs;..\..\..\Common\Splash;..\..\..\Common\Datasets;..\..\..\Common\Classes;..\..\..\Common\Collections;..\..\..\Common\Classes\ErrHandle;..\..\..\Calls;..\..\..\WF;..\..\..\Debug;..\..\..\Common\DataModule;..\..\..\Common\Help\legacy;..\..\..\Common\Grids;..\..\..\ReportPreview;..\..\..\Common\Settings;..\..\..\Plugins\CopyObjects_3\uCopyDLG;..\..\..\Sign;..\..\..\Common\Help\OPP.Buffer;..\..\..\Common\Help\OPP.Help;..\..\..\Common\Rus;..\..\..\Controls\dlgErrorCheck\units1;..\..\..\Components\OppComp1;..\..\..\Components\OppComp\UIControls1;..\..\..\DreamControls;..\..\..\Common\Help\OPP.Client.Helper;..\..\..\GreenConf\Forms\MetaData1;..\..\..\Components\Import\OPP Components1;..\..\..\Components\Import\DC;..\..\..\Components\Import\DC\delphi_2006;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Guide</DCC_DcuOutput>
-        <UsePackages>false</UsePackages>
+        <DCC_MapFile>3</DCC_MapFile>
+        <DCC_UnitSearchPath>D:\projects\TMS 7.28\source\memo;D:\projects\TMS 7.28\source\legacy;D:\projects\TMS 7.28\source\vcl;D:\projects\TMS 7.28\source\ide;D:\projects\TMS 7.28\source\fmx;D:\projects\TMS 7.28\source\design;D:\projects\TMS 7.28\source\core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -111,14 +113,17 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="OPP.Guide.Form.pas">
-            <Form>Form1</Form>
+            <Form>OPPGuideForm</Form>
         </DCCReference>
         <DCCReference Include="OPP.Guide.Executor.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Str.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
-        <DCCReference Include="OPP.Guide.Scripter.pas"/>
+        <DCCReference Include="scripters\OPP.Guide.Scripter.TMS.pas"/>
+        <DCCReference Include="scripters\OPP.Guide.Scripter.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Stream.Observer.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Output.Console.pas"/>
         <None Include="readme.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -146,18 +151,19 @@
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxFD25.bpl">FastReport 6.0 FireDAC Components - Designtime Package</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\dclfrxIntIO25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
                     <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Standard\LibD25\dclfrxIntIOIndy25.bpl">FastReport 6.0 Internet transports</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Program Files (x86)\Deleaker\DeleakerRADStudioPackage250.bpl">Deleaker</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="Win32\Debug\OPP.Guide.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>OPP_Guide.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="readme.txt" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPP.Guide.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>OPP_Guide.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
