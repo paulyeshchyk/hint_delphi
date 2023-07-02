@@ -9,7 +9,7 @@ uses
   cxMaskEdit, cxTLdxBarBuiltInMenu, cxDataControllerConditionalFormattingRulesManagerDialog, cxInplaceContainer, cxDBTL,
   cxTLData, cxEdit, cxVGrid, cxDBVGrid, dxBar, System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, cxContainer,
   cxTextEdit, cxMemo, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit, ScrMemo, ScrMps, IDEMain, atScript,
-  atPascal;
+  atPascal, dxScrollbarAnnotations, dxStatusBar;
 
 type
   TOPPGuideForm = class(TForm)
@@ -82,6 +82,8 @@ type
     dxDockPanelOutputLog: TdxDockPanel;
     cxMemo1: TcxMemo;
     cxDBMemo1: TcxDBMemo;
+    dxStatusBar1: TdxStatusBar;
+    dxStatusBar2: TdxStatusBar;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -164,6 +166,7 @@ begin
   fDatasetXMLFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath('opp.guide.xml');
   DataSetTreeView.LoadFromFile(fDatasetXMLFile);
   cxDBTreeList1.EndUpdate;
+  dxStatusBar1.Panels[0].Text := Format('Loaded file: %s',[fDatasetXMLFile]);
 end;
 
 procedure TOPPGuideForm.actionExportExecute(Sender: TObject);

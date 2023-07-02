@@ -324,7 +324,11 @@ begin
       if Assigned(AStream) then
       begin
         try
+          TThread.Synchronize(nil, procedure() begin
+          fPDFViewer.BeginUpdate;
           fPDFViewer.LoadFromStream(AStream);
+          fPDFViewer.EndUpdate;
+          end);
         except
           on E: Exception do
           begin

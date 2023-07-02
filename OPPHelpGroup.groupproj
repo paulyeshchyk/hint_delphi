@@ -3,10 +3,10 @@
         <ProjectGuid>{A4A020B5-FF25-4816-955B-D5040C13A0D0}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="D:\projects\DreamControls\OPP.Guide.DC.dproj">
+        <Projects Include="..\..\DreamControls\OPP.Guide.DC.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj">
+        <Projects Include="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Help.Package\OPPHelp.dproj">
@@ -22,7 +22,7 @@
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Guide\OPP.Guide.dproj">
-            <Dependencies>D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj</Dependencies>
+            <Dependencies>..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -33,22 +33,22 @@
         </BorlandProject>
     </ProjectExtensions>
     <Target Name="OPP_Guide_DC">
-        <MSBuild Projects="D:\projects\DreamControls\OPP.Guide.DC.dproj"/>
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.dproj"/>
     </Target>
     <Target Name="OPP_Guide_DC:Clean">
-        <MSBuild Projects="D:\projects\DreamControls\OPP.Guide.DC.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.dproj" Targets="Clean"/>
     </Target>
     <Target Name="OPP_Guide_DC:Make">
-        <MSBuild Projects="D:\projects\DreamControls\OPP.Guide.DC.dproj" Targets="Make"/>
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.dproj" Targets="Make"/>
     </Target>
     <Target Name="OPP_Guide_TMS">
-        <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj"/>
+        <MSBuild Projects="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj"/>
     </Target>
     <Target Name="OPP_Guide_TMS:Clean">
-        <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Clean"/>
     </Target>
     <Target Name="OPP_Guide_TMS:Make">
-        <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Make"/>
+        <MSBuild Projects="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Make"/>
     </Target>
     <Target Name="OPPHelp">
         <MSBuild Projects="OPP.Help.Package\OPPHelp.dproj"/>

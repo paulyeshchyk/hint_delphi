@@ -8,35 +8,36 @@ object OPPBufferForm: TOPPBufferForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -22
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   PixelsPerInch = 192
-  TextHeight = 13
+  TextHeight = 27
   object cxGrid1: TcxGrid
+    AlignWithMargins = True
     Left = 0
-    Top = 82
+    Top = 151
     Width = 1002
-    Height = 347
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Height = 253
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
     Align = alClient
     BorderStyle = cxcbsNone
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 81
-    ExplicitHeight = 348
+    ExplicitWidth = 988
+    ExplicitHeight = 252
     object cxGrid1DBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       FilterBox.Visible = fvNever
+      ScrollbarAnnotations.CustomAnnotations = <>
       OnCellDblClick = cxGrid1DBTableView1CellDblClick
       OnEditing = cxGrid1DBTableView1Editing
       OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
@@ -120,7 +121,7 @@ object OPPBufferForm: TOPPBufferForm
   end
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 470
+    Top = 404
     Width = 1002
     Height = 20
     Panels = <
@@ -136,32 +137,47 @@ object OPPBufferForm: TOPPBufferForm
     PaintStyle = stpsUseLookAndFeel
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -21
     Font.Name = 'Tahoma'
     Font.Style = []
+    ExplicitTop = 403
+    ExplicitWidth = 988
   end
   object Panel1: TPanel
+    AlignWithMargins = True
     Left = 0
-    Top = 429
+    Top = 424
     Width = 1002
-    Height = 41
+    Height = 66
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 423
+    ExplicitWidth = 988
     object Panel2: TPanel
-      Left = 820
+      AlignWithMargins = True
+      Left = 714
       Top = 0
-      Width = 182
-      Height = 41
+      Width = 272
+      Height = 66
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 16
+      Margins.Bottom = 0
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitLeft = 700
       object cxButton1: TcxButton
         AlignWithMargins = True
         Left = 8
         Top = 8
-        Width = 75
-        Height = 25
+        Width = 120
+        Height = 50
         Margins.Left = 8
         Margins.Top = 8
         Margins.Right = 8
@@ -196,10 +212,10 @@ object OPPBufferForm: TOPPBufferForm
       end
       object cxButton2: TcxButton
         AlignWithMargins = True
-        Left = 99
+        Left = 144
         Top = 8
-        Width = 75
-        Height = 25
+        Width = 120
+        Height = 50
         Margins.Left = 8
         Margins.Top = 8
         Margins.Right = 8
@@ -242,10 +258,11 @@ object OPPBufferForm: TOPPBufferForm
     Top = 0
     Width = 1002
     Align = dalTop
+    ExplicitWidth = 988
   end
   object ActionList1: TActionList
     Left = 40
-    Top = 168
+    Top = 200
     object actionCloseByPressingEsc: TAction
       Caption = #1047#1072#1082#1088#1099#1090#1100
       ShortCut = 27
@@ -328,24 +345,24 @@ object OPPBufferForm: TOPPBufferForm
   object DataSource1: TDataSource
     OnStateChange = DataSource1StateChange
     OnDataChange = DataSource1DataChange
-    Left = 312
-    Top = 136
+    Left = 408
+    Top = 216
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '*.oppclipboarddata'
     Filter = 'oppclipboarddata|*.oppclipboarddata'
-    Left = 32
-    Top = 112
+    Left = 880
+    Top = 160
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = '*.oppclipboarddata'
     Filter = 'oppclipboarddata|*.oppclipboarddata'
-    Left = 104
-    Top = 112
+    Left = 680
+    Top = 160
   end
   object PopupMenu1: TPopupMenu
-    Left = 104
-    Top = 176
+    Left = 200
+    Top = 208
     object N17: TMenuItem
       Action = actionNewRecord
     end
@@ -369,9 +386,9 @@ object OPPBufferForm: TOPPBufferForm
     end
   end
   object cxStyleRepository1: TcxStyleRepository
-    Left = 208
-    Top = 136
-    PixelsPerInch = 96
+    Left = 320
+    Top = 360
+    PixelsPerInch = 192
     object cxStyle1: TcxStyle
       AssignedValues = [svColor]
       Color = clBtnFace
@@ -391,13 +408,13 @@ object OPPBufferForm: TOPPBufferForm
       True)
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 496
-    Top = 248
-    PixelsPerInch = 96
+    Left = 80
+    Top = 360
+    PixelsPerInch = 192
     DockControlHeights = (
       0
       0
-      79
+      148
       0)
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
@@ -409,7 +426,7 @@ object OPPBufferForm: TOPPBufferForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 25
+      DockedTop = 46
       DockingStyle = dsTop
       FloatLeft = 0
       FloatTop = 8
@@ -417,7 +434,7 @@ object OPPBufferForm: TOPPBufferForm
       FloatClientHeight = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -21
       Font.Name = 'Segoe UI'
       Font.Style = []
       ItemLinks = <
@@ -441,46 +458,24 @@ object OPPBufferForm: TOPPBufferForm
         item
           Visible = True
           ItemName = 'dxBarLargeButton7'
-        end>
-      OneOnRow = False
-      Row = 1
-      SizeGrip = False
-      UseOwnFont = True
-      UseRecentItems = False
-      UseRestSpace = True
-      Visible = True
-      WholeRow = False
-    end
-    object dxBarManager1Bar2: TdxBar
-      AllowClose = False
-      AllowCustomizing = False
-      AllowQuickCustomizing = False
-      AllowReset = False
-      BorderStyle = bbsNone
-      Caption = 'Custom 2'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 861
-      DockedTop = 25
-      DockingStyle = dsTop
-      FloatLeft = 0
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
-      ItemLinks = <
+        end
         item
           Visible = True
-          ItemName = 'dxBarLargeButton2'
+          ItemName = 'barSpacer'
         end
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarLargeButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarLargeButton1'
         end>
-      OneOnRow = False
+      OneOnRow = True
       Row = 1
       SizeGrip = False
-      UseOwnFont = False
+      UseOwnFont = True
       UseRecentItems = False
       UseRestSpace = True
       Visible = True
@@ -499,7 +494,7 @@ object OPPBufferForm: TOPPBufferForm
       FloatClientHeight = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -21
       Font.Name = 'Segoe UI'
       Font.Style = []
       IsMainMenu = True
@@ -623,6 +618,7 @@ object OPPBufferForm: TOPPBufferForm
     end
     object dxBarLargeButton2: TdxBarLargeButton
       Action = actionApplySelection
+      Align = iaRight
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -799,6 +795,7 @@ object OPPBufferForm: TOPPBufferForm
         3F58DCA15AAD1E999999398A9AC6F4418D1368751C0AB95C6E939B9B6B49CF3D
         3D0A85E26DCE8B3FD0C2E23F9AF353A5D58452F90000000049454E44AE426082}
       AutoGrayScale = False
+      Width = 90
     end
     object dxBarLargeButton4: TdxBarLargeButton
       Action = actionDeleteRecord
@@ -1345,6 +1342,81 @@ object OPPBufferForm: TOPPBufferForm
         DC0A80C500B77CE6AB50AA35EADC57F1FC329AD019D262D212D215CDE7ECB9FF
         F9FFBFB8898B2D4292683A11CE08A6E2DC6B5D44FB2FB77EF67A530D2D610000
         000049454E44AE426082}
+    end
+    object dxBarStatic1: TdxBarStatic
+      Align = iaRight
+      Category = 0
+      Visible = ivAlways
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+        F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+        00097048597300000EC300000EC301C76FA864000007804944415458479D9709
+        4C55671A862F085AA863759A385863624D3B699C589B4C9A4E6B6D9AA6E992A6
+        491B0701A522312E5519D1B28846511010371637167776141075A616042A152B
+        C20545F122821494F502A25C0481FACEF7FEDC4B592EC2CC49DE9CC3B9E7F03D
+        FFF7BDDFFFFF47F3FF1C002C445622DBE7CF9F4F92F394019A2CF7FE24E79744
+        E34416C6D7463E16393B06D83B2CC058B4D0F19F705CB4102EAEDF61D5EA9570
+        DFB00E5EDE1ED8E8E3056F1F4F7878FD807FB9BBC9D9235482DB12C21866E483
+        FFF8C2850BD8BB772F76ECD8015F5F5F6CDCB8111B366C809B9B1B56AD5A8565
+        CB96C1C5C505CECECE58BA7429D6AC598DF2F2BB30189EA0A3A35D64503218DA
+        D1D4D4084FEF1F2099982A9A306A160870F1E24584868662E7CE9DD8BE7D3B36
+        6FDE0C2F2F2FB8BBBB4BB03558B972A58270757555D7047CF0A01A9D9D4FD1D5
+        D58967CFBA9478FDF46907027706485CCC3266C1D218CAFC4180ECEC6C1C3870
+        406521202000DBB66DC3A64D9BE0E9E98975EBD6F543AC58B14265C5DFDF1FF5
+        F5752A684F4FB7A847A9BBFB9982083F10C60CCC36FA617480BCBC3C44454521
+        2C2C0CBB76ED52105BB76E858F8F0F3C3C3C5426D6AE5DAB40589AE0E0603436
+        36A880BDBD3DA25E25427475752122F21001E68868D2D1010A0A0A70E2C4091C
+        3E7C5895821003FDC072AC5FBF5E81787B7B63DFBE7DD0EB9BFA017EFFFD0F00
+        662522EA3001E68E19A0B0B010313131387AF4A882080909517EF0F3F353102C
+        0721980DFA83996A6ED61B017A8701444645280009FE4AF2ECD913E3349ABF1B
+        C30D3F08A0D56A111B1B8BE3C78FAB521C3A74488D9210A64C30304BC26BFAA5
+        A5A5654480A8E83E005D70F06B0916168502D0610C37FC2040515111E2E3E355
+        19A2A3A35516C2C3C3B167CF1E556F13C4962D5B9401F97B6BEB8B011A7373E7
+        25585A9614D8DBF7A4D8D97519C30D3F08505C5C8C8484049C3C79B2BF0CFBF7
+        EF57A5A01F020303557BB23B68D0C8C8482340B75980E8B07D48B2B5ADD03A3A
+        F6B49E3B879469D34607484C4CC4A953A770ECD83115806926C0EEDDBB5550FA
+        612C00EDD29EB17676287270E8D5CB609AE3E2906A67D71DAFD13C1E2829CB9D
+        4100494949FD3E60190E1E3C38A82D997A02D0177D00AD830028437D3DCEBDF1
+        06B4F6F668906EAA5EBE1CFA8808E825B37A31B95E06C8EB26018BD5687A0701
+        242727234E68E98323478E2833D207CC80F9120C06E89091A7CF9A05EDB7DFA2
+        4E9EBDBF70212A172C40A5A323EE2F5EAC54E9E4844A816B12A86100A74F9F56
+        466419E80342B01B6842067D1180E1E103A4CF9C89C22FBF448D4C54E59F7F8E
+        F24F3F45F9175FE0DE575FE1DED75FF749AE79AF413ACC2C008DC8F9803EA098
+        054ECFA60C502680478FFA000CB5B5383B63060A3EFE1855B256E8DE7B0FBA77
+        DF45D9071FA06CFE7CDC95FB65F3E641F7FEFB7DD772AF4EBACA2C80C9070301
+        381FBC08402F7348F2CB2FA3E4C30FD53F2F914CDC121F9408D48D575F8576C2
+        0414CA3682D25A59A178D224547FFFBD7900930F68448A81E803061DDA052600
+        96A03AE50C4E4F9C88E2B7DF46E99C3928B4B4EC0F6A4EF4815900B62201381F
+        108059E09CC0A043BB80005C0909C0F5A0E2CC19244926B46FBD85D2B973A11D
+        37AE2F206186A8E29B6F860370F414CB401F50048910C712C064C2A0A020F54C
+        5BDBA37E006E44F47A3D6E8881136D6C50F0FAEBB8F3CE3BD05A5B2B2FB0F677
+        3FF9A4CF989F7DA68C183310203F3F1FA9A9A938C351187D40B12338230E04A0
+        1FF80C97E34E59FBB9FCB6B5B5A9FD41456505AE44452276FC785C9B3E5D4194
+        8A2913C68FEF961173D403D5AC001C9CECD56A48005316D88E2C0133C0749B03
+        E01EA2563AA0B3B3138F1F13A01E950270F3E60D04B92C419CA565E7AF53A7E2
+        9674449CB5B541427145FC9B6896689A68B268B80929B6A3693E3001D0848420
+        007FCFBC9489B2321DDADBB92F34402FCB734D4D35743A1DB6F9F922E4A38FBC
+        632D2C3A2E4F9982382B2B02FC553453F49AE8CF226B9179009A9125E0AC480F
+        D0789C92D992EC8AC4C4045CBD9A878732013D79F25879E08980D00755BF55C1
+        3FC08F2D3C3F68FA747B2EC592EE7609F5171103BF24FA63A36A0E8029661968
+        449682BBA4F0F0308489CE5F388F5BB74B505BF710CD2D7AB43E6AE917FF6E68
+        AC4740A0BFEC8E9BDECCCCCC7C25CAC6E61F62B8AD12CAFCEE782800CF26A5A5
+        A5C9EE265216A550A4A7A7C9735A315AB9DA11D709407D43AD5175EA4CA89A9A
+        DFB0C57733372433443663DA92151717F5074D494941464686942046461C82F4
+        73A928D05E43A9AE04E51565A8ACBA87FB551592EAE1E26F7C861F28127CECDF
+        05DC11B10BB2B2B264A46765577B18E7FF9D86ABD77251547C1D25B78B71BBF4
+        A68228D5DDC21D93CA065C8B4AEF94A867D7BAAD96B8982CB2328619F93001E4
+        E464233E3156029F45CEE54BC893E0D70AAEE27AE1AFB82E1960160A8AF2950A
+        07C8744F499EC99777962D772580AD686C9F663F65FC881F7F3A8F8C4BFF41F6
+        CF19F839F7122EFF9285DC2BD94ABFE4E58C49B95772E4DD2C382F5944006BD1
+        D83F4EF9E1C949891F9F4E8B1D20F795167FE734A21868E83DBEB364A9739004
+        7FB1F9CC1D2436CAD2287E62FFAFE27BA38F5CA3D1FC17CCCB51751A5A6F6000
+        00000049454E44AE426082}
+    end
+    object barSpacer: TdxBarLargeButton
+      Category = 0
+      Visible = ivAlways
     end
   end
 end
