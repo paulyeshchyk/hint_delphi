@@ -84,6 +84,8 @@ type
     cxDBMemo1: TcxDBMemo;
     dxStatusBar1: TdxStatusBar;
     dxStatusBar2: TdxStatusBar;
+    cxDBVerticalGrid1DBEditorRow5: TcxDBEditorRow;
+    actionShowFindPanel: TAction;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -94,8 +96,11 @@ type
     procedure actionRunScriptExecute(Sender: TObject);
     procedure actionRunSelectedExecute(Sender: TObject);
     procedure actionSaveScriptExecute(Sender: TObject);
+    procedure actionShowFindPanelExecute(Sender: TObject);
     procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+    procedure cxDBTreeList1FindCriteriaChanged(Sender: TcxDataFindCriteria; const
+        AChanges: TcxDataFindCriteriaChanges);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
@@ -104,6 +109,9 @@ type
     procedure DataSetTreeViewAfterPost(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DataSetTreeViewBeforeEdit(DataSet: TDataSet);
+    procedure cxDBVerticalGrid1DBEditorRow6EditPropertiesEditValueChanged(Sender: TObject);
+    procedure DataSetTreeViewAfterApplyUpdates(Sender: TObject; var OwnerData:
+        OLEVariant);
   private
     { Private declarations }
   public
@@ -158,6 +166,7 @@ var
   fIniFile: String;
   fDatasetXMLFile: String;
 begin
+
   fIniFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath('opp.guide.docking.ini');
   if FileExists(fIniFile) then
     dxDockingManager1.LoadLayoutFromIniFile(fIniFile);
@@ -166,6 +175,7 @@ begin
   fDatasetXMLFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath('opp.guide.xml');
   DataSetTreeView.LoadFromFile(fDatasetXMLFile);
   cxDBTreeList1.EndUpdate;
+  cxDBTreeList1.FocusedNode := cxDBTreeList1.TopNode;
   dxStatusBar1.Panels[0].Text := Format('Loaded file: %s',[fDatasetXMLFile]);
 end;
 
@@ -257,6 +267,12 @@ begin
     DataSourceTreeView.DataSet.Post;
 end;
 
+procedure TOPPGuideForm.actionShowFindPanelExecute(Sender: TObject);
+begin
+  cxDBTreeList1.SetFocus;
+  cxDBTreeList1.ShowFindPanel;
+end;
+
 procedure TOPPGuideForm.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
 begin
   //
@@ -265,6 +281,12 @@ end;
 procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   OutputDebugString(Format('%d', [Integer(State)]).toWideChar);
+end;
+
+procedure TOPPGuideForm.cxDBTreeList1FindCriteriaChanged(Sender:
+    TcxDataFindCriteria; const AChanges: TcxDataFindCriteriaChanges);
+begin
+//  cxDBTreeList1.FullExpand;
 end;
 
 procedure TOPPGuideForm.cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
@@ -314,6 +336,17 @@ begin
     DataSetTreeView.swapValues('Order', 'identifier', kv1, kv2);
     Key := 0; // VK_ESCAPE;
   end;
+end;
+
+procedure TOPPGuideForm.cxDBVerticalGrid1DBEditorRow6EditPropertiesEditValueChanged(Sender: TObject);
+begin
+  dxDockPanelScript.Visible := selectedNodeIsRunnable();
+end;
+
+procedure TOPPGuideForm.DataSetTreeViewAfterApplyUpdates(Sender: TObject; var
+    OwnerData: OLEVariant);
+begin
+//
 end;
 
 procedure TOPPGuideForm.DataSetTreeViewAfterOpen(DataSet: TDataSet);

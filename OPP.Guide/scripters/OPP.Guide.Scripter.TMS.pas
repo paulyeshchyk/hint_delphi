@@ -12,9 +12,11 @@ uses
   Vcl.ScripterInit,
 
   WinAPI.ActiveX,
-  WinAPI.Windows;
+  WinAPI.Windows,
+  atScript;
 
 type
+
   TOPPGuideScripterTMS = class(TInterfacedObject, IOPPGuideScripter)
   private
     procedure scripterror(Sender: TObject; const ExcepInfo: TExcepInfo; CharNo, LineNo: integer; var Handled: boolean);
@@ -30,9 +32,13 @@ type
 implementation
 
 uses
+//  ap_Classes,
+
   atScripter,
   atPascal,
-//  ap_Classes,
+  Vcl.Dialogs,
+
+  OPP.Guide.Context.TaTWrapper,
   OPP.Guide.API.ContextLibrary,
   OPP.Guide.API.SampleLibrary;
 
@@ -65,8 +71,12 @@ begin
   try
     fScripter.AddLibrary(TExampleLibrary);
     fScripter.AddLibrary(TAPIContextLibrary);
-//    fScripter.AddLibrary(TatClassesLibrary);
+    fScripter.AddLibrary(TOPPGuideCoreLibrary);
 
+//    with fScripter.AddDelphiClass(TOPPGuideContext) do begin
+//      DefineMethod('test',0,tkNone,nil,tcontexttest);
+//    end;
+//
     fScripter.SourceCode := AStrings;
     fScripter.Compile;
     fScripter.Execute(0);

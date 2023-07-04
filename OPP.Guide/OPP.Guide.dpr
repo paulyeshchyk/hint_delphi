@@ -12,7 +12,9 @@ uses
   OPP.Guide.Scripter.TMS in 'scripters\OPP.Guide.Scripter.TMS.pas',
   OPP.Guide.Scripter in 'scripters\OPP.Guide.Scripter.pas',
   OPP.Stream.Observer in '..\OPP.Help\OPP.Stream.Observer.pas',
-  OPP.Output.Console in '..\OPP.Help\OPP.Output.Console.pas';
+  OPP.Output.Console in '..\OPP.Help\OPP.Output.Console.pas',
+  OPP.Guide.Context in 'scripters\core\OPP.Guide.Context.pas',
+  OPP.Guide.Context.TaTWrapper in 'scripters\core\OPP.Guide.Context.TaTWrapper.pas';
 
 {$R *.res}
 

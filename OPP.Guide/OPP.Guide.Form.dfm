@@ -212,6 +212,7 @@ object OPPGuideForm: TOPPGuideForm
             DataController.ParentField = 'PIdentifier'
             DataController.KeyField = 'Identifier'
             DragMode = dmAutomatic
+            FindPanel.DisplayMode = fpdmManual
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -21
@@ -236,6 +237,7 @@ object OPPGuideForm: TOPPGuideForm
             TabOrder = 0
             OnDragDrop = cxDBTreeList1DragDrop
             OnDragOver = cxDBTreeList1DragOver
+            OnFindCriteriaChanged = cxDBTreeList1FindCriteriaChanged
             OnFocusedNodeChanged = cxDBTreeList1FocusedNodeChanged
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
@@ -377,7 +379,6 @@ object OPPGuideForm: TOPPGuideForm
             OptionsBehavior.GoToNextCellOnEnter = True
             OptionsBehavior.ImmediateEditor = False
             OptionsBehavior.FocusCellOnCycle = True
-            OptionsData.Editing = False
             OptionsData.Appending = False
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
@@ -400,6 +401,7 @@ object OPPGuideForm: TOPPGuideForm
                 end>
               Properties.EditProperties.ListOptions.ShowHeader = False
               Properties.EditProperties.ListSource = DataSourceNodeType
+              Properties.EditProperties.OnEditValueChanged = cxDBVerticalGrid1DBEditorRow6EditPropertiesEditValueChanged
               Properties.DataBinding.FieldName = 'NodeType'
               ID = 0
               ParentID = -1
@@ -433,6 +435,18 @@ object OPPGuideForm: TOPPGuideForm
               ID = 4
               ParentID = -1
               Index = 4
+              Version = 1
+            end
+            object cxDBVerticalGrid1DBEditorRow5: TcxDBEditorRow
+              Properties.DataBinding.FieldName = 'Identifier'
+              Properties.Options.Editing = False
+              Properties.Options.Filtering = False
+              Properties.Options.FilteringWithFindPanel = False
+              Properties.Options.IncSearch = False
+              Properties.Options.ShowEditButtons = eisbNever
+              ID = 5
+              ParentID = -1
+              Index = 5
               Version = 1
             end
           end
@@ -594,6 +608,7 @@ object OPPGuideForm: TOPPGuideForm
     AfterOpen = DataSetTreeViewAfterOpen
     BeforeEdit = DataSetTreeViewBeforeEdit
     AfterPost = DataSetTreeViewAfterPost
+    AfterApplyUpdates = DataSetTreeViewAfterApplyUpdates
     Left = 960
     Top = 216
     object DataSetTreeViewIdentifier: TStringField
@@ -1030,6 +1045,11 @@ object OPPGuideForm: TOPPGuideForm
     object actionRunScript: TAction
       Caption = 'actionRunScript'
       OnExecute = actionRunScriptExecute
+    end
+    object actionShowFindPanel: TAction
+      Caption = 'actionShowFindPanel'
+      ShortCut = 16454
+      OnExecute = actionShowFindPanelExecute
     end
   end
   object SaveDialog1: TSaveDialog
