@@ -9,6 +9,7 @@ type
     function RunScript(AStrings: TStrings): Variant; overload;
     function RunScript(AScriptText: String): Variant; overload;
     function RunScript(AStream: TMemoryStream): Variant; overload;
+    function CompileScript(AStream: TMemoryStream): Variant;
   end;
 
 implementation

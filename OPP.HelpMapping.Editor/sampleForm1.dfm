@@ -2,7 +2,7 @@ object SampleForm: TSampleForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1076#1077#1082#1089#1086#1074' '#1089#1080#1089#1090#1077#1084#1099' '#1087#1086#1084#1086#1097#1080
-  ClientHeight = 601
+  ClientHeight = 581
   ClientWidth = 1074
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,7 +14,6 @@ object SampleForm: TSampleForm
   OldCreateOrder = True
   Position = poDefault
   Visible = True
-  OnActivate = FormActivate
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -24,18 +23,16 @@ object SampleForm: TSampleForm
     Left = 0
     Top = 0
     Width = 1074
-    Height = 581
+    Height = 561
     Align = alClient
-    ExplicitHeight = 514
     DockingType = 5
     OriginalWidth = 1074
-    OriginalHeight = 581
+    OriginalHeight = 561
     object dxLayoutDockSite2: TdxLayoutDockSite
       Left = 0
       Top = 0
       Width = 537
-      Height = 581
-      ExplicitHeight = 514
+      Height = 561
       DockingType = 0
       OriginalWidth = 300
       OriginalHeight = 200
@@ -43,7 +40,7 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 537
-        Height = 581
+        Height = 561
         DockingType = 0
         OriginalWidth = 300
         OriginalHeight = 200
@@ -52,15 +49,13 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 537
-        Height = 581
+        Height = 561
         ParentColor = True
-        OnVisibleChanged = dxDockPanelListVisibleChanged
         AllowFloating = True
         AutoHide = False
         Caption = #1057#1087#1080#1089#1086#1082
         CustomCaptionButtons.Buttons = <>
         TabsProperties.CustomButtons.Buttons = <>
-        OnClose = dxDockPanelListClose
         DockingType = 0
         OriginalWidth = 185
         OriginalHeight = 140
@@ -77,7 +72,7 @@ object SampleForm: TSampleForm
           Left = 0
           Top = 28
           Width = 532
-          Height = 529
+          Height = 509
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 1
@@ -88,7 +83,6 @@ object SampleForm: TSampleForm
           OnResize = cxGrid1Resize
           LookAndFeel.Kind = lfFlat
           LookAndFeel.NativeStyle = False
-          ExplicitHeight = 462
           object cxGrid1DBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             FindPanel.ApplyInputDelay = 10
@@ -140,7 +134,7 @@ object SampleForm: TSampleForm
         object PanelFind: TPanel
           AlignWithMargins = True
           Left = 19
-          Top = 557
+          Top = 537
           Width = 514
           Height = 0
           Margins.Left = 19
@@ -150,7 +144,6 @@ object SampleForm: TSampleForm
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
-          ExplicitTop = 490
         end
       end
     end
@@ -158,12 +151,11 @@ object SampleForm: TSampleForm
       Left = 537
       Top = 0
       Width = 537
-      Height = 581
+      Height = 561
       ActiveChildIndex = -1
       AllowFloating = True
       AutoHide = False
       CustomCaptionButtons.Buttons = <>
-      ExplicitHeight = 514
       DockingType = 3
       OriginalWidth = 537
       OriginalHeight = 140
@@ -171,15 +163,13 @@ object SampleForm: TSampleForm
         Left = 0
         Top = 0
         Width = 537
-        Height = 81
+        Height = 79
         ParentColor = True
-        OnVisibleChanged = dxDockPanelIdentifierVisibleChanged
         AllowFloating = True
         AutoHide = False
         Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
         CustomCaptionButtons.Buttons = <>
         TabsProperties.CustomButtons.Buttons = <>
-        OnClose = dxDockPanelIdentifierClose
         DockingType = 2
         OriginalWidth = 537
         OriginalHeight = 86
@@ -237,10 +227,10 @@ object SampleForm: TSampleForm
       end
       object dxTabContainerDockSite1: TdxTabContainerDockSite
         Left = 0
-        Top = 81
+        Top = 79
         Width = 537
-        Height = 500
-        ActiveChildIndex = 1
+        Height = 482
+        ActiveChildIndex = 0
         AllowFloating = True
         AutoHide = False
         CustomCaptionButtons.Buttons = <>
@@ -253,15 +243,13 @@ object SampleForm: TSampleForm
           Left = 0
           Top = 0
           Width = 533
-          Height = 455
+          Height = 437
           ParentColor = True
-          OnVisibleChanged = dxDockPanelHintVisibleChanged
           AllowFloating = True
           AutoHide = False
           Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1072
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
-          ExplicitHeight = 397
           DockingType = 0
           OriginalWidth = 537
           OriginalHeight = 528
@@ -269,7 +257,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 533
-            Height = 455
+            Height = 437
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -277,7 +265,6 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitHeight = 397
             object Panel1: TPanel
               Left = 0
               Top = 28
@@ -508,15 +495,13 @@ object SampleForm: TSampleForm
           Left = 0
           Top = 0
           Width = 533
-          Height = 455
+          Height = 437
           ParentColor = True
-          OnVisibleChanged = dxDockPanelHelpVisibleChanged
           AllowFloating = True
           AutoHide = False
           Caption = #1055#1086#1084#1086#1097#1100
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
-          ExplicitHeight = 397
           DockingType = 0
           OriginalWidth = 537
           OriginalHeight = 528
@@ -524,7 +509,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 0
             Width = 533
-            Height = 455
+            Height = 437
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -532,7 +517,6 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitHeight = 397
             object dxBarDockControl2: TdxBarDockControl
               Left = 0
               Top = 0
@@ -545,14 +529,10 @@ object SampleForm: TSampleForm
               Left = 0
               Top = 28
               Width = 533
-              Height = 427
+              Height = 409
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 1
-              ExplicitLeft = 288
-              ExplicitTop = 34
-              ExplicitWidth = 249
-              ExplicitHeight = 383
               object Panel9: TPanel
                 Left = 0
                 Top = 0
@@ -561,9 +541,6 @@ object SampleForm: TSampleForm
                 Align = alTop
                 BevelOuter = bvNone
                 TabOrder = 0
-                ExplicitLeft = -6
-                ExplicitTop = 28
-                ExplicitWidth = 255
                 object Panel10: TPanel
                   Left = 0
                   Top = 0
@@ -572,9 +549,6 @@ object SampleForm: TSampleForm
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 0
-                  ExplicitLeft = 1
-                  ExplicitTop = 1
-                  ExplicitWidth = 253
                   object cxLabel7: TcxLabel
                     AlignWithMargins = True
                     Left = 8
@@ -600,7 +574,6 @@ object SampleForm: TSampleForm
                     Align = alClient
                     Properties.OnEditValueChanged = OnEditValueChanged
                     TabOrder = 1
-                    ExplicitWidth = 131
                     Width = 411
                   end
                 end
@@ -612,9 +585,6 @@ object SampleForm: TSampleForm
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 1
-                  ExplicitLeft = 1
-                  ExplicitTop = 67
-                  ExplicitWidth = 253
                   object cxLabel8: TcxLabel
                     AlignWithMargins = True
                     Left = 8
@@ -641,7 +611,6 @@ object SampleForm: TSampleForm
                     Align = alClient
                     Properties.OnEditValueChanged = OnEditValueChanged
                     TabOrder = 1
-                    ExplicitWidth = 131
                     Width = 411
                   end
                 end
@@ -653,9 +622,6 @@ object SampleForm: TSampleForm
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 2
-                  ExplicitLeft = 1
-                  ExplicitTop = 34
-                  ExplicitWidth = 253
                   object cxLabel6: TcxLabel
                     AlignWithMargins = True
                     Left = 8
@@ -694,7 +660,6 @@ object SampleForm: TSampleForm
                     Properties.OnEditValueChanged = OnEditValueChanged
                     Properties.OnValidate = cxEditHintPredicateFilenamePropertiesValidate
                     TabOrder = 1
-                    ExplicitWidth = 131
                     Width = 411
                   end
                 end
@@ -707,8 +672,6 @@ object SampleForm: TSampleForm
                 Align = alTop
                 BevelOuter = bvNone
                 TabOrder = 1
-                ExplicitTop = 137
-                ExplicitWidth = 241
                 object Panel13: TPanel
                   Left = 0
                   Top = 0
@@ -717,9 +680,6 @@ object SampleForm: TSampleForm
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 0
-                  ExplicitLeft = 1
-                  ExplicitTop = 1
-                  ExplicitWidth = 239
                   object cxLabel13: TcxLabel
                     AlignWithMargins = True
                     Left = 8
@@ -743,9 +703,6 @@ object SampleForm: TSampleForm
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 1
-                  ExplicitLeft = 1
-                  ExplicitTop = 34
-                  ExplicitWidth = 239
                   object cxLabel10: TcxLabel
                     AlignWithMargins = True
                     Left = 8
@@ -771,7 +728,6 @@ object SampleForm: TSampleForm
                     Align = alClient
                     Properties.OnEditValueChanged = OnEditValueChanged
                     TabOrder = 1
-                    ExplicitWidth = 117
                     Width = 411
                   end
                 end
@@ -783,9 +739,6 @@ object SampleForm: TSampleForm
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 2
-                  ExplicitLeft = 1
-                  ExplicitTop = 67
-                  ExplicitWidth = 239
                   object cxLabel9: TcxLabel
                     AlignWithMargins = True
                     Left = 8
@@ -811,7 +764,6 @@ object SampleForm: TSampleForm
                     Align = alClient
                     Properties.OnEditValueChanged = OnEditValueChanged
                     TabOrder = 1
-                    ExplicitWidth = 117
                     Width = 411
                   end
                 end
@@ -823,15 +775,12 @@ object SampleForm: TSampleForm
           Left = 0
           Top = 0
           Width = 533
-          Height = 455
-          OnVisibleChanged = dxDockPanelPreviewVisibleChanged
+          Height = 437
           AllowFloating = True
           AutoHide = False
           Caption = #1055#1088#1086#1089#1084#1086#1090#1088
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
-          OnClose = dxDockPanelPreviewClose
-          ExplicitHeight = 397
           DockingType = 0
           OriginalWidth = 537
           OriginalHeight = 528
@@ -840,7 +789,7 @@ object SampleForm: TSampleForm
             Left = 0
             Top = 3
             Width = 533
-            Height = 449
+            Height = 431
             Hint = 'Wrong hint'
             HelpType = htKeyword
             HelpKeyword = 'Kod_OKWED'
@@ -859,7 +808,6 @@ object SampleForm: TSampleForm
             ParentShowHint = False
             ShowHint = True
             TabOrder = 0
-            ExplicitHeight = 391
           end
         end
       end
@@ -867,7 +815,7 @@ object SampleForm: TSampleForm
   end
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 581
+    Top = 561
     Width = 1074
     Height = 20
     Panels = <
@@ -880,7 +828,6 @@ object SampleForm: TSampleForm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 514
   end
   object cxHintController: TcxHintStyleController
     HintStyleClassName = 'TdxScreenTipStyle'
@@ -940,32 +887,12 @@ object SampleForm: TSampleForm
       Caption = #1042#1080#1076
       object N8: TMenuItem
         Caption = #1055#1072#1085#1077#1083#1080
-        object NHint: TMenuItem
-          Caption = #1055#1072#1085#1077#1083#1100' "'#1055#1086#1076#1089#1082#1072#1079#1082#1072'"'
-          OnClick = NHintClick
-        end
-        object NHelp: TMenuItem
-          Caption = #1055#1072#1085#1077#1083#1100' "'#1055#1086#1084#1086#1097#1100'"'
-          OnClick = NHelpClick
-        end
-        object NIdentifier: TMenuItem
-          Caption = #1055#1072#1085#1077#1083#1100' "'#1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088'"'
-          OnClick = NIdentifierClick
-        end
-        object NList: TMenuItem
-          Caption = #1055#1072#1085#1077#1083#1100' "'#1057#1087#1080#1089#1086#1082'"'
-          OnClick = NListClick
-        end
-        object NPreview: TMenuItem
-          Caption = #1055#1072#1085#1077#1083#1100' "'#1055#1088#1086#1089#1084#1086#1090#1088'"'
-          OnClick = NPreviewClick
-        end
-        object N9: TMenuItem
-          Caption = '-'
-        end
         object N10: TMenuItem
           Caption = #1057#1073#1088#1086#1089
           OnClick = N10Click
+        end
+        object N9: TMenuItem
+          Caption = '-'
         end
       end
     end

@@ -19,7 +19,7 @@ uses
   OPP.Buffer.Manager.Settings.Data,
   OPP.Buffer.Clipboard,
   OPP.Buffer.Manager.DatasetRecord,
-  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, dxDateRanges, dxScrollbarAnnotations, dxBarExtItems;
+  OPP.Buffer.Manager, OPP.Buffer.Manager.Settings, dxBarExtItems;
 
 type
   TOPPBufferFormOnApply = reference to procedure(ARecord: TOPPBufferManagerRecord; ABufferManager: TOPPBufferManager; AClipboardControl: TWinControl);

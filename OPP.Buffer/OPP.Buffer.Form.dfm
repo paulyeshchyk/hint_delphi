@@ -3,26 +3,27 @@ object OPPBufferForm: TOPPBufferForm
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052': '#1041#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
-  ClientHeight = 490
+  ClientHeight = 479
   ClientWidth = 1002
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   PixelsPerInch = 192
-  TextHeight = 27
+  TextHeight = 13
   object cxGrid1: TcxGrid
     AlignWithMargins = True
     Left = 0
-    Top = 151
+    Top = 78
     Width = 1002
-    Height = 253
+    Height = 334
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -32,12 +33,10 @@ object OPPBufferForm: TOPPBufferForm
     TabOrder = 0
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 988
-    ExplicitHeight = 252
+    ExplicitHeight = 326
     object cxGrid1DBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       FilterBox.Visible = fvNever
-      ScrollbarAnnotations.CustomAnnotations = <>
       OnCellDblClick = cxGrid1DBTableView1CellDblClick
       OnEditing = cxGrid1DBTableView1Editing
       OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
@@ -121,7 +120,7 @@ object OPPBufferForm: TOPPBufferForm
   end
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 404
+    Top = 459
     Width = 1002
     Height = 20
     Panels = <
@@ -140,15 +139,13 @@ object OPPBufferForm: TOPPBufferForm
     Font.Height = -21
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 403
-    ExplicitWidth = 988
   end
   object Panel1: TPanel
     AlignWithMargins = True
     Left = 0
-    Top = 424
+    Top = 412
     Width = 1002
-    Height = 66
+    Height = 47
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -156,14 +153,14 @@ object OPPBufferForm: TOPPBufferForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 423
-    ExplicitWidth = 988
+    ExplicitLeft = -5
+    ExplicitTop = 385
     object Panel2: TPanel
       AlignWithMargins = True
       Left = 714
       Top = 0
       Width = 272
-      Height = 66
+      Height = 47
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 16
@@ -171,13 +168,13 @@ object OPPBufferForm: TOPPBufferForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 700
+      ExplicitHeight = 66
       object cxButton1: TcxButton
         AlignWithMargins = True
         Left = 8
         Top = 8
         Width = 120
-        Height = 50
+        Height = 31
         Margins.Left = 8
         Margins.Top = 8
         Margins.Right = 8
@@ -209,13 +206,14 @@ object OPPBufferForm: TOPPBufferForm
           1EA8A1D51115828B1E50D3A6FCE1E2EA859004F691AC4956F5FA504A1D961751
           27885F4D7737607FE4F0B80000000049454E44AE426082}
         TabOrder = 0
+        ExplicitHeight = 25
       end
       object cxButton2: TcxButton
         AlignWithMargins = True
         Left = 144
         Top = 8
         Width = 120
-        Height = 50
+        Height = 31
         Margins.Left = 8
         Margins.Top = 8
         Margins.Right = 8
@@ -250,6 +248,7 @@ object OPPBufferForm: TOPPBufferForm
           813313D3E54C1488661E4CC6563131E4AF10FD02565C244ECB4C567C00000000
           49454E44AE426082}
         TabOrder = 1
+        ExplicitHeight = 50
       end
     end
   end
@@ -258,7 +257,6 @@ object OPPBufferForm: TOPPBufferForm
     Top = 0
     Width = 1002
     Align = dalTop
-    ExplicitWidth = 988
   end
   object ActionList1: TActionList
     Left = 40
@@ -388,7 +386,7 @@ object OPPBufferForm: TOPPBufferForm
   object cxStyleRepository1: TcxStyleRepository
     Left = 320
     Top = 360
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     object cxStyle1: TcxStyle
       AssignedValues = [svColor]
       Color = clBtnFace
@@ -410,11 +408,11 @@ object OPPBufferForm: TOPPBufferForm
     UseSystemFont = True
     Left = 80
     Top = 360
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      148
+      75
       0)
     object dxBarManager1Bar1: TdxBar
       AllowClose = False
@@ -426,7 +424,7 @@ object OPPBufferForm: TOPPBufferForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 46
+      DockedTop = 23
       DockingStyle = dsTop
       FloatLeft = 0
       FloatTop = 8
@@ -434,7 +432,7 @@ object OPPBufferForm: TOPPBufferForm
       FloatClientHeight = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -21
+      Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
       ItemLinks = <
@@ -494,7 +492,7 @@ object OPPBufferForm: TOPPBufferForm
       FloatClientHeight = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -21
+      Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
       IsMainMenu = True
@@ -795,7 +793,7 @@ object OPPBufferForm: TOPPBufferForm
         3F58DCA15AAD1E999999398A9AC6F4418D1368751C0AB95C6E939B9B6B49CF3D
         3D0A85E26DCE8B3FD0C2E23F9AF353A5D58452F90000000049454E44AE426082}
       AutoGrayScale = False
-      Width = 90
+      Width = 45
     end
     object dxBarLargeButton4: TdxBarLargeButton
       Action = actionDeleteRecord

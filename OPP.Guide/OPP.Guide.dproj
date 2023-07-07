@@ -46,7 +46,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Guide.API</DCC_DcuOutput>
         <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -65,6 +65,7 @@
         <UsePackages>true</UsePackages>
         <DCC_FrameworkPath>..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
+        <DCC_UnitSearchPath>$(TMS728)\source\legacy;$(TMS728)\source\vcl;$(TMS728)\source\ide;$(TMS728)\source\fmx;$(TMS728)\source\design;$(TMS728)\source\core;$(TMS728)\source\memo;$(DC411)\import\OPP;$(DC411)\import\DC;$(DC411)\import\DC\delphi_2006;$(DC411)\units;D:\projects\OPP.Guide.DC\import\GUIDE;D:\projects\OPP.Guide.DC\scripter;..\..\..\Common\Help\OPP.Guide.API\exportable;..\..\..\Common\Help\OPP.Guide.API\common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -91,10 +92,8 @@
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Guide</DCC_DcuOutput>
         <DCC_MapFile>3</DCC_MapFile>
-        <DCC_UnitSearchPath>D:\projects\TMS 7.28\source\memo;D:\projects\TMS 7.28\source\legacy;D:\projects\TMS 7.28\source\vcl;D:\projects\TMS 7.28\source\ide;D:\projects\TMS 7.28\source\fmx;D:\projects\TMS 7.28\source\design;D:\projects\TMS 7.28\source\core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_Define>madExcept;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -120,10 +119,9 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
-        <DCCReference Include="scripters\OPP.Guide.Scripter.TMS.pas"/>
-        <DCCReference Include="scripters\OPP.Guide.Scripter.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Stream.Observer.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Output.Console.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas"/>
         <None Include="readme.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

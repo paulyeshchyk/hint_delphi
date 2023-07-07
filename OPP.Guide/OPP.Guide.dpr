@@ -1,6 +1,11 @@
 program OPP.Guide;
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madListHardware,
+  madListProcesses,
+  madListModules,
   midaslib,
   Vcl.Forms,
   OPP.Guide.Form in 'OPP.Guide.Form.pas' {OPPGuideForm},
@@ -9,12 +14,9 @@ uses
   OPP.Help.System.Messaging in '..\OPP.Help\OPP.Help.System.Messaging.pas',
   OPP.Help.System.Files in '..\OPP.Help\OPP.Help.System.Files.pas',
   OPP.Help.Log in '..\OPP.Help\OPP.Help.Log.pas',
-  OPP.Guide.Scripter.TMS in 'scripters\OPP.Guide.Scripter.TMS.pas',
-  OPP.Guide.Scripter in 'scripters\OPP.Guide.Scripter.pas',
   OPP.Stream.Observer in '..\OPP.Help\OPP.Stream.Observer.pas',
   OPP.Output.Console in '..\OPP.Help\OPP.Output.Console.pas',
-  OPP.Guide.Context in 'scripters\core\OPP.Guide.Context.pas',
-  OPP.Guide.Context.TaTWrapper in 'scripters\core\OPP.Guide.Context.TaTWrapper.pas';
+  OPP.Help.VCL.PanelTrigger in '..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas';
 
 {$R *.res}
 

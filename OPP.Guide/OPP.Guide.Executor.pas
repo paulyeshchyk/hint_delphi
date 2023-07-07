@@ -9,18 +9,22 @@ uses
 
 type
   TOPPGuideCompletion = reference to procedure(ALog: String);
+  TOPPBlobToStreamCompletion = reference to procedure(AStream: TStream; userInfo: Variant);
 
   TOPPGuideExecutor = class
+  private
+    class procedure GetScriptedStream(dataset: TClientDataSet; ident: Variant; completion: TOPPBlobToStreamCompletion);
+    class function BuildFilter(fieldName, pident: Variant): String;
   public
+    class function compile(dataset: TClientDataSet; ident: Variant; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean; overload;
     class function run(dataset: TClientDataSet; ident: Variant; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean; overload;
     class function runSubs(dataset: TClientDataSet; AFilter: String; Scripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean;
   end;
 
   TOPPStreamHelper = class helper for TStream
+    function CompileScript(AScripter: IOPPGuideScripter; userInfo: Variant; completion: TOPPGuideCompletion): Boolean;
     function RunScript(AScripter: IOPPGuideScripter; userInfo: Variant; completion: TOPPGuideCompletion): Boolean;
   end;
-
-  TOPPBlobToStreamCompletion = reference to procedure(AStream: TStream; userInfo: Variant);
 
   TOPPClientDataSetHelper = class helper for TDataSet
     procedure BlobToStream(AFieldName: String; completion: TOPPBlobToStreamCompletion); overload;
@@ -37,50 +41,77 @@ uses
 
 { TOPPGuideExecutor }
 
-class function TOPPGuideExecutor.run(dataset: TClientDataSet; ident: Variant; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean;
-var
-  fCDS: TClientDataSet;
-  fFilter, fFilter2: String;
-  function BuildFilter(fieldName, pident: Variant): String;
+class function TOPPGuideExecutor.BuildFilter(fieldName, pident: Variant): String;
+begin
+  if VarIsNull(fieldName) or VarIsEmpty(fieldName) then
   begin
-    if VarIsNull(fieldName) or VarIsEmpty(fieldName) then
-    begin
-      result := '';
-      exit;
-    end;
-
-    if VarIsNull(pident) or VarIsEmpty(pident) then
-    begin
-      result := '';
-    end else begin
-      result := Format('%s LIKE ''%s''', [fieldName, pident]);
-    end;
+    result := '';
+    exit;
   end;
 
-begin
-  result := false;
-  if not Assigned(dataset) then
-    exit;
+  if VarIsNull(pident) or VarIsEmpty(pident) then
+  begin
+    result := '';
+  end else begin
+    result := Format('%s LIKE ''%s''', [fieldName, pident]);
+  end;
+end;
 
+class function TOPPGuideExecutor.compile(dataset: TClientDataSet; ident: Variant; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean;
+begin
+  GetScriptedStream(dataset, ident,
+    procedure(AStream: TStream; userInfo: Variant)
+    begin
+      if Assigned(AStream) then
+        AStream.CompileScript(AScripter, userInfo, completion);
+    end);
+end;
+
+class procedure TOPPGuideExecutor.GetScriptedStream(dataset: TClientDataSet; ident: Variant; completion: TOPPBlobToStreamCompletion);
+var
+  fFilter: String;
+  fCDS: TClientDataSet;
+begin
+  if (not Assigned(dataset)) or (VarIsNull(ident)) or (VarIsEmpty(ident)) then
+  begin
+    if Assigned(completion) then
+      completion(nil, null);
+    exit;
+  end;
   fFilter := BuildFilter('identifier', ident);
   fCDS := TClientDataSet.Create(nil);
   try
     fCDS.CloneCursor(dataset, false);
     fCDS.Filter := fFilter;
     fCDS.Filtered := true;
-    fCDS.BlobToStream('Script',
-      procedure(fStream: TStream; userInfo: Variant)
-      begin
-        fStream.RunScript(AScripter, userInfo, completion)
-      end);
-    if ArunSubs then
-    begin
-      fFilter2 := BuildFilter('pidentifier', ident);
-      runSubs(dataset, fFilter2, AScripter, completion);
-    end;
+    fCDS.BlobToStream('Script', completion);
   finally
     fCDS.Free;
   end;
+end;
+
+class function TOPPGuideExecutor.run(dataset: TClientDataSet; ident: Variant; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean;
+var
+  fFilter2: String;
+
+begin
+  result := false;
+  if not Assigned(dataset) then
+    exit;
+
+  GetScriptedStream(dataset, ident,
+    procedure(AStream: TStream; userInfo: Variant)
+    begin
+      if Assigned(AStream) then
+        AStream.RunScript(AScripter, userInfo, completion);
+    end);
+
+  if ArunSubs then
+  begin
+    fFilter2 := BuildFilter('pidentifier', ident);
+    runSubs(dataset, fFilter2, AScripter, completion);
+  end;
+
 end;
 
 class function TOPPGuideExecutor.runSubs(dataset: TClientDataSet; AFilter: String; Scripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean;
@@ -144,11 +175,10 @@ end;
 
 { TOPPStreamHelper }
 
-function TOPPStreamHelper.RunScript(AScripter: IOPPGuideScripter; userInfo: Variant; completion: TOPPGuideCompletion): Boolean;
+function TOPPStreamHelper.CompileScript(AScripter: IOPPGuideScripter; userInfo: Variant; completion: TOPPGuideCompletion): Boolean;
 var
   ss: TStringStream;
   fScriptSize: Integer;
-  fScript: PWideChar;
   fScriptExecutionResult: Variant;
 begin
   self.Position := 0;
@@ -157,7 +187,6 @@ begin
   ss := TStringStream.Create;
   try
     ss.CopyFrom(self, fScriptSize);
-    fScript := PWideChar(ss.DataString);
     try
 
       if Assigned(completion) then
@@ -165,7 +194,49 @@ begin
 
       { --- }
       try
-        fScriptExecutionResult := AScripter.RunScript(fScript);
+        fScriptExecutionResult := AScripter.CompileScript(ss);
+        if Assigned(completion) then
+          completion(Format('Finished: %s with result %s', [VarToStr(userInfo), VarToStr(fScriptExecutionResult)]));
+      except
+        on E: Exception do
+        begin
+          if Assigned(completion) then
+            completion(Format('Finished: %s with error: %s', [VarToStr(userInfo), E.Message]));
+        end;
+      end;
+      { --- }
+
+    except
+      on E: Exception do
+        if Assigned(completion) then
+          completion(Format('Finished: %s with error: %s', [VarToStr(userInfo), E.Message]));
+    end;
+  finally
+    ss.Free;
+  end;
+
+end;
+
+function TOPPStreamHelper.RunScript(AScripter: IOPPGuideScripter; userInfo: Variant; completion: TOPPGuideCompletion): Boolean;
+var
+  ss: TStringStream;
+  fScriptSize: Integer;
+  fScriptExecutionResult: Variant;
+begin
+  self.Position := 0;
+  self.Read(fScriptSize, SizeOf(fScriptSize));
+
+  ss := TStringStream.Create;
+  try
+    ss.CopyFrom(self, fScriptSize);
+    try
+
+      if Assigned(completion) then
+        completion(Format('Started: %s', [VarToStr(userInfo)]));
+
+      { --- }
+      try
+        fScriptExecutionResult := AScripter.RunScript(ss);
         if Assigned(completion) then
           completion(Format('Finished: %s with result %s', [VarToStr(userInfo), VarToStr(fScriptExecutionResult)]));
       except

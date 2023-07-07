@@ -2,43 +2,41 @@ object OPPGuideForm: TOPPGuideForm
   Left = 0
   Top = 0
   Caption = 'OPPGuideForm'
-  ClientHeight = 1061
-  ClientWidth = 2242
+  ClientHeight = 1041
+  ClientWidth = 1417
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -22
+  Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = True
   WindowState = wsMaximized
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 192
-  TextHeight = 30
+  TextHeight = 13
   object dxDockSite1: TdxDockSite
     Left = 0
-    Top = 44
-    Width = 2242
-    Height = 937
+    Top = 3
+    Width = 1417
+    Height = 1017
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -21
-    Font.Name = 'Segoe UI'
-    Font.Style = []
     ManagerFont = False
+    ParentFont = True
     Align = alClient
     DockingType = 5
-    OriginalWidth = 2242
-    OriginalHeight = 937
+    OriginalWidth = 1417
+    OriginalHeight = 1017
     object dxLayoutDockSite2: TdxLayoutDockSite
       Left = 0
       Top = 0
-      Width = 2242
-      Height = 441
+      Width = 1417
+      Height = 521
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -51,8 +49,8 @@ object OPPGuideForm: TOPPGuideForm
       object dxLayoutDockSite3: TdxLayoutDockSite
         Left = 642
         Top = 0
-        Width = 1600
-        Height = 441
+        Width = 775
+        Height = 521
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -65,25 +63,23 @@ object OPPGuideForm: TOPPGuideForm
         object dxLayoutDockSite1: TdxLayoutDockSite
           Left = 0
           Top = 0
-          Width = 958
-          Height = 441
+          Width = 133
+          Height = 521
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
           ManagerFont = False
           ParentFont = True
-          ExplicitWidth = 944
-          ExplicitHeight = 440
           DockingType = 0
           OriginalWidth = 600
           OriginalHeight = 400
         end
         object dxVertContainerDockSite2: TdxVertContainerDockSite
-          Left = 958
+          Left = 133
           Top = 0
           Width = 642
-          Height = 441
+          Height = 521
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
@@ -94,8 +90,6 @@ object OPPGuideForm: TOPPGuideForm
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
-          ExplicitLeft = 944
-          ExplicitHeight = 440
           DockingType = 3
           OriginalWidth = 642
           OriginalHeight = 280
@@ -103,17 +97,13 @@ object OPPGuideForm: TOPPGuideForm
             Left = 0
             Top = 0
             Width = 642
-            Height = 221
+            Height = 261
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -21
-            Font.Name = 'Segoe UI'
-            Font.Style = []
             ManagerFont = False
+            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel5'
@@ -125,19 +115,15 @@ object OPPGuideForm: TOPPGuideForm
           end
           object dxDockPanel6: TdxDockPanel
             Left = 0
-            Top = 221
+            Top = 261
             Width = 642
-            Height = 220
+            Height = 260
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -21
-            Font.Name = 'Segoe UI'
-            Font.Style = []
             ManagerFont = False
+            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel6'
@@ -153,7 +139,7 @@ object OPPGuideForm: TOPPGuideForm
         Left = 0
         Top = 0
         Width = 642
-        Height = 441
+        Height = 521
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -171,19 +157,15 @@ object OPPGuideForm: TOPPGuideForm
           Left = 0
           Top = 0
           Width = 642
-          Height = 147
+          Height = 174
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
           Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -21
-          Font.Name = 'Segoe UI'
-          Font.Style = []
           ManagerColor = False
           ManagerFont = False
+          ParentFont = True
           AllowFloating = True
           AutoHide = False
           Caption = 'Hierarchy'
@@ -196,7 +178,7 @@ object OPPGuideForm: TOPPGuideForm
             Left = 0
             Top = 0
             Width = 638
-            Height = 107
+            Height = 150
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -212,32 +194,22 @@ object OPPGuideForm: TOPPGuideForm
             DataController.ParentField = 'PIdentifier'
             DataController.KeyField = 'Identifier'
             DragMode = dmAutomatic
-            FindPanel.DisplayMode = fpdmManual
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -21
-            Font.Name = 'Segoe UI'
-            Font.Style = []
             Images = ImageList1
             LookAndFeel.Kind = lfFlat
             LookAndFeel.SkinName = ''
             Navigator.Buttons.CustomButtons = <>
             OptionsBehavior.ImmediateEditor = False
-            OptionsBehavior.CopyCaptionsToClipboard = False
             OptionsSelection.InvertSelect = False
             OptionsView.FixedSeparatorWidth = 4
             OptionsView.Headers = False
             OptionsView.IndicatorWidth = 16
             OptionsView.NavigatorOffset = 100
-            ParentFont = False
             Preview.LeftIndent = 10
             Preview.RightIndent = 10
             RootValue = -1
-            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
             OnDragDrop = cxDBTreeList1DragDrop
             OnDragOver = cxDBTreeList1DragOver
-            OnFindCriteriaChanged = cxDBTreeList1FindCriteriaChanged
             OnFocusedNodeChanged = cxDBTreeList1FocusedNodeChanged
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
@@ -269,19 +241,15 @@ object OPPGuideForm: TOPPGuideForm
         end
         object dxDockPanelScript: TdxDockPanel
           Left = 0
-          Top = 147
+          Top = 174
           Width = 642
-          Height = 147
+          Height = 174
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -21
-          Font.Name = 'Segoe UI'
-          Font.Style = []
           ManagerFont = False
+          ParentFont = True
           AllowFloating = True
           AutoHide = False
           Caption = 'Script'
@@ -298,51 +266,172 @@ object OPPGuideForm: TOPPGuideForm
             Align = dalTop
             BarManager = dxBarManager1
           end
-          object cxDBMemo1: TcxDBMemo
+          object ScrMemo1: TScrMemo
             Left = 0
             Top = 28
-            Align = alClient
-            DataBinding.DataField = 'Script'
-            DataBinding.DataSource = DataSourceTreeView
-            ParentFont = False
-            Properties.ScrollBars = ssBoth
-            Style.BorderStyle = ebsNone
-            Style.Font.Charset = DEFAULT_CHARSET
-            Style.Font.Color = clWindowText
-            Style.Font.Height = -21
-            Style.Font.Name = 'Segoe UI'
-            Style.Font.Style = []
-            Style.LookAndFeel.Kind = lfFlat
-            Style.LookAndFeel.NativeStyle = False
-            Style.IsFontAssigned = True
-            StyleDisabled.LookAndFeel.Kind = lfFlat
-            StyleDisabled.LookAndFeel.NativeStyle = False
-            StyleFocused.BorderStyle = ebsNone
-            StyleFocused.LookAndFeel.Kind = lfFlat
-            StyleFocused.LookAndFeel.NativeStyle = False
-            StyleHot.BorderStyle = ebsNone
-            StyleHot.LookAndFeel.Kind = lfFlat
-            StyleHot.LookAndFeel.NativeStyle = False
-            TabOrder = 1
-            Height = 79
             Width = 638
+            Height = 102
+            Cursor = crIBeam
+            ActiveLineSettings.ShowActiveLine = False
+            ActiveLineSettings.ShowActiveLineIndicator = True
+            Align = alClient
+            AutoCompletion.Active = False
+            AutoCompletion.AutoDisplay = False
+            AutoCompletion.AutoWidth = False
+            AutoCompletion.Font.Charset = DEFAULT_CHARSET
+            AutoCompletion.Font.Color = clWindowText
+            AutoCompletion.Font.Height = -11
+            AutoCompletion.Font.Name = 'Tahoma'
+            AutoCompletion.Font.Style = []
+            AutoCompletion.StartToken = '(.'
+            AutoCorrect.Active = True
+            AutoHintParameterPosition = hpBelowCode
+            BlockBrackets = True
+            BlockColor = clWhite
+            BlockLineColor = clTeal
+            BookmarkGlyph.Data = {
+              36050000424D3605000000000000360400002800000010000000100000000100
+              0800000000000001000000000000000000000001000000000000000000000000
+              80000080000000808000800000008000800080800000C0C0C000C0DCC000F0CA
+              A6000020400000206000002080000020A0000020C0000020E000004000000040
+              20000040400000406000004080000040A0000040C0000040E000006000000060
+              20000060400000606000006080000060A0000060C0000060E000008000000080
+              20000080400000806000008080000080A0000080C0000080E00000A0000000A0
+              200000A0400000A0600000A0800000A0A00000A0C00000A0E00000C0000000C0
+              200000C0400000C0600000C0800000C0A00000C0C00000C0E00000E0000000E0
+              200000E0400000E0600000E0800000E0A00000E0C00000E0E000400000004000
+              20004000400040006000400080004000A0004000C0004000E000402000004020
+              20004020400040206000402080004020A0004020C0004020E000404000004040
+              20004040400040406000404080004040A0004040C0004040E000406000004060
+              20004060400040606000406080004060A0004060C0004060E000408000004080
+              20004080400040806000408080004080A0004080C0004080E00040A0000040A0
+              200040A0400040A0600040A0800040A0A00040A0C00040A0E00040C0000040C0
+              200040C0400040C0600040C0800040C0A00040C0C00040C0E00040E0000040E0
+              200040E0400040E0600040E0800040E0A00040E0C00040E0E000800000008000
+              20008000400080006000800080008000A0008000C0008000E000802000008020
+              20008020400080206000802080008020A0008020C0008020E000804000008040
+              20008040400080406000804080008040A0008040C0008040E000806000008060
+              20008060400080606000806080008060A0008060C0008060E000808000008080
+              20008080400080806000808080008080A0008080C0008080E00080A0000080A0
+              200080A0400080A0600080A0800080A0A00080A0C00080A0E00080C0000080C0
+              200080C0400080C0600080C0800080C0A00080C0C00080C0E00080E0000080E0
+              200080E0400080E0600080E0800080E0A00080E0C00080E0E000C0000000C000
+              2000C0004000C0006000C0008000C000A000C000C000C000E000C0200000C020
+              2000C0204000C0206000C0208000C020A000C020C000C020E000C0400000C040
+              2000C0404000C0406000C0408000C040A000C040C000C040E000C0600000C060
+              2000C0604000C0606000C0608000C060A000C060C000C060E000C0800000C080
+              2000C0804000C0806000C0808000C080A000C080C000C080E000C0A00000C0A0
+              2000C0A04000C0A06000C0A08000C0A0A000C0A0C000C0A0E000C0C00000C0C0
+              2000C0C04000C0C06000C0C08000C0C0A000F0FBFF00A4A0A000808080000000
+              FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00FDFD25252525
+              2525252525252525FDFDFD2E25FFFFFFFFFFFFFFFFFFFF25FDFDFD2525252525
+              2525252525252525FDFD9A9AB7B7B7B7B7B7B7B7B7B72525FDFDFD25B7B7B7B7
+              B7B7B7B7B7B72525FDFD9A9AB7B7B7B7B7B7B7B7B7B72525FDFDFD25BFB7BFBF
+              B7B7B7B7B7B72525FDFD9A9ABFBFBFB7BFBFB7B7B7B72525FDFDFD25BFBFBFBF
+              BFB7BFBFB7B72525FDFD9A9ABFBFBFB7BFBFBFB7BFB72525FDFDFD25BFBFBFBF
+              BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFB7BFBFB7B72525FDFDFD25BFBFBFBF
+              BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFBFBFBFBFB725FDFDFDFD2525252525
+              25252525252525FDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFD}
+            BorderColor = 15000546
+            BorderStyle = bsSingle
+            ClipboardFormats = [cfText]
+            CodeFolding.Enabled = False
+            CodeFolding.LineColor = clGray
+            Ctl3D = False
+            DelErase = True
+            EnhancedHomeKey = False
+            Gutter.Font.Charset = DEFAULT_CHARSET
+            Gutter.Font.Color = clWindowText
+            Gutter.Font.Height = -13
+            Gutter.Font.Name = 'Courier New'
+            Gutter.Font.Style = []
+            Gutter.BorderColor = 15000546
+            Gutter.GutterColor = 16250613
+            Gutter.GutterColorTo = 16250613
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'COURIER NEW'
+            Font.Style = []
+            HiddenCaret = False
+            Lines.Strings = (
+              '')
+            MarkerList.UseDefaultMarkerImageIndex = False
+            MarkerList.DefaultMarkerImageIndex = -1
+            MarkerList.ImageTransparentColor = 33554432
+            MemoSource = ScrMemoSource1
+            OleDropTarget = []
+            PrintOptions.MarginLeft = 0
+            PrintOptions.MarginRight = 0
+            PrintOptions.MarginTop = 0
+            PrintOptions.MarginBottom = 0
+            PrintOptions.PageNr = False
+            PrintOptions.PrintLineNumbers = False
+            RightMarginColor = 14869218
+            ScrollHint = False
+            SelColor = clWhite
+            SelBkColor = clNavy
+            ShowRightMargin = True
+            SmartTabs = False
+            SyntaxStyles = ScrPascalMemoStyler1
+            TabOrder = 1
+            TabSize = 2
+            TabStop = True
+            TrimTrailingSpaces = True
+            UILanguage.ScrollHint = 'Row'
+            UILanguage.Undo = 'Undo'
+            UILanguage.Redo = 'Redo'
+            UILanguage.Copy = 'Copy'
+            UILanguage.Cut = 'Cut'
+            UILanguage.Paste = 'Paste'
+            UILanguage.Delete = 'Delete'
+            UILanguage.SelectAll = 'Select All'
+            UIStyle = tsWindows8
+            UrlStyle.TextColor = clBlue
+            UrlStyle.BkColor = clWhite
+            UrlStyle.Style = [fsUnderline]
+            UseStyler = True
+            Version = '3.8.1.0'
+            WordWrap = wwNone
+            OnCursorChange = ScrMemo1CursorChange
+            OnChange = ScrMemo1Change
+            ExplicitLeft = 200
+            ExplicitTop = 34
+            ExplicitHeight = 122
+          end
+          object dxStatusBar2: TdxStatusBar
+            Left = 0
+            Top = 130
+            Width = 638
+            Height = 20
+            Panels = <
+              item
+                PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+                Width = 70
+              end
+              item
+                PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+              end>
+            Font.Charset = RUSSIAN_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Courier'
+            Font.Style = []
+            ExplicitLeft = -3
+            ExplicitTop = 136
           end
         end
         object dxDockPanelProperties: TdxDockPanel
           Left = 0
-          Top = 294
+          Top = 348
           Width = 642
-          Height = 147
+          Height = 173
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -21
-          Font.Name = 'Segoe UI'
-          Font.Style = []
           ManagerFont = False
+          ParentFont = True
           AllowFloating = True
           AutoHide = False
           Caption = 'Properties'
@@ -355,18 +444,13 @@ object OPPGuideForm: TOPPGuideForm
             Left = 0
             Top = 0
             Width = 638
-            Height = 107
+            Height = 149
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
             BorderStyle = cxcbsNone
             Align = alClient
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -21
-            Font.Name = 'Segoe UI'
-            Font.Style = []
             LookAndFeel.Kind = lfFlat
             LookAndFeel.NativeStyle = False
             LookAndFeel.SkinName = ''
@@ -385,11 +469,8 @@ object OPPGuideForm: TOPPGuideForm
             OptionsData.Inserting = False
             Navigator.Buttons.CustomButtons = <>
             Navigator.InfoPanel.Visible = True
-            ParentFont = False
-            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
             DataController.DataSource = DataSourceTreeView
-            ExplicitHeight = 106
             Version = 1
             object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
               Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -441,7 +522,6 @@ object OPPGuideForm: TOPPGuideForm
               Properties.DataBinding.FieldName = 'Identifier'
               Properties.Options.Editing = False
               Properties.Options.Filtering = False
-              Properties.Options.FilteringWithFindPanel = False
               Properties.Options.IncSearch = False
               Properties.Options.ShowEditButtons = eisbNever
               ID = 5
@@ -455,26 +535,20 @@ object OPPGuideForm: TOPPGuideForm
     end
     object dxDockPanelOutputLog: TdxDockPanel
       Left = 0
-      Top = 441
-      Width = 2242
+      Top = 521
+      Width = 1417
       Height = 496
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Segoe UI'
-      Font.Style = []
       ManagerFont = False
+      ParentFont = True
       AllowFloating = True
       AutoHide = False
       Caption = 'Log'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitTop = 440
-      ExplicitWidth = 2228
       DockingType = 4
       OriginalWidth = 370
       OriginalHeight = 496
@@ -486,18 +560,11 @@ object OPPGuideForm: TOPPGuideForm
         Margins.Right = 6
         Margins.Bottom = 6
         Align = alClient
-        ParentFont = False
         Properties.ReadOnly = True
         Properties.ScrollBars = ssBoth
         Style.BorderStyle = ebsNone
-        Style.Font.Charset = DEFAULT_CHARSET
-        Style.Font.Color = clWindowText
-        Style.Font.Height = -21
-        Style.Font.Name = 'Segoe UI'
-        Style.Font.Style = []
         Style.LookAndFeel.Kind = lfFlat
         Style.LookAndFeel.SkinName = ''
-        Style.IsFontAssigned = True
         StyleDisabled.LookAndFeel.Kind = lfFlat
         StyleDisabled.LookAndFeel.SkinName = ''
         StyleFocused.LookAndFeel.Kind = lfFlat
@@ -505,29 +572,16 @@ object OPPGuideForm: TOPPGuideForm
         StyleHot.LookAndFeel.Kind = lfFlat
         StyleHot.LookAndFeel.SkinName = ''
         TabOrder = 0
-        ExplicitWidth = 2224
-        Height = 456
-        Width = 2238
+        Height = 472
+        Width = 1413
       end
     end
   end
-  object dxBarDockControl1: TdxBarDockControl
-    Left = 0
-    Top = 0
-    Width = 2242
-    Height = 44
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
-    Align = dalTop
-    BarManager = dxBarManager1
-  end
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 981
-    Width = 2242
-    Height = 40
+    Top = 1020
+    Width = 1417
+    Height = 21
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -535,31 +589,25 @@ object OPPGuideForm: TOPPGuideForm
     Panels = <
       item
         PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+        Width = 200
+      end
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+      end
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
       end>
     ParentFont = True
-    ExplicitTop = 980
-    ExplicitWidth = 2228
+    OnResize = dxStatusBar1Resize
   end
-  object dxStatusBar2: TdxStatusBar
+  object dxBarDockControl3: TdxBarDockControl
     Left = 0
-    Top = 1021
-    Width = 2242
-    Height = 40
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
-    Panels = <>
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -21
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    ExplicitTop = 1020
-    ExplicitWidth = 2228
+    Top = 0
+    Width = 1417
+    Align = dalTop
+    BarManager = dxBarManager1
   end
   object dxDockingManager1: TdxDockingManager
-    AutoHideMovingSize = 40
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
@@ -571,26 +619,22 @@ object OPPGuideForm: TOPPGuideForm
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
-    DockZonesWidth = 40
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -21
+    Font.Height = -11
     Font.Name = 'Segoe UI'
     Font.Style = []
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ResizeZonesWidth = 6
-    SelectionFrameWidth = 8
     Left = 736
     Top = 304
-    PixelsPerInch = 192
+    PixelsPerInch = 96
   end
   object DataSourceTreeView: TDataSource
     DataSet = DataSetTreeView
-    OnDataChange = DataSourceTreeViewDataChange
-    Left = 957
-    Top = 104
+    Left = 829
+    Top = 352
   end
   object DataSetTreeView: TClientDataSet
     PersistDataPacket.Data = {
@@ -608,9 +652,10 @@ object OPPGuideForm: TOPPGuideForm
     AfterOpen = DataSetTreeViewAfterOpen
     BeforeEdit = DataSetTreeViewBeforeEdit
     AfterPost = DataSetTreeViewAfterPost
+    AfterScroll = DataSetTreeViewAfterScroll
     AfterApplyUpdates = DataSetTreeViewAfterApplyUpdates
-    Left = 960
-    Top = 216
+    Left = 824
+    Top = 416
     object DataSetTreeViewIdentifier: TStringField
       DisplayWidth = 40
       FieldName = 'Identifier'
@@ -657,61 +702,7 @@ object OPPGuideForm: TOPPGuideForm
     UseSystemFont = False
     Left = 728
     Top = 192
-    PixelsPerInch = 192
-    object dxBarManager1Bar1: TdxBar
-      Caption = 'default'
-      CaptionButtons = <>
-      DockControl = dxBarDockControl1
-      DockedDockControl = dxBarDockControl1
-      DockedLeft = 0
-      DockedTop = 0
-      FloatLeft = 608
-      FloatTop = 377
-      FloatClientWidth = 51
-      FloatClientHeight = 295
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarButton5'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarButton6'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton7'
-        end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = True
-      Visible = True
-      WholeRow = False
-    end
+    PixelsPerInch = 96
     object dxBarManager1Bar2: TdxBar
       Caption = 'script'
       CaptionButtons = <>
@@ -725,17 +716,17 @@ object OPPGuideForm: TOPPGuideForm
       FloatClientHeight = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -6
+      Font.Height = -3
       Font.Name = 'Segoe UI'
       Font.Style = []
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton8'
+          ItemName = 'dxBarButton9'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton9'
+          ItemName = 'dxBarButton12'
         end>
       OneOnRow = True
       Row = 0
@@ -998,10 +989,60 @@ object OPPGuideForm: TOPPGuideForm
       Category = 0
       Visible = ivAlways
     end
+    object dxBarButton11: TdxBarButton
+      Caption = #1042#1080#1076
+      Category = 0
+      Hint = #1042#1080#1076
+      Visible = ivAlways
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1042#1080#1076
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actionCompileScript
+      Category = 0
+      Glyph.SourceDPI = 96
+      Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        6100000021744558745469746C65004170706C793B4F4B3B436865636B3B4261
+        72733B526962626F6E3B6463C8680000037D49444154785E4D8E7F4C94051CC6
+        3FEF7B77E02073EA92742577579B684891E62AB6C4526B6013696BC9DC5A0B33
+        D0322DA716D3CA94A21A8E96E976AEB654688E409B46B859CC249500E3F81588
+        234EE0F875DC1DF7A3BB7BDFF7DBC16AEBD9F3D9BEFF3CCFF7C13555CB58A801
+        40014CC5E5696BF638D24FBEF7EDF2D683550F7B0E5666B4969C5A5EBBEBCB65
+        2F0209803A116E6438F82377A66A60385007A0E4EFB2A5BC51B1B4AEF4EC5AB9
+        D476583A87AA642C7055BA47CE4A43F72752713157F67D93DE54B0DFBE04308D
+        867E9E290050725F4BBDB7F8E8B29EAA86B7C4E5BF203DDEE3D23E71585AC6F6
+        48E7E4C7D2E777C870A05E7E68DE277B4F668C6EDE6BCF00D4017F350A607EF5
+        48DAB99CECBC9CF4343BC3E1264CAA60C282AAA8288A028A30313E852DE509EE
+        0C4D72EEF26967CD17FD4F0EDE0A064DF9BBEDEB6CD6C51F3C9DF5382EFF1540
+        104014216E500C2ED6DDA4F67C3BEDB79BC9C95EC3E8F8784AD28288BBADC1D3
+        6C4E98652A7C2C7D2543816674430304C4885B0755E1CC99EBCC51D750F14E35
+        DBCB32E91DF98DCCA5ABE8FCB36733E0500D3132EF9EAB108C7AE9ED1BA6B4AC
+        969F2E39896A11CE5F68212529975D5B4A395A59C40B79CF6049D0489AAD81AA
+        3C0A9854436741140FE148809AEA16CA8AAEA34C65F1E9E7F524EBEBD99A7F80
+        53751FB2707118EB836642311F31C63174497C286BEE6C55D3F48971DF2088C1
+        A60D6BF9BAB6849D0547D8FD520D2F3F5F822FD8C7AFCEEF58B16A11FEC82831
+        3DC6A87F8868C488745C9D0C9AF5A8D2E51EF15BE72FD248B127E2F5FE8DE3FB
+        FDEC28280755E1FDCFB691BF310B6FC48566C4C030F08D458984B40E4057837E
+        ADAAA7CB87A0E2090EB2E491594C1A4DD45C2EC779AB0E53B287C4399384A353
+        718288A8F4767B09F8F4F380069094BBDD7AB3E474869CB8B1428E5DCB90AAB6
+        0DB2E59055B2B621C72EAF93134D99723C8EE3F79572A83A5336EEB439EF9A67
+        990FA82A1071F7855EF9E35AC0D3EB0C010A9EF000799B56F1EEDBAFC7BF87D0
+        0D411185BEEE30AD8DFE88AB2B501CF0C4FC5706DE34CC0D7F15E9AB53BF6A17
+        784ED78C4AB72BF6803DDD82B6B013D5A420064CB875FABB628CB8A21DEEDBA1
+        A2D6FAB11B8066480C7EE92F045000737CD6BCA736DFB77F7D616A63EE769BCC
+        B0C326CF6E4D6D5B5D70FF47C9732CF700164099CE4D3373FCA76CAB43052CFF
+        62065440001D884E130F19FC4FFF00FE20CB5D5DF1FFF30000000049454E44AE
+        426082}
+    end
   end
   object ActionList1: TActionList
     Left = 56
-    Top = 152
+    Top = 64
     object actionAddRecord: TAction
       Caption = 'actionAddRecord'
       OnExecute = actionAddRecordExecute
@@ -1015,7 +1056,7 @@ object OPPGuideForm: TOPPGuideForm
       Caption = 'actionRemoveRecord'
     end
     object actionExport: TAction
-      Caption = 'actionExport'
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1082#1072#1082'...'
       OnExecute = actionExportExecute
     end
     object actionReload: TAction
@@ -1023,10 +1064,10 @@ object OPPGuideForm: TOPPGuideForm
       OnExecute = actionReloadExecute
     end
     object actionOpen: TAction
-      Caption = 'actionOpen'
+      Caption = #1054#1090#1082#1088#1099#1090#1100
     end
     object actionNew: TAction
-      Caption = 'actionNew'
+      Caption = #1057#1086#1079#1076#1072#1090#1100
       OnExecute = actionNewExecute
     end
     object actionRunSelected: TAction
@@ -1051,6 +1092,18 @@ object OPPGuideForm: TOPPGuideForm
       ShortCut = 16454
       OnExecute = actionShowFindPanelExecute
     end
+    object actionClose: TAction
+      Caption = 'actionClose'
+      OnExecute = actionCloseExecute
+    end
+    object actionHelp: TAction
+      Caption = 'actionHelp'
+      OnExecute = actionHelpExecute
+    end
+    object actionCompileScript: TAction
+      Caption = 'actionCompileScript'
+      OnExecute = actionCompileScriptExecute
+    end
   end
   object SaveDialog1: TSaveDialog
     Left = 728
@@ -1060,7 +1113,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1202,7 +1255,7 @@ object OPPGuideForm: TOPPGuideForm
   object cxStyleRepository1: TcxStyleRepository
     Left = 728
     Top = 80
-    PixelsPerInch = 192
+    PixelsPerInch = 96
     object cxStyle1: TcxStyle
       AssignedValues = [svTextColor]
       TextColor = clMenuHighlight
@@ -1217,8 +1270,8 @@ object OPPGuideForm: TOPPGuideForm
   end
   object DataSourceNodeType: TDataSource
     DataSet = DataSetNodeType
-    Left = 1240
-    Top = 96
+    Left = 960
+    Top = 360
   end
   object DataSetNodeType: TClientDataSet
     PersistDataPacket.Data = {
@@ -1230,14 +1283,367 @@ object OPPGuideForm: TOPPGuideForm
     Active = True
     Aggregates = <>
     Params = <>
-    Left = 1240
-    Top = 208
+    Left = 968
+    Top = 416
     object DataSetNodeTypeid: TIntegerField
       FieldName = 'id'
     end
     object DataSetNodeTypecaption: TWideStringField
       FieldName = 'caption'
       Size = 255
+    end
+  end
+  object ScrPascalMemoStyler1: TScrPascalMemoStyler
+    AutoBlockEnd = True
+    BlockStart = 'begin,try,case,class,record,interface,implementation'
+    BlockEnd = 'end'
+    LineComment = '//'
+    MultiCommentLeft = '{'
+    MultiCommentRight = '}'
+    CommentStyle.TextColor = clNavy
+    CommentStyle.BkColor = clNone
+    CommentStyle.Style = [fsItalic]
+    NumberStyle.TextColor = clFuchsia
+    NumberStyle.BkColor = clNone
+    NumberStyle.Style = [fsBold]
+    HighlightStyle.TextColor = clWhite
+    HighlightStyle.BkColor = clRed
+    HighlightStyle.Style = [fsBold]
+    AllStyles = <
+      item
+        KeyWords.Strings = (
+          'UNIT'
+          'INTERFACE'
+          'IMPLEMENTATION'
+          'USES'
+          'CONST'
+          'PROGRAM'
+          'PRIVATE'
+          'PUBLIC'
+          'PUBLISHED'
+          'PROTECTED'
+          'PROPERTY'
+          'FUNCTION'
+          'FINALISE'
+          'INITIALISE'
+          'VAR'
+          'BEGIN'
+          'WITH'
+          'END'
+          'FOR'
+          'TO'
+          'DO'
+          'NOT'
+          'IF'
+          'THEN'
+          'ELSE'
+          'TYPE'
+          'WHILE'
+          'REPEAT'
+          'UNTIL'
+          'BREAK'
+          'CONTINUE'
+          'VIRTUAL'
+          'OVERRIDE'
+          'DEFAULT'
+          'CLASS'
+          'STORED'
+          'INHERITED'
+          'PROCEDURE'
+          'CONSTRUCTOR'
+          'DESTRUCTOR'
+          'FINALLY'
+          'RAISE'
+          'STRING'
+          'TRY'
+          'EXCEPT'
+          'STDCALL'
+          'CDECL'
+          'PASCAL'
+          'NIL'
+          'CASE'
+          'REINTRODUCE'
+          'PACKED'
+          'RECORD'
+          'MESSAGE'
+          'IN'
+          'IS'
+          'SHL'
+          'SHR'
+          'MOD'
+          'DIV'
+          'XOR'
+          'OR'
+          'AND'
+          'OF'
+          'SET'
+          'DOWNTO'
+          'EXPORTS'
+          'LIBRARY'
+          'AS'
+          'ASM'
+          'DYNAMIC'
+          'OBJECT'
+          'THREADVAR'
+          'FILE'
+          'ABSTRACT'
+          'OVERLOAD'
+          'ASSEMBLER'
+          'ABSOLUTE'
+          'AUTOMATED'
+          'EXTERNAL'
+          'REGISTER'
+          'DISPINTERFACE'
+          'RESOURCESTRING'
+          'NEAR'
+          'FAR'
+          'LABEL'
+          'OUT'
+          'SAFECALL'
+          'DISPID'
+          'ARRAY'
+          'INLINE'
+          'FORWARD'
+          'PLATFORM'
+          'DEPRECATED')
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGreen
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        BGColor = clNone
+        StyleType = stKeyword
+        BracketStart = #0
+        BracketEnd = #0
+        Info = 'Pascal Standard Default'
+      end
+      item
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Style = []
+        BGColor = clNone
+        StyleType = stBracket
+        BracketStart = #39
+        BracketEnd = #39
+        Info = 'Simple Quote'
+      end
+      item
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Style = []
+        BGColor = clNone
+        StyleType = stBracket
+        BracketStart = '"'
+        BracketEnd = '"'
+        Info = 'Double Quote'
+      end
+      item
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Style = []
+        BGColor = clNone
+        StyleType = stSymbol
+        BracketStart = #0
+        BracketEnd = #0
+        Symbols = ' ,;:.(){}[]=+-*/^%<>#'#13#10
+        Info = 'Symbols Delimiters'
+      end
+      item
+        CommentLeft = '(*'
+        CommentRight = '*)'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Style = [fsItalic]
+        BGColor = clNone
+        StyleType = stComment
+        BracketStart = #0
+        BracketEnd = #0
+        Info = 'Multi line comment'
+      end>
+    AutoCompletion.Strings = (
+      'ShowMessage'
+      'MessageDlg')
+    HintParameter.TextColor = clBlack
+    HintParameter.BkColor = clInfoBk
+    HintParameter.HintCharStart = '('
+    HintParameter.HintCharEnd = ')'
+    HintParameter.HintCharDelimiter = ';'
+    HintParameter.HintClassDelimiter = '.'
+    HintParameter.HintCharWriteDelimiter = ','
+    HintParameter.Parameters.Strings = (
+      'ShowMessage(const Msg: string);'
+      
+        'MessageDlg(const Msg: string; DlgType: TMsgDlgType; Buttons: TMs' +
+        'gDlgButtons; HelpCtx: Longint): Integer);')
+    HexIdentifier = '$'
+    Description = 'Pascal'
+    Filter = 'Pascal Files (*.pas,*.dpr,*.dpk,*.inc)|*.pas;*.dpr;*.dpk;*.inc'
+    DefaultExtension = '.pas'
+    StylerName = 'Pascal'
+    Extensions = 'pas;dpr;dpk;inc'
+    RegionDefinitions = <
+      item
+        Identifier = 'procedure'
+        RegionStart = 'begin'
+        RegionEnd = 'end'
+        RegionType = rtClosed
+        ShowComments = False
+      end
+      item
+        Identifier = 'procedure'
+        RegionEnd = 'forward'
+        RegionType = rtClosed
+        ShowComments = False
+      end
+      item
+        Identifier = 'constructor'
+        RegionStart = 'begin'
+        RegionEnd = 'end'
+        RegionType = rtClosed
+        ShowComments = False
+      end
+      item
+        Identifier = 'destructor'
+        RegionStart = 'begin'
+        RegionEnd = 'end'
+        RegionType = rtClosed
+        ShowComments = False
+      end
+      item
+        Identifier = 'interface'
+        RegionStart = 'interface'
+        RegionType = rtOpen
+        ShowComments = False
+      end
+      item
+        Identifier = 'unit'
+        RegionStart = 'unit'
+        RegionType = rtFile
+        ShowComments = False
+      end
+      item
+        Identifier = 'implementation'
+        RegionStart = 'implementation'
+        RegionType = rtOpen
+        ShowComments = False
+      end
+      item
+        Identifier = 'case'
+        RegionStart = 'case'
+        RegionEnd = 'end'
+        RegionType = rtIgnore
+        ShowComments = False
+      end
+      item
+        Identifier = 'try'
+        RegionStart = 'try'
+        RegionEnd = 'end'
+        RegionType = rtIgnore
+        ShowComments = False
+      end
+      item
+        Identifier = 'function'
+        RegionStart = 'begin'
+        RegionEnd = 'end'
+        RegionType = rtClosed
+        ShowComments = False
+      end
+      item
+        Identifier = '{$region'
+        RegionStart = '{$region'
+        RegionEnd = '{$endregion'
+        RegionType = rtClosed
+        ShowComments = False
+      end>
+    Left = 656
+    Top = 276
+  end
+  object ScrMemoSource1: TScrMemoSource
+    Lines.Strings = (
+      '')
+    ReadOnly = False
+    Left = 656
+    Top = 220
+  end
+  object MainMenu1: TMainMenu
+    Left = 176
+    Top = 67
+    object N3: TMenuItem
+      Caption = #1056#1077#1076#1072#1082#1090#1086#1088' '#1089#1094#1077#1085#1072#1088#1080#1077#1074
+      object actionHelp1: TMenuItem
+        Action = actionHelp
+      end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object actionClose1: TMenuItem
+        Action = actionClose
+      end
+    end
+    object N8: TMenuItem
+      Caption = #1048#1077#1088#1072#1088#1093#1080#1103
+      object actionNew1: TMenuItem
+        Action = actionNew
+      end
+      object actionOpen1: TMenuItem
+        Action = actionOpen
+      end
+      object actionExport1: TMenuItem
+        Action = actionExport
+      end
+      object N11: TMenuItem
+        Caption = '-'
+      end
+      object actionRunAll1: TMenuItem
+        Action = actionRunAll
+      end
+      object actionRunSelected1: TMenuItem
+        Action = actionRunSelected
+      end
+    end
+    object N5: TMenuItem
+      Caption = #1044#1077#1081#1089#1090#1074#1080#1103
+      object N6: TMenuItem
+        Caption = '-'
+      end
+      object actionAddRecord1: TMenuItem
+        Action = actionAddRecord
+      end
+      object actionAddChildRecord1: TMenuItem
+        Action = actionAddChildRecord
+      end
+      object actionRemoveRecord1: TMenuItem
+        Action = actionRemoveRecord
+      end
+      object N7: TMenuItem
+        Caption = '-'
+      end
+    end
+    object N10: TMenuItem
+      Caption = #1057#1082#1088#1080#1087#1090
+      object actionRunScript1: TMenuItem
+        Action = actionRunScript
+      end
+      object actionSaveScript1: TMenuItem
+        Action = actionSaveScript
+      end
+      object actionCompileScript1: TMenuItem
+        Action = actionCompileScript
+      end
+    end
+    object N1: TMenuItem
+      Caption = #1042#1080#1076
+      object N2: TMenuItem
+        Caption = #1055#1072#1085#1077#1083#1080
+      end
     end
   end
 end

@@ -51,7 +51,8 @@ requires
   IndySystem,
   rtl,
   vcl,
-  dsnap;
+  dsnap,
+  dxBarExtItemsRS25;
 
 contains
   OPP.Help.Map in '..\OPP.Help\OPP.Help.Map.pas',
@@ -101,7 +102,8 @@ contains
   OPP.Help.System.Timer in '..\OPP.Help\OPP.Help.System.Timer.pas',
   FDC.CommandLine in '..\FDC\FDC.CommandLine.pas',
   OPP.Output.Console in '..\OPP.Help\OPP.Output.Console.pas',
-  OPP.Stream.Observer in '..\OPP.Help\OPP.Stream.Observer.pas';
+  OPP.Stream.Observer in '..\OPP.Help\OPP.Stream.Observer.pas',
+  OPP.Help.VCL.PanelTrigger in '..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas';
 
 end.
 

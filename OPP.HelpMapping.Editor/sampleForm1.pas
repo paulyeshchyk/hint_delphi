@@ -20,6 +20,7 @@ uses
 
   System.Threading,
   ShellAPI,
+  OPP.Help.Vcl.PanelTrigger,
   OPP.Help.Component.Enumerator,
   OPP.Help.Hint, OPP.Help.Map, OPP.Help.Meta,
   OPP.Help.System.Messaging,
@@ -122,10 +123,6 @@ type
     dxBarDockControl4: TdxBarDockControl;
     dxBarManager1Bar4: TdxBar;
     N8: TMenuItem;
-    NHint: TMenuItem;
-    NHelp: TMenuItem;
-    NIdentifier: TMenuItem;
-    NList: TMenuItem;
     dxBarButton12: TdxBarButton;
     actionShowFindWindow: TAction;
     PanelFind: TPanel;
@@ -135,7 +132,6 @@ type
     cxStyle3: TcxStyle;
     cxImageList1: TcxImageList;
     dxDockPanelPreview: TdxDockPanel;
-    NPreview: TMenuItem;
     N9: TMenuItem;
     N10: TMenuItem;
     actionRestartApp: TAction;
@@ -199,25 +195,13 @@ type
     procedure cxGrid1DBTableView1CanFocusRecord(Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord; var AAllow: Boolean);
     procedure cxGrid1Resize(Sender: TObject);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
-    procedure dxDockPanelHelpVisibleChanged(Sender: TdxCustomDockControl);
-    procedure dxDockPanelHintVisibleChanged(Sender: TdxCustomDockControl);
-    procedure dxDockPanelListClose(Sender: TdxCustomDockControl);
-    procedure dxDockPanelListVisibleChanged(Sender: TdxCustomDockControl);
-    procedure dxDockPanelIdentifierClose(Sender: TdxCustomDockControl);
-    procedure dxDockPanelIdentifierVisibleChanged(Sender: TdxCustomDockControl);
-    procedure FormActivate(Sender: TObject);
     procedure NHelpClick(Sender: TObject);
-    procedure NIdentifierClick(Sender: TObject);
-    procedure NListClick(Sender: TObject);
-    procedure NHintClick(Sender: TObject);
     procedure cxEditHintPredicateFilenamePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure cxGrid1DBTableView1FindPanelVisibilityChanged(Sender: TcxCustomGridTableView; const AVisible: Boolean);
-    procedure dxDockPanelPreviewClose(Sender: TdxCustomDockControl);
-    procedure dxDockPanelPreviewVisibleChanged(Sender: TdxCustomDockControl);
     procedure N10Click(Sender: TObject);
-    procedure NPreviewClick(Sender: TObject);
     procedure cxEditHintPredicateFilenamePropertiesEditValueChanged(Sender: TObject);
   private
+    fPanelTriggerContainer: TOPPHelpVCLPanelTriggerContainer;
     fLoadIsInProgress: Boolean;
 
     fDefaultSettings: TOPPHelpHintTunningEditorDefaultSettings;
@@ -262,6 +246,13 @@ type
     procedure GridAutoSize;
     property LayoutSettingsFileName: String read GetLayoutSettingsFileName;
     procedure customFilterText(AText: String);
+
+    procedure BuildPanelTriggers;
+    procedure TriggerPanelHint(AVisible: Boolean);
+    procedure TriggerPanelList(AVisible: Boolean);
+    procedure TriggerPanelHelp(AVisible: Boolean);
+    procedure TriggerPanelIdentifier(AVisible: Boolean);
+    procedure TriggerPanelPreview(AVisible: Boolean);
 
   protected
     procedure WMHELP(var Msg: TWMHelp); message WM_HELP;
@@ -386,10 +377,11 @@ procedure TSampleForm.actionDeleteRecordExecute(Sender: TObject);
 begin
   self.isModified := false;
 
-  ClientDataSet1.DeleteCurrentRecord(procedure()
-  begin
-    eventLogger.Flow('Has deleted record',kContext)
-  end);
+  ClientDataSet1.DeleteCurrentRecord(
+    procedure()
+    begin
+      eventLogger.Flow('Has deleted record', kContext)
+    end);
 
 end;
 
@@ -579,6 +571,17 @@ begin
       ClientDataSet1.Post;
       self.isModified := false;
     end);
+end;
+
+procedure TSampleForm.BuildPanelTriggers;
+begin
+
+  fPanelTriggerContainer.AddTrigger(dxDockPanelHint);
+  fPanelTriggerContainer.AddTrigger(dxDockPanelHelp);
+  fPanelTriggerContainer.AddTrigger(dxDockPanelIdentifier);
+  fPanelTriggerContainer.AddTrigger(dxDockPanelPreview);
+  fPanelTriggerContainer.AddTrigger(dxDockPanelList);
+
 end;
 
 procedure TSampleForm.CreateScreenTip(fHint: TOPPHelpHint; AComponent: TComponent);
@@ -858,36 +861,6 @@ begin
     end);
 end;
 
-procedure TSampleForm.dxDockPanelHelpVisibleChanged(Sender: TdxCustomDockControl);
-begin
-  NHelp.Checked := dxDockPanelHelp.Visible;
-end;
-
-procedure TSampleForm.dxDockPanelHintVisibleChanged(Sender: TdxCustomDockControl);
-begin
-  NHint.Checked := dxDockPanelHint.Visible;
-end;
-
-procedure TSampleForm.dxDockPanelListClose(Sender: TdxCustomDockControl);
-begin
-  NList.Checked := dxDockPanelList.Visible;
-end;
-
-procedure TSampleForm.dxDockPanelListVisibleChanged(Sender: TdxCustomDockControl);
-begin
-  NList.Checked := dxDockPanelList.Visible;
-end;
-
-procedure TSampleForm.dxDockPanelIdentifierClose(Sender: TdxCustomDockControl);
-begin
-  NIdentifier.Checked := dxDockPanelIdentifier.Visible;
-end;
-
-procedure TSampleForm.dxDockPanelIdentifierVisibleChanged(Sender: TdxCustomDockControl);
-begin
-  NIdentifier.Checked := dxDockPanelIdentifier.Visible;
-end;
-
 procedure TSampleForm.GotResponse(ofResponses: Integer);
 begin
   fResponseCount := fResponseCount + 1;
@@ -933,17 +906,10 @@ begin
     end);
 end;
 
-procedure TSampleForm.FormActivate(Sender: TObject);
-begin
-  NHint.Checked := dxDockPanelHint.Visible;
-  NList.Checked := dxDockPanelList.Visible;
-  NIdentifier.Checked := dxDockPanelIdentifier.Visible;
-  NHelp.Checked := dxDockPanelHelp.Visible;
-  NPreview.Checked := dxDockPanelPreview.Visible;
-end;
-
 procedure TSampleForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+
+  fPanelTriggerContainer.Free;
 
   self.SaveFormState;
   dxDockingManager1.SaveLayoutToIniFile(self.LayoutSettingsFileName);
@@ -972,20 +938,13 @@ begin
   end;
 end;
 
-procedure TSampleForm.dxDockPanelPreviewClose(Sender: TdxCustomDockControl);
-begin
-  NPreview.Checked := dxDockPanelPreview.Visible;
-end;
-
-procedure TSampleForm.dxDockPanelPreviewVisibleChanged(Sender: TdxCustomDockControl);
-begin
-  NPreview.Checked := dxDockPanelPreview.Visible;
-end;
-
 procedure TSampleForm.FormCreate(Sender: TObject);
 var
   dropdownItem: String;
 begin
+
+  fPanelTriggerContainer := TOPPHelpVCLPanelTriggerContainer.Create(N8);
+  BuildPanelTriggers();
 
   oppBufferManager.RegisterOPPInfoExtractor(TWinControlOPPInfoExtractor.Create);
 
@@ -1068,11 +1027,6 @@ end;
 
 procedure TSampleForm.NHelpClick(Sender: TObject);
 begin
-  if dxDockPanelHelp.Visible then
-    dxDockPanelHelp.Close
-  else
-    dxDockPanelHelp.Show;
-  NHelp.Checked := dxDockPanelHelp.Visible;
 end;
 
 { ------------ }
@@ -1080,22 +1034,6 @@ end;
 procedure TSampleForm.N11Click(Sender: TObject);
 begin
   TformTest1.Create(self).ShowModal;
-end;
-
-procedure TSampleForm.NIdentifierClick(Sender: TObject);
-begin
-  if dxDockPanelIdentifier.Visible then
-    dxDockPanelIdentifier.Close
-  else
-    dxDockPanelIdentifier.Show;
-end;
-
-procedure TSampleForm.NListClick(Sender: TObject);
-begin
-  if dxDockPanelList.Visible then
-    dxDockPanelList.Close
-  else
-    dxDockPanelList.Show;
 end;
 
 procedure TSampleForm.N21Click(Sender: TObject);
@@ -1106,22 +1044,6 @@ end;
 procedure TSampleForm.N31Click(Sender: TObject);
 begin
   TFormTest3.Create(self).ShowModal;
-end;
-
-procedure TSampleForm.NHintClick(Sender: TObject);
-begin
-  if dxDockPanelHint.Visible then
-    dxDockPanelHint.Close
-  else
-    dxDockPanelHint.Show;
-end;
-
-procedure TSampleForm.NPreviewClick(Sender: TObject);
-begin
-  if dxDockPanelPreview.Visible then
-    dxDockPanelPreview.Close
-  else
-    dxDockPanelPreview.Show;
 end;
 
 procedure TSampleForm.onApplyHintMapDefaults(const AMap: POPPHelpMap);
@@ -1310,6 +1232,46 @@ begin
   actionPreviewHelp.Enabled := assigned(self.SelectedShortcutMap);
 end;
 
+procedure TSampleForm.TriggerPanelHelp(AVisible: Boolean);
+begin
+  if AVisible then
+    dxDockPanelHelp.Show
+  else
+    dxDockPanelHelp.Close;
+end;
+
+procedure TSampleForm.TriggerPanelHint(AVisible: Boolean);
+begin
+  if AVisible then
+    dxDockPanelHint.Show
+  else
+    dxDockPanelHint.Close;
+end;
+
+procedure TSampleForm.TriggerPanelIdentifier(AVisible: Boolean);
+begin
+  if AVisible then
+    dxDockPanelIdentifier.Show
+  else
+    dxDockPanelIdentifier.Close;
+end;
+
+procedure TSampleForm.TriggerPanelList(AVisible: Boolean);
+begin
+  if AVisible then
+    dxDockPanelList.Show
+  else
+    dxDockPanelList.Close;
+end;
+
+procedure TSampleForm.TriggerPanelPreview(AVisible: Boolean);
+begin
+  if AVisible then
+    dxDockPanelPreview.Show
+  else
+    dxDockPanelPreview.Close;
+end;
+
 procedure TSampleForm.UpdateButtonStates;
 begin
   actionSave.Enabled := self.isModified and self.isIdentifierValid;
@@ -1465,7 +1427,7 @@ begin
         self.DisableControls;
         self.Delete;
         self.EnableControls;
-        if Assigned(completion) then
+        if assigned(completion) then
           completion();
       end;
     fState.shortcutWasUpdated := false;
@@ -1490,7 +1452,7 @@ begin
     fState.Free;
   end;
 
-//
+  //
 end;
 
 function TOPPObjectDataSetHelper.ReadList(AList: TOPPHelpMapList): Boolean;
@@ -1531,7 +1493,6 @@ begin
   self.IndexDefs.Clear;
 
   self.Fields.Clear;
-
 
   fStringField := TStringField.Create(self);
   fStringField.FieldName := 'identifier';
