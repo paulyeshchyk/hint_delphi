@@ -25,7 +25,7 @@ type
     Result: Longint;
   end;
 
-  TOPPSystemMessageRunCompletion = reference to procedure(ARunResultType: Exception);
+  TOPPSystemMessageRunCompletion = reference to procedure(AHandle: System.THandle; AError: Exception);
 
   TOPPSystemMessageHelper = class
   private
@@ -163,7 +163,7 @@ begin
     begin
       error := Exception.Create(Format('Process [%s] was not created', [AProcessName]));
       try
-        completion(error);
+        completion(System.THandle(INVALID_HANDLE_VALUE),error);
       finally
         error.Free;
       end;
@@ -174,12 +174,16 @@ begin
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hThread);
 
   // TODO: implement callback or use postmessage to determine if app was executed in time
-  WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, ActivationDelay);
+  while WinAPI.Windows.WaitForSingleObject(tmpProcessInformation.hProcess, ActivationDelay) <> WAIT_TIMEOUT do
+  begin
+    Application.ProcessMessages;
+  end;
+
+  if assigned(completion) then
+    completion(tmpProcessInformation.hProcess, nil);
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hProcess);
 
-  if assigned(completion) then
-    completion(nil);
 
 end;
 

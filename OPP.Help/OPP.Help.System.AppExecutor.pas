@@ -94,7 +94,7 @@ begin
   end;
 
   TOPPSystemMessageHelper.RunProcess(Appname, fSelfHandle, AActivationDelay,
-    procedure(ARunResultType: Exception)
+    procedure(AHandle: THandle; ARunResultType: Exception)
     begin
       if ARunResultType = nil then
       begin

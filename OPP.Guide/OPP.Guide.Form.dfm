@@ -204,6 +204,7 @@ object OPPGuideForm: TOPPGuideForm
             OptionsView.Headers = False
             OptionsView.IndicatorWidth = 16
             OptionsView.NavigatorOffset = 100
+            PopupMenu = PopupMenu1
             Preview.LeftIndent = 10
             Preview.RightIndent = 10
             RootValue = -1
@@ -395,9 +396,6 @@ object OPPGuideForm: TOPPGuideForm
             WordWrap = wwNone
             OnCursorChange = ScrMemo1CursorChange
             OnChange = ScrMemo1Change
-            ExplicitLeft = 200
-            ExplicitTop = 34
-            ExplicitHeight = 122
           end
           object dxStatusBar2: TdxStatusBar
             Left = 0
@@ -417,8 +415,6 @@ object OPPGuideForm: TOPPGuideForm
             Font.Height = -13
             Font.Name = 'Courier'
             Font.Style = []
-            ExplicitLeft = -3
-            ExplicitTop = 136
           end
         end
         object dxDockPanelProperties: TdxDockPanel
@@ -463,6 +459,7 @@ object OPPGuideForm: TOPPGuideForm
             OptionsBehavior.GoToNextCellOnEnter = True
             OptionsBehavior.ImmediateEditor = False
             OptionsBehavior.FocusCellOnCycle = True
+            OptionsBehavior.AllowChangeRecord = False
             OptionsData.Appending = False
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
@@ -1044,16 +1041,17 @@ object OPPGuideForm: TOPPGuideForm
     Left = 56
     Top = 64
     object actionAddRecord: TAction
-      Caption = 'actionAddRecord'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       OnExecute = actionAddRecordExecute
     end
     object actionAddChildRecord: TAction
-      Caption = 'actionAddChildRecord'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086#1076#1095#1080#1085#1105#1085#1085#1099#1081
       Enabled = False
       OnExecute = actionAddChildRecordExecute
     end
     object actionRemoveRecord: TAction
-      Caption = 'actionRemoveRecord'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      OnExecute = actionRemoveRecordExecute
     end
     object actionExport: TAction
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1082#1072#1082'...'
@@ -1065,17 +1063,18 @@ object OPPGuideForm: TOPPGuideForm
     end
     object actionOpen: TAction
       Caption = #1054#1090#1082#1088#1099#1090#1100
+      OnExecute = actionOpenExecute
     end
     object actionNew: TAction
       Caption = #1057#1086#1079#1076#1072#1090#1100
       OnExecute = actionNewExecute
     end
     object actionRunSelected: TAction
-      Caption = 'actionRunSelected'
+      Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1086#1077
       OnExecute = actionRunSelectedExecute
     end
     object actionRunAll: TAction
-      Caption = 'actionRunAll'
+      Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1089#1105
       OnExecute = actionRunAllExecute
     end
     object actionSaveScript: TAction
@@ -1093,19 +1092,25 @@ object OPPGuideForm: TOPPGuideForm
       OnExecute = actionShowFindPanelExecute
     end
     object actionClose: TAction
-      Caption = 'actionClose'
+      Caption = #1047#1072#1082#1088#1099#1090#1100
       OnExecute = actionCloseExecute
     end
     object actionHelp: TAction
-      Caption = 'actionHelp'
+      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
       OnExecute = actionHelpExecute
     end
     object actionCompileScript: TAction
       Caption = 'actionCompileScript'
       OnExecute = actionCompileScriptExecute
     end
+    object actionClearRecentList: TAction
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      OnExecute = actionClearRecentListExecute
+    end
   end
   object SaveDialog1: TSaveDialog
+    DefaultExt = '*.xml'
+    Filter = 'XML|*.xml'
     Left = 728
     Top = 416
   end
@@ -1113,7 +1118,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1259,6 +1264,10 @@ object OPPGuideForm: TOPPGuideForm
     object cxStyle1: TcxStyle
       AssignedValues = [svTextColor]
       TextColor = clMenuHighlight
+    end
+    object cxStyle2: TcxStyle
+    end
+    object cxStyle3: TcxStyle
     end
   end
   object FileOpenDialog1: TFileOpenDialog
@@ -1589,7 +1598,7 @@ object OPPGuideForm: TOPPGuideForm
       end
     end
     object N8: TMenuItem
-      Caption = #1048#1077#1088#1072#1088#1093#1080#1103
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
       object actionNew1: TMenuItem
         Action = actionNew
       end
@@ -1602,15 +1611,37 @@ object OPPGuideForm: TOPPGuideForm
       object N11: TMenuItem
         Caption = '-'
       end
-      object actionRunAll1: TMenuItem
-        Action = actionRunAll
-      end
-      object actionRunSelected1: TMenuItem
-        Action = actionRunSelected
+      object N10: TMenuItem
+        Caption = #1053#1077#1076#1072#1074#1085#1080#1077
+        object N12: TMenuItem
+          Caption = '-'
+        end
+        object N13: TMenuItem
+          Action = actionClearRecentList
+        end
       end
     end
     object N5: TMenuItem
-      Caption = #1044#1077#1081#1089#1090#1074#1080#1103
+      Caption = #1057#1094#1077#1085#1072#1088#1080#1080
+      object actionRunAll1: TMenuItem
+        Action = actionRunAll
+        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1089#1077
+      end
+      object actionRunSelected1: TMenuItem
+        Action = actionRunSelected
+        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081
+      end
+      object actionRunScript1: TMenuItem
+        Action = actionRunScript
+        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' ('#1073#1077#1079' '#1087#1086#1076#1095#1080#1085#1105#1085#1085#1099#1093')'
+      end
+      object N9: TMenuItem
+        Caption = '-'
+      end
+      object actionCompileScript1: TMenuItem
+        Action = actionCompileScript
+        Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1085#1072' '#1086#1096#1080#1073#1082#1080
+      end
       object N6: TMenuItem
         Caption = '-'
       end
@@ -1627,23 +1658,24 @@ object OPPGuideForm: TOPPGuideForm
         Caption = '-'
       end
     end
-    object N10: TMenuItem
-      Caption = #1057#1082#1088#1080#1087#1090
-      object actionRunScript1: TMenuItem
-        Action = actionRunScript
-      end
-      object actionSaveScript1: TMenuItem
-        Action = actionSaveScript
-      end
-      object actionCompileScript1: TMenuItem
-        Action = actionCompileScript
-      end
-    end
     object N1: TMenuItem
       Caption = #1042#1080#1076
       object N2: TMenuItem
         Caption = #1055#1072#1085#1077#1083#1080
       end
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 304
+    Top = 51
+    object actionAddRecord2: TMenuItem
+      Action = actionAddRecord
+    end
+    object actionAddChildRecord2: TMenuItem
+      Action = actionAddChildRecord
+    end
+    object actionRemoveRecord2: TMenuItem
+      Action = actionRemoveRecord
     end
   end
 end

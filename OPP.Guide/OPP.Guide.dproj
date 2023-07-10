@@ -66,6 +66,7 @@
         <DCC_FrameworkPath>..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
         <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <DCC_UnitSearchPath>$(TMS728)\source\legacy;$(TMS728)\source\vcl;$(TMS728)\source\ide;$(TMS728)\source\fmx;$(TMS728)\source\design;$(TMS728)\source\core;$(TMS728)\source\memo;$(DC411)\import\OPP;$(DC411)\import\DC;$(DC411)\import\DC\delphi_2006;$(DC411)\units;D:\projects\OPP.Guide.DC\import\GUIDE;D:\projects\OPP.Guide.DC\scripter;..\..\..\Common\Help\OPP.Guide.API\exportable;..\..\..\Common\Help\OPP.Guide.API\common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -117,11 +118,25 @@
         <DCCReference Include="OPP.Guide.Executor.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Str.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Stream.Observer.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Output.Console.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Application.pas"/>
+        <DCCReference Include="OPP.Guide.Settings.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Interfaces.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Predicate.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Types.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.References.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.Helper.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.FormSizeSettings.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas"/>
         <None Include="readme.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

@@ -39,6 +39,8 @@ contains
   OPP_Guide_API_Context_Map in 'exportable\OPP_Guide_API_Context_Map.pas',
   OPP_Guide_API_Context_Step in 'exportable\OPP_Guide_API_Context_Step.pas',
   OPP.Guide.Scripter in 'common\OPP.Guide.Scripter.pas',
-  OPP_Guide_API in 'exportable\OPP_Guide_API.pas';
+  OPP_Guide_API in 'exportable\OPP_Guide_API.pas',
+  OPP.Help.Predicate in '..\OPP.Help\OPP.Help.Predicate.pas',
+  OPP.Help.System.AppExecutor in '..\OPP.Help\OPP.Help.System.AppExecutor.pas';
 
 end.
