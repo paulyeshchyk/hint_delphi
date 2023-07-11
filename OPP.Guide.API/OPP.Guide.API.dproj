@@ -55,7 +55,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Guide.API</DCC_DcuOutput>
+        <DCC_DcuOutput>$(OPPCompiled)\Units\Common\OPP.Guide.API</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -67,12 +67,14 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>OPP_Guide_API</SanitizedProjectName>
-        <DCC_UnitSearchPath>..\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\OPP.Help;$(OPPCompiled)\Executable;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
-        <DCC_FrameworkPath>..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
-        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
+        <DCC_DcpOutput>$(OPPCompiled)\Executable</DCC_DcpOutput>
+        <DCC_FrameworkPath>$(OPPCompiled)\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
+        <DCC_BplOutput>$(OPPCompiled)\Executable</DCC_BplOutput>
+        <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -106,6 +108,9 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Debugger_HostApplication>$(OPPCompiled)\Executable\OPP.Guide.exe</Debugger_HostApplication>
+        <DCC_DcpOutput>$(OPPCompiled)\Executable</DCC_DcpOutput>
+        <DCC_BplOutput>$(OPPCompiled)\Executable</DCC_BplOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -117,18 +122,13 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="vcl.dcp"/>
-        <DCCReference Include="IndySystem.dcp"/>
-        <DCCReference Include="IndyProtocols.dcp"/>
-        <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="OPPHelp.dcp"/>
         <DCCReference Include="exportable\OPP_Guide_API_Context.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API_Context_Map.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API_Context_Step.pas"/>
         <DCCReference Include="common\OPP.Guide.Scripter.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Predicate.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
+        <DCCReference Include="exportable\OPP_Guide_API_Context_Step_OpenHelp.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

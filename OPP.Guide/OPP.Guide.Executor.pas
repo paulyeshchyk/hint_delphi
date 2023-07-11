@@ -116,26 +116,26 @@ end;
 
 class function TOPPGuideExecutor.runSubs(dataset: TClientDataSet; AFilter: String; Scripter: IOPPGuideScripter; completion: TOPPGuideCompletion): Boolean;
 var
-  fCDS: TClientDataSet;
+  cloned: TClientDataSet;
 begin
   result := false;
   if not Assigned(dataset) then
     exit;
-  fCDS := TClientDataSet.Create(nil);
+  cloned := TClientDataSet.Create(nil);
   try
-    fCDS.CloneCursor(dataset, false);
-    fCDS.Filter := AFilter;
-    fCDS.Filtered := true;
-    fCDS.IndexFieldNames := 'Order';
+    cloned.CloneCursor(dataset, false);
+    cloned.Filter := AFilter;
+    cloned.Filtered := true;
+    cloned.IndexFieldNames := 'Order';
 
-    fCDS.First;
-    while not fCDS.Eof do
+    cloned.First;
+    while not cloned.Eof do
     begin
-      TOPPGuideExecutor.run(dataset, fCDS.FieldByName('identifier').value, true, Scripter, completion);
-      fCDS.Next;
+      TOPPGuideExecutor.run(dataset, cloned.FieldByName('identifier').value, true, Scripter, completion);
+      cloned.Next;
     end;
   finally
-    fCDS.Free;
+    cloned.Free;
   end;
 end;
 

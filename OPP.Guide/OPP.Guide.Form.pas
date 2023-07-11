@@ -119,7 +119,6 @@ type
     actionCompileScript1: TMenuItem;
     dxStatusBar2: TdxStatusBar;
     dxBarButton12: TdxBarButton;
-    N9: TMenuItem;
     N10: TMenuItem;
     N12: TMenuItem;
     N13: TMenuItem;
@@ -130,6 +129,14 @@ type
     actionRemoveRecord2: TMenuItem;
     cxStyle2: TcxStyle;
     cxStyle3: TcxStyle;
+    N14: TMenuItem;
+    N9: TMenuItem;
+    actionCompileScript2: TMenuItem;
+    N15: TMenuItem;
+    N16: TMenuItem;
+    actionRunScript2: TMenuItem;
+    actionSave: TAction;
+    actionSave1: TMenuItem;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure actionClearRecentListExecute(Sender: TObject);
@@ -145,6 +152,7 @@ type
     procedure actionRunAllExecute(Sender: TObject);
     procedure actionRunScriptExecute(Sender: TObject);
     procedure actionRunSelectedExecute(Sender: TObject);
+    procedure actionSaveExecute(Sender: TObject);
     procedure actionSaveScriptExecute(Sender: TObject);
     procedure actionShowFindPanelExecute(Sender: TObject);
     procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -169,11 +177,14 @@ type
     fSaveActionIsInProgress: Boolean;
     fScriptPanelTrigger: TOPPHelpVCLPanelTrigger;
     fPanelTriggerContainer: TOPPHelpVCLPanelTriggerContainer;
+    fFilename: String;
     procedure BuildPanelTriggers(AMenuItem: TMenuItem);
     procedure ReadDefaults;
     procedure DoUpdateStatusBarWidths;
     procedure LoadDatasetContent(AFilename: String);
     class function GetApplicationTitle: String; static;
+    procedure SetFilename(const Value: String);
+    property Filename: String read fFilename write SetFilename;
   public
     { Public declarations }
     property SaveActionIsInProgress: Boolean read fSaveActionIsInProgress write fSaveActionIsInProgress default false;
@@ -283,23 +294,21 @@ begin
 end;
 
 procedure TOPPGuideForm.LoadDatasetContent(AFilename: String);
-var
-  fDatasetXMLFile: String;
 begin
   if TOPPHelpSystemFilesHelper.FilenameHasPath(AFilename) then
-    fDatasetXMLFile := AFilename
+    self.Filename := AFilename
   else
-    fDatasetXMLFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath(AFilename);
+    self.Filename := TOPPHelpSystemFilesHelper.GetOPPGuidePath(AFilename);
 
-  if FileExists(fDatasetXMLFile) then
+  fSettings.SetDefaultHierarchyFilename(self.Filename);
+
+  if FileExists(self.Filename) then
   begin
     cxDBTreeList1.BeginUpdate;
-    DataSetTreeView.LoadFromFile(fDatasetXMLFile);
+    DataSetTreeView.LoadFromFile(self.Filename);
     cxDBTreeList1.EndUpdate;
-    dxStatusBar1.Panels[0].Text := Format('Loaded file: %s', [fDatasetXMLFile]);
   end else begin
-    eventLogger.Error(Format('File not found: %s', [fDatasetXMLFile]), kContext);
-    dxStatusBar1.Panels[0].Text := 'Empty';
+    eventLogger.Error(Format('File not found: %s', [self.Filename]), kContext);
   end;
 end;
 
@@ -379,8 +388,8 @@ procedure TOPPGuideForm.actionExportExecute(Sender: TObject);
 begin
   if SaveDialog1.Execute(self.handle) then
   begin
-    DataSetTreeView.SaveToFile(SaveDialog1.FileName, dfXMLUTF8);
-    dxStatusBar1.Panels[0].Text := Format('Loaded file: %s', [SaveDialog1.FileName]);
+    DataSetTreeView.SaveToFile(SaveDialog1.Filename, dfXMLUTF8);
+    self.Filename := SaveDialog1.Filename;
   end;
 end;
 
@@ -394,7 +403,7 @@ begin
   DataSetTreeView.DisableControls;
   try
     DataSetTreeView.EmptyDataSet;
-    dxStatusBar1.Panels[0].Text := 'New document';
+    self.Filename := '';
   finally
     DataSetTreeView.EnableControls;
   end;
@@ -404,8 +413,7 @@ procedure TOPPGuideForm.actionOpenExecute(Sender: TObject);
 begin
   if FileOpenDialog1.Execute then
   begin
-    fSettings.SetDefaultHierarchyFilename(FileOpenDialog1.FileName);
-    LoadDatasetContent(FileOpenDialog1.FileName);
+    LoadDatasetContent(FileOpenDialog1.Filename);
   end;
 end;
 
@@ -413,7 +421,7 @@ procedure TOPPGuideForm.actionReloadExecute(Sender: TObject);
 begin
   if FileOpenDialog1.Execute then
   begin
-    LoadDatasetContent(FileOpenDialog1.FileName);
+    LoadDatasetContent(FileOpenDialog1.Filename);
   end;
 end;
 
@@ -425,9 +433,74 @@ begin
   cxDBTreeList1.EndUpdate;
 end;
 
+procedure TOPPGuideForm.actionRunScriptExecute(Sender: TObject);
+var
+  ident: Variant;
+begin
+  ident := DataSetTreeView.FieldByName('identifier').Value;
+  cxMemo1.Clear;
+
+  try
+    TOPPGuideExecutor.run(DataSetTreeView, ident, false, fScripter,
+      procedure(AText: String)
+      begin
+        cxMemo1.Lines.Add(AText);
+      end);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
+end;
+
 procedure TOPPGuideForm.actionRunAllExecute(Sender: TObject);
 var
   ident: Variant;
+  fFilter: String;
+  cloned: TClientDataSet;
+begin
+
+  fFilter := Format('pidentifier IS NULL', []);
+
+  cxMemo1.Clear;
+
+  cloned := TClientDataSet.Create(nil);
+  try
+    cloned.CloneCursor(DataSetTreeView, false);
+    cloned.Filter := fFilter;
+    cloned.Filtered := true;
+    cloned.First;
+    while not cloned.Eof do
+    begin
+
+      ident := cloned.FieldByName('identifier').Value;
+
+      try
+        TOPPGuideExecutor.run(DataSetTreeView, ident, true, fScripter,
+          procedure(AText: String)
+          begin
+            cxMemo1.Lines.Add(AText);
+          end);
+      except
+        on E: Exception do
+        begin
+          eventLogger.Error(E, kContext);
+        end;
+      end;
+
+      cloned.Next;
+    end;
+  finally
+    cloned.Free;
+  end;
+
+end;
+
+procedure TOPPGuideForm.actionRunSelectedExecute(Sender: TObject);
+var
+  ident: Variant;
+  fScriptResult: Variant;
 begin
   ident := DataSetTreeView.FieldByName('identifier').Value;
   cxMemo1.Clear;
@@ -446,32 +519,9 @@ begin
   end;
 end;
 
-procedure TOPPGuideForm.actionRunScriptExecute(Sender: TObject);
+procedure TOPPGuideForm.actionSaveExecute(Sender: TObject);
 begin
-  actionSaveScript.Execute;
-  actionRunSelected.Execute;
-end;
-
-procedure TOPPGuideForm.actionRunSelectedExecute(Sender: TObject);
-var
-  ident: Variant;
-  fScriptResult: Variant;
-begin
-  ident := DataSetTreeView.FieldByName('identifier').Value;
-  cxMemo1.Clear;
-
-  try
-    TOPPGuideExecutor.run(DataSetTreeView, ident, false, fScripter,
-      procedure(AText: String)
-      begin
-        cxMemo1.Lines.Add(AText);
-      end);
-  except
-    on E: Exception do
-    begin
-      eventLogger.Error(E, kContext);
-    end;
-  end;
+  DataSetTreeView.SaveToFile(self.Filename, dfXMLUTF8);
 end;
 
 procedure TOPPGuideForm.actionSaveScriptExecute(Sender: TObject);
@@ -671,6 +721,28 @@ begin
   dxStatusBar2.Panels[0].Text := Format('%4.d:%d', [ScrMemo1.CurY + 1, ScrMemo1.CurX + 1]);
 end;
 
+procedure TOPPGuideForm.SetFilename(const Value: String);
+begin
+  fFilename := Value;
+
+  actionSave.Enabled := false;
+  if length(self.Filename) = 0 then
+  begin
+    dxStatusBar1.Panels[0].Text := 'New document';
+  end else begin
+
+    actionSave.Enabled := FileExists(self.Filename);
+    if FileExists(self.Filename) then
+    begin
+      dxStatusBar1.Panels[0].Text := Format('Loaded file: %s', [self.Filename]);
+    end else begin
+      dxStatusBar1.Panels[0].Text := 'Empty';
+    end;
+  end;
+
+  DoUpdateStatusBarWidths();
+end;
+
 { TOPPTreeDatasetHelpler }
 
 procedure TOPPTreeDatasetHelpler.swapValues(AFieldName, AIDFieldName: String; sourceId, destinationId: Variant);
@@ -678,9 +750,9 @@ var
   fSourceDS, fDestinationDS: TClientDataSet;
   fSourceValue, fDestinatonValue: Variant;
 begin
-  if Length(AFieldName) = 0 then
+  if length(AFieldName) = 0 then
     exit;
-  if Length(AIDFieldName) = 0 then
+  if length(AIDFieldName) = 0 then
     exit;
   if VarIsNull(sourceId) or VarIsEmpty(sourceId) then
     exit;
@@ -811,7 +883,8 @@ var
   child: TcxTreeListNode;
 begin
   child := self.getFirstChild;
-  while Assigned(child) do begin
+  while Assigned(child) do
+  begin
     child.DeleteAllDescendants;
     child := self.GetNextChild(child);
   end;

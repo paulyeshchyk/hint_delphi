@@ -7,13 +7,13 @@
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Guide.API\OPP.Guide.API.dproj">
-            <Dependencies/>
+            <Dependencies>OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
         <Projects Include="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj">
-            <Dependencies/>
+            <Dependencies>OPP.Guide.API\OPP.Guide.API.dproj;OPP.Help.Package\OPPHelp.dproj</Dependencies>
         </Projects>
         <Projects Include="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj">
-            <Dependencies/>
+            <Dependencies>OPP.Guide.API\OPP.Guide.API.dproj</Dependencies>
         </Projects>
         <Projects Include="OPP.Help.Preview\OPPHelpPreview.dproj">
             <Dependencies/>
@@ -44,31 +44,31 @@
     <Target Name="OPPHelp:Make">
         <MSBuild Projects="OPP.Help.Package\OPPHelp.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPP_Guide_API">
+    <Target Name="OPP_Guide_API" DependsOnTargets="OPPHelp">
         <MSBuild Projects="OPP.Guide.API\OPP.Guide.API.dproj"/>
     </Target>
-    <Target Name="OPP_Guide_API:Clean">
+    <Target Name="OPP_Guide_API:Clean" DependsOnTargets="OPPHelp:Clean">
         <MSBuild Projects="OPP.Guide.API\OPP.Guide.API.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPP_Guide_API:Make">
+    <Target Name="OPP_Guide_API:Make" DependsOnTargets="OPPHelp:Make">
         <MSBuild Projects="OPP.Guide.API\OPP.Guide.API.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPP_Guide_DC">
+    <Target Name="OPP_Guide_DC" DependsOnTargets="OPP.Guide.API;OPPHelp">
         <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj"/>
     </Target>
-    <Target Name="OPP_Guide_DC:Clean">
+    <Target Name="OPP_Guide_DC:Clean" DependsOnTargets="OPP.Guide.API:Clean;OPPHelp:Clean">
         <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPP_Guide_DC:Make">
+    <Target Name="OPP_Guide_DC:Make" DependsOnTargets="OPP.Guide.API:Make;OPPHelp:Make">
         <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPP_Guide_TMS">
+    <Target Name="OPP_Guide_TMS" DependsOnTargets="OPP.Guide.API">
         <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj"/>
     </Target>
-    <Target Name="OPP_Guide_TMS:Clean">
+    <Target Name="OPP_Guide_TMS:Clean" DependsOnTargets="OPP.Guide.API:Clean">
         <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPP_Guide_TMS:Make">
+    <Target Name="OPP_Guide_TMS:Make" DependsOnTargets="OPP.Guide.API:Make">
         <MSBuild Projects="D:\projects\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Make"/>
     </Target>
     <Target Name="OPPHelpPreview">

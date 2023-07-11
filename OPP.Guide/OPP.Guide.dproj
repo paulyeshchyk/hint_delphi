@@ -47,13 +47,13 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Guide.API</DCC_DcuOutput>
-        <DCC_ExeOutput>..\..\..\..\Compiled\Executable</DCC_ExeOutput>
+        <DCC_ExeOutput>$(OPPCompiled)\Executable</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
-        <DCC_UsePackage>OPP.Guide.TMS;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>OPPHelp;OPP.Guide.API;OPP.Guide.DC;OPP.Guide.TMS;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
@@ -61,11 +61,10 @@
         <SanitizedProjectName>OPP_Guide</SanitizedProjectName>
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_DcpOutput>..\..\..\..\Compiled\Executable</DCC_DcpOutput>
-        <UsePackages>true</UsePackages>
-        <DCC_FrameworkPath>..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
-        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
-        <DCC_UnitSearchPath>$(TMS728)\source\legacy;$(TMS728)\source\vcl;$(TMS728)\source\ide;$(TMS728)\source\fmx;$(TMS728)\source\design;$(TMS728)\source\core;$(TMS728)\source\memo;$(DC411)\import\OPP;$(DC411)\import\DC;$(DC411)\import\DC\delphi_2006;$(DC411)\units;D:\projects\OPP.Guide.DC\import\GUIDE;D:\projects\OPP.Guide.DC\scripter;..\..\..\Common\Help\OPP.Guide.API\exportable;..\..\..\Common\Help\OPP.Guide.API\common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_DcpOutput>$(OPPCompiled)\Executable</DCC_DcpOutput>
+        <DCC_FrameworkPath>$(OPPCompiled)\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
+        <DCC_BplOutput>$(OPPCompiled)\Executable</DCC_BplOutput>
+        <DCC_UnitSearchPath>$(TMS728)\source\legacy;$(TMS728)\source\vcl;$(TMS728)\source\ide;$(TMS728)\source\fmx;$(TMS728)\source\design;$(TMS728)\source\core;$(TMS728)\source\memo;$(DC411)\import\DC;$(DC411)\import\DC\delphi_2006;$(DC411)\import\GUIDE;$(DC411)\import\OPP;$(DC411)\scripter;$(DC411)\units;..\..\..\Common\Help\OPP.Guide.API\exportable;..\..\..\Common\Help\OPP.Guide.API\common;$(OPPCompiled)\Executable;D:\projects\OPP.Guide.TMS\sources;D:\projects\OPP.Guide.TMS\sources\OPP.Guide;..\..\..\Common\Help\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -91,7 +90,6 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_Define>madExcept;$(DCC_Define)</DCC_Define>
@@ -116,27 +114,7 @@
             <Form>OPPGuideForm</Form>
         </DCCReference>
         <DCCReference Include="OPP.Guide.Executor.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Str.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Stream.Observer.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Output.Console.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Application.pas"/>
         <DCCReference Include="OPP.Guide.Settings.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Interfaces.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Predicate.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Types.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Hint.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Meta.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.References.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.Helper.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.FormSizeSettings.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas"/>
         <None Include="readme.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

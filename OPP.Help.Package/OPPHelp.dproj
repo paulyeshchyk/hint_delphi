@@ -61,7 +61,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units</DCC_DcuOutput>
+        <DCC_DcuOutput>$(OPPCompiled)\Units</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -74,12 +74,13 @@
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>OPPHelp</SanitizedProjectName>
         <DCC_UsePackage>RESTComponents;$(DCC_UsePackage)</DCC_UsePackage>
-        <DCC_DcpOutput>..\..\..\..\Compiled\Units</DCC_DcpOutput>
+        <DCC_DcpOutput>$(OPPCompiled)\Executable</DCC_DcpOutput>
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
-        <DCC_UnitSearchPath>..\..\..\..\Compiled\Units;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_FrameworkPath>..\..\..\..\Compiled\Units;..\..\..\..\Compiled\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
+        <DCC_BplOutput>$(OPPCompiled)\Executable</DCC_BplOutput>
+        <DCC_UnitSearchPath>$(OPPCompiled)\Executable;$(OPPCompiled)\Units;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_FrameworkPath>$(OPPCompiled)\Executable;$(OPPCompiled)\Units;$(DCC_FrameworkPath)</DCC_FrameworkPath>
+        <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -118,9 +119,9 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_BplOutput>..\..\..\..\Compiled\Executable</DCC_BplOutput>
         <Debugger_HostApplication>D:\GulfStream\Compiled\Executable\OPP.HelpEditor.exe</Debugger_HostApplication>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
+        <DCC_DcuOutput>$(OPPCompiled)\Units\Common\OPP.Help</DCC_DcuOutput>
         <Debugger_EnvVars>&quot;Path=C:\Program Files (x86)\Embarcadero\Studio\19.0\bin;C:\Users\Public\Documents\Embarcadero\InterBase\redist\InterBaseXE7\IDE_spoof;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Embarcadero\Studio\19.0\bin;C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl;C:\Program Files (x86)\Embarcadero\Studio\19.0\bin64;C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\Win64;C:\Program Files (x86)\VMware\VMware vSphere CLI\Perl\site\bin;C:\Program Files (x86)\VMware\VMware vSphere CLI\Perl\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Common Files\ASCON Shared\Gulfstream\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\pavel\AppData\Local\Microsoft\WindowsApps;&quot;;$(Debugger_EnvVars)</Debugger_EnvVars>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -178,7 +179,7 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Stream.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Events.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Messaging.Pipe.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.Predicate.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP_Help_Predicate.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.AppExecutor.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Shortcut.DatasetBind.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Log.pas"/>
@@ -187,7 +188,6 @@
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Files.pas"/>
         <DCCReference Include="..\OPP.Help\AsyncCalls.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.References.pas"/>
-        <DCCReference Include="..\OPP.Help\OPP.Help.System.Types.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.FormSizeSettings.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.Helper.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.System.Codable.pas"/>
@@ -268,6 +268,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHelp.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win32">
+                        <RemoteName>OPPHelp.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

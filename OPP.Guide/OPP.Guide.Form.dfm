@@ -1053,6 +1053,11 @@ object OPPGuideForm: TOPPGuideForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       OnExecute = actionRemoveRecordExecute
     end
+    object actionSave: TAction
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Enabled = False
+      OnExecute = actionSaveExecute
+    end
     object actionExport: TAction
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1082#1072#1082'...'
       OnExecute = actionExportExecute
@@ -1069,22 +1074,22 @@ object OPPGuideForm: TOPPGuideForm
       Caption = #1057#1086#1079#1076#1072#1090#1100
       OnExecute = actionNewExecute
     end
-    object actionRunSelected: TAction
-      Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1086#1077
-      OnExecute = actionRunSelectedExecute
+    object actionRunScript: TAction
+      Caption = #1042#1099#1073#1088#1072#1085#1085#1099#1081' ('#1090#1086#1083#1100#1082#1086' '#1089#1082#1088#1080#1087#1090')'
+      OnExecute = actionRunScriptExecute
     end
     object actionRunAll: TAction
-      Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1089#1105
+      Caption = #1042#1089#1077
       OnExecute = actionRunAllExecute
+    end
+    object actionRunSelected: TAction
+      Caption = #1042#1099#1073#1088#1072#1085#1085#1099#1081
+      OnExecute = actionRunSelectedExecute
     end
     object actionSaveScript: TAction
       Caption = 'actionSaveScript'
       Enabled = False
       OnExecute = actionSaveScriptExecute
-    end
-    object actionRunScript: TAction
-      Caption = 'actionRunScript'
-      OnExecute = actionRunScriptExecute
     end
     object actionShowFindPanel: TAction
       Caption = 'actionShowFindPanel'
@@ -1100,7 +1105,7 @@ object OPPGuideForm: TOPPGuideForm
       OnExecute = actionHelpExecute
     end
     object actionCompileScript: TAction
-      Caption = 'actionCompileScript'
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1085#1072' '#1086#1096#1080#1073#1082#1080
       OnExecute = actionCompileScriptExecute
     end
     object actionClearRecentList: TAction
@@ -1118,7 +1123,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800500010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1605,6 +1610,9 @@ object OPPGuideForm: TOPPGuideForm
       object actionOpen1: TMenuItem
         Action = actionOpen
       end
+      object actionSave1: TMenuItem
+        Action = actionSave
+      end
       object actionExport1: TMenuItem
         Action = actionExport
       end
@@ -1623,24 +1631,8 @@ object OPPGuideForm: TOPPGuideForm
     end
     object N5: TMenuItem
       Caption = #1057#1094#1077#1085#1072#1088#1080#1080
-      object actionRunAll1: TMenuItem
-        Action = actionRunAll
-        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1089#1077
-      end
-      object actionRunSelected1: TMenuItem
-        Action = actionRunSelected
-        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081
-      end
-      object actionRunScript1: TMenuItem
-        Action = actionRunScript
-        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' ('#1073#1077#1079' '#1087#1086#1076#1095#1080#1085#1105#1085#1085#1099#1093')'
-      end
-      object N9: TMenuItem
-        Caption = '-'
-      end
       object actionCompileScript1: TMenuItem
         Action = actionCompileScript
-        Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1085#1072' '#1086#1096#1080#1073#1082#1080
       end
       object N6: TMenuItem
         Caption = '-'
@@ -1656,6 +1648,18 @@ object OPPGuideForm: TOPPGuideForm
       end
       object N7: TMenuItem
         Caption = '-'
+      end
+    end
+    object N14: TMenuItem
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+      object actionRunScript1: TMenuItem
+        Action = actionRunScript
+      end
+      object actionRunSelected1: TMenuItem
+        Action = actionRunSelected
+      end
+      object actionRunAll1: TMenuItem
+        Action = actionRunAll
       end
     end
     object N1: TMenuItem
@@ -1676,6 +1680,21 @@ object OPPGuideForm: TOPPGuideForm
     end
     object actionRemoveRecord2: TMenuItem
       Action = actionRemoveRecord
+    end
+    object N9: TMenuItem
+      Caption = '-'
+    end
+    object actionCompileScript2: TMenuItem
+      Action = actionCompileScript
+    end
+    object N15: TMenuItem
+      Caption = '-'
+    end
+    object N16: TMenuItem
+      Action = actionRunSelected
+    end
+    object actionRunScript2: TMenuItem
+      Action = actionRunScript
     end
   end
 end
