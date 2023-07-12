@@ -10,31 +10,40 @@ uses
   OPP.Stream.Observer;
 
 type
+  IOPPLogOutput = interface
+    procedure SetEnabled(AEnabled: Boolean);
+    procedure WriteData(AData: UTF8String);
+  end;
 
-  TOPPFileOutput = class(TInterfacedObject, IOPPStreamObserver)
+  TOPPFileOutput = class(TInterfacedObject, IOPPStreamObserver, IOPPLogOutput)
   private
     fPeek: Int64;
     fFileStream: TFileStream;
+    fEnabled: Boolean;
     procedure startSession;
     procedure endSession;
-    procedure WriteData(AData: UTF8String);
   public
     constructor Create;
     destructor Destroy; override;
+    procedure SetEnabled(AEnabled: Boolean);
   protected
+    procedure WriteData(AData: UTF8String);
     procedure StartListenStream(AStream: TStream);
     procedure StopListenStream(AStream: TStream);
     procedure WillChangeStream(AStream: TStream);
     procedure DidChangeStream(AStream: TStream);
   end;
 
-  TOPPConsoleOutput = class(TInterfacedObject, IOPPStreamObserver)
+  TOPPConsoleOutput = class(TInterfacedObject, IOPPStreamObserver, IOPPLogOutput)
   private
     fPeek: Int64;
+    fEnabled: Boolean;
   public
     constructor Create;
     destructor Destroy; override;
+    procedure SetEnabled(AEnabled: Boolean);
   protected
+    procedure WriteData(AData: UTF8String);
     procedure StartListenStream(AStream: TStream);
     procedure StopListenStream(AStream: TStream);
     procedure WillChangeStream(AStream: TStream);
@@ -53,6 +62,7 @@ uses
 constructor TOPPConsoleOutput.Create;
 begin
   fPeek := 0;
+  fEnabled := false;
 end;
 
 destructor TOPPConsoleOutput.Destroy;
@@ -64,14 +74,14 @@ end;
 procedure TOPPConsoleOutput.DidChangeStream(AStream: TStream);
 var
   fUTF8String: UTF8String;
-  fAnsiStr: String;
 begin
-
   AStream.ReadWideChar(fPeek, fUTF8String);
+  WriteData(fUTF8String);
+end;
 
-  fAnsiStr := Utf8ToAnsi(fUTF8String);
-
-  OutputDebugString(fAnsiStr.towideChar);
+procedure TOPPConsoleOutput.SetEnabled(AEnabled: Boolean);
+begin
+  fEnabled := AEnabled;
 end;
 
 procedure TOPPConsoleOutput.StartListenStream(AStream: TStream);
@@ -89,6 +99,18 @@ begin
   fPeek := AStream.Position;
 end;
 
+procedure TOPPConsoleOutput.WriteData(AData: UTF8String);
+var
+  fAnsiStr: String;
+begin
+
+  if not fEnabled then
+    exit;
+
+  fAnsiStr := Utf8ToAnsi(AData);
+  OutputDebugString(fAnsiStr.towideChar);
+end;
+
 { TOPPFileOutput }
 
 constructor TOPPFileOutput.Create;
@@ -96,6 +118,8 @@ var
   fMode: Word;
   fFileName: String;
 begin
+  fEnabled := false;
+
   fMode := fmOpenReadWrite or fmShareDenyNone;
   fFileName := TOPPHelpSystemFilesHelper.GetOPPLogsPath(Format('%s.log', [ExtractFileName(Application.ExeName)]));
   if not TFile.Exists(fFileName) then
@@ -129,6 +153,11 @@ begin
   WriteData(Format('[%s]: --- end session ---', [FormatDateTime('YYYY-MM-DD hh:mm:ss:zzz', now)]))
 end;
 
+procedure TOPPFileOutput.SetEnabled(AEnabled: Boolean);
+begin
+  fEnabled := AEnabled;
+end;
+
 procedure TOPPFileOutput.StartListenStream(AStream: TStream);
 begin
   fPeek := AStream.Size;
@@ -156,6 +185,10 @@ var
 const
   eol: String = #13#10;
 begin
+
+  if not fEnabled then
+    exit;
+
   fAnsiStr := Utf8ToAnsi(AData);
   len := Length(fAnsiStr);
   if len > 0 then
