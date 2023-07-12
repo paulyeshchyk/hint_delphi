@@ -71,7 +71,7 @@ uses
   Vcl.Forms;
 
 const
-  kContext = 'IOPPBufferManagerDataset';
+  kContext = 'TOPPBufferManagerDataset';
 
   { TOPPBufferManagerDataset }
 
@@ -145,12 +145,12 @@ begin
     begin
       if not Assigned(OPPInfo) then
       begin
-        eventLogger.Warning('OPPInfo is not defined', 'TOPPBufferManagerDataset');
+        eventLogger.Warning('OPPInfo is not defined', kContext);
         exit;
       end;
       if not Assigned(callback) then
       begin
-        eventLogger.Warning('callback is not defined', 'TOPPBufferManagerDataset');
+        eventLogger.Warning('callback is not defined', kContext);
         exit;
       end;
 
@@ -177,6 +177,7 @@ begin
 
   if (HasTheSameValue(ARecord.text) and not (ADuplicatesAllowed)) then
   begin
+    eventLogger.Warning('Record was not saved, because duplicates are not allowed' ,kContext);
     exit;
   end;
 
