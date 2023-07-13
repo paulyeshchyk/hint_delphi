@@ -6,7 +6,7 @@ uses
   System.Generics.Collections;
 
 type
-  TOPPGuideAPIContextMap = TDictionary<Variant, Variant>;
+  TOPPGuideAPIContextMap = TDictionary<String, TOPPGuideAPIContextStepResult>;
   TOPPGuideAPIContextContainer = TList<IOPPGuideAPIContext>;
 
 implementation

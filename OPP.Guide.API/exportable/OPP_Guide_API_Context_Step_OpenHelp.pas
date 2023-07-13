@@ -4,6 +4,7 @@ interface
 
 uses
   OPP.Help.Predicate,
+  OPP_Guide_API,
   OPP_Guide_API_Context_Step;
 
 type
@@ -14,7 +15,7 @@ type
     function SendOpenPage(AProcessHandle: THandle; Predicate: TOPPHelpPredicate): Integer;
   public
     procedure SetPredicate(APredicate: TOPPHelpPredicate);
-    procedure Run(AContext: OLEVariant); override;
+    procedure PerformIn(AContext: Variant; AStepIdentifier: String); override;
   end;
 
 implementation
@@ -91,9 +92,9 @@ begin
     end);
 end;
 
-procedure TOPPGuideAPIContextStepOpenHelp.Run(AContext: OLEVariant);
+procedure TOPPGuideAPIContextStepOpenHelp.PerformIn(AContext: Variant; AStepIdentifier: String);
 begin
-  inherited;
+
   try
     self.findhelpandstartsearch(fPredicate);
   except

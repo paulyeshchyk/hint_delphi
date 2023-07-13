@@ -1,11 +1,6 @@
 program OPP.Guide;
 
 uses
-  madExcept,
-  madLinkDisAsm,
-  madListHardware,
-  madListProcesses,
-  madListModules,
   midaslib,
   Vcl.Forms,
   OPP.Guide.Form in 'OPP.Guide.Form.pas' {OPPGuideForm},

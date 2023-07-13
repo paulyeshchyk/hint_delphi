@@ -4,6 +4,7 @@ interface
 
 uses
   OPP_Guide_API,
+  OPP_Guide_API_Context_Step,
   OPP_Guide_API_Context_Map;
 
 type
@@ -26,15 +27,13 @@ type
   public
 
     class function shared: TOPPGuideAPIContext; static;
-
     destructor Destroy; override;
+    procedure PushContextItem(const stepIdentifier: String; const contextItem: IOPPGuideAPIContextStep);
 
     { IOPPGuideAPIContext }
     procedure Add(AChild: IOPPGuideAPIContext);
     procedure Remove(AChild: IOPPGuideAPIContext);
     procedure Clear;
-    procedure SetResultForStep(AResult: Variant; AStep: Variant);
-    function GetResultForStep(AStep: Variant): Variant;
 
     procedure testDC;
   end;
@@ -55,9 +54,17 @@ begin
   //
 end;
 
+procedure TOPPGuideAPIContext.PushContextItem(const stepIdentifier: String; const contextItem: IOPPGuideAPIContextStep);
+begin
+  fMap.AddOrSetValue(stepIdentifier, contextItem.GetExecutionResult);
+end;
+
 constructor TOPPGuideAPIContext.Create(AParentContext: IOPPGuideAPIContext);
 begin
   inherited Create;
+
+  fMap := TOPPGuideAPIContextMap.Create();
+
   fList := TOPPGuideAPIContextContainer.Create;
 
   fParentContext := AParentContext;
@@ -92,19 +99,9 @@ begin
   result := fMap;
 end;
 
-function TOPPGuideAPIContext.GetResultForStep(AStep: Variant): Variant;
-begin
-  self.map.TryGetValue(AStep, result);
-end;
-
 procedure TOPPGuideAPIContext.Remove(AChild: IOPPGuideAPIContext);
 begin
 
-end;
-
-procedure TOPPGuideAPIContext.SetResultForStep(AResult, AStep: Variant);
-begin
-  self.map.AddOrSetValue(AStep, AResult);
 end;
 
 class function TOPPGuideAPIContext.shared: TOPPGuideAPIContext;

@@ -46,7 +46,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\..\..\..\Compiled\Units\Common\OPP.Guide.API</DCC_DcuOutput>
+        <DCC_DcuOutput>$(OPPCompiled)\Units\Common\OPP.Guide.API</DCC_DcuOutput>
         <DCC_ExeOutput>$(OPPCompiled)\Executable</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -60,12 +60,16 @@
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <SanitizedProjectName>OPP_Guide</SanitizedProjectName>
         <VerInfo_Locale>1049</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;SpecialBuild=;PrivateBuild=</VerInfo_Keys>
         <DCC_DcpOutput>$(OPPCompiled)\Executable</DCC_DcpOutput>
         <DCC_FrameworkPath>$(OPPCompiled)\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
         <DCC_BplOutput>$(OPPCompiled)\Executable</DCC_BplOutput>
-        <DCC_UnitSearchPath>$(TMS728)\source\legacy;$(TMS728)\source\vcl;$(TMS728)\source\ide;$(TMS728)\source\fmx;$(TMS728)\source\design;$(TMS728)\source\core;$(TMS728)\source\memo;$(DC411)\import\DC;$(DC411)\import\DC\delphi_2006;$(DC411)\import\GUIDE;$(DC411)\import\OPP;$(DC411)\scripter;$(DC411)\units;..\..\..\Common\Help\OPP.Guide.API\exportable;..\..\..\Common\Help\OPP.Guide.API\common;$(OPPCompiled)\Executable;D:\projects\OPP.Guide.TMS\sources;D:\projects\OPP.Guide.TMS\sources\OPP.Guide;..\..\..\Common\Help\OPP.Help;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_UnitSearchPath>$(TMS728)\source\legacy;$(TMS728)\source\vcl;$(TMS728)\source\ide;$(TMS728)\source\fmx;$(TMS728)\source\design;$(TMS728)\source\core;$(TMS728)\source\memo;$(DC411)\import\DC;$(DC411)\import\DC\delphi_2006;$(DC411)\import\GUIDE;$(DC411)\import\OPP;$(DC411)\scripter;$(DC411)\units;D:\projects\OPP.Guide.TMS\sources;D:\projects\OPP.Guide.TMS\sources\OPP.Guide;..\..\..\Common\Help\OPP.Guide.API\exportable;..\..\..\Common\Help\OPP.Guide.API\common;..\..\..\Common\Help\OPP.Guide.API\wrappers;..\..\..\Common\Help\OPP.Help;$(OPPCompiled)\Executable;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Debug>true</VerInfo_Debug>
+        <VerInfo_PreRelease>true</VerInfo_PreRelease>
+        <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
+        <VerInfo_Special>true</VerInfo_Special>
+        <VerInfo_Private>true</VerInfo_Private>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -92,7 +96,12 @@
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_MapFile>3</DCC_MapFile>
-        <DCC_Define>madExcept;$(DCC_Define)</DCC_Define>
+        <VerInfo_Build>32</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.1.32;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName)-alpha;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -103,8 +112,15 @@
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_MapFile>3</DCC_MapFile>
+        <DCC_DebugInformation>2</DCC_DebugInformation>
+        <VerInfo_Release>1</VerInfo_Release>
+        <DCC_LocalDebugSymbols>true</DCC_LocalDebugSymbols>
+        <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.1.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>2</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

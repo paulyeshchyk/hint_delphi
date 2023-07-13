@@ -786,7 +786,7 @@ object OPPGuideForm: TOPPGuideForm
         85870000000049454E44AE426082}
     end
     object dxBarButton3: TdxBarButton
-      Action = actionExport
+      Action = actionGuideExportAs
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -816,7 +816,7 @@ object OPPGuideForm: TOPPGuideForm
         6F21A4644A9B8874959FB191A9A729553D740000000049454E44AE426082}
     end
     object dxBarButton4: TdxBarButton
-      Action = actionReload
+      Action = actionGuideReload
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -847,7 +847,7 @@ object OPPGuideForm: TOPPGuideForm
         AE0000000049454E44AE426082}
     end
     object dxBarButton5: TdxBarButton
-      Action = actionNew
+      Action = actionGuideNew
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -869,7 +869,7 @@ object OPPGuideForm: TOPPGuideForm
         44AE426082}
     end
     object dxBarButton6: TdxBarButton
-      Action = actionRunSelected
+      Action = actionGuideRunSelected
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -900,7 +900,7 @@ object OPPGuideForm: TOPPGuideForm
         FC988F0000000049454E44AE426082}
     end
     object dxBarButton7: TdxBarButton
-      Action = actionRunAll
+      Action = actionGuideRunAll
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -931,8 +931,10 @@ object OPPGuideForm: TOPPGuideForm
         0B0C0C183FEAAD166E0000000049454E44AE426082}
     end
     object dxBarButton8: TdxBarButton
-      Action = actionSaveScript
+      Caption = 'actionSaveScript'
       Category = 0
+      Enabled = False
+      Visible = ivAlways
       Glyph.SourceDPI = 96
       Glyph.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -956,7 +958,7 @@ object OPPGuideForm: TOPPGuideForm
         F6AC9379188DF20000000049454E44AE426082}
     end
     object dxBarButton9: TdxBarButton
-      Action = actionRunScript
+      Action = actionScriptRun
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -999,7 +1001,7 @@ object OPPGuideForm: TOPPGuideForm
       ItemLinks = <>
     end
     object dxBarButton12: TdxBarButton
-      Action = actionCompileScript
+      Action = actionScriptCompile
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -1053,48 +1055,51 @@ object OPPGuideForm: TOPPGuideForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       OnExecute = actionRemoveRecordExecute
     end
-    object actionSave: TAction
+    object actionGuideExport: TAction
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Enabled = False
-      OnExecute = actionSaveExecute
+      OnExecute = actionGuideExportExecute
     end
-    object actionExport: TAction
+    object actionGuideExportAs: TAction
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1082#1072#1082'...'
-      OnExecute = actionExportExecute
+      OnExecute = actionGuideExportAsExecute
     end
-    object actionReload: TAction
+    object actionGuideReload: TAction
       Caption = 'actionReload'
-      OnExecute = actionReloadExecute
+      OnExecute = actionGuideReloadExecute
     end
-    object actionOpen: TAction
+    object actionGuideOpen: TAction
       Caption = #1054#1090#1082#1088#1099#1090#1100
-      OnExecute = actionOpenExecute
+      OnExecute = actionGuideOpenExecute
     end
-    object actionNew: TAction
+    object actionGuideNew: TAction
       Caption = #1057#1086#1079#1076#1072#1090#1100
-      OnExecute = actionNewExecute
+      OnExecute = actionGuideNewExecute
     end
-    object actionRunScript: TAction
+    object actionScriptCompile: TAction
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1085#1072' '#1086#1096#1080#1073#1082#1080
+      OnExecute = actionScriptCompileExecute
+    end
+    object actionScriptSave: TAction
+      Caption = 'actionScriptSave'
+      OnExecute = actionScriptSaveExecute
+    end
+    object actionScriptRun: TAction
       Caption = #1042#1099#1073#1088#1072#1085#1085#1099#1081' ('#1090#1086#1083#1100#1082#1086' '#1089#1082#1088#1080#1087#1090')'
-      OnExecute = actionRunScriptExecute
+      OnExecute = actionScriptRunExecute
     end
-    object actionRunAll: TAction
+    object actionGuideRunAll: TAction
       Caption = #1042#1089#1077
-      OnExecute = actionRunAllExecute
+      OnExecute = actionGuideRunAllExecute
     end
-    object actionRunSelected: TAction
+    object actionGuideRunSelected: TAction
       Caption = #1042#1099#1073#1088#1072#1085#1085#1099#1081
-      OnExecute = actionRunSelectedExecute
+      OnExecute = actionGuideRunSelectedExecute
     end
-    object actionSaveScript: TAction
-      Caption = 'actionSaveScript'
-      Enabled = False
-      OnExecute = actionSaveScriptExecute
-    end
-    object actionShowFindPanel: TAction
-      Caption = 'actionShowFindPanel'
+    object actionFindPanelShow: TAction
+      Caption = 'actionFindPanelShow'
       ShortCut = 16454
-      OnExecute = actionShowFindPanelExecute
+      OnExecute = actionFindPanelShowExecute
     end
     object actionClose: TAction
       Caption = #1047#1072#1082#1088#1099#1090#1100
@@ -1103,10 +1108,6 @@ object OPPGuideForm: TOPPGuideForm
     object actionHelp: TAction
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
       OnExecute = actionHelpExecute
-    end
-    object actionCompileScript: TAction
-      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1085#1072' '#1086#1096#1080#1073#1082#1080
-      OnExecute = actionCompileScriptExecute
     end
     object actionClearRecentList: TAction
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100
@@ -1123,7 +1124,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800500010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1605,16 +1606,16 @@ object OPPGuideForm: TOPPGuideForm
     object N8: TMenuItem
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090
       object actionNew1: TMenuItem
-        Action = actionNew
+        Action = actionGuideNew
       end
       object actionOpen1: TMenuItem
-        Action = actionOpen
+        Action = actionGuideOpen
       end
       object actionSave1: TMenuItem
-        Action = actionSave
+        Action = actionGuideExport
       end
       object actionExport1: TMenuItem
-        Action = actionExport
+        Action = actionGuideExportAs
       end
       object N11: TMenuItem
         Caption = '-'
@@ -1632,7 +1633,7 @@ object OPPGuideForm: TOPPGuideForm
     object N5: TMenuItem
       Caption = #1057#1094#1077#1085#1072#1088#1080#1080
       object actionCompileScript1: TMenuItem
-        Action = actionCompileScript
+        Action = actionScriptCompile
       end
       object N6: TMenuItem
         Caption = '-'
@@ -1653,13 +1654,13 @@ object OPPGuideForm: TOPPGuideForm
     object N14: TMenuItem
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       object actionRunScript1: TMenuItem
-        Action = actionRunScript
+        Action = actionScriptRun
       end
       object actionRunSelected1: TMenuItem
-        Action = actionRunSelected
+        Action = actionGuideRunSelected
       end
       object actionRunAll1: TMenuItem
-        Action = actionRunAll
+        Action = actionGuideRunAll
       end
     end
     object N1: TMenuItem
@@ -1685,16 +1686,16 @@ object OPPGuideForm: TOPPGuideForm
       Caption = '-'
     end
     object actionCompileScript2: TMenuItem
-      Action = actionCompileScript
+      Action = actionScriptCompile
     end
     object N15: TMenuItem
       Caption = '-'
     end
     object N16: TMenuItem
-      Action = actionRunSelected
+      Action = actionGuideRunSelected
     end
     object actionRunScript2: TMenuItem
-      Action = actionRunScript
+      Action = actionScriptRun
     end
   end
 end

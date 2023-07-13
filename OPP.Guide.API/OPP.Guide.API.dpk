@@ -37,6 +37,9 @@ contains
   OPP_Guide_API_Context_Step in 'exportable\OPP_Guide_API_Context_Step.pas',
   OPP.Guide.Scripter in 'common\OPP.Guide.Scripter.pas',
   OPP_Guide_API in 'exportable\OPP_Guide_API.pas',
-  OPP_Guide_API_Context_Step_OpenHelp in 'exportable\OPP_Guide_API_Context_Step_OpenHelp.pas';
+  OPP_Guide_API_Context_Step_OpenHelp in 'exportable\OPP_Guide_API_Context_Step_OpenHelp.pas',
+  OPP_Help_System_Messaging_Pipe in 'exportable\OPP_Help_System_Messaging_Pipe.pas',
+  OPP_Guide_API_Context_Step_Process in 'exportable\OPP_Guide_API_Context_Step_Process.pas',
+  OPP_Guide_API_Context_Step_Wrapper in 'wrappers\OPP_Guide_API_Context_Step_Wrapper.pas';
 
 end.

@@ -3,39 +3,69 @@ unit OPP_Guide_API_Context_Step;
 interface
 
 uses
+  // ComObj,
   Forms,
   Variants,
   System.SysUtils,
   System.Classes,
-  OPP_Guide_API,
-  OPP_Help_Predicate;
+  OPP_Guide_API;
 
 type
-  TOPPTestObjectState = (osIdle, osRunning, osError);
+  {
+    procedure TOPPGuideAPIContextStep.SetState(const Value: TOPPGuideAPIContextStepState);
+    begin
+    fState := Value;
+    case fState of
+    osIdle:
+    fStateDescription := 'idle';
+    osRunning:
+    fStateDescription := 'running';
+    osError:
+    fStateDescription := 'error';
+    end;
+    end;
 
-  TOPPGuideAPIContextStep = class(TInterfacedObject, IOPPGuideAPIContextStep)
+  }
+
+  TOPPGuideAPIContextStep = class(TInterfacedObject, IOPPGuideAPIContextStep, IOPPGuideAPIIdentifiable)
   private
-    fState: TOPPTestObjectState;
-    fStepResult: Variant;
+    fExecutionResult: TOPPGuideAPIContextStepResult;
 
     [weak]
     fListener: IOPPGuideAPIContextStepListener;
     fStateDescription: String;
-    procedure SetState(const Value: TOPPTestObjectState);
-  public
-    procedure Run(AContext: OLEVariant); virtual;
-    property State: TOPPTestObjectState read fState write SetState default osIdle;
-    property StateDescription: String read fStateDescription write fStateDescription;
-    property StepResult: Variant read fStepResult;
-    property Listener: IOPPGuideAPIContextStepListener read fListener write fListener;
-  end;
+    fActionIdentifier: String;
+    fReactionIdentifier: String;
+    fIdentifier: String;
+    fCaption: String;
+    fNodeType: String;
 
-  TOPPGuideAPIContextStepProcess = class(TOPPGuideAPIContextStep)
-  private
-    fApplicationName: String;
+  protected
+    procedure SetCustomExecutionResult(AState: TOPPGuideAPIContextStepState; AValue: String; ADescription: String = '');
+
   public
-    procedure Run(AContext: OLEVariant); override;
-    property ApplicationName: String read fApplicationName write fApplicationName;
+    constructor Create;
+
+    function GetTest: TOPPGuideAPIContextStepResult;
+    procedure PerformIn(AContext: Variant; AStepIdentifier: String); virtual;
+
+    procedure SetExecutionResult(const AValue: TOPPGuideAPIContextStepResult);
+    function GetExecutionResult: TOPPGuideAPIContextStepResult;
+    function IdentifierName: String;
+    function IdentifierValue: String;
+    function PIdentifierName: String;
+
+    property ExecutionResult: TOPPGuideAPIContextStepResult read GetExecutionResult write SetExecutionResult;
+
+    property StateDescription: String read fStateDescription write fStateDescription;
+    property Listener: IOPPGuideAPIContextStepListener read fListener write fListener;
+    // ----------------
+    property NodeType: String read fNodeType write fNodeType;
+    property Caption: String read fCaption write fCaption;
+    property ReactionIdentifier: String read fReactionIdentifier write fReactionIdentifier;
+    property ActionIdentifier: String read fActionIdentifier write fActionIdentifier;
+    property Identifier: String read fIdentifier write fIdentifier;
+
   end;
 
 implementation
@@ -46,72 +76,49 @@ uses
 
 { TOPPTestObject }
 
-procedure TOPPGuideAPIContextStep.Run(AContext: OLEVariant);
+constructor TOPPGuideAPIContextStep.Create;
 begin
 end;
 
-{ TOPPGuideAPIContextStepProcess }
-
-procedure TOPPGuideAPIContextStepProcess.Run(AContext: OLEVariant);
+function TOPPGuideAPIContextStep.GetExecutionResult: TOPPGuideAPIContextStepResult;
 begin
-
-  fStepResult := Null;
-
-  if (VarIsNull(AContext) or VarIsEmpty(AContext)) then
-    exit;
-
-  self.State := osRunning;
-  TOPPSystemMessageHelper.RunProcess(ApplicationName, Application.Handle, 100,
-    procedure(AHandle: System.THandle; ARunResultType: Exception)
-    var
-      fThread: TThread;
-    begin
-      fThread := TThread.currentThread;
-      TThread.Synchronize(nil,
-        procedure
-        begin
-
-          if Assigned(ARunResultType) then
-          begin
-            fState := osError;
-            fStateDescription := ARunResultType.Message;
-            exit;
-          end;
-
-          if AHandle = THandle(INVALID_HANDLE_VALUE) then
-          begin
-            fState := osError;
-            fStateDescription := 'Invalid handle';
-            exit;
-          end;
-
-          fStepResult := 0;
-
-          try
-            AContext.testDC;
-            fState := osIdle;
-          except
-            on E: Exception do
-            begin
-              fState := osError;
-              fStateDescription := E.Message;
-            end;
-          end;
-        end);
-    end);
+  result := fExecutionResult;
 end;
 
-procedure TOPPGuideAPIContextStep.SetState(const Value: TOPPTestObjectState);
+function TOPPGuideAPIContextStep.GetTest: TOPPGuideAPIContextStepResult;
 begin
-  fState := Value;
-  case fState of
-    osIdle:
-      fStateDescription := 'idle';
-    osRunning:
-      fStateDescription := 'running';
-    osError:
-      fStateDescription := 'error';
-  end;
+  result.state := osIdle;
+end;
+
+function TOPPGuideAPIContextStep.IdentifierName: String;
+begin
+  result := 'identifier';
+end;
+
+function TOPPGuideAPIContextStep.IdentifierValue: String;
+begin
+  result := self.Identifier;
+end;
+
+function TOPPGuideAPIContextStep.PIdentifierName: String;
+begin
+  result := 'pidentifier';
+end;
+
+procedure TOPPGuideAPIContextStep.PerformIn(AContext: Variant; AStepIdentifier: String);
+begin
+end;
+
+procedure TOPPGuideAPIContextStep.SetCustomExecutionResult(AState: TOPPGuideAPIContextStepState; AValue: String; ADescription: String);
+begin
+  fExecutionResult.state := AState;
+  fExecutionResult.value_str := AValue;
+  fExecutionResult.description := ADescription;
+end;
+
+procedure TOPPGuideAPIContextStep.SetExecutionResult(const AValue: TOPPGuideAPIContextStepResult);
+begin
+  fExecutionResult := AValue;
 end;
 
 end.
