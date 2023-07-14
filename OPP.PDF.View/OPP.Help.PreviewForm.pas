@@ -17,6 +17,7 @@ uses
   OPP.Help.System.Codable.FormSizeSettings,
   OPP.Help.PreviewSettings,
   OPP.Help.System.Timer,
+  OPP.Help.PreviewForm.LogObserver,
 
   System.Classes, System.SysUtils, System.Variants, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.StdCtrls, Vcl.AppEvnts,
@@ -26,7 +27,7 @@ uses
   dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore,
   dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer,
   dxPScxEditorProducers, dxPScxExtEditorProducers, dxPSCore, cxTextEdit, cxPropertiesStore, dxPScxGridLnk,
-  dxPScxGridLayoutViewLnk;
+  dxPScxGridLayoutViewLnk, cxMemo;
 
 type
 
@@ -93,9 +94,6 @@ type
     dxBarButton8: TdxBarButton;
     dxBarButton9: TdxBarButton;
     dxBarButtonExit: TdxBarButton;
-    dxBarDockControl1: TdxBarDockControl;
-    dxBarDockControl2: TdxBarDockControl;
-    dxBarDockControl3: TdxBarDockControl;
     dxBarLargeButton1: TdxBarLargeButton;
     dxBarLargeButton2: TdxBarLargeButton;
     dxBarLargeButton3: TdxBarLargeButton;
@@ -162,6 +160,12 @@ type
     dxBarButton24: TdxBarButton;
     customActionList: TActionList;
     dxBarSubItem10: TdxBarSubItem;
+    actionShowLog: TAction;
+    dxBarButtonShowLog: TdxBarButton;
+    dxDockSite1: TdxDockSite;
+    dxDockPanel1: TdxDockPanel;
+    cxMemo1: TcxMemo;
+    dxLayoutDockSite1: TdxLayoutDockSite;
     procedure actionFitPageCustomExecute(Sender: TObject);
     procedure actionFitPageHeightExecute(Sender: TObject);
     procedure actionFitPageWidthExecute(Sender: TObject);
@@ -175,6 +179,7 @@ type
     procedure actionPrintExecute(Sender: TObject);
     procedure actionSendToBackgroundExecute(Sender: TObject);
     procedure actionSendToForegroundExecute(Sender: TObject);
+    procedure actionShowLogExecute(Sender: TObject);
     procedure actionToggleFindPanelExecute(Sender: TObject);
     procedure actionVersionExecute(Sender: TObject);
     procedure actionZoomDecreaseExecute(Sender: TObject);
@@ -184,6 +189,7 @@ type
     procedure cxEditGotoCustomPageChange(Sender: TObject);
     procedure cxEditGotoCustomPagePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure dxBarButtonExitClick(Sender: TObject);
+    procedure dxDockPanel1VisibleChanged(Sender: TdxCustomDockControl);
     procedure dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -192,6 +198,7 @@ type
     procedure OnViewStatusChanged(AStatus: TOPPHelpViewFullScreenStatus);
     procedure Timer1Timer(Sender: TObject);
   private
+    fLogObserver: TOPPHelpPreviewFormLogObserver;
     fSettings: TOPPHelpPreviewSettings;
     fDefaultPredicate: TOPPHelpPredicate;
     fCurrentState: TOPPHelpPreviewFormState;
@@ -222,11 +229,13 @@ type
     procedure SetCurrentState(ACurrentState: TOPPHelpPreviewFormState);
     procedure SetIsProcessingOPPPredicateMessage(const Value: Boolean);
     class function GetApplicationTitle: String; static;
+    function GetLogIsVisible: Boolean;
     property currentState: TOPPHelpPreviewFormState read fCurrentState write SetCurrentState;
     property InfoPanel: TdxStatusBarPanel read GetPageIndexPanel;
     property Navigator: IOPPNavigator read fNavigator;
     property IsProcessingOPPPredicateMessage: Boolean read fIsProcessingOPPPredicateMessage write SetIsProcessingOPPPredicateMessage;
     procedure ApplySettings(ASettings: TOPPHelpPreviewSettings);
+    property LogIsVisible: Boolean read GetLogIsVisible;
   protected
     procedure OnMessageWMCopyData(var Msg: TWMCopyData); message WM_COPYDATA;
     procedure OnMessageWMOPPPredicate(var Msg: TMessage); message WM_OPPPredicate;
@@ -390,6 +399,11 @@ begin
   Application.BringToFront();
 end;
 
+procedure TOPPHelpPreviewForm.actionShowLogExecute(Sender: TObject);
+begin
+  dxDockPanel1.Visible := not LogIsVisible;
+end;
+
 procedure TOPPHelpPreviewForm.actionToggleFindPanelExecute(Sender: TObject);
 begin
   oppHelpView.IsFindPanelVisible := not oppHelpView.IsFindPanelVisible;
@@ -501,6 +515,14 @@ begin
   self.Close();
 end;
 
+procedure TOPPHelpPreviewForm.dxDockPanel1VisibleChanged(Sender: TdxCustomDockControl);
+begin
+  if dxDockPanel1.Visible then
+    actionShowLog.Caption := 'Спрятать лог'
+  else
+    actionShowLog.Caption := 'Показать лог';
+end;
+
 procedure TOPPHelpPreviewForm.dxDockPanel2CloseQuery(Sender: TdxCustomDockControl; var CanClose: Boolean);
 begin
   CanClose := false;
@@ -523,10 +545,20 @@ begin
   begin
     FreeAndNil(fDefaultPredicate);
   end;
+  eventLogger.UnregisterObserver(fLogObserver);
 end;
 
 procedure TOPPHelpPreviewForm.FormCreate(Sender: TObject);
 begin
+  fLogObserver := TOPPHelpPreviewFormLogObserver.Create;
+  fLogObserver.cxMemo := self.cxMemo1;
+  eventLogger.RegisterObserver(fLogObserver);
+  dxDockPanel1.Visible := false;
+{$IF DEFINED (DEBUG)}
+  dxBarButtonShowLog.Visible := ivAlways;
+{$ELSE}
+  dxBarButtonShowLog.Visible := ivNever;
+{$ENDIF}
   IsProcessingOPPPredicateMessage := false;
 
   fSettings := TOPPHelpPreviewSettings.LoadOrCreate;
@@ -628,6 +660,11 @@ end;
 function TOPPHelpPreviewForm.GetContainerClassName: String;
 begin
   result := self.className;
+end;
+
+function TOPPHelpPreviewForm.GetLogIsVisible: Boolean;
+begin
+  result := dxDockPanel1.Visible;
 end;
 
 function TOPPHelpPreviewForm.GetPageIndexPanel: TdxStatusBarPanel;

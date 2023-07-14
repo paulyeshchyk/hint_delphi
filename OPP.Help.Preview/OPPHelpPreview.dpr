@@ -11,7 +11,8 @@ uses
   OPP.Help.View.ZoomSettings in '..\OPP.PDF.View\OPP.Help.View.ZoomSettings.pas' {OPPHelpPreviewZoomForm},
   OPP.Help.PreviewSettings in '..\OPP.PDF.View\OPP.Help.PreviewSettings.pas',
   OPP.Help.QuickJumpMenuBuilder in '..\OPP.PDF.View\OPP.Help.QuickJumpMenuBuilder.pas',
-  OPP.Help.View.CommandLine in '..\OPP.PDF.View\OPP.Help.View.CommandLine.pas';
+  OPP.Help.View.CommandLine in '..\OPP.PDF.View\OPP.Help.View.CommandLine.pas',
+  OPP.Help.PreviewForm.LogObserver in '..\OPP.PDF.View\OPP.Help.PreviewForm.LogObserver.pas';
 
 {$R *.res}
 

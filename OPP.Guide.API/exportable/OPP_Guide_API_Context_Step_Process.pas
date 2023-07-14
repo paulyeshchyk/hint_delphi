@@ -15,10 +15,12 @@ type
   TOPPGuideAPIContextStepProcess = class(TOPPGuideAPIContextStep)
   private
     fApplicationName: String;
+    fWindowClassName: String;
     procedure SetApplicationName(const Value: String);
   public
     procedure PerformIn(AContext: Variant; AStepIdentifier: String); override;
     property ApplicationName: String read fApplicationName write SetApplicationName;
+    property WindowClassName: String read fWindowClassName write fWindowClassName;
   end;
 
 implementation
@@ -42,30 +44,44 @@ begin
   TOPPSystemMessageHelper.RunProcess(ApplicationName, Application.Handle, 100,
     procedure(AHandle: System.THandle; ARunResultType: Exception)
     var
-      fThread: TThread;
+      hwnd: THandle;
+      fWindowClassHandleList: TList<THandle>;
     begin
-      fThread := TThread.currentThread;
-      TThread.Synchronize(nil,
-        procedure
-        begin
 
-          if Assigned(ARunResultType) then
-          begin
-            self.SetCustomExecutionResult(osError, '', ARunResultType.Message);
-            fContext.PushContextItem(AStepIdentifier, self);
-            exit;
-          end;
+      if Assigned(ARunResultType) then
+      begin
+        self.SetCustomExecutionResult(osError, '', ARunResultType.Message);
+        fContext.PushContextItem(AStepIdentifier, self);
+        exit;
+      end;
 
-          if AHandle = THandle(INVALID_HANDLE_VALUE) then
-          begin
-            self.SetCustomExecutionResult(osError, '', 'Invalid handle');
-            fContext.PushContextItem(AStepIdentifier, self);
-            exit;
-          end;
+      if AHandle = THandle(INVALID_HANDLE_VALUE) then
+      begin
+        self.SetCustomExecutionResult(osError, '', 'Invalid handle');
+        fContext.PushContextItem(AStepIdentifier, self);
+        exit;
+      end;
 
-          self.SetCustomExecutionResult(osIdle, IntToStr(AHandle));
-          fContext.PushContextItem(AStepIdentifier, self);
-        end);
+      fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fWindowClassName); // 'TOPPHelpPreviewForm'
+      if (not Assigned(fWindowClassHandleList)) then
+      begin
+        self.SetCustomExecutionResult(osError, '', Format('Window Class not found:[%s]', [fWindowClassName]));
+        fContext.PushContextItem(AStepIdentifier, self);
+        exit;
+      end;
+      if fWindowClassHandleList.Count = 0 then
+      begin
+        self.SetCustomExecutionResult(osError, '', Format('Window List is empty for class:[%s]', [fWindowClassName]));
+        fContext.PushContextItem(AStepIdentifier, self);
+        exit;
+      end;
+
+      hwnd := fWindowClassHandleList[0];
+      // for hwnd in fWindowClassHandleList do
+      // begin
+      // end;
+      self.SetCustomExecutionResult(osIdle, IntToStr(hwnd));
+      fContext.PushContextItem(AStepIdentifier, self);
     end);
 end;
 

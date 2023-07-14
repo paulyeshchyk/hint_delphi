@@ -494,36 +494,15 @@ object OPPGuideForm: TOPPGuideForm
               Index = 1
               Version = 1
             end
-            object cxDBVerticalGrid1DBEditorRow3: TcxDBEditorRow
-              Properties.DataBinding.FieldName = 'ReactionIdentifier'
-              ID = 2
-              ParentID = -1
-              Index = 2
-              Version = 1
-            end
-            object cxDBVerticalGrid1DBEditorRow4: TcxDBEditorRow
-              Properties.DataBinding.FieldName = 'ActualResultIdentifier'
-              ID = 3
-              ParentID = -1
-              Index = 3
-              Version = 1
-            end
-            object cxDBVerticalGrid1DBEditorRow2: TcxDBEditorRow
-              Properties.DataBinding.FieldName = 'ActionIdentifier'
-              ID = 4
-              ParentID = -1
-              Index = 4
-              Version = 1
-            end
             object cxDBVerticalGrid1DBEditorRow5: TcxDBEditorRow
               Properties.DataBinding.FieldName = 'Identifier'
               Properties.Options.Editing = False
               Properties.Options.Filtering = False
               Properties.Options.IncSearch = False
               Properties.Options.ShowEditButtons = eisbNever
-              ID = 5
+              ID = 2
               ParentID = -1
-              Index = 5
+              Index = 2
               Version = 1
             end
           end
@@ -1124,7 +1103,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

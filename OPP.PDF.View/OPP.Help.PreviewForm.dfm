@@ -2,12 +2,12 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   Left = 283
   Top = 0
   Caption = #1043#1054#1051#1068#1060#1057#1058#1056#1048#1052' '#1055#1086#1084#1086#1097#1100
-  ClientHeight = 497
-  ClientWidth = 864
+  ClientHeight = 644
+  ClientWidth = 977
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = True
@@ -16,11 +16,11 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 192
-  TextHeight = 14
+  TextHeight = 13
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 478
-    Width = 864
+    Top = 625
+    Width = 977
     Height = 19
     Margins.Left = 7
     Margins.Top = 7
@@ -50,7 +50,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     object dxStatusBar1Container0: TdxStatusBarContainerControl
       Left = 156
       Top = 4
-      Width = 690
+      Width = 803
       Height = 13
       Margins.Left = 7
       Margins.Top = 7
@@ -81,35 +81,54 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         TabOrder = 0
         Visible = False
         Height = 13
-        Width = 690
+        Width = 803
       end
     end
   end
-  object dxBarDockControl1: TdxBarDockControl
+  object dxDockSite1: TdxDockSite
     Left = 0
-    Top = 83
-    Width = 3
-    Height = 392
-    Align = dalLeft
-    BarManager = dxBarManager1
-  end
-  object dxBarDockControl2: TdxBarDockControl
-    Left = 861
-    Top = 83
-    Width = 3
-    Height = 392
-    Align = dalRight
-    BarManager = dxBarManager1
-    ExplicitLeft = 855
-  end
-  object dxBarDockControl3: TdxBarDockControl
-    Left = 0
-    Top = 475
-    Width = 864
-    Height = 3
-    Align = dalBottom
-    BarManager = dxBarManager1
-    ExplicitTop = 469
+    Top = 624
+    Width = 977
+    Height = 1
+    Align = alBottom
+    AutoSize = True
+    DockingType = 5
+    OriginalWidth = 977
+    OriginalHeight = 1
+    object dxLayoutDockSite1: TdxLayoutDockSite
+      Left = 0
+      Top = 0
+      Width = 977
+      Height = 1
+      Visible = False
+      DockingType = 0
+      OriginalWidth = 300
+      OriginalHeight = 140
+    end
+    object dxDockPanel1: TdxDockPanel
+      Left = 0
+      Top = 0
+      Width = 977
+      Height = 1
+      Visible = False
+      OnVisibleChanged = dxDockPanel1VisibleChanged
+      AllowFloating = True
+      AutoHide = False
+      Caption = 'dxDockPanel1'
+      CustomCaptionButtons.Buttons = <>
+      TabsProperties.CustomButtons.Buttons = <>
+      DockingType = 0
+      OriginalWidth = 185
+      OriginalHeight = 140
+      object cxMemo1: TcxMemo
+        Left = 0
+        Top = 0
+        Align = alClient
+        TabOrder = 0
+        Height = 0
+        Width = 973
+      end
+    end
   end
   object dxDockingManager1: TdxDockingManager
     Color = clBtnFace
@@ -154,7 +173,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     DockControlHeights = (
       0
       0
-      83
+      87
       0)
     object barNavigator: TdxBar
       AllowCustomizing = False
@@ -163,7 +182,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 325
-      DockedTop = 23
+      DockedTop = 28
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -229,6 +248,10 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         item
           Visible = True
           ItemName = 'dxBarSubItem8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButtonShowLog'
         end>
       MultiLine = True
       OneOnRow = True
@@ -247,7 +270,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 55
-      DockedTop = 23
+      DockedTop = 28
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -276,7 +299,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 240
-      DockedTop = 23
+      DockedTop = 28
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -300,7 +323,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 0
-      DockedTop = 23
+      DockedTop = 28
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -324,7 +347,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       CaptionButtons = <>
       DockedDockingStyle = dsTop
       DockedLeft = 554
-      DockedTop = 23
+      DockedTop = 28
       DockingStyle = dsTop
       FloatLeft = 866
       FloatTop = 8
@@ -2256,6 +2279,11 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
           ItemName = 'dxBarSeparator10'
         end>
     end
+    object dxBarButtonShowLog: TdxBarButton
+      Action = actionShowLog
+      Category = 0
+      Visible = ivNever
+    end
   end
   object TrayIcon1: TTrayIcon
     Icon.Data = {
@@ -2486,6 +2514,10 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       Caption = 'actionSendToForeground'
       OnExecute = actionSendToForegroundExecute
     end
+    object actionShowLog: TAction
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1086#1075
+      OnExecute = actionShowLogExecute
+    end
   end
   object dxComponentPrinter1: TdxComponentPrinter
     Version = 0
@@ -2494,7 +2526,7 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
     PixelsPerInch = 96
   end
   object customActionList: TActionList
-    Left = 88
-    Top = 208
+    Left = 136
+    Top = 216
   end
 end

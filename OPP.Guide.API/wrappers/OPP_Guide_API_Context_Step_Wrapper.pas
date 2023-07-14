@@ -9,14 +9,14 @@ uses
 type
   TOPPGuideAPIContextStepWrapper = class helper for TOPPGuideAPIContextStep
   public
-    class function WrapFromDataset(ADataset: TClientDataset): TOPPGuideAPIContextStep; static;
+    class function WrapFromDataset1(ADataset: TClientDataset): TOPPGuideAPIContextStep; static;
   end;
 
 implementation
 
 { TOPPGuideAPIContextStepWrapper }
 
-class function TOPPGuideAPIContextStepWrapper.WrapFromDataset(ADataset: TClientDataset): TOPPGuideAPIContextStep;
+class function TOPPGuideAPIContextStepWrapper.WrapFromDataset1(ADataset: TClientDataset): TOPPGuideAPIContextStep;
 var
   fCDS: TClientDataset;
 begin
@@ -30,7 +30,6 @@ begin
     result := TOPPGuideAPIContextStep.Create;
     result.NodeType := ADataset.FieldByName('NodeType').AsString;
     result.Caption := ADataset.FieldByName('Caption').AsString;
-    result.ActionIdentifier := ADataset.FieldByName('ActionIdentifier').AsString;
     result.Identifier := ADataset.FieldByName('Identifier').AsString;
   finally
     fCDS.Free;

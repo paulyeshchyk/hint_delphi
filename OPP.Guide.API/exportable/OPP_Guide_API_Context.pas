@@ -16,6 +16,7 @@ type
     [weak]
     fParentContext: IOPPGuideAPIContext;
     fMap: TOPPGuideAPIContextMap;
+    fDataprovider: IOPPGuideAPIDataprovider;
 
     function GetMap: TOPPGuideAPIContextMap;
     property map: TOPPGuideAPIContextMap read GetMap;
@@ -29,13 +30,16 @@ type
     class function shared: TOPPGuideAPIContext; static;
     destructor Destroy; override;
     procedure PushContextItem(const stepIdentifier: String; const contextItem: IOPPGuideAPIContextStep);
+    function PullContextItem(const stepIdentifier: String): TOPPGuideAPIContextStepResult;
 
     { IOPPGuideAPIContext }
     procedure Add(AChild: IOPPGuideAPIContext);
     procedure Remove(AChild: IOPPGuideAPIContext);
     procedure Clear;
+    function GetParentStepResult(AStepIdentifier: String):TOPPGuideAPIContextStepResult;
+    function GetStepResult(AStepIdentifier: String):TOPPGuideAPIContextStepResult;
+    procedure SetDataprovider(AValue: IOPPGuideAPIDataprovider);
 
-    procedure testDC;
   end;
 
 implementation
@@ -54,9 +58,17 @@ begin
   //
 end;
 
+function TOPPGuideAPIContext.PullContextItem(const stepIdentifier: String): TOPPGuideAPIContextStepResult;
+var
+  fResult : ROPPGuideAPIContextStepResult;
+begin
+  fMap.TryGetValue(stepIdentifier, fResult);
+  result := TOPPGuideAPIContextStepResult.Create(fResult);
+end;
+
 procedure TOPPGuideAPIContext.PushContextItem(const stepIdentifier: String; const contextItem: IOPPGuideAPIContextStep);
 begin
-  fMap.AddOrSetValue(stepIdentifier, contextItem.GetExecutionResult);
+  fMap.AddOrSetValue(stepIdentifier, contextItem.GetExecutionResult.theRecord);
 end;
 
 constructor TOPPGuideAPIContext.Create(AParentContext: IOPPGuideAPIContext);
@@ -99,24 +111,43 @@ begin
   result := fMap;
 end;
 
+function TOPPGuideAPIContext.GetParentStepResult(AStepIdentifier: String): TOPPGuideAPIContextStepResult;
+var
+  fResult : ROPPGuideAPIContextStepResult;
+  fParent : TOPPGuideAPIContextStep;
+begin
+
+  result := nil;
+  fParent := TOPPGuideAPIContextStep(fDataprovider.GetParentStepByIdentifier(AStepIdentifier));
+  if not Assigned(fParent) then
+    exit;
+
+  fMap.TryGetValue(fParent.IdentifierValue, fResult);
+  result := TOPPGuideAPIContextStepResult.Create(fResult);
+
+end;
+
+function TOPPGuideAPIContext.GetStepResult(AStepIdentifier: String): TOPPGuideAPIContextStepResult;
+begin
+  result := TOPPGuideAPIContextStepResult.Create;
+  result.state := osUnknown;
+end;
+
 procedure TOPPGuideAPIContext.Remove(AChild: IOPPGuideAPIContext);
 begin
 
 end;
 
+procedure TOPPGuideAPIContext.SetDataprovider(AValue: IOPPGuideAPIDataprovider);
+begin
+  fDataprovider := AValue;
+end;
+
 class function TOPPGuideAPIContext.shared: TOPPGuideAPIContext;
 begin
   if not Assigned(fContext) then
-  begin
     fContext := TOPPGuideAPIContext.Create(nil);
-  end;
   result := fContext;
-
-end;
-
-procedure TOPPGuideAPIContext.testDC;
-begin
-  //
 end;
 
 initialization

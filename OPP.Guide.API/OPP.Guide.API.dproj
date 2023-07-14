@@ -74,7 +74,6 @@
         <DCC_FrameworkPath>$(OPPCompiled)\Executable;$(DCC_FrameworkPath)</DCC_FrameworkPath>
         <DCC_BplOutput>$(OPPCompiled)\Executable</DCC_BplOutput>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
-        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -128,10 +127,11 @@
         <DCCReference Include="exportable\OPP_Guide_API_Context_Step.pas"/>
         <DCCReference Include="common\OPP.Guide.Scripter.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API.pas"/>
-        <DCCReference Include="exportable\OPP_Guide_API_Context_Step_OpenHelp.pas"/>
+        <DCCReference Include="exportable\OPP_Guide_API_Context_Step_SendMessage_Help.pas"/>
         <DCCReference Include="exportable\OPP_Help_System_Messaging_Pipe.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API_Context_Step_Process.pas"/>
         <DCCReference Include="wrappers\OPP_Guide_API_Context_Step_Wrapper.pas"/>
+        <DCCReference Include="exportable\OPP_Guide_API_Dataprovider.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

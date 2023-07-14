@@ -3,9 +3,6 @@ unit OPP_Guide_API_Context_Step;
 interface
 
 uses
-  // ComObj,
-  Forms,
-  Variants,
   System.SysUtils,
   System.Classes,
   OPP_Guide_API;
@@ -34,8 +31,6 @@ type
     [weak]
     fListener: IOPPGuideAPIContextStepListener;
     fStateDescription: String;
-    fActionIdentifier: String;
-    fReactionIdentifier: String;
     fIdentifier: String;
     fCaption: String;
     fNodeType: String;
@@ -45,6 +40,7 @@ type
 
   public
     constructor Create;
+    destructor Destroy;override;
 
     function GetTest: TOPPGuideAPIContextStepResult;
     procedure PerformIn(AContext: Variant; AStepIdentifier: String); virtual;
@@ -62,8 +58,6 @@ type
     // ----------------
     property NodeType: String read fNodeType write fNodeType;
     property Caption: String read fCaption write fCaption;
-    property ReactionIdentifier: String read fReactionIdentifier write fReactionIdentifier;
-    property ActionIdentifier: String read fActionIdentifier write fActionIdentifier;
     property Identifier: String read fIdentifier write fIdentifier;
 
   end;
@@ -78,10 +72,20 @@ uses
 
 constructor TOPPGuideAPIContextStep.Create;
 begin
+  fExecutionResult := nil;
+end;
+
+destructor TOPPGuideAPIContextStep.Destroy;
+begin
+  if Assigned(fExecutionResult) then
+    fExecutionResult.Free;
+  inherited;
 end;
 
 function TOPPGuideAPIContextStep.GetExecutionResult: TOPPGuideAPIContextStepResult;
 begin
+  if not Assigned(fExecutionResult) then
+    fExecutionResult := TOPPGuideAPIContextStepResult.Create;
   result := fExecutionResult;
 end;
 
@@ -111,9 +115,9 @@ end;
 
 procedure TOPPGuideAPIContextStep.SetCustomExecutionResult(AState: TOPPGuideAPIContextStepState; AValue: String; ADescription: String);
 begin
-  fExecutionResult.state := AState;
-  fExecutionResult.value_str := AValue;
-  fExecutionResult.description := ADescription;
+  self.ExecutionResult.state := AState;
+  self.ExecutionResult.value_str := AValue;
+  self.ExecutionResult.description := ADescription;
 end;
 
 procedure TOPPGuideAPIContextStep.SetExecutionResult(const AValue: TOPPGuideAPIContextStepResult);

@@ -9,7 +9,7 @@ type
   IOPPGuideScripter = interface
     function RunScript(AStrings: TStrings): Variant; overload;
     function RunScript(AScriptText: String): Variant; overload;
-    function RunScript(AStream: TMemoryStream; userInfo: IOPPGuideAPIIdentifiable): Variant; overload;
+    function RunScript(AStream: TMemoryStream; AIdentifiable: IOPPGuideAPIIdentifiable): Variant; overload;
     function CompileScript(AStream: TMemoryStream): Variant;
   end;
 
