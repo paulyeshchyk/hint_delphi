@@ -9,70 +9,75 @@ uses
   System.Classes,
   OPP_Guide_API,
   OPP_Guide_API_Context,
-  OPP_Guide_API_Context_Step;
+  OPP_Guide_API_Context_Step,
+  OPP_Guide_Executor_State;
 
 type
   TOPPGuideAPIContextStepProcess = class(TOPPGuideAPIContextStep)
   private
     fApplicationName: String;
     fWindowClassName: String;
-    procedure SetApplicationName(const Value: String);
+    fWaitForSingleObjectInMS: Cardinal;
   public
-    procedure PerformIn(AContext: Variant; AStepIdentifier: String); override;
-    property ApplicationName: String read fApplicationName write SetApplicationName;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); override;
+    property ApplicationName: String read fApplicationName write fApplicationName;
     property WindowClassName: String read fWindowClassName write fWindowClassName;
+    property WaitForSingleObjectInMS: Cardinal read fWaitForSingleObjectInMS write fWaitForSingleObjectInMS default 1000;
   end;
 
 implementation
 
 uses
+  OPP_Guide_Executor,
   OPP.Help.System.Messaging,
-  System.Generics.Collections;
+  System.Generics.Collections,
+  OPP.Help.Log;
+
+const
+  kContext: String = 'StepProcess';
 
 { TOPPGuideAPIContextStepProcess }
 
-procedure TOPPGuideAPIContextStepProcess.PerformIn(AContext: Variant; AStepIdentifier: String);
+procedure TOPPGuideAPIContextStepProcess.Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
 var
   fContext: TOPPGuideAPIContext;
 begin
 
-  self.SetCustomExecutionResult(osError, '', 'not executed');
-
   fContext := TOPPGuideAPIContext.shared;
 
-  self.SetCustomExecutionResult(osRunning, '');
-  TOPPSystemMessageHelper.RunProcess(ApplicationName, Application.Handle, 100,
+  TOPPSystemMessageHelper.RunProcess(ApplicationName, Application.Handle, WaitForSingleObjectInMS,
     procedure(AHandle: System.THandle; ARunResultType: Exception)
     var
       hwnd: THandle;
       fWindowClassHandleList: TList<THandle>;
     begin
 
+      if not Assigned(callback) then begin
+        eventLogger.Error('callback is not defined',kContext);
+        exit;
+      end;
+
       if Assigned(ARunResultType) then
       begin
-        self.SetCustomExecutionResult(osError, '', ARunResultType.Message);
-        fContext.PushContextItem(AStepIdentifier, self);
+        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, ARunResultType.Message));
         exit;
       end;
 
       if AHandle = THandle(INVALID_HANDLE_VALUE) then
       begin
-        self.SetCustomExecutionResult(osError, '', 'Invalid handle');
-        fContext.PushContextItem(AStepIdentifier, self);
+        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, 'Invalid handle'));
         exit;
       end;
 
-      fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fWindowClassName); // 'TOPPHelpPreviewForm'
+      fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fWindowClassName);
       if (not Assigned(fWindowClassHandleList)) then
       begin
-        self.SetCustomExecutionResult(osError, '', Format('Window Class not found:[%s]', [fWindowClassName]));
-        fContext.PushContextItem(AStepIdentifier, self);
+        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Window Class not found:[%s]', [fWindowClassName])));
         exit;
       end;
       if fWindowClassHandleList.Count = 0 then
       begin
-        self.SetCustomExecutionResult(osError, '', Format('Window List is empty for class:[%s]', [fWindowClassName]));
-        fContext.PushContextItem(AStepIdentifier, self);
+        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Window List is empty for class:[%s]', [fWindowClassName])));
         exit;
       end;
 
@@ -80,14 +85,11 @@ begin
       // for hwnd in fWindowClassHandleList do
       // begin
       // end;
-      self.SetCustomExecutionResult(osIdle, IntToStr(hwnd));
-      fContext.PushContextItem(AStepIdentifier, self);
-    end);
-end;
+//      self.SetCustomExecutionResult(osIdle, IntToStr(hwnd));
+//      fContext.PushContextItem(AStepIdentifier, self);
+      callback(TOPPGuideExecutorRunState.FinishState(AStepIdentifier, '', IntToStr(hwnd)));
 
-procedure TOPPGuideAPIContextStepProcess.SetApplicationName(const Value: String);
-begin
-  fApplicationName := Value;
+    end);
 end;
 
 end.

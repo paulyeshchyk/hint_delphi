@@ -5,24 +5,10 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  OPP_Guide_API;
+  OPP_Guide_API,
+  OPP_Guide_Executor_State;
 
 type
-  {
-    procedure TOPPGuideAPIContextStep.SetState(const Value: TOPPGuideAPIContextStepState);
-    begin
-    fState := Value;
-    case fState of
-    osIdle:
-    fStateDescription := 'idle';
-    osRunning:
-    fStateDescription := 'running';
-    osError:
-    fStateDescription := 'error';
-    end;
-    end;
-
-  }
 
   TOPPGuideAPIContextStep = class(TInterfacedObject, IOPPGuideAPIContextStep, IOPPGuideAPIIdentifiable)
   private
@@ -36,24 +22,17 @@ type
     fNodeType: String;
 
   protected
-    procedure SetCustomExecutionResult(AState: TOPPGuideAPIContextStepState; AValue: String; ADescription: String = '');
 
   public
     constructor Create;
-    destructor Destroy;override;
+    destructor Destroy; override;
 
-    function GetTest: TOPPGuideAPIContextStepResult;
-    procedure PerformIn(AContext: Variant; AStepIdentifier: String); virtual;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); virtual;
 
-    procedure SetExecutionResult(const AValue: TOPPGuideAPIContextStepResult);
-    function GetExecutionResult: TOPPGuideAPIContextStepResult;
     function IdentifierName: String;
     function IdentifierValue: String;
     function PIdentifierName: String;
 
-    property ExecutionResult: TOPPGuideAPIContextStepResult read GetExecutionResult write SetExecutionResult;
-
-    property StateDescription: String read fStateDescription write fStateDescription;
     property Listener: IOPPGuideAPIContextStepListener read fListener write fListener;
     // ----------------
     property NodeType: String read fNodeType write fNodeType;
@@ -65,6 +44,7 @@ type
 implementation
 
 uses
+  OPP_Guide_Executor,
   OPP.Help.System.Messaging,
   System.Generics.Collections;
 
@@ -82,18 +62,6 @@ begin
   inherited;
 end;
 
-function TOPPGuideAPIContextStep.GetExecutionResult: TOPPGuideAPIContextStepResult;
-begin
-  if not Assigned(fExecutionResult) then
-    fExecutionResult := TOPPGuideAPIContextStepResult.Create;
-  result := fExecutionResult;
-end;
-
-function TOPPGuideAPIContextStep.GetTest: TOPPGuideAPIContextStepResult;
-begin
-  result.state := osIdle;
-end;
-
 function TOPPGuideAPIContextStep.IdentifierName: String;
 begin
   result := 'identifier';
@@ -109,20 +77,8 @@ begin
   result := 'pidentifier';
 end;
 
-procedure TOPPGuideAPIContextStep.PerformIn(AContext: Variant; AStepIdentifier: String);
+procedure TOPPGuideAPIContextStep.Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
 begin
-end;
-
-procedure TOPPGuideAPIContextStep.SetCustomExecutionResult(AState: TOPPGuideAPIContextStepState; AValue: String; ADescription: String);
-begin
-  self.ExecutionResult.state := AState;
-  self.ExecutionResult.value_str := AValue;
-  self.ExecutionResult.description := ADescription;
-end;
-
-procedure TOPPGuideAPIContextStep.SetExecutionResult(const AValue: TOPPGuideAPIContextStepResult);
-begin
-  fExecutionResult := AValue;
 end;
 
 end.

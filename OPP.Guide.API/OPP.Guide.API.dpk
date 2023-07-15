@@ -40,6 +40,8 @@ contains
   OPP_Help_System_Messaging_Pipe in 'exportable\OPP_Help_System_Messaging_Pipe.pas',
   OPP_Guide_API_Context_Step_Process in 'exportable\OPP_Guide_API_Context_Step_Process.pas',
   OPP_Guide_API_Context_Step_Wrapper in 'wrappers\OPP_Guide_API_Context_Step_Wrapper.pas',
-  OPP_Guide_API_Dataprovider in 'exportable\OPP_Guide_API_Dataprovider.pas';
+  OPP_Guide_API_Dataprovider in 'exportable\OPP_Guide_API_Dataprovider.pas',
+  OPP_Guide_Executor in 'common\OPP_Guide_Executor.pas',
+  OPP_Guide_Executor_State in 'exportable\OPP_Guide_Executor_State.pas';
 
 end.

@@ -3,9 +3,11 @@ unit OPP_Guide_API_Context;
 interface
 
 uses
+  System.SysUtils,
   OPP_Guide_API,
   OPP_Guide_API_Context_Step,
-  OPP_Guide_API_Context_Map;
+  OPP_Guide_API_Context_Map,
+  OPP_Guide_Executor_State;
 
 type
 
@@ -26,25 +28,32 @@ type
     constructor Create(AParentContext: IOPPGuideAPIContext = nil);
 
   public
-
     class function shared: TOPPGuideAPIContext; static;
+
     destructor Destroy; override;
-    procedure PushContextItem(const stepIdentifier: String; const contextItem: IOPPGuideAPIContextStep);
-    function PullContextItem(const stepIdentifier: String): TOPPGuideAPIContextStepResult;
+
+    procedure PushStepState(const AResult: TOPPGuideExecutorRunState);
+    function PullStepState(const AStepIdentifier: String): TOPPGuideExecutorRunState;
 
     { IOPPGuideAPIContext }
+
+    procedure Execute(const contextItem: TOPPGuideAPIContextStep; AStepIdentifier: String);
+
     procedure Add(AChild: IOPPGuideAPIContext);
     procedure Remove(AChild: IOPPGuideAPIContext);
     procedure Clear;
-    function GetParentStepResult(AStepIdentifier: String):TOPPGuideAPIContextStepResult;
-    function GetStepResult(AStepIdentifier: String):TOPPGuideAPIContextStepResult;
+    function GetParentStepResult(AStepIdentifier: String): TOPPGuideAPIContextStepResult;
     procedure SetDataprovider(AValue: IOPPGuideAPIDataprovider);
-
   end;
 
 implementation
 
-uses System.Variants, Dialogs;
+uses
+  Vcl.Forms,
+  Windows,
+  System.Variants,
+  OPP.Help.Log,
+  OPP_Guide_Executor;
 
 { TOPPGuideAPIContext }
 
@@ -58,17 +67,14 @@ begin
   //
 end;
 
-function TOPPGuideAPIContext.PullContextItem(const stepIdentifier: String): TOPPGuideAPIContextStepResult;
-var
-  fResult : ROPPGuideAPIContextStepResult;
+function TOPPGuideAPIContext.PullStepState(const AStepIdentifier: String): TOPPGuideExecutorRunState;
 begin
-  fMap.TryGetValue(stepIdentifier, fResult);
-  result := TOPPGuideAPIContextStepResult.Create(fResult);
+  fMap.TryGetValue(AStepIdentifier, result);
 end;
 
-procedure TOPPGuideAPIContext.PushContextItem(const stepIdentifier: String; const contextItem: IOPPGuideAPIContextStep);
+procedure TOPPGuideAPIContext.PushStepState(const AResult: TOPPGuideExecutorRunState);
 begin
-  fMap.AddOrSetValue(stepIdentifier, contextItem.GetExecutionResult.theRecord);
+  fMap.AddOrSetValue(AResult.stepIdentifier, AResult);
 end;
 
 constructor TOPPGuideAPIContext.Create(AParentContext: IOPPGuideAPIContext);
@@ -102,6 +108,32 @@ begin
   inherited;
 end;
 
+procedure TOPPGuideAPIContext.Execute(const contextItem: TOPPGuideAPIContextStep; AStepIdentifier: String);
+begin
+  contextItem.Execute(AStepIdentifier,
+    procedure(AResult: TOPPGuideExecutorRunState)
+    begin
+
+      self.PushStepState(AResult);
+
+      Application.ProcessMessages;
+      case AResult.value of
+        rsvError:
+          begin
+            eventLogger.Error(Format('[%s] Failed with: %s', [AResult.stepIdentifier, AResult.shortDescription]), 'APIContext')
+          end;
+        rsvFinished:
+          begin
+            eventLogger.Flow(Format('[%s] Finished', [AResult.stepIdentifier]), 'APIContext')
+          end;
+      else
+        begin
+          eventLogger.Flow(AResult.shortDescription, 'APIContext')
+        end;
+      end;
+    end);
+end;
+
 function TOPPGuideAPIContext.GetMap: TOPPGuideAPIContextMap;
 begin
   if not Assigned(fMap) then
@@ -113,8 +145,8 @@ end;
 
 function TOPPGuideAPIContext.GetParentStepResult(AStepIdentifier: String): TOPPGuideAPIContextStepResult;
 var
-  fResult : ROPPGuideAPIContextStepResult;
-  fParent : TOPPGuideAPIContextStep;
+  fPreviousStepState: TOPPGuideExecutorRunState;
+  fParent: TOPPGuideAPIContextStep;
 begin
 
   result := nil;
@@ -122,15 +154,8 @@ begin
   if not Assigned(fParent) then
     exit;
 
-  fMap.TryGetValue(fParent.IdentifierValue, fResult);
-  result := TOPPGuideAPIContextStepResult.Create(fResult);
-
-end;
-
-function TOPPGuideAPIContext.GetStepResult(AStepIdentifier: String): TOPPGuideAPIContextStepResult;
-begin
-  result := TOPPGuideAPIContextStepResult.Create;
-  result.state := osUnknown;
+  fPreviousStepState := PullStepState(fParent.IdentifierValue);
+  result := TOPPGuideAPIContextStepResult.Create(fPreviousStepState);
 end;
 
 procedure TOPPGuideAPIContext.Remove(AChild: IOPPGuideAPIContext);

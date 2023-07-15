@@ -1,9 +1,11 @@
-unit OPP_Guide_API_Context_Step_SendMessage_Help;
+﻿unit OPP_Guide_API_Context_Step_SendMessage_Help;
 
 interface
 
 uses
+  System.SysUtils,
   OPP_Guide_API,
+  OPP_Guide_Executor_State,
   OPP_Guide_API_Context_Step;
 
 type
@@ -13,7 +15,7 @@ type
     fSearchText: String;
     fHelpFilename: String;
   public
-    procedure PerformIn(AContext: Variant; AStepIdentifier: String); override;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); override;
     property HelpApplicationHandle: String read fHelpApplicationHandle write fHelpApplicationHandle;
     property HelpFilename: String read fHelpFilename write fHelpFilename;
     property SearchText: String read fSearchText write fSearchText;
@@ -22,16 +24,19 @@ type
 implementation
 
 uses
-  System.SysUtils,
   System.Classes,
   System.Generics.Collections,
   Vcl.Forms,
+  OPP.Help.Log,
   OPP.Help.Predicate,
   OPP.Help.System.Types,
 
   OPP.Help.System.Messaging.Pipe,
   OPP.Help.System.Messaging,
   OPP.Help.System.AppExecutor;
+
+const
+  kContext: String = 'StepSendMessage';
 
 type
   TOPPGuideAPIContextStepSendMessageHelpHelper = class helper for TOPPGuideAPIContextStepSendMessageHelp
@@ -45,7 +50,7 @@ function TOPPGuideAPIContextStepSendMessageHelpHelper.SendOpenPage(AProcessHandl
 var
   fMessagePipe: TOPPMessagePipe;
   fSelfHandle: THandle;
-  fResult : TOPPMessagePipeSendResult;
+  fResult: TOPPMessagePipeSendResult;
 begin
   result := 10001; // psrFail;
   if AProcessHandle = 0 then
@@ -63,27 +68,52 @@ begin
       begin
         Predicate.WriteToStream(AStream);
       end);
-     result := Integer(fResult);
+    result := Integer(fResult);
   finally
     fMessagePipe.Free;
   end;
 end;
 
-procedure TOPPGuideAPIContextStepSendMessageHelp.PerformIn(AContext: Variant; AStepIdentifier: String);
+procedure TOPPGuideAPIContextStepSendMessageHelp.Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
 var
-  Predicate: TOPPHelpPredicate;
+  fPredicate: TOPPHelpPredicate;
+  fHandle: Integer;
 begin
 
-  Predicate := TOPPHelpPredicate.Create(self.fHelpFilename, TOPPKeywordType.ktSearch, self.fSearchText);
+  fHandle := 0;
+  if Length(Self.HelpApplicationHandle) = 0 then
+  begin
+    eventLogger.Error('Handle is not defined', kContext);
+    exit;
+  end;
+  try
+    fHandle := StrToInt(Self.HelpApplicationHandle);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
+    end;
+  end;
+
+  if fHandle = 0 then
+  begin
+    eventLogger.Error('Handle is equal to zero', kContext);
+    exit;
+  end;
+
+  fPredicate := TOPPHelpPredicate.Create(Self.fHelpFilename, TOPPKeywordType.ktSearch, Self.fSearchText);
   try
 
     try
-      SendOpenPage(StrToInt(self.HelpApplicationHandle), Predicate);
+      SendOpenPage(StrToInt(Self.HelpApplicationHandle), fPredicate);
     except
-
+      on E: Exception do
+      begin
+        eventLogger.Error(E, kContext);
+      end;
     end;
   finally
-    Predicate.Free;
+    fPredicate.Free;
   end;
 end;
 

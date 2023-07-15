@@ -1103,7 +1103,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 272
     Top = 168
     Bitmap = {
-      494C010103000800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800800010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1670,11 +1670,16 @@ object OPPGuideForm: TOPPGuideForm
     object N15: TMenuItem
       Caption = '-'
     end
-    object N16: TMenuItem
-      Action = actionGuideRunSelected
-    end
-    object actionRunScript2: TMenuItem
-      Action = actionScriptRun
+    object N17: TMenuItem
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+      object N18: TMenuItem
+        Action = actionGuideRunSelected
+        Caption = #1053#1072#1095#1072#1074' '#1086#1090' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1074#1085#1080#1079
+      end
+      object N19: TMenuItem
+        Action = actionScriptRun
+        Caption = #1042#1099#1073#1088#1072#1085#1085#1099#1081
+      end
     end
   end
 end

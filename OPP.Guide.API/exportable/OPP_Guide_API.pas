@@ -4,44 +4,55 @@ interface
 
 uses
   DBClient,
-  System.Variants;
+  System.Variants,
+  System.Classes,
+  System.SysUtils,
+  OPP_Guide_Executor_State;
 
 type
 
-  TOPPGuideAPIContextStepState = (osIdle, osRunning, osError, osUnknown);
+  TOPPGuideAPIContextStepResultCallback = TProc<TOPPGuideExecutorRunState>;
+
+
+  IOPPGuideAPIIdentifiable = interface(IUnknown)
+    ['{0852EEAF-AB86-4F05-92D3-8DE1BA867417}']
+    function PIdentifierName: String;
+    function IdentifierName: String;
+    function IdentifierValue: String;
+  end;
+
+  IOPPGuideScripter = interface
+    function RunScript(AStrings: TStrings): Variant; overload;
+    function RunScript(AScriptText: String): Variant; overload;
+    function RunScript(AStream: TMemoryStream; AIdentifiable: IOPPGuideAPIIdentifiable): Variant; overload;
+    function CompileScript(AStream: TMemoryStream): Variant;
+  end;
 
   IOPPGuideAPIContextStepResult = interface(IUnknown)
   end;
 
-  ROPPGuideAPIContextStepResult = record
-    fState: TOPPGuideAPIContextStepState;
-    fDescription: String;
-    fValue_str: String;
-  end;
-
   TOPPGuideAPIContextStepResult = class
   private
-    fRecord: ROPPGuideAPIContextStepResult;
+    fRecord: TOPPGuideExecutorRunState;
     function GetDescription: String;
-    function GetState: TOPPGuideAPIContextStepState;
+    function GetState: TOPPGuideExecutorRunState;
     function GetValue_str: String;
-    procedure SetDescription(const Value: String);
-    procedure SetState(const Value: TOPPGuideAPIContextStepState);
-    procedure SetValue_str(const Value: String);
+    procedure SetDescription(const value: String);
+    procedure SetState(const value: TOPPGuideExecutorRunState);
+    procedure SetValue_str(const value: String);
   public
-    constructor Create();overload;
-    constructor Create(ARecord: ROPPGuideAPIContextStepResult);overload;
-    property State: TOPPGuideAPIContextStepState read GetState write SetState;
+    constructor Create(); overload;
+    constructor Create(ARecord: TOPPGuideExecutorRunState); overload;
+    property State: TOPPGuideExecutorRunState read GetState write SetState;
     property Description: String read GetDescription write SetDescription;
     property Value_str: String read GetValue_str write SetValue_str;
-    property theRecord: ROPPGuideAPIContextStepResult read fRecord;
+    property theRecord: TOPPGuideExecutorRunState read fRecord;
   end;
 
   IOPPGuideAPIContextStep = interface;
 
   IOPPGuideAPIDataprovider = interface(IUnknown)
     ['{5849F28F-9DFD-4D55-A54B-085A5CD68048}']
-
     function GetDataset: TClientDataset;
     function GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
     function GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
@@ -57,7 +68,9 @@ type
     procedure Add(AChild: IOPPGuideAPIContext);
     procedure Remove(AChild: IOPPGuideAPIContext);
     procedure Clear;
-    procedure PushContextItem(const stepIdentifier: String; const contextItem: IOPPGuideAPIContextStep);
+    //procedure Execute(const contextItem: IOPPGuideAPIContextStep);
+    procedure PushStepState(const AResult: TOPPGuideExecutorRunState);
+    function PullStepState(const AStepIdentifier: String): TOPPGuideExecutorRunState;
     procedure SetDataprovider(AValue: IOPPGuideAPIDataprovider);
   end;
 
@@ -67,60 +80,51 @@ type
 
   IOPPGuideAPIContextStep = interface(IUnknown)
     ['{610F0F2E-4034-4310-9F7C-D0D0FCBF9C29}']
-    procedure PerformIn(AContext: Variant; AStepIdentifier: String); // IOPPGuideAPIContext
-    procedure SetExecutionResult(const AValue: TOPPGuideAPIContextStepResult);
-    function GetExecutionResult: TOPPGuideAPIContextStepResult;
-  end;
-
-  IOPPGuideAPIIdentifiable = interface(IUnknown)
-    ['{0852EEAF-AB86-4F05-92D3-8DE1BA867417}']
-    function PIdentifierName: String;
-    function IdentifierName: String;
-    function IdentifierValue: String;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); // IOPPGuideAPIContext
   end;
 
 implementation
 
 { TOPPGuideAPIContextStepResult }
 
-constructor TOPPGuideAPIContextStepResult.Create(ARecord: ROPPGuideAPIContextStepResult);
+constructor TOPPGuideAPIContextStepResult.Create(ARecord: TOPPGuideExecutorRunState);
 begin
   fRecord := ARecord;
 end;
 
 constructor TOPPGuideAPIContextStepResult.Create;
 begin
-//
+  //
 end;
 
 function TOPPGuideAPIContextStepResult.GetDescription: String;
 begin
-  result := fRecord.fDescription;
+  result := fRecord.shortDescription;
 end;
 
-function TOPPGuideAPIContextStepResult.GetState: TOPPGuideAPIContextStepState;
+function TOPPGuideAPIContextStepResult.GetState: TOPPGuideExecutorRunState;
 begin
-  result := fRecord.fState;
+  result := fRecord;
 end;
 
 function TOPPGuideAPIContextStepResult.GetValue_str: String;
 begin
-  result := fRecord.fValue_str;
+  result := fRecord.executionResult;
 end;
 
-procedure TOPPGuideAPIContextStepResult.SetDescription(const Value: String);
+procedure TOPPGuideAPIContextStepResult.SetDescription(const value: String);
 begin
-  fRecord.fDescription := Value;
+  fRecord.shortDescription := value;
 end;
 
-procedure TOPPGuideAPIContextStepResult.SetState(const Value: TOPPGuideAPIContextStepState);
+procedure TOPPGuideAPIContextStepResult.SetState(const value: TOPPGuideExecutorRunState);
 begin
-  fRecord.fState := Value;
+  fRecord := value;
 end;
 
-procedure TOPPGuideAPIContextStepResult.SetValue_str(const Value: String);
+procedure TOPPGuideAPIContextStepResult.SetValue_str(const value: String);
 begin
-  fRecord.fValue_str := Value;
+  fRecord.executionResult := value;
 end;
 
 end.

@@ -12,7 +12,6 @@ type
   TOPPGuideAPIDataprovider = class(TControl, IOPPGuideAPIDataprovider)
   private
     fClientDataset: TClientDataset;
-    procedure SetDataset(const Value: TClientDataset);
   public
     constructor Create(AOwner: TComponent); override;
     function GetDataset: TClientDataset;
@@ -24,7 +23,7 @@ type
     function ActiveItem: IOPPGuideAPIContextStep;
     function ActiveItemSubscCount: Integer;
 
-    property ClientDataset: TClientDataset read GetDataset write SetDataset;
+    property ClientDataset: TClientDataset read GetDataset write fClientDataset;
   end;
 
 procedure Register;
@@ -36,8 +35,12 @@ uses
   // remove asap
   OPP_Guide_API_Context_Step,
 
+  OPP.Help.Log,
   Variants,
   System.SysUtils;
+
+const
+  kContext: String = 'GuideAPIProvider';
 
 { TOPPGuideAPIDataprovider }
 
@@ -110,7 +113,7 @@ begin
     except
       on E: Exception do
       begin
-        // eventLogger.Error(E, kContext);
+        eventLogger.Error(E, kContext);
       end;
     end;
   finally
@@ -133,7 +136,6 @@ function TOPPGuideAPIDataprovider.GetParentStepByIdentifier(AIdentifier: String)
 var
   fFilter: String;
   cloned: TClientDataset;
-  fResult : TOPPGuideAPIContextStep;
   fPIdentifier: String;
 begin
   result := nil;
@@ -200,11 +202,6 @@ begin
 
 end;
 
-procedure TOPPGuideAPIDataprovider.SetDataset(const Value: TClientDataset);
-begin
-  fClientDataset := Value;
-end;
-
 function TOPPGuideAPIDataprovider.SubsCount(AIdentifier: String): Integer;
 var
   cloned: TClientDataset;
@@ -235,7 +232,6 @@ end;
 
 procedure Register;
 begin
-  RegisterComponents('Ascon OPP', [TOPPGuideAPIDataprovider]);
 end;
 
 end.

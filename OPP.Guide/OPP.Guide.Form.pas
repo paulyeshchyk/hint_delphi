@@ -12,6 +12,9 @@ uses
 
   OPP_Guide_API,
   OPP_Guide_API_Dataprovider,
+  OPP.Guide.executor,
+  OPP_Guide_Executor,
+  OPP_Guide_Executor_State,
 
   OPP.Help.Vcl.PanelTrigger,
   OPP.Guide.Settings,
@@ -50,7 +53,6 @@ type
     actionRemoveRecord2: TMenuItem;
     actionRunAll1: TMenuItem;
     actionRunScript1: TMenuItem;
-    actionRunScript2: TMenuItem;
     actionRunSelected1: TMenuItem;
     actionSave1: TMenuItem;
     actionScriptCompile: TAction;
@@ -123,7 +125,6 @@ type
     N13: TMenuItem;
     N14: TMenuItem;
     N15: TMenuItem;
-    N16: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
     N4: TMenuItem;
@@ -137,6 +138,9 @@ type
     ScrMemo1: TScrMemo;
     ScrMemoSource1: TScrMemoSource;
     ScrPascalMemoStyler1: TScrPascalMemoStyler;
+    N17: TMenuItem;
+    N18: TMenuItem;
+    N19: TMenuItem;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure actionClearRecentListExecute(Sender: TObject);
@@ -182,7 +186,7 @@ type
     procedure BuildPanelTriggers(AMenuItem: TMenuItem);
     procedure DoUpdateStatusBarWidths;
     function fIdentifiableClone(ADataset: TClientDataSet): IOPPGuideAPIIdentifiable;
-    procedure fScriptRunCompletion(AText: String);
+    procedure fScriptRunCompletion(AState: TOPPGuideExecutorRunState);
     class function GetApplicationTitle: String; static;
     procedure LoadDatasetContent(AFilename: String);
     procedure ReadDefaults;
@@ -218,7 +222,7 @@ uses
   OPP_Guide_API_Context_Step,
   OPP_Guide_API_Context,
 
-  midaslib, OPP.Guide.executor;
+  midaslib;
 
 type
   TOPPTreeDatasetHelpler = class helper for TClientDataSet
@@ -355,11 +359,7 @@ begin
       fObject := fIdentifiableClone(cloned);
 
       try
-        TOPPGuideExecutor.run(DataSetTreeView, fObject, fIdentifiableClone, true, fScripter,
-          procedure(AText: String)
-          begin
-            cxMemo1.Lines.Add(AText);
-          end);
+        TOPPGuideExecutor.shared.run(DataSetTreeView, fObject, fIdentifiableClone, true, fScripter, fScriptRunCompletion);
       except
         on E: Exception do
         begin
@@ -385,11 +385,7 @@ begin
   fObject := fIdentifiableClone(DataSetTreeView);
   try
     try
-      TOPPGuideExecutor.run(DataSetTreeView, fObject, fIdentifiableClone, true, fScripter,
-        procedure(AText: String)
-        begin
-          cxMemo1.Lines.Add(AText);
-        end);
+      TOPPGuideExecutor.shared.run(DataSetTreeView, fObject, fIdentifiableClone, true, fScripter, fScriptRunCompletion);
     except
       on E: Exception do
       begin
@@ -418,14 +414,10 @@ procedure TOPPGuideForm.actionScriptCompileExecute(Sender: TObject);
 begin
   actionScriptSave.Execute;
 
-  TOPPGuideExecutor.compile(DataSetTreeView,
+  TOPPGuideExecutor.shared.compile(DataSetTreeView,
     function(ADataset: TClientDataSet): IOPPGuideAPIIdentifiable
     begin
-    end, false, fScripter,
-    procedure(AText: String)
-    begin
-      cxMemo1.Lines.Add(AText);
-    end);
+    end, false, fScripter,self.fScriptRunCompletion);
 end;
 
 procedure TOPPGuideForm.actionScriptRunExecute(Sender: TObject);
@@ -437,7 +429,7 @@ begin
   try
     fObject := fIdentifiableClone(DataSetTreeView);
     try
-      TOPPGuideExecutor.run(DataSetTreeView, fObject, fIdentifiableClone, false, fScripter, fScriptRunCompletion);
+      TOPPGuideExecutor.shared.run(DataSetTreeView, fObject, fIdentifiableClone, false, fScripter, fScriptRunCompletion);
     except
       on E: Exception do
       begin
@@ -457,7 +449,7 @@ begin
     if DataSourceTreeView.DataSet.State in [dsEdit, dsInsert, dsNewValue] then
       DataSourceTreeView.DataSet.Post;
     ScrMemoSource1.Modified := false;
-    dxStatusBar1.Panels[2].Text := 'Insert';
+    dxStatusBar1.Panels[2].text := 'Insert';
     DoUpdateStatusBarWidths;
     DataSourceTreeView.DataSet.EnableControls;
   finally
@@ -629,7 +621,7 @@ begin
   if not ScrMemoSource1.Modified then
     exit;
 
-  dxStatusBar1.Panels[2].Text := 'Modified';
+  dxStatusBar1.Panels[2].text := 'Modified';
   DoUpdateStatusBarWidths;
 
   if not DataSetTreeView.Modified then
@@ -645,7 +637,7 @@ end;
 
 procedure TOPPGuideForm.ScrMemo1CursorChange(Sender: TObject);
 begin
-  dxStatusBar2.Panels[0].Text := Format('%4.d:%d', [ScrMemo1.CurY + 1, ScrMemo1.CurX + 1]);
+  dxStatusBar2.Panels[0].text := Format('%4.d:%d', [ScrMemo1.CurY + 1, ScrMemo1.CurX + 1]);
 end;
 
 procedure TOPPGuideForm.BuildPanelTriggers(AMenuItem: TMenuItem);
@@ -663,8 +655,8 @@ procedure TOPPGuideForm.DoUpdateStatusBarWidths;
 var
   l1, l2: Integer;
 begin
-  l1 := 40 + dxStatusBar1.Canvas.TextWidth(dxStatusBar1.Panels[0].Text);
-  l2 := 40 + dxStatusBar1.Canvas.TextWidth(dxStatusBar1.Panels[2].Text);
+  l1 := 40 + dxStatusBar1.Canvas.TextWidth(dxStatusBar1.Panels[0].text);
+  l2 := 40 + dxStatusBar1.Canvas.TextWidth(dxStatusBar1.Panels[2].text);
   dxStatusBar1.Panels[0].Width := l1;
   dxStatusBar1.Panels[1].Width := dxStatusBar1.Width - l1 - l2;
   dxStatusBar1.Panels[2].Width := l2;
@@ -680,9 +672,10 @@ begin
   result := TOPPGuideAPIContextStep.WrapFromDataset1(ADataset);
 end;
 
-procedure TOPPGuideForm.fScriptRunCompletion(AText: String);
+procedure TOPPGuideForm.fScriptRunCompletion(AState: TOPPGuideExecutorRunState);
 begin
-  cxMemo1.Lines.Add(AText);
+  cxMemo1.Lines.Add(AState.shortDescription);
+  eventLogger.Flow(AState.shortDescription, 'GuideAPI');
 end;
 
 class function TOPPGuideForm.GetApplicationTitle: String;
@@ -788,15 +781,15 @@ begin
   actionGuideExport.Enabled := false;
   if length(self.Filename) = 0 then
   begin
-    dxStatusBar1.Panels[0].Text := 'New document';
+    dxStatusBar1.Panels[0].text := 'New document';
   end else begin
 
     actionGuideExport.Enabled := FileExists(self.Filename);
     if FileExists(self.Filename) then
     begin
-      dxStatusBar1.Panels[0].Text := Format('Loaded file: %s', [self.Filename]);
+      dxStatusBar1.Panels[0].text := Format('Loaded file: %s', [self.Filename]);
     end else begin
-      dxStatusBar1.Panels[0].Text := 'Empty';
+      dxStatusBar1.Panels[0].text := 'Empty';
     end;
   end;
 
