@@ -25,9 +25,12 @@ package OPP.Guide.API;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
+  vcl,
+  rtl,
   OPPHelp;
 
 contains

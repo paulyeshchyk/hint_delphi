@@ -2,26 +2,21 @@ object OPPGuideForm: TOPPGuideForm
   Left = 0
   Top = 0
   Caption = 'OPPGuideForm'
-  ClientHeight = 1041
-  ClientWidth = 1417
+  ClientHeight = 881
+  ClientWidth = 1243
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Segoe UI'
-  Font.Style = []
+  ParentFont = True
   Menu = MainMenu1
-  OldCreateOrder = True
   WindowState = wsMaximized
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 192
-  TextHeight = 13
+  PixelsPerInch = 168
+  TextHeight = 32
   object dxDockSite1: TdxDockSite
     Left = 0
     Top = 3
-    Width = 1417
-    Height = 1017
+    Width = 1243
+    Height = 856
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -29,28 +24,31 @@ object OPPGuideForm: TOPPGuideForm
     ManagerFont = False
     ParentFont = True
     Align = alClient
+    ExplicitTop = 4
+    ExplicitHeight = 855
     DockingType = 5
-    OriginalWidth = 1417
-    OriginalHeight = 1017
+    OriginalWidth = 1243
+    OriginalHeight = 856
     object dxLayoutDockSite2: TdxLayoutDockSite
       Left = 0
       Top = 0
-      Width = 1417
-      Height = 521
+      Width = 1243
+      Height = 422
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
       ManagerFont = False
       ParentFont = True
+      ExplicitHeight = 421
       DockingType = 0
-      OriginalWidth = 600
-      OriginalHeight = 400
+      OriginalWidth = 525
+      OriginalHeight = 350
       object dxLayoutDockSite3: TdxLayoutDockSite
-        Left = 642
+        Left = 564
         Top = 0
-        Width = 775
-        Height = 521
+        Width = 679
+        Height = 422
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -58,28 +56,29 @@ object OPPGuideForm: TOPPGuideForm
         ManagerFont = False
         ParentFont = True
         DockingType = 0
-        OriginalWidth = 600
-        OriginalHeight = 400
+        OriginalWidth = 525
+        OriginalHeight = 350
         object dxLayoutDockSite1: TdxLayoutDockSite
           Left = 0
           Top = 0
-          Width = 133
-          Height = 521
+          Width = 118
+          Height = 422
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
           ManagerFont = False
           ParentFont = True
+          ExplicitHeight = 421
           DockingType = 0
-          OriginalWidth = 600
-          OriginalHeight = 400
+          OriginalWidth = 525
+          OriginalHeight = 350
         end
         object dxVertContainerDockSite2: TdxVertContainerDockSite
-          Left = 133
+          Left = 118
           Top = 0
-          Width = 642
-          Height = 521
+          Width = 561
+          Height = 422
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
@@ -90,56 +89,65 @@ object OPPGuideForm: TOPPGuideForm
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
+          ExplicitHeight = 421
           DockingType = 3
-          OriginalWidth = 642
-          OriginalHeight = 280
+          OriginalWidth = 561
+          OriginalHeight = 245
           object dxDockPanel5: TdxDockPanel
             Left = 0
             Top = 0
-            Width = 642
-            Height = 261
+            Width = 561
+            Height = 211
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -20
+            Font.Name = 'Segoe UI'
+            Font.Style = []
             ManagerFont = False
-            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel5'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
             DockingType = 2
-            OriginalWidth = 642
-            OriginalHeight = 280
+            OriginalWidth = 561
+            OriginalHeight = 245
           end
           object dxDockPanel6: TdxDockPanel
             Left = 0
-            Top = 261
-            Width = 642
-            Height = 260
+            Top = 211
+            Width = 561
+            Height = 211
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -20
+            Font.Name = 'Segoe UI'
+            Font.Style = []
             ManagerFont = False
-            ParentFont = True
             AllowFloating = True
             AutoHide = False
             Caption = 'dxDockPanel6'
             CustomCaptionButtons.Buttons = <>
             TabsProperties.CustomButtons.Buttons = <>
             DockingType = 2
-            OriginalWidth = 642
-            OriginalHeight = 280
+            OriginalWidth = 561
+            OriginalHeight = 245
           end
         end
       end
       object dxVertContainerDockSite1: TdxVertContainerDockSite
         Left = 0
         Top = 0
-        Width = 642
-        Height = 521
+        Width = 564
+        Height = 422
         Margins.Left = 6
         Margins.Top = 6
         Margins.Right = 6
@@ -151,34 +159,38 @@ object OPPGuideForm: TOPPGuideForm
         AutoHide = False
         CustomCaptionButtons.Buttons = <>
         DockingType = 1
-        OriginalWidth = 642
-        OriginalHeight = 280
+        OriginalWidth = 564
+        OriginalHeight = 245
         object dxDockPanelTreeView: TdxDockPanel
           Left = 0
           Top = 0
-          Width = 642
-          Height = 174
+          Width = 564
+          Height = 141
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
           Color = clBtnFace
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -20
+          Font.Name = 'Segoe UI'
+          Font.Style = []
           ManagerColor = False
           ManagerFont = False
-          ParentFont = True
           AllowFloating = True
           AutoHide = False
           Caption = 'Hierarchy'
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
           DockingType = 2
-          OriginalWidth = 642
-          OriginalHeight = 280
+          OriginalWidth = 564
+          OriginalHeight = 245
           object cxDBTreeList1: TcxDBTreeList
             Left = 0
             Top = 0
-            Width = 638
-            Height = 150
+            Width = 560
+            Height = 103
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -187,38 +199,47 @@ object OPPGuideForm: TOPPGuideForm
             Align = alClient
             Bands = <
               item
-                MinWidth = 40
+                MinWidth = 35
               end>
             DataController.DataSource = DataSourceTreeView
             DataController.ImageIndexField = 'NodeType'
             DataController.ParentField = 'PIdentifier'
             DataController.KeyField = 'Identifier'
             DragMode = dmAutomatic
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -20
+            Font.Name = 'Segoe UI'
+            Font.Style = []
             Images = ImageList1
             LookAndFeel.Kind = lfFlat
             LookAndFeel.SkinName = ''
             Navigator.Buttons.CustomButtons = <>
             OptionsBehavior.ImmediateEditor = False
+            OptionsBehavior.CopyCaptionsToClipboard = False
             OptionsSelection.InvertSelect = False
-            OptionsView.FixedSeparatorWidth = 4
+            OptionsView.FixedSeparatorWidth = 6
             OptionsView.Headers = False
-            OptionsView.IndicatorWidth = 16
-            OptionsView.NavigatorOffset = 100
+            OptionsView.IndicatorWidth = 14
+            OptionsView.NavigatorOffset = 90
+            ParentFont = False
             PopupMenu = PopupMenu1
-            Preview.LeftIndent = 10
-            Preview.RightIndent = 10
+            Preview.LeftIndent = 11
+            Preview.RightIndent = 11
             RootValue = -1
+            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
             OnDragDrop = cxDBTreeList1DragDrop
             OnDragOver = cxDBTreeList1DragOver
-            OnFocusedNodeChanged = cxDBTreeList1FocusedNodeChanged
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
+            ExplicitWidth = 559
+            ExplicitHeight = 102
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
-              MinWidth = 40
+              MinWidth = 35
               Options.Sorting = False
-              Width = 590
+              Width = 517
               Position.ColIndex = 0
               Position.RowIndex = 0
               Position.BandIndex = 0
@@ -228,8 +249,8 @@ object OPPGuideForm: TOPPGuideForm
             object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
               Visible = False
               DataBinding.FieldName = 'Order'
-              MinWidth = 40
-              Width = 200
+              MinWidth = 35
+              Width = 175
               Position.ColIndex = 1
               Position.RowIndex = 0
               Position.BandIndex = 0
@@ -242,37 +263,50 @@ object OPPGuideForm: TOPPGuideForm
         end
         object dxDockPanelScript: TdxDockPanel
           Left = 0
-          Top = 174
-          Width = 642
-          Height = 174
+          Top = 141
+          Width = 564
+          Height = 141
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -20
+          Font.Name = 'Segoe UI'
+          Font.Style = []
           ManagerFont = False
-          ParentFont = True
           AllowFloating = True
           AutoHide = False
           Caption = 'Script'
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
           DockingType = 2
-          OriginalWidth = 642
-          OriginalHeight = 280
+          OriginalWidth = 564
+          OriginalHeight = 245
           object dxBarDockControl2: TdxBarDockControl
             Left = 0
             Top = 0
-            Width = 638
+            Width = 560
             Height = 28
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Align = dalTop
             BarManager = dxBarManager1
+            ExplicitWidth = 559
           end
           object ScrMemo1: TScrMemo
             Left = 0
             Top = 28
-            Width = 638
-            Height = 102
+            Width = 560
+            Height = 51
             Cursor = crIBeam
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             ActiveLineSettings.ShowActiveLine = False
             ActiveLineSettings.ShowActiveLineIndicator = True
             Align = alClient
@@ -281,7 +315,7 @@ object OPPGuideForm: TOPPGuideForm
             AutoCompletion.AutoWidth = False
             AutoCompletion.Font.Charset = DEFAULT_CHARSET
             AutoCompletion.Font.Color = clWindowText
-            AutoCompletion.Font.Height = -11
+            AutoCompletion.Font.Height = -21
             AutoCompletion.Font.Name = 'Tahoma'
             AutoCompletion.Font.Style = []
             AutoCompletion.StartToken = '(.'
@@ -290,6 +324,7 @@ object OPPGuideForm: TOPPGuideForm
             BlockBrackets = True
             BlockColor = clWhite
             BlockLineColor = clTeal
+            BkColor = clWindow
             BookmarkGlyph.Data = {
               36050000424D3605000000000000360400002800000010000000100000000100
               0800000000000001000000000000000000000001000000000000000000000000
@@ -333,7 +368,6 @@ object OPPGuideForm: TOPPGuideForm
               BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFB7BFBFB7B72525FDFDFD25BFBFBFBF
               BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFBFBFBFBFB725FDFDFDFD2525252525
               25252525252525FDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFD}
-            BorderColor = 15000546
             BorderStyle = bsSingle
             ClipboardFormats = [cfText]
             CodeFolding.Enabled = False
@@ -343,16 +377,17 @@ object OPPGuideForm: TOPPGuideForm
             EnhancedHomeKey = False
             Gutter.Font.Charset = DEFAULT_CHARSET
             Gutter.Font.Color = clWindowText
-            Gutter.Font.Height = -13
+            Gutter.Font.Height = -19
             Gutter.Font.Name = 'Courier New'
             Gutter.Font.Style = []
-            Gutter.BorderColor = 15000546
-            Gutter.GutterColor = 16250613
-            Gutter.GutterColorTo = 16250613
+            Gutter.GutterWidth = 41
+            Gutter.GutterMargin = 41
+            Gutter.GutterColorTo = clBtnFace
+            Gutter.LineNumberTextColor = clWindowText
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'COURIER NEW'
+            Font.Height = -19
+            Font.Name = 'Courier New'
             Font.Style = []
             HiddenCaret = False
             Lines.Strings = (
@@ -370,8 +405,8 @@ object OPPGuideForm: TOPPGuideForm
             PrintOptions.PrintLineNumbers = False
             RightMarginColor = 14869218
             ScrollHint = False
-            SelColor = clWhite
-            SelBkColor = clNavy
+            SelColor = clHighlightText
+            SelBkColor = clHighlight
             ShowRightMargin = True
             SmartTabs = False
             SyntaxStyles = ScrPascalMemoStyler1
@@ -396,66 +431,83 @@ object OPPGuideForm: TOPPGuideForm
             WordWrap = wwNone
             OnCursorChange = ScrMemo1CursorChange
             OnChange = ScrMemo1Change
+            ExplicitTop = 33
+            ExplicitWidth = 559
+            ExplicitHeight = 46
           end
           object dxStatusBar2: TdxStatusBar
             Left = 0
-            Top = 130
-            Width = 638
-            Height = 20
+            Top = 79
+            Width = 560
+            Height = 24
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Panels = <
               item
                 PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
-                Width = 70
+                Width = 61
               end
               item
                 PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
               end>
             Font.Charset = RUSSIAN_CHARSET
             Font.Color = clWindowText
-            Font.Height = -13
+            Font.Height = -20
             Font.Name = 'Courier'
             Font.Style = []
+            ExplicitWidth = 559
           end
         end
         object dxDockPanelProperties: TdxDockPanel
           Left = 0
-          Top = 348
-          Width = 642
-          Height = 173
+          Top = 282
+          Width = 564
+          Height = 140
           Margins.Left = 6
           Margins.Top = 6
           Margins.Right = 6
           Margins.Bottom = 6
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -20
+          Font.Name = 'Segoe UI'
+          Font.Style = []
           ManagerFont = False
-          ParentFont = True
           AllowFloating = True
           AutoHide = False
           Caption = 'Properties'
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
           DockingType = 2
-          OriginalWidth = 642
-          OriginalHeight = 280
+          OriginalWidth = 564
+          OriginalHeight = 245
           object cxDBVerticalGrid1: TcxDBVerticalGrid
             Left = 0
             Top = 0
-            Width = 638
-            Height = 149
+            Width = 560
+            Height = 102
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
             Margins.Bottom = 6
             BorderStyle = cxcbsNone
             Align = alClient
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -20
+            Font.Name = 'Segoe UI'
+            Font.Style = []
             LookAndFeel.Kind = lfFlat
             LookAndFeel.NativeStyle = False
             LookAndFeel.SkinName = ''
             OptionsView.ScrollBars = ssVertical
-            OptionsView.RowHeaderMinWidth = 48
-            OptionsView.RowHeaderWidth = 150
-            OptionsView.ValueWidth = 200
-            OptionsView.ValueMinWidth = 80
-            OptionsView.NavigatorOffset = 100
+            OptionsView.RowHeaderMinWidth = 42
+            OptionsView.RowHeaderWidth = 132
+            OptionsView.ValueWidth = 175
+            OptionsView.ValueMinWidth = 70
+            OptionsView.NavigatorOffset = 90
             OptionsBehavior.GoToNextCellOnEnter = True
             OptionsBehavior.ImmediateEditor = False
             OptionsBehavior.FocusCellOnCycle = True
@@ -466,8 +518,12 @@ object OPPGuideForm: TOPPGuideForm
             OptionsData.Inserting = False
             Navigator.Buttons.CustomButtons = <>
             Navigator.InfoPanel.Visible = True
+            ParentFont = False
+            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
             DataController.DataSource = DataSourceTreeView
+            ExplicitWidth = 559
+            ExplicitHeight = 95
             Version = 1
             object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
               Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -511,23 +567,28 @@ object OPPGuideForm: TOPPGuideForm
     end
     object dxDockPanelOutputLog: TdxDockPanel
       Left = 0
-      Top = 521
-      Width = 1417
-      Height = 496
+      Top = 422
+      Width = 1243
+      Height = 434
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Segoe UI'
+      Font.Style = []
       ManagerFont = False
-      ParentFont = True
       AllowFloating = True
       AutoHide = False
       Caption = 'Log'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
+      ExplicitTop = 421
       DockingType = 4
-      OriginalWidth = 370
-      OriginalHeight = 496
+      OriginalWidth = 326
+      OriginalHeight = 434
       object cxMemo1: TcxMemo
         Left = 0
         Top = 0
@@ -548,16 +609,17 @@ object OPPGuideForm: TOPPGuideForm
         StyleHot.LookAndFeel.Kind = lfFlat
         StyleHot.LookAndFeel.SkinName = ''
         TabOrder = 0
-        Height = 472
-        Width = 1413
+        ExplicitWidth = 1238
+        Height = 396
+        Width = 1239
       end
     end
   end
   object dxStatusBar1: TdxStatusBar
     Left = 0
-    Top = 1020
-    Width = 1417
-    Height = 21
+    Top = 859
+    Width = 1243
+    Height = 22
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -565,7 +627,7 @@ object OPPGuideForm: TOPPGuideForm
     Panels = <
       item
         PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
-        Width = 200
+        Width = 175
       end
       item
         PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
@@ -573,18 +635,33 @@ object OPPGuideForm: TOPPGuideForm
       item
         PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
       end>
-    ParentFont = True
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     OnResize = dxStatusBar1Resize
   end
   object dxBarDockControl3: TdxBarDockControl
     Left = 0
     Top = 0
-    Width = 1417
+    Width = 1243
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     Align = dalTop
     BarManager = dxBarManager1
   end
   object dxDockingManager1: TdxDockingManager
+    AutoHideMovingSize = 40
     Color = clBtnFace
+    DefaultFloatSiteProperties.Font.Charset = DEFAULT_CHARSET
+    DefaultFloatSiteProperties.Font.Color = clWindowText
+    DefaultFloatSiteProperties.Font.Height = -21
+    DefaultFloatSiteProperties.Font.Name = 'Segoe UI'
+    DefaultFloatSiteProperties.Font.Style = []
+    DefaultFloatSiteProperties.ManagerFont = False
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
     DefaultHorizContainerSiteProperties.ImageIndex = -1
@@ -595,22 +672,27 @@ object OPPGuideForm: TOPPGuideForm
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
+    DockZonesWidth = 40
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -21
     Font.Name = 'Segoe UI'
     Font.Style = []
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    Left = 736
-    Top = 304
-    PixelsPerInch = 96
+    ResizeZonesWidth = 6
+    SelectionFrameWidth = 8
+    Left = 1056
+    Top = 80
+    PixelsPerInch = 192
   end
   object DataSourceTreeView: TDataSource
     DataSet = DataSetTreeView
-    Left = 829
-    Top = 352
+    OnStateChange = DataSourceTreeViewStateChange
+    OnDataChange = DataSourceTreeViewDataChange
+    Left = 733
+    Top = 240
   end
   object DataSetTreeView: TClientDataSet
     PersistDataPacket.Data = {
@@ -625,13 +707,8 @@ object OPPGuideForm: TOPPGuideForm
     Active = True
     Aggregates = <>
     Params = <>
-    AfterOpen = DataSetTreeViewAfterOpen
-    BeforeEdit = DataSetTreeViewBeforeEdit
-    AfterPost = DataSetTreeViewAfterPost
-    AfterScroll = DataSetTreeViewAfterScroll
-    AfterApplyUpdates = DataSetTreeViewAfterApplyUpdates
-    Left = 824
-    Top = 416
+    Left = 728
+    Top = 384
     object DataSetTreeViewIdentifier: TStringField
       DisplayWidth = 40
       FieldName = 'Identifier'
@@ -661,9 +738,10 @@ object OPPGuideForm: TOPPGuideForm
     end
   end
   object dxBarManager1: TdxBarManager
+    Scaled = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -21
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -676,9 +754,9 @@ object OPPGuideForm: TOPPGuideForm
     LookAndFeel.SkinName = ''
     PopupMenuLinks = <>
     UseSystemFont = False
-    Left = 728
-    Top = 192
-    PixelsPerInch = 96
+    Left = 840
+    Top = 80
+    PixelsPerInch = 192
     object dxBarManager1Bar2: TdxBar
       Caption = 'script'
       CaptionButtons = <>
@@ -692,7 +770,7 @@ object OPPGuideForm: TOPPGuideForm
       FloatClientHeight = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -3
+      Font.Height = -6
       Font.Name = 'Segoe UI'
       Font.Style = []
       ItemLinks = <
@@ -1037,6 +1115,7 @@ object OPPGuideForm: TOPPGuideForm
     object actionGuideExport: TAction
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Enabled = False
+      ShortCut = 16467
       OnExecute = actionGuideExportExecute
     end
     object actionGuideExportAs: TAction
@@ -1096,14 +1175,14 @@ object OPPGuideForm: TOPPGuideForm
   object SaveDialog1: TSaveDialog
     DefaultExt = '*.xml'
     Filter = 'XML|*.xml'
-    Left = 728
-    Top = 416
+    Left = 88
+    Top = 624
   end
   object ImageList1: TImageList
-    Left = 272
-    Top = 168
+    Left = 32
+    Top = 216
     Bitmap = {
-      494C010103000800800010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1243,9 +1322,9 @@ object OPPGuideForm: TOPPGuideForm
       000000000000}
   end
   object cxStyleRepository1: TcxStyleRepository
-    Left = 728
+    Left = 616
     Top = 80
-    PixelsPerInch = 96
+    PixelsPerInch = 192
     object cxStyle1: TcxStyle
       AssignedValues = [svTextColor]
       TextColor = clMenuHighlight
@@ -1259,13 +1338,13 @@ object OPPGuideForm: TOPPGuideForm
     FavoriteLinks = <>
     FileTypes = <>
     Options = []
-    Left = 733
-    Top = 543
+    Left = 333
+    Top = 639
   end
   object DataSourceNodeType: TDataSource
     DataSet = DataSetNodeType
-    Left = 960
-    Top = 360
+    Left = 1056
+    Top = 248
   end
   object DataSetNodeType: TClientDataSet
     PersistDataPacket.Data = {
@@ -1277,8 +1356,8 @@ object OPPGuideForm: TOPPGuideForm
     Active = True
     Aggregates = <>
     Params = <>
-    Left = 968
-    Top = 416
+    Left = 1064
+    Top = 384
     object DataSetNodeTypeid: TIntegerField
       FieldName = 'id'
     end
@@ -1402,7 +1481,7 @@ object OPPGuideForm: TOPPGuideForm
           'DEPRECATED')
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clGreen
-        Font.Height = -11
+        Font.Height = -21
         Font.Name = 'Courier New'
         Font.Style = [fsBold]
         BGColor = clNone
@@ -1414,7 +1493,7 @@ object OPPGuideForm: TOPPGuideForm
       item
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlue
-        Font.Height = -11
+        Font.Height = -21
         Font.Name = 'Courier New'
         Font.Style = []
         BGColor = clNone
@@ -1426,7 +1505,7 @@ object OPPGuideForm: TOPPGuideForm
       item
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlue
-        Font.Height = -11
+        Font.Height = -21
         Font.Name = 'Courier New'
         Font.Style = []
         BGColor = clNone
@@ -1438,7 +1517,7 @@ object OPPGuideForm: TOPPGuideForm
       item
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clRed
-        Font.Height = -11
+        Font.Height = -21
         Font.Name = 'Courier New'
         Font.Style = []
         BGColor = clNone
@@ -1453,7 +1532,7 @@ object OPPGuideForm: TOPPGuideForm
         CommentRight = '*)'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clGray
-        Font.Height = -11
+        Font.Height = -21
         Font.Name = 'Courier New'
         Font.Style = [fsItalic]
         BGColor = clNone
@@ -1557,18 +1636,18 @@ object OPPGuideForm: TOPPGuideForm
         RegionType = rtClosed
         ShowComments = False
       end>
-    Left = 656
-    Top = 276
+    Left = 496
+    Top = 244
   end
   object ScrMemoSource1: TScrMemoSource
     Lines.Strings = (
       '')
     ReadOnly = False
-    Left = 656
+    Left = 240
     Top = 220
   end
   object MainMenu1: TMainMenu
-    Left = 176
+    Left = 240
     Top = 67
     object N3: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1086#1088' '#1089#1094#1077#1085#1072#1088#1080#1077#1074
@@ -1650,8 +1729,8 @@ object OPPGuideForm: TOPPGuideForm
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 304
-    Top = 51
+    Left = 416
+    Top = 67
     object actionAddRecord2: TMenuItem
       Action = actionAddRecord
     end
@@ -1672,13 +1751,16 @@ object OPPGuideForm: TOPPGuideForm
     end
     object N17: TMenuItem
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+      object N19: TMenuItem
+        Action = actionScriptRun
+        Caption = #1058#1086#1083#1100#1082#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1081
+      end
+      object N16: TMenuItem
+        Caption = '-'
+      end
       object N18: TMenuItem
         Action = actionGuideRunSelected
         Caption = #1053#1072#1095#1072#1074' '#1086#1090' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1074#1085#1080#1079
-      end
-      object N19: TMenuItem
-        Action = actionScriptRun
-        Caption = #1042#1099#1073#1088#1072#1085#1085#1099#1081
       end
     end
   end

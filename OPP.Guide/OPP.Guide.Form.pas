@@ -19,7 +19,7 @@ uses
   OPP.Help.Vcl.PanelTrigger,
   OPP.Guide.Settings,
   OPP.Help.System.Codable.FormSizeSettings,
-  OPP.Guide.Scripter, ScrMemo, ScrMps, Vcl.Menus;
+  OPP.Guide.Scripter, ScrMemo, ScrMps, Vcl.Menus, dxScrollbarAnnotations;
 
 type
   TOPPGuideForm = class(TForm)
@@ -141,6 +141,7 @@ type
     N17: TMenuItem;
     N18: TMenuItem;
     N19: TMenuItem;
+    N16: TMenuItem;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure actionClearRecentListExecute(Sender: TObject);
@@ -160,15 +161,11 @@ type
     procedure actionScriptSaveExecute(Sender: TObject);
     procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-    procedure cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cxDBVerticalGrid1DBEditorRow6EditPropertiesEditValueChanged(Sender: TObject);
-    procedure DataSetTreeViewAfterApplyUpdates(Sender: TObject; var OwnerData: OLEVariant);
-    procedure DataSetTreeViewAfterOpen(DataSet: TDataSet);
-    procedure DataSetTreeViewAfterPost(DataSet: TDataSet);
-    procedure DataSetTreeViewAfterScroll(DataSet: TDataSet);
-    procedure DataSetTreeViewBeforeEdit(DataSet: TDataSet);
+    procedure DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
+    procedure DataSourceTreeViewStateChange(Sender: TObject);
     procedure dxStatusBar1Resize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -191,6 +188,10 @@ type
     procedure LoadDatasetContent(AFilename: String);
     procedure ReadDefaults;
     procedure SetFilename(const Value: String);
+
+    procedure AfterScrollLoadScript;
+    procedure AfterScrollEnableScriptPanel;
+
     property Filename: String read fFilename write SetFilename;
   public
     class property ApplicationTitle: String read GetApplicationTitle;
@@ -300,25 +301,20 @@ procedure TOPPGuideForm.actionGuideExportAsExecute(Sender: TObject);
 begin
   if SaveDialog1.Execute(self.handle) then
   begin
-    DataSetTreeView.SaveToFile(SaveDialog1.Filename, dfXMLUTF8);
+    fDataprovider.SaveToFile(SaveDialog1.Filename);
     self.Filename := SaveDialog1.Filename;
   end;
 end;
 
 procedure TOPPGuideForm.actionGuideExportExecute(Sender: TObject);
 begin
-  DataSetTreeView.SaveToFile(self.Filename, dfXMLUTF8);
+  fDataprovider.SaveToFile(self.Filename);
 end;
 
 procedure TOPPGuideForm.actionGuideNewExecute(Sender: TObject);
 begin
-  DataSetTreeView.DisableControls;
-  try
-    DataSetTreeView.EmptyDataSet;
-    self.Filename := '';
-  finally
-    DataSetTreeView.EnableControls;
-  end;
+  fDataprovider.EmptyDataset;
+  self.Filename := '';
 end;
 
 procedure TOPPGuideForm.actionGuideOpenExecute(Sender: TObject);
@@ -417,7 +413,7 @@ begin
   TOPPGuideExecutor.shared.compile(DataSetTreeView,
     function(ADataset: TClientDataSet): IOPPGuideAPIIdentifiable
     begin
-    end, false, fScripter,self.fScriptRunCompletion);
+    end, false, fScripter, self.fScriptRunCompletion);
 end;
 
 procedure TOPPGuideForm.actionScriptRunExecute(Sender: TObject);
@@ -457,21 +453,14 @@ begin
   end;
 end;
 
-procedure TOPPGuideForm.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
-begin
-  //
-end;
-
-procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-begin
-  OutputDebugString(Format('%d', [Integer(State)]).toWideChar);
-end;
-
-procedure TOPPGuideForm.cxDBTreeList1FocusedNodeChanged(Sender: TcxCustomTreeList; APrevFocusedNode, AFocusedNode: TcxTreeListNode);
+procedure TOPPGuideForm.AfterScrollEnableScriptPanel;
 var
   fActiveItemSubscCount: Integer;
 begin
-  fActiveItemSubscCount := fDataprovider.ActiveItemSubscCount;
+
+  fActiveItemSubscCount := 0;
+  if Assigned(fDataprovider) then
+    fActiveItemSubscCount := fDataprovider.ActiveItemSubscCount;
 
   actionGuideRunAll.Enabled := (fActiveItemSubscCount > 0);
   if assigned(fScriptPanelTrigger) then
@@ -482,6 +471,34 @@ begin
   end else begin
     dxDockPanelScript.Visible := ScriptPanelIsVisible;
   end;
+end;
+
+procedure TOPPGuideForm.AfterScrollLoadScript;
+var
+  fStream: TStream;
+begin
+  actionAddChildRecord.Enabled := (DataSourceTreeView.DataSet.RecordCount <> 0) and (not DataSourceTreeView.DataSet.FieldByName('identifier').IsNull);
+  actionRemoveRecord.Enabled := assigned(cxDBTreeList1.FocusedNode);
+
+  if not self.SaveActionIsInProgress then
+  begin
+    fStream := DataSetTreeView.CreateBlobStream(DataSetTreeView.FieldByName('Script'), bmRead);
+    try
+      ScrMemoSource1.Lines.LoadFromStream(fStream);
+    finally
+      fStream.Free;
+    end;
+  end;
+end;
+
+procedure TOPPGuideForm.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
+begin
+  //
+end;
+
+procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  OutputDebugString(Format('%d', [Integer(State)]).toWideChar);
 end;
 
 procedure TOPPGuideForm.cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
@@ -532,44 +549,6 @@ begin
   dxDockPanelScript.Visible := ScriptPanelIsVisible();
 end;
 
-procedure TOPPGuideForm.DataSetTreeViewAfterApplyUpdates(Sender: TObject; var OwnerData: OLEVariant);
-begin
-  //
-end;
-
-procedure TOPPGuideForm.DataSetTreeViewAfterOpen(DataSet: TDataSet);
-begin
-  cxDBTreeList1cxDBTreeListColumn1.Width := cxDBTreeList1.Width;
-end;
-
-procedure TOPPGuideForm.DataSetTreeViewAfterPost(DataSet: TDataSet);
-begin
-  actionScriptCompile.Enabled := false;
-end;
-
-procedure TOPPGuideForm.DataSetTreeViewAfterScroll(DataSet: TDataSet);
-var
-  fStream: TStream;
-begin
-  actionAddChildRecord.Enabled := (DataSourceTreeView.DataSet.RecordCount <> 0) and (not DataSourceTreeView.DataSet.FieldByName('identifier').IsNull);
-  actionRemoveRecord.Enabled := assigned(cxDBTreeList1.FocusedNode);
-
-  if not self.SaveActionIsInProgress then
-  begin
-    fStream := DataSetTreeView.CreateBlobStream(DataSetTreeView.FieldByName('Script'), bmRead);
-    try
-      ScrMemoSource1.Lines.LoadFromStream(fStream);
-    finally
-      fStream.Free;
-    end;
-  end;
-end;
-
-procedure TOPPGuideForm.DataSetTreeViewBeforeEdit(DataSet: TDataSet);
-begin
-  actionScriptCompile.Enabled := true;
-end;
-
 procedure TOPPGuideForm.dxStatusBar1Resize(Sender: TObject);
 begin
   DoUpdateStatusBarWidths;
@@ -588,6 +567,8 @@ end;
 
 procedure TOPPGuideForm.FormCreate(Sender: TObject);
 begin
+
+  dxDockingManager1.ScaleForPPI(96);
 
   eventLogger.Flow('Form Created', kContext);
 
@@ -651,6 +632,21 @@ begin
   fPanelTriggerContainer.AddTrigger(dxDockPanel6);
 end;
 
+procedure TOPPGuideForm.DataSourceTreeViewDataChange(Sender: TObject; Field:
+    TField);
+begin
+  if DataSourceTreeView.State = dsBrowse then begin
+  cxDBTreeList1cxDBTreeListColumn1.Width := cxDBTreeList1.Width;
+  AfterScrollEnableScriptPanel;
+  AfterScrollLoadScript;
+  end;
+end;
+
+procedure TOPPGuideForm.DataSourceTreeViewStateChange(Sender: TObject);
+begin
+  actionScriptCompile.Enabled := (DataSourceTreeView.State = dsEdit);
+end;
+
 procedure TOPPGuideForm.DoUpdateStatusBarWidths;
 var
   l1, l2: Integer;
@@ -695,7 +691,7 @@ begin
   if FileExists(self.Filename) then
   begin
     cxDBTreeList1.BeginUpdate;
-    DataSetTreeView.LoadFromFile(self.Filename);
+    fDataprovider.LoadFromFile(self.Filename);
     cxDBTreeList1.EndUpdate;
   end else begin
     eventLogger.Error(Format('File not found: %s', [self.Filename]), kContext);
@@ -755,7 +751,7 @@ begin
         fDatasetXMLFile := AFilename
       else
         fDatasetXMLFile := TOPPHelpSystemFilesHelper.GetOPPGuidePath(AFilename);
-      DataSetTreeView.SaveToFile(fDatasetXMLFile, dfXMLUTF8);
+      fDataprovider.SaveToFile(fDatasetXMLFile);
     end);
   fSettings.OnHierarchyFilenameRecentListLoad(
     procedure(AList: TStringlist)

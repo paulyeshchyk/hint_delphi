@@ -22,6 +22,9 @@ type
     function SubsCount(AIdentifier: String): Integer;
     function ActiveItem: IOPPGuideAPIContextStep;
     function ActiveItemSubscCount: Integer;
+    procedure SaveToFile(AFilename: String);
+    procedure LoadFromFile(AFilename: String);
+    procedure EmptyDataset;
 
     property ClientDataset: TClientDataset read GetDataset write fClientDataset;
   end;
@@ -42,7 +45,7 @@ uses
 const
   kContext: String = 'GuideAPIProvider';
 
-{ TOPPGuideAPIDataprovider }
+  { TOPPGuideAPIDataprovider }
 
 function TOPPGuideAPIDataprovider.ActiveItem: IOPPGuideAPIContextStep;
 var
@@ -71,7 +74,9 @@ var
   fIdentifier: String;
 begin
   result := 0;
-  if not ClientDataset.Active then
+  if (not Assigned(ClientDataset)) then
+    exit;
+  if (not ClientDataset.Active) then
     exit;
   fIdentifier := ClientDataset.FieldByName('Identifier').AsString;
   result := SubsCount(fIdentifier);
@@ -124,7 +129,20 @@ end;
 constructor TOPPGuideAPIDataprovider.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  // fClientDataset := TClientDataSet.Create(self);
+  fClientDataset := nil;
+end;
+
+procedure TOPPGuideAPIDataprovider.EmptyDataset;
+begin
+  if not Assigned(self.ClientDataset) then
+    exit;
+  self.ClientDataset.DisableControls;
+  try
+    self.ClientDataset.EmptyDataSet;
+  finally
+    self.ClientDataset.EnableControls;
+  end;
+
 end;
 
 function TOPPGuideAPIDataprovider.GetDataset: TClientDataset;
@@ -200,6 +218,20 @@ begin
     cloned.Free;
   end;
 
+end;
+
+procedure TOPPGuideAPIDataprovider.LoadFromFile(AFilename: String);
+begin
+  if not Assigned(self.ClientDataset) then
+    exit;
+  self.ClientDataset.LoadFromFile(AFilename);
+end;
+
+procedure TOPPGuideAPIDataprovider.SaveToFile(AFilename: String);
+begin
+  if not Assigned(self.ClientDataset) then
+    exit;
+  self.ClientDataset.SaveToFile(AFilename, dfXMLUTF8);
 end;
 
 function TOPPGuideAPIDataprovider.SubsCount(AIdentifier: String): Integer;

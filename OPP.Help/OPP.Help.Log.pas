@@ -218,15 +218,11 @@ initialization
 fInfoLogLock := TCriticalSection.Create;
 
 fConsoleOutput := TOPPConsoleOutput.Create;
-{$IF DEFINED (OPP_LOG_CONSOLE_OUTPUT)}
 fConsoleOutput.setEnabled(true);
-{$ENDIF}
 eventLogger.RegisterObserver(fConsoleOutput);
 
 fFileOutput := TOPPFileOutput.Create;
-{$IF DEFINED (OPP_LOG_FILE_OUTPUT)}
 fFileOutput.setEnabled(true);
-{$ENDIF}
 eventLogger.RegisterObserver(fFileOutput);
 
 finalization

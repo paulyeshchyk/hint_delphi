@@ -8,7 +8,6 @@ uses
   OPP.Guide.Settings in 'OPP.Guide.Settings.pas';
 
 {$R *.res}
-
 begin
   Application.Title := TOPPGuideForm.ApplicationTitle;
   Application.Initialize;
