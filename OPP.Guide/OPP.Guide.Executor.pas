@@ -14,11 +14,11 @@ type
 
   TOPPGuideExecutorRunStateHelper = record helper for TOPPGuideExecutorRunState
   public
-    class function idle: TOPPGuideExecutorRunState; static;
-    class function error(text: String): TOPPGuideExecutorRunState; static;
-    class function started(text: String = ''): TOPPGuideExecutorRunState; static;
-    class function finished(text: String = ''): TOPPGuideExecutorRunState; static;
-    class function progress(text: String = ''): TOPPGuideExecutorRunState; static;
+    class function idle(identifier: String): TOPPGuideExecutorRunState; static;
+    class function error(identifier: String; text: String): TOPPGuideExecutorRunState; static;
+    class function started(identifier: String; text: String = ''): TOPPGuideExecutorRunState; static;
+    class function finished(identifier: String; text: String = ''): TOPPGuideExecutorRunState; static;
+    class function progress(identifier: String; text: String = ''): TOPPGuideExecutorRunState; static;
     function StateName: String;
   end;
 
@@ -38,8 +38,8 @@ type
   end;
 
   TOPPStreamHelper = class helper for TStream
-    function CompileScript(AScripter: IOPPGuideScripter; userInfo: OLEVariant; completion: TOPPExecutorStateCallback): Boolean;
-    function RunScript(AScripter: IOPPGuideScripter; userInfo: IOPPGuideAPIIdentifiable; completion: TOPPExecutorStateCallback): Boolean;
+    function CompileScript(AScripter: IOPPGuideScripter; userInfo: OLEVariant; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;
+    function RunScript(AScripter: IOPPGuideScripter; stepInfo: IOPPGuideAPIIdentifiable; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;
   end;
 
   TOPPClientDataSetHelper = class helper for TDataSet
@@ -83,7 +83,7 @@ begin
     procedure(AStream: TStream; userInfo: IOPPGuideAPIIdentifiable)
     begin
       if Assigned(AStream) then
-        AStream.CompileScript(AScripter, userInfo, completion);
+        AStream.CompileScript(AScripter, userInfo.IdentifierValue, completion);
     end);
 end;
 
@@ -135,7 +135,7 @@ begin
   if not Assigned(dataset) then
   begin
     if Assigned(completion) then
-      completion(TOPPGuideExecutorRunState.error('Dataset is nil'));
+      completion(TOPPGuideExecutorRunState.error('', 'Dataset is nil'));
     exit;
   end;
 
@@ -145,7 +145,7 @@ begin
       if not Assigned(AStream) then
       begin
         if Assigned(completion) then
-          completion(TOPPGuideExecutorRunState.error('Stream is nil'));
+          completion(TOPPGuideExecutorRunState.error('', 'Stream is nil'));
         exit;
       end;
 
@@ -181,7 +181,7 @@ begin
   if not Assigned(dataset) then
   begin
     if Assigned(completion) then
-      completion(TOPPGuideExecutorRunState.error('Dataset is nil'));
+      completion(TOPPGuideExecutorRunState.error('', 'Dataset is nil'));
     exit;
   end;
   cloned := TClientDataset.Create(nil);
@@ -207,8 +207,8 @@ class function TOPPGuideExecutor.shared: TOPPGuideExecutor;
 begin
   if not Assigned(fExecutor) then
     fExecutor := TOPPGuideExecutor.Create();
-  result := fExecutor;
 
+  result := fExecutor;
 end;
 
 { TOPPClientDataSetHelper }
@@ -245,7 +245,7 @@ end;
 
 { TOPPStreamHelper }
 
-function TOPPStreamHelper.CompileScript(AScripter: IOPPGuideScripter; userInfo: OLEVariant; completion: TOPPExecutorStateCallback): Boolean;
+function TOPPStreamHelper.CompileScript(AScripter: IOPPGuideScripter; userInfo: OLEVariant; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;
 var
   ss: TStringStream;
   fScriptSize: Integer;
@@ -259,27 +259,27 @@ begin
     ss.CopyFrom(self, fScriptSize);
     try
 
-      if Assigned(completion) then
-        completion(TOPPGuideExecutorRunState.started(VarToStr(userInfo)));
+      if Assigned(ALogOutputCompletion) then
+        ALogOutputCompletion(TOPPGuideExecutorRunState.started(VarToStr(userInfo)));
 
       { --- }
       try
         fScriptExecutionResult := AScripter.CompileScript(ss);
-        if Assigned(completion) then
-          completion(TOPPGuideExecutorRunState.finished(Format('Finished [%s] with result %s', [VarToStr(userInfo), VarToStr(fScriptExecutionResult)])))
+        if Assigned(ALogOutputCompletion) then
+          ALogOutputCompletion(TOPPGuideExecutorRunState.finished('', Format('Finished [%s] with result %s', [VarToStr(userInfo), VarToStr(fScriptExecutionResult)])))
       except
         on E: Exception do
         begin
-          if Assigned(completion) then
-            completion(TOPPGuideExecutorRunState.error(Format('Finished [%s] with error: %s', [VarToStr(userInfo), E.Message])));
+          if Assigned(ALogOutputCompletion) then
+            ALogOutputCompletion(TOPPGuideExecutorRunState.error('', Format('Finished [%s] with error: %s', [VarToStr(userInfo), E.Message])));
         end;
       end;
       { --- }
 
     except
       on E: Exception do
-        if Assigned(completion) then
-          completion(TOPPGuideExecutorRunState.error(Format('Finished [%s] with error: %s', [VarToStr(userInfo), E.Message])));
+        if Assigned(ALogOutputCompletion) then
+          ALogOutputCompletion(TOPPGuideExecutorRunState.error('', Format('Finished [%s] with error: %s', [VarToStr(userInfo), E.Message])));
     end;
   finally
     ss.Free;
@@ -287,7 +287,7 @@ begin
 
 end;
 
-function TOPPStreamHelper.RunScript(AScripter: IOPPGuideScripter; userInfo: IOPPGuideAPIIdentifiable; completion: TOPPExecutorStateCallback): Boolean;
+function TOPPStreamHelper.RunScript(AScripter: IOPPGuideScripter; stepInfo: IOPPGuideAPIIdentifiable; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;
 var
   ss: TStringStream;
   fScriptSize: Integer;
@@ -301,28 +301,28 @@ begin
     ss.CopyFrom(self, fScriptSize);
     try
 
-      if Assigned(completion) then
-        completion(TOPPGuideExecutorRunState.started(VarToStr(userInfo.IdentifierValue)));
+      if Assigned(ALogOutputCompletion) then
+        ALogOutputCompletion(TOPPGuideExecutorRunState.started(stepInfo.IdentifierValue));
 
       { --- }
       try
-        fScriptExecutionResult := AScripter.RunScript(ss, userInfo);
-        if Assigned(completion) then
-          completion(TOPPGuideExecutorRunState.finished(Format('Finished step [%s] with result %s', [userInfo.IdentifierValue, VarToStr(fScriptExecutionResult)])));
+        fScriptExecutionResult := AScripter.RunScript(ss, stepInfo);
+        if Assigned(ALogOutputCompletion) then
+          ALogOutputCompletion(TOPPGuideExecutorRunState.finished(stepInfo.IdentifierValue, Format('Finished with result %s', [VarToStr(fScriptExecutionResult)])));
 
       except
         on E: Exception do
         begin
-          if Assigned(completion) then
-            completion(TOPPGuideExecutorRunState.error(Format('Finished step [%s] with error: %s', [userInfo.IdentifierValue, E.Message])));
+          if Assigned(ALogOutputCompletion) then
+            ALogOutputCompletion(TOPPGuideExecutorRunState.error(stepInfo.IdentifierValue, Format('Finished with error: %s', [E.Message])));
         end;
       end;
       { --- }
 
     except
       on E: Exception do
-        if Assigned(completion) then
-          completion(TOPPGuideExecutorRunState.error(Format('Finished step [%s] with error: %s', [userInfo.IdentifierValue, E.Message])));
+        if Assigned(ALogOutputCompletion) then
+          ALogOutputCompletion(TOPPGuideExecutorRunState.error(stepInfo.IdentifierValue, Format('Finished with error: %s', [E.Message])));
     end;
   finally
     ss.Free;
@@ -332,34 +332,39 @@ end;
 
 { TOPPGuideExecutorRunStateHelper }
 
-class function TOPPGuideExecutorRunStateHelper.error(text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.error(identifier: String; text: String): TOPPGuideExecutorRunState;
 begin
+  result.stepIdentifier := identifier;
   result.value := rsvError;
-  result.shortDescription := text;
+  result.userInfo := text;
 end;
 
-class function TOPPGuideExecutorRunStateHelper.finished(text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.finished(identifier: String; text: String): TOPPGuideExecutorRunState;
 begin
+  result.stepIdentifier := identifier;
   result.value := rsvFinished;
-  result.shortDescription := '';
+  result.userInfo := '';
 end;
 
-class function TOPPGuideExecutorRunStateHelper.idle: TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.idle(identifier: String): TOPPGuideExecutorRunState;
 begin
+  result.stepIdentifier := identifier;
   result.value := rsvIdle;
-  result.shortDescription := '';
+  result.userInfo := '';
 end;
 
-class function TOPPGuideExecutorRunStateHelper.progress(text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.progress(identifier: String; text: String): TOPPGuideExecutorRunState;
 begin
+  result.stepIdentifier := identifier;
   result.value := rsvProgress;
-  result.shortDescription := text;
+  result.userInfo := text;
 end;
 
-class function TOPPGuideExecutorRunStateHelper.started(text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.started(identifier: String; text: String): TOPPGuideExecutorRunState;
 begin
+  result.stepIdentifier := identifier;
   result.value := rsvStarted;
-  result.shortDescription := text;
+  result.userInfo := text;
 end;
 
 function TOPPGuideExecutorRunStateHelper.StateName: String;

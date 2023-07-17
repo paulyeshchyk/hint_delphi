@@ -300,6 +300,7 @@ uses
   SampleOnly.Help.Meta.Extractor,
   SampleOnly.Help.Shortcut.Setup,
 
+  OPP_Help_API,
   OPP.ContextMenu.Edit,
 
   OPP.Help.Settings.Form,
@@ -1065,7 +1066,7 @@ begin
     exit;
   end;
   AMap^.Predicate.filename := fDefaultSettings.ShortcutFilePath;
-  AMap^.Predicate.keywordType := ktPage;
+  AMap^.Predicate.keywordType := Integer(TOPPKeywordType.ktPage);
   //
 end;
 
@@ -1337,14 +1338,14 @@ begin
   if assigned(fPredicate) then
   begin
     fPredicate.filename := filename.text;
-    fPredicate.keywordType := TOPPKeywordType(keyword.ItemIndex);
+    fPredicate.keywordType := keyword.ItemIndex;
     fPredicate.value := value.text;
     fPredicate.predicates.Clear;
     if Length(detailsvalue.text) <> 0 then
     begin
       fDetailsPredicate := TOPPHelpPredicate.Create;
       fDetailsPredicate.value := detailsvalue.text;
-      fDetailsPredicate.keywordType := TOPPKeywordType(detailskeyword.ItemIndex);
+      fDetailsPredicate.keywordType := detailskeyword.ItemIndex;
       fDetailsPredicate.filename := filename.text;
       fPredicate.predicates.Add(fDetailsPredicate);
     end;

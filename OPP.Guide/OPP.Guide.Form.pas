@@ -19,7 +19,7 @@ uses
   OPP.Help.Vcl.PanelTrigger,
   OPP.Guide.Settings,
   OPP.Help.System.Codable.FormSizeSettings,
-  OPP.Guide.Scripter, ScrMemo, ScrMps, Vcl.Menus, dxScrollbarAnnotations;
+  OPP.Guide.Scripter, ScrMemo, ScrMps, Vcl.Menus;
 
 type
   TOPPGuideForm = class(TForm)
@@ -159,8 +159,8 @@ type
     procedure actionScriptCompileExecute(Sender: TObject);
     procedure actionScriptRunExecute(Sender: TObject);
     procedure actionScriptSaveExecute(Sender: TObject);
-    procedure cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
-    procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+    procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State:
+        TDragState; var Accept: Boolean);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cxDBVerticalGrid1DBEditorRow6EditPropertiesEditValueChanged(Sender: TObject);
@@ -218,6 +218,8 @@ uses
 
   OPP.Guide.Scripter.TMS,
   OPP.Guide.Scripter.DC,
+
+  OPP_Guide_Executor_State_Helper,
 
   OPP_Guide_API_Context_Step_Wrapper,
   OPP_Guide_API_Context_Step,
@@ -410,10 +412,7 @@ procedure TOPPGuideForm.actionScriptCompileExecute(Sender: TObject);
 begin
   actionScriptSave.Execute;
 
-  TOPPGuideExecutor.shared.compile(DataSetTreeView,
-    function(ADataset: TClientDataSet): IOPPGuideAPIIdentifiable
-    begin
-    end, false, fScripter, self.fScriptRunCompletion);
+  TOPPGuideExecutor.shared.compile(DataSetTreeView,fIdentifiableClone, false, fScripter, self.fScriptRunCompletion);
 end;
 
 procedure TOPPGuideForm.actionScriptRunExecute(Sender: TObject);
@@ -489,16 +488,6 @@ begin
       fStream.Free;
     end;
   end;
-end;
-
-procedure TOPPGuideForm.cxDBTreeList1DragDrop(Sender, Source: TObject; X, Y: Integer);
-begin
-  //
-end;
-
-procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-begin
-  OutputDebugString(Format('%d', [Integer(State)]).toWideChar);
 end;
 
 procedure TOPPGuideForm.cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
@@ -632,6 +621,12 @@ begin
   fPanelTriggerContainer.AddTrigger(dxDockPanel6);
 end;
 
+procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y:
+    Integer; State: TDragState; var Accept: Boolean);
+begin
+  Accept := true;
+end;
+
 procedure TOPPGuideForm.DataSourceTreeViewDataChange(Sender: TObject; Field:
     TField);
 begin
@@ -644,7 +639,7 @@ end;
 
 procedure TOPPGuideForm.DataSourceTreeViewStateChange(Sender: TObject);
 begin
-  actionScriptCompile.Enabled := (DataSourceTreeView.State = dsEdit);
+  actionScriptCompile.Enabled := true;//(DataSourceTreeView.State = dsEdit);
 end;
 
 procedure TOPPGuideForm.DoUpdateStatusBarWidths;
@@ -669,9 +664,12 @@ begin
 end;
 
 procedure TOPPGuideForm.fScriptRunCompletion(AState: TOPPGuideExecutorRunState);
+var
+  log: String;
 begin
-  cxMemo1.Lines.Add(AState.shortDescription);
-  eventLogger.Flow(AState.shortDescription, 'GuideAPI');
+  log := AState.Description;
+  cxMemo1.Lines.Add(log);
+  eventLogger.Flow(log, 'GuideAPI');
 end;
 
 class function TOPPGuideForm.GetApplicationTitle: String;

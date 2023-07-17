@@ -5,6 +5,7 @@ interface
 uses
   dxPDFViewer, dxPDFDocument,
   Vcl.Forms,
+  OPP_Help_API,
   OPP.Help.Predicate, OPP.Help.System.Types,
   OPP.Help.System.References, OPP.Help.Log;
 
@@ -50,7 +51,7 @@ begin
       if not Assigned(APredicate) then
         exit;
 
-      case APredicate.keywordType of
+      case TOPPKeywordType(APredicate.keywordType) of
         ktSearch:
           begin
             fCurrentPageIndex := self.CurrentPageIndex;

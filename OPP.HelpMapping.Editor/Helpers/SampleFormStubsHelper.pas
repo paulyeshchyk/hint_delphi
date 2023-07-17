@@ -25,6 +25,7 @@ uses
   System.Classes, System.Generics.Collections,
   Vcl.Forms,
 
+  OPP_Help_API,
   OPP.Help.Log,
   OPP.Help.System.Error,
   SampleOnly.Help.Hint.Setup,
@@ -71,7 +72,7 @@ begin
     fPredicate := TOPPHelpPredicate.Create;
     try
       fPredicate.value := 'Lorem ipsum';
-      fPredicate.keywordType := ktSearch;
+      fPredicate.keywordType := Integer(ktSearch);
       fPredicate.writeToStream(fStream);
 
       fPredicate2 := TOPPHelpPredicate.Create;

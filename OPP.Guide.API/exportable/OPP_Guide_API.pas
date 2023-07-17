@@ -99,7 +99,7 @@ end;
 
 function TOPPGuideAPIContextStepResult.GetDescription: String;
 begin
-  result := fRecord.shortDescription;
+  result := fRecord.userInfo;
 end;
 
 function TOPPGuideAPIContextStepResult.GetState: TOPPGuideExecutorRunState;
@@ -114,7 +114,7 @@ end;
 
 procedure TOPPGuideAPIContextStepResult.SetDescription(const value: String);
 begin
-  fRecord.shortDescription := value;
+  fRecord.userInfo := value;
 end;
 
 procedure TOPPGuideAPIContextStepResult.SetState(const value: TOPPGuideExecutorRunState);

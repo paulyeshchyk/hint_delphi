@@ -7,6 +7,7 @@ uses
 
   dxRichEdit.Control, dxRichEdit.NativeAPI,
 
+  OPP_Help_API,
   OPP.Help.Interfaces,
   OPP.Help.System.Types,
   OPP.Help.System.References,
@@ -74,7 +75,7 @@ var
   paragraph: IdxRichEditParagraph;
 begin
 
-  case APredicate.keywordType of
+  case TOPPKeywordType(APredicate.keywordType) of
     ktSearch:
       begin
         bookmark := self.GetBookmark(APredicate.value);

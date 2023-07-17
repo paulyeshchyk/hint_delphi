@@ -8,6 +8,7 @@ uses
   OPP.Help.System.Stream,
   OPP.Help.System.Types,
   FDC.CommandLine,
+  OPP_Help_API,
   OPP.Help.Predicate;
 
 type
@@ -51,7 +52,7 @@ begin
     fMap := TOPPHelpPredicate.Create;
     try
       fMap.filename := result.filename.Value;
-      fMap.keywordtype := TOPPKeywordType.FromString(result.keywordtype.Value);
+      fMap.keywordtype := Integer(TOPPKeywordType.FromString(result.keywordtype.Value));
       fMap.Value := result.valuetosearch.Value;
       if Assigned(completion) then
         completion(fMap);

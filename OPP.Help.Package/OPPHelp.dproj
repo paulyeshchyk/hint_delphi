@@ -137,22 +137,22 @@
         </DelphiCompile>
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="cxGridRS28.dcp"/>
-        <DCCReference Include="cxLibraryRS28.dcp"/>
-        <DCCReference Include="dxBarRS28.dcp"/>
-        <DCCReference Include="dxComnRS28.dcp"/>
-        <DCCReference Include="dxCoreRS28.dcp"/>
-        <DCCReference Include="dxDockingRS28.dcp"/>
-        <DCCReference Include="dxGDIPlusRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditControlRS28.dcp"/>
-        <DCCReference Include="dxRichEditCoreRS28.dcp"/>
-        <DCCReference Include="dxRichEditDocumentModelRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreRS28.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
-        <DCCReference Include="cxTreeListRS28.dcp"/>
-        <DCCReference Include="dxSpreadSheetCoreConditionalFormattingDialogsRS28.dcp"/>
-        <DCCReference Include="dxBarExtItemsRS28.dcp"/>
+        <DCCReference Include="cxGridRS25.dcp"/>
+        <DCCReference Include="cxLibraryRS25.dcp"/>
+        <DCCReference Include="dxBarRS25.dcp"/>
+        <DCCReference Include="dxComnRS25.dcp"/>
+        <DCCReference Include="dxCoreRS25.dcp"/>
+        <DCCReference Include="dxDockingRS25.dcp"/>
+        <DCCReference Include="dxGDIPlusRS25.dcp"/>
+        <DCCReference Include="dxRichEditControlCoreRS25.dcp"/>
+        <DCCReference Include="dxRichEditControlRS25.dcp"/>
+        <DCCReference Include="dxRichEditCoreRS25.dcp"/>
+        <DCCReference Include="dxRichEditDocumentModelRS25.dcp"/>
+        <DCCReference Include="dxSpreadSheetCoreRS25.dcp"/>
+        <DCCReference Include="dxSkinsCoreRS25.dcp"/>
+        <DCCReference Include="cxTreeListRS25.dcp"/>
+        <DCCReference Include="dxSpreadSheetCoreConditionalFormattingDialogsRS25.dcp"/>
+        <DCCReference Include="dxBarExtItemsRS25.dcp"/>
         <DCCReference Include="dsnap.dcp"/>
         <DCCReference Include="RESTComponents.dcp"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.Map.pas"/>
@@ -208,15 +208,16 @@
         <DCCReference Include="..\OPP.Help\OPP.Output.Console.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Stream.Observer.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP_Help_API.pas"/>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -258,12 +259,6 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\..\..\..\Compiled\Executable\OPPHelp.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win32">
-                        <RemoteName>OPPHelp.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -5,11 +5,12 @@ interface
 uses
   System.Classes, System.Generics.Collections,
   OPP.Help.System.Stream,
-  OPP.Help.System.Types;
+  OPP.Help.System.Types,
+  OPP_Help_API;
 
 type
 
-  TOPPHelpPredicate = class(TObject)
+  TOPPHelpPredicate = class(TInterfacedObject, IOPPHelpPredicate)
   private
     fValue: String;
     fKeywordType: TOPPKeywordType;
@@ -17,23 +18,30 @@ type
     fPredicates: TList<TOPPHelpPredicate>;
     procedure SetValue(AValue: String);
     function GetIsRunnable: Boolean;
+    function GetValue: String;
+    function GetPredicates: TList<TOPPHelpPredicate>;
+    function GetKeywordType: Integer;
+    procedure SetKeywordType(const Value: Integer);
+    procedure SetFileName(const Value: String);
+    function GetFileName: String;
   public
-    constructor Create;overload;
-    constructor Create(AFileName: String; AKeywordType: TOPPKeywordType; AValue: String);overload;
+    constructor Create; overload;
+    constructor Create(AFileName: String; AKeywordType: TOPPKeywordType; AValue: String); overload;
     destructor Destroy; override;
 
-    property value: String read fValue write SetValue;
-    property keywordType: TOPPKeywordType read fKeywordType write fKeywordType;
-    property filename: String read fFileName write fFileName;
-    property predicates: TList<TOPPHelpPredicate> read fPredicates;
-    property isRunnable: Boolean read GetIsRunnable;
+    property Value: String read GetValue write SetValue;
+    property KeywordType: Integer read GetKeywordType write SetKeywordType;
+    property Filename: String read GetFileName write SetFileName;
+    property Predicates: TList<TOPPHelpPredicate> read GetPredicates;
+    property IsRunnable: Boolean read GetIsRunnable;
+
+    function WriteToStream(AStream: TStream): Boolean;
+    function ReadFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
   end;
 
   TOPPHelpPredicateStreamHelper = class helper for TOPPHelpPredicate
     class function DefaultPredicate(): TOPPHelpPredicate;
     function asString(): String;
-    function writeToStream(AStream: TStream): Boolean;
-    function readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
   end;
 
 implementation
@@ -41,7 +49,7 @@ implementation
 uses
   System.SysUtils;
 
-function TOPPHelpPredicateStreamHelper.writeToStream(AStream: TStream): Boolean;
+function TOPPHelpPredicate.writeToStream(AStream: TStream): Boolean;
 var
   temp: TOPPHelpPredicate;
   cnt: Integer;
@@ -69,18 +77,18 @@ end;
 
 function TOPPHelpPredicateStreamHelper.asString: String;
 begin
-  result := Format('Filename: %s; Value: %s, Type:%s',[self.filename, self.value, self.KeywordType.asString]);
+  result := Format('Filename: %s; Value: %s, Type:%s', [self.filename, self.value, fKeywordType.asString]);
 end;
 
 class function TOPPHelpPredicateStreamHelper.DefaultPredicate: TOPPHelpPredicate;
 begin
   result := TOPPHelpPredicate.Create;
   result.filename := '.\Документация\ГОЛЬФСТРИМ_Руководство пользователя.pdf';
-  result.keywordType := ktPage;
+  result.keywordType := Integer(TOPPKeywordType.ktPage);
   result.value := '2';
 end;
 
-function TOPPHelpPredicateStreamHelper.readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
+function TOPPHelpPredicate.readFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
 var
   i, cnt: Integer;
   child: TOPPHelpPredicate;
@@ -93,7 +101,7 @@ begin
     AStream.Position := 0;
 
   self.value := AStream.ReadString;
-  self.keywordType := TOPPKeywordType(AStream.ReadInteger);
+  self.keywordType := AStream.ReadInteger;
   self.filename := AStream.ReadString;
   cnt := AStream.ReadInteger;
   for i := 0 to cnt - 1 do
@@ -116,7 +124,7 @@ constructor TOPPHelpPredicate.Create(AFileName: String; AKeywordType: TOPPKeywor
 begin
   inherited Create;
   fPredicates := TList<TOPPHelpPredicate>.Create;
-  fFilename := AFileName;
+  fFileName := AFileName;
   fKeywordType := AKeywordType;
   self.value := AValue;
 end;
@@ -130,13 +138,44 @@ begin
   inherited Destroy;
 end;
 
+function TOPPHelpPredicate.GetFileName: String;
+begin
+  result := fFileName;
+end;
+
 function TOPPHelpPredicate.GetIsRunnable: Boolean;
 begin
-  //TODO: make the same test for children
+  // TODO: make the same test for children
   result := false;
-  if (length(fFileName) > 0) then begin
-    result := Length(fValue) > 0;
+  if (length(fFileName) > 0) then
+  begin
+    result := length(fValue) > 0;
   end;
+end;
+
+function TOPPHelpPredicate.GetKeywordType: Integer;
+begin
+  Result := Integer(fKeywordType);
+end;
+
+function TOPPHelpPredicate.GetPredicates: TList<TOPPHelpPredicate>;
+begin
+  result := fPredicates;
+end;
+
+function TOPPHelpPredicate.GetValue: String;
+begin
+  result := fValue;
+end;
+
+procedure TOPPHelpPredicate.SetFileName(const Value: String);
+begin
+  fFileName := Value;
+end;
+
+procedure TOPPHelpPredicate.SetKeywordType(const Value: Integer);
+begin
+  fKeywordType := TOPPKeywordType(Value);
 end;
 
 procedure TOPPHelpPredicate.SetValue(AValue: String);

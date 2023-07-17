@@ -250,6 +250,7 @@ object SampleForm: TSampleForm
           Caption = #1055#1086#1076#1089#1082#1072#1079#1082#1072
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
+          ExplicitHeight = 433
           DockingType = 0
           OriginalWidth = 537
           OriginalHeight = 528
@@ -265,6 +266,7 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitHeight = 454
             object Panel1: TPanel
               Left = 0
               Top = 28
@@ -502,6 +504,7 @@ object SampleForm: TSampleForm
           Caption = #1055#1086#1084#1086#1097#1100
           CustomCaptionButtons.Buttons = <>
           TabsProperties.CustomButtons.Buttons = <>
+          ExplicitHeight = 433
           DockingType = 0
           OriginalWidth = 537
           OriginalHeight = 528
@@ -517,6 +520,7 @@ object SampleForm: TSampleForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitHeight = 454
             object dxBarDockControl2: TdxBarDockControl
               Left = 0
               Top = 0
@@ -533,6 +537,7 @@ object SampleForm: TSampleForm
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 1
+              ExplicitHeight = 426
               object Panel9: TPanel
                 Left = 0
                 Top = 0

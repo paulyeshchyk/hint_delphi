@@ -2,8 +2,10 @@
 
 interface
 
+uses
+  OPP_Help_API;
+
 type
-  TOPPKeywordType = (ktSearch = 0, ktPage = 1, ktBookmark = 2, ktAny = 3);
 
   TOPPKeywordTypeHelper = record helper for TOPPKeywordType
   public

@@ -28,28 +28,25 @@ package OPPHelp;
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
-{$DEFINE OPP_LOG_FILE_OUTPUT}
-{$DEFINE OPP_LOG_CONSOLE_OUTPUT}
-
 requires
   vcl,
   rtl,
-  cxGridRS28,
-  cxLibraryRS28,
-  dxBarRS28,
-  dxComnRS28,
-  dxCoreRS28,
-  dxDockingRS28,
-  dxGDIPlusRS28,
-  dxRichEditControlCoreRS28,
-  dxRichEditControlRS28,
-  dxRichEditCoreRS28,
-  dxRichEditDocumentModelRS28,
-  dxSpreadSheetCoreRS28,
-  dxSkinsCoreRS28,
-  cxTreeListRS28,
-  dxSpreadSheetCoreConditionalFormattingDialogsRS28,
-  dxBarExtItemsRS28,
+  cxGridRS25,
+  cxLibraryRS25,
+  dxBarRS25,
+  dxComnRS25,
+  dxCoreRS25,
+  dxDockingRS25,
+  dxGDIPlusRS25,
+  dxRichEditControlCoreRS25,
+  dxRichEditControlRS25,
+  dxRichEditCoreRS25,
+  dxRichEditDocumentModelRS25,
+  dxSpreadSheetCoreRS25,
+  dxSkinsCoreRS25,
+  cxTreeListRS25,
+  dxSpreadSheetCoreConditionalFormattingDialogsRS25,
+  dxBarExtItemsRS25,
   dsnap,
   RESTComponents;
 
@@ -102,7 +99,8 @@ contains
   FDC.CommandLine in '..\FDC\FDC.CommandLine.pas',
   OPP.Output.Console in '..\OPP.Help\OPP.Output.Console.pas',
   OPP.Stream.Observer in '..\OPP.Help\OPP.Stream.Observer.pas',
-  OPP.Help.VCL.PanelTrigger in '..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas';
+  OPP.Help.VCL.PanelTrigger in '..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas',
+  OPP_Help_API in '..\OPP.Help\OPP_Help_API.pas';
 
 end.
 

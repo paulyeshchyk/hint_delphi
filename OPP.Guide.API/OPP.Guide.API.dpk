@@ -29,8 +29,6 @@ package OPP.Guide.API;
 {$IMPLICITBUILD OFF}
 
 requires
-  vcl,
-  rtl,
   OPPHelp;
 
 contains
@@ -45,6 +43,10 @@ contains
   OPP_Guide_API_Context_Step_Wrapper in 'wrappers\OPP_Guide_API_Context_Step_Wrapper.pas',
   OPP_Guide_API_Dataprovider in 'exportable\OPP_Guide_API_Dataprovider.pas',
   OPP_Guide_Executor in 'common\OPP_Guide_Executor.pas',
-  OPP_Guide_Executor_State in 'exportable\OPP_Guide_Executor_State.pas';
+  OPP_Guide_Executor_State in 'exportable\OPP_Guide_Executor_State.pas',
+  Proxy_OPPHelpPredicate in 'exportable\Proxy_OPPHelpPredicate.pas',
+  OPP_Guide_Executor_State_Helper in 'exportable\OPP_Guide_Executor_State_Helper.pas',
+  teststep1 in 'test\teststep1.pas',
+  OPP_Guide_API_Context_Helper in 'exportable\OPP_Guide_API_Context_Helper.pas';
 
 end.

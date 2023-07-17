@@ -209,9 +209,9 @@ begin
     if cloned.RecordCount = 1 then
     begin
       fResult := TOPPGuideAPIContextStep.Create;
-      fResult.NodeType := ClientDataset.FieldByName('NodeType').AsString;
-      fResult.Caption := ClientDataset.FieldByName('Caption').AsString;
-      fResult.Identifier := ClientDataset.FieldByName('Identifier').AsString;
+      fResult.NodeType := cloned.FieldByName('NodeType').AsString;
+      fResult.Caption := cloned.FieldByName('Caption').AsString;
+      fResult.Identifier := cloned.FieldByName('Identifier').AsString;
       result := fResult;
     end;
   finally

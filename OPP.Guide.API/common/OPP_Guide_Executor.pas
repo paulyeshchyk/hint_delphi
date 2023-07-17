@@ -36,7 +36,7 @@ class function TOPPGuideExecutorRunStateHelper.ErrorState(AStepIdentifier, ADesc
 begin
   result.value := rsvError;
   result.stepIdentifier := AStepIdentifier;
-  result.shortDescription := ADescription;
+  result.userInfo := ADescription;
   result.executionResult := '';
 end;
 
@@ -44,7 +44,7 @@ class function TOPPGuideExecutorRunStateHelper.FinishState(AStepIdentifier, ADes
 begin
   result.value := rsvFinished;
   result.stepIdentifier := AStepIdentifier;
-  result.shortDescription := ADescription;
+  result.userInfo := ADescription;
   result.executionResult := AResult;
 end;
 
@@ -52,7 +52,7 @@ class function TOPPGuideExecutorRunStateHelper.IdleState(AStepIdentifier, ADescr
 begin
   result.value := rsvIdle;
   result.stepIdentifier := AStepIdentifier;
-  result.shortDescription := ADescription;
+  result.userInfo := ADescription;
   result.executionResult := '';
 end;
 
@@ -60,7 +60,7 @@ class function TOPPGuideExecutorRunStateHelper.ProgressState(AStepIdentifier, AD
 begin
   result.value := rsvProgress;
   result.stepIdentifier := AStepIdentifier;
-  result.shortDescription := ADescription;
+  result.userInfo := ADescription;
   result.executionResult := '';
 end;
 
@@ -68,7 +68,7 @@ class function TOPPGuideExecutorRunStateHelper.StartedState(AStepIdentifier, ADe
 begin
   result.value := rsvStarted;
   result.stepIdentifier := AStepIdentifier;
-  result.shortDescription := ADescription;
+  result.userInfo := ADescription;
   result.executionResult := '';
 end;
 
