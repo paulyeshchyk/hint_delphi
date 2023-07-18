@@ -175,7 +175,7 @@ begin
     cloned.Filtered := true;
     if cloned.RecordCount = 1 then
     begin
-      fPIdentifier := ClientDataset.FieldByName('pidentifier').AsString;
+      fPIdentifier := cloned.FieldByName('pidentifier').AsString;
       result := GetStepByIdentifier(fPIdentifier);
     end;
   finally
