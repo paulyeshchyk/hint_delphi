@@ -85,60 +85,45 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
       end
     end
   end
-  object dxDockSite1: TdxDockSite
+  object dxDockSite2: TdxDockSite
     Left = 0
-    Top = 610
+    Top = 489
     Width = 851
-    Height = 4
-    Margins.Left = 4
-    Margins.Top = 4
-    Margins.Right = 4
-    Margins.Bottom = 4
-    ManagerFont = False
-    ParentFont = True
+    Height = 125
     Align = alBottom
     AutoSize = True
     DockingType = 5
-    OriginalWidth = 858
-    OriginalHeight = 4
+    OriginalWidth = 851
+    OriginalHeight = 0
     object dxLayoutDockSite1: TdxLayoutDockSite
       Left = 0
       Top = 0
       Width = 851
-      Height = 4
-      Margins.Left = 4
-      Margins.Top = 4
-      Margins.Right = 4
-      Margins.Bottom = 4
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ManagerFont = False
-      Visible = False
+      Height = 125
+      ExplicitWidth = 300
+      ExplicitHeight = 200
       DockingType = 0
-      OriginalWidth = 265
+      OriginalWidth = 300
       OriginalHeight = 125
     end
     object dxDockPanel1: TdxDockPanel
       Left = 0
       Top = 0
       Width = 851
-      Height = 4
+      Height = 125
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
       ManagerFont = False
       ParentFont = True
-      Visible = False
       OnVisibleChanged = dxDockPanel1VisibleChanged
       AllowFloating = True
       AutoHide = False
       Caption = 'dxDockPanel1'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
+      ExplicitWidth = 165
       DockingType = 0
       OriginalWidth = 165
       OriginalHeight = 125
@@ -151,7 +136,9 @@ object OPPHelpPreviewForm: TOPPHelpPreviewForm
         Margins.Bottom = 4
         Align = alClient
         TabOrder = 0
-        Height = 0
+        ExplicitWidth = 165
+        ExplicitHeight = 125
+        Height = 96
         Width = 847
       end
     end

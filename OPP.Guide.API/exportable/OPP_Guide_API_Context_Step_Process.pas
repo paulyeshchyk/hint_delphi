@@ -9,8 +9,7 @@ uses
   System.Classes,
   OPP_Guide_API,
   OPP_Guide_API_Context,
-  OPP_Guide_API_Context_Step,
-  OPP_Guide_Executor_State;
+  OPP_Guide_API_Context_Step, OPP_Guide_API_Context_Step_SendMessage_Help;
 
 type
   TOPPGuideAPIContextStepProcess = class(TOPPGuideAPIContextStep)
@@ -31,7 +30,7 @@ uses
   OPP_Guide_Executor,
   OPP.Help.System.Messaging,
   System.Generics.Collections,
-  OPP.Help.Log;
+  OPP.Help.Log, OPP_Guide_Executor_State;
 
 const
   kContext: String = 'StepProcess';

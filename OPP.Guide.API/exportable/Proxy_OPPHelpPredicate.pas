@@ -26,6 +26,10 @@ type
     function GetIsRunnable: Boolean;
     function ReadFromStream(AStream: TStream; moveCursorToStart: Boolean): Boolean;
     function WriteToStream(AStream: TStream): Boolean;
+
+    property Filename: String read GetFilename write SetFilename;
+    property KeywordType: Integer read GetKeywordType write SetKeywordType;
+    property Value: String read GetValue write SetValue;
   end;
 
 implementation

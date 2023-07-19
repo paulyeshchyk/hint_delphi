@@ -162,9 +162,9 @@ type
     dxBarSubItem10: TdxBarSubItem;
     actionShowLog: TAction;
     dxBarButtonShowLog: TdxBarButton;
-    dxDockSite1: TdxDockSite;
     dxDockPanel1: TdxDockPanel;
     cxMemo1: TcxMemo;
+    dxDockSite2: TdxDockSite;
     dxLayoutDockSite1: TdxLayoutDockSite;
     procedure actionFitPageCustomExecute(Sender: TObject);
     procedure actionFitPageHeightExecute(Sender: TObject);
@@ -401,7 +401,7 @@ end;
 
 procedure TOPPHelpPreviewForm.actionShowLogExecute(Sender: TObject);
 begin
-  dxDockPanel1.Visible := not LogIsVisible;
+  dxDockSite2.Visible := not LogIsVisible;
 end;
 
 procedure TOPPHelpPreviewForm.actionToggleFindPanelExecute(Sender: TObject);
@@ -517,7 +517,7 @@ end;
 
 procedure TOPPHelpPreviewForm.dxDockPanel1VisibleChanged(Sender: TdxCustomDockControl);
 begin
-  if dxDockPanel1.Visible then
+  if dxDockSite2.Visible then
     actionShowLog.Caption := 'Спрятать лог'
   else
     actionShowLog.Caption := 'Показать лог';
@@ -553,7 +553,7 @@ begin
   fLogObserver := TOPPHelpPreviewFormLogObserver.Create;
   fLogObserver.cxMemo := self.cxMemo1;
   eventLogger.RegisterObserver(fLogObserver);
-  dxDockPanel1.Visible := false;
+  dxDockSite2.Visible := false;
 {$IF DEFINED (DEBUG)}
   dxBarButtonShowLog.Visible := ivAlways;
 {$ELSE}
@@ -664,7 +664,7 @@ end;
 
 function TOPPHelpPreviewForm.GetLogIsVisible: Boolean;
 begin
-  result := dxDockPanel1.Visible;
+  result := dxDockSite2.Visible;
 end;
 
 function TOPPHelpPreviewForm.GetPageIndexPanel: TdxStatusBarPanel;

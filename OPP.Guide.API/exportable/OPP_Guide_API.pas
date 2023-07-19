@@ -7,19 +7,13 @@ uses
   System.Variants,
   System.Classes,
   System.SysUtils,
-  OPP_Guide_Executor_State;
+  OPP_Guide_Executor_State,
+  OPP_Guide_API_Identifiable,
+  OPP_Guide_API_Object_Converter;
 
 type
 
   TOPPGuideAPIContextStepResultCallback = TProc<TOPPGuideExecutorRunState>;
-
-
-  IOPPGuideAPIIdentifiable = interface(IUnknown)
-    ['{0852EEAF-AB86-4F05-92D3-8DE1BA867417}']
-    function PIdentifierName: String;
-    function IdentifierName: String;
-    function IdentifierValue: String;
-  end;
 
   IOPPGuideScripter = interface
     function RunScript(AStrings: TStrings): Variant; overload;
@@ -61,6 +55,7 @@ type
     function SubsCount(AIdentifier: String): Integer;
     function ActiveItem: IOPPGuideAPIContextStep;
     function ActiveItemSubscCount: Integer;
+    function GetObjectConverter: IOPPGuideObjectConverter;
   end;
 
   IOPPGuideAPIContext = interface(IUnknown)
@@ -68,7 +63,7 @@ type
     procedure Add(AChild: IOPPGuideAPIContext);
     procedure Remove(AChild: IOPPGuideAPIContext);
     procedure Clear;
-    //procedure Execute(const contextItem: IOPPGuideAPIContextStep);
+    // procedure Execute(const contextItem: IOPPGuideAPIContextStep);
     procedure PushStepState(const AResult: TOPPGuideExecutorRunState);
     function PullStepState(const AStepIdentifier: String): TOPPGuideExecutorRunState;
     procedure SetDataprovider(AValue: IOPPGuideAPIDataprovider);

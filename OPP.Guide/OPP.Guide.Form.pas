@@ -11,10 +11,13 @@ uses
   cxTextEdit, cxMemo, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit, dxStatusBar,
 
   OPP_Guide_API,
+  OPP.Guide.API.ObjectConverter.Step,
   OPP_Guide_API_Dataprovider,
   OPP.Guide.executor,
   OPP_Guide_Executor,
   OPP_Guide_Executor_State,
+
+  OPP_Guide_API_Object_Converter,
 
   OPP.Help.Vcl.PanelTrigger,
   OPP.Guide.Settings,
@@ -42,7 +45,7 @@ type
     actionGuideOpen: TAction;
     actionGuideReload: TAction;
     actionGuideRunAll: TAction;
-    actionGuideRunSelected: TAction;
+    actionGuideRunSelectedDownstairs: TAction;
     actionHelp: TAction;
     actionHelp1: TMenuItem;
     ActionList1: TActionList;
@@ -70,10 +73,10 @@ type
     cxStyle2: TcxStyle;
     cxStyle3: TcxStyle;
     cxStyleRepository1: TcxStyleRepository;
-    DataSetNodeType: TClientDataSet;
+    DataSetNodeType: TClientDataset;
     DataSetNodeTypecaption: TWideStringField;
     DataSetNodeTypeid: TIntegerField;
-    DataSetTreeView: TClientDataSet;
+    DataSetTreeView: TClientDataset;
     DataSetTreeViewActionText: TStringField;
     DataSetTreeViewCaption: TWideStringField;
     DataSetTreeViewIdentifier: TStringField;
@@ -142,6 +145,8 @@ type
     N18: TMenuItem;
     N19: TMenuItem;
     N16: TMenuItem;
+    actionGuideRunSelectedUpstairs: TAction;
+    actionGuideRunSelectedUpstairs1: TMenuItem;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
     procedure actionClearRecentListExecute(Sender: TObject);
@@ -153,14 +158,14 @@ type
     procedure actionGuideOpenExecute(Sender: TObject);
     procedure actionGuideReloadExecute(Sender: TObject);
     procedure actionGuideRunAllExecute(Sender: TObject);
-    procedure actionGuideRunSelectedExecute(Sender: TObject);
+    procedure actionGuideRunSelectedDownstairsExecute(Sender: TObject);
+    procedure actionGuideRunSelectedUpstairsExecute(Sender: TObject);
     procedure actionHelpExecute(Sender: TObject);
     procedure actionRemoveRecordExecute(Sender: TObject);
     procedure actionScriptCompileExecute(Sender: TObject);
     procedure actionScriptRunExecute(Sender: TObject);
     procedure actionScriptSaveExecute(Sender: TObject);
-    procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State:
-        TDragState; var Accept: Boolean);
+    procedure cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure cxDBTreeList1InitInsertingRecord(Sender: TcxCustomDBTreeList; AFocusedNode: TcxDBTreeListNode; var AHandled: Boolean);
     procedure cxDBTreeList1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cxDBVerticalGrid1DBEditorRow6EditPropertiesEditValueChanged(Sender: TObject);
@@ -172,7 +177,7 @@ type
     procedure ScrMemo1Change(Sender: TObject);
     procedure ScrMemo1CursorChange(Sender: TObject);
   private
-    fDataprovider: TOPPGuideAPIDataprovider;
+    fDataprovider: TOPPGuideAPIDataProvider;
     fFilename: String;
     fPanelTriggerContainer: TOPPHelpVCLPanelTriggerContainer;
     fSaveActionIsInProgress: Boolean;
@@ -182,7 +187,6 @@ type
     fSettings: IOPPGuideSettings;
     procedure BuildPanelTriggers(AMenuItem: TMenuItem);
     procedure DoUpdateStatusBarWidths;
-    function fIdentifiableClone(ADataset: TClientDataSet): IOPPGuideAPIIdentifiable;
     procedure fScriptRunCompletion(AState: TOPPGuideExecutorRunState);
     class function GetApplicationTitle: String; static;
     procedure LoadDatasetContent(AFilename: String);
@@ -220,15 +224,14 @@ uses
   OPP.Guide.Scripter.DC,
 
   OPP_Guide_Executor_State_Helper,
-
-  OPP_Guide_API_Context_Step_Wrapper,
+  OPP_Guide_API_Identifiable,
   OPP_Guide_API_Context_Step,
   OPP_Guide_API_Context,
 
   midaslib;
 
 type
-  TOPPTreeDatasetHelpler = class helper for TClientDataSet
+  TOPPTreeDatasetHelpler = class helper for TClientDataset
     procedure swapValues(AFieldName: String; AIDFieldName: String; sourceId, destinationId: Variant);
   end;
 
@@ -245,10 +248,10 @@ type
 procedure TOPPGuideForm.actionAddChildRecordExecute(Sender: TObject);
 var
   pid: Variant;
-  fActiveItem: TOPPGuideAPIContextStep;
+  fActiveItem: IOPPGuideAPIIdentifiable;
 begin
 
-  fActiveItem := TOPPGuideAPIContextStep(fDataprovider.ActiveItem);
+  fActiveItem := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
   if not assigned(fActiveItem) then
     exit;
 
@@ -338,52 +341,38 @@ end;
 procedure TOPPGuideForm.actionGuideRunAllExecute(Sender: TObject);
 var
   fFilter: String;
-  cloned: TClientDataSet;
+  cloned: TClientDataset;
   fObject: IOPPGuideAPIIdentifiable;
+  fList: TOPPGuideAPIIdentifiableList;
 begin
 
   fFilter := Format('pidentifier IS NULL', []);
 
   cxMemo1.Clear;
 
-  cloned := TClientDataSet.Create(nil);
-  try
-    cloned.CloneCursor(DataSetTreeView, false);
-    cloned.Filter := fFilter;
-    cloned.Filtered := true;
-    cloned.First;
-    while not cloned.Eof do
-    begin
-      fObject := fIdentifiableClone(cloned);
-
-      try
-        TOPPGuideExecutor.shared.run(DataSetTreeView, fObject, fIdentifiableClone, true, fScripter, fScriptRunCompletion);
-      except
-        on E: Exception do
-        begin
-          eventLogger.Error(E, kContext);
-        end;
-      end;
-
-      cloned.Next;
-    end;
-  finally
-    cloned.Free;
+  fList := fDataprovider.ObjectConverter.GetObjectsFromDataset(DataSetTreeView, fFilter);
+  if not assigned(fList) then
+  begin
+    exit;
   end;
 
+  for fObject in fList do
+  begin
+    TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, fScriptRunCompletion);
+  end;
 end;
 
-procedure TOPPGuideForm.actionGuideRunSelectedExecute(Sender: TObject);
+procedure TOPPGuideForm.actionGuideRunSelectedDownstairsExecute(Sender: TObject);
 var
   fScriptResult: Variant;
   fObject: IOPPGuideAPIIdentifiable;
 begin
   cxMemo1.Clear;
 
-  fObject := fIdentifiableClone(DataSetTreeView);
+  fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
   try
     try
-      TOPPGuideExecutor.shared.run(DataSetTreeView, fObject, fIdentifiableClone, true, fScripter, fScriptRunCompletion);
+      TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, fScriptRunCompletion);
     except
       on E: Exception do
       begin
@@ -393,6 +382,11 @@ begin
   finally
     fObject := nil;
   end;
+end;
+
+procedure TOPPGuideForm.actionGuideRunSelectedUpstairsExecute(Sender: TObject);
+begin
+  //
 end;
 
 procedure TOPPGuideForm.actionHelpExecute(Sender: TObject);
@@ -412,7 +406,7 @@ procedure TOPPGuideForm.actionScriptCompileExecute(Sender: TObject);
 begin
   actionScriptSave.Execute;
 
-  TOPPGuideExecutor.shared.compile(DataSetTreeView,fIdentifiableClone, false, fScripter, self.fScriptRunCompletion);
+  TOPPGuideExecutor.shared.compile(fDataprovider, false, fScripter, self.fScriptRunCompletion);
 end;
 
 procedure TOPPGuideForm.actionScriptRunExecute(Sender: TObject);
@@ -422,9 +416,9 @@ begin
   cxMemo1.Clear;
 
   try
-    fObject := fIdentifiableClone(DataSetTreeView);
+    fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
     try
-      TOPPGuideExecutor.shared.run(DataSetTreeView, fObject, fIdentifiableClone, false, fScripter, fScriptRunCompletion);
+      TOPPGuideExecutor.shared.run(fDataprovider, fObject, false, fScripter, fScriptRunCompletion);
     except
       on E: Exception do
       begin
@@ -458,7 +452,7 @@ var
 begin
 
   fActiveItemSubscCount := 0;
-  if Assigned(fDataprovider) then
+  if assigned(fDataprovider) then
     fActiveItemSubscCount := fDataprovider.ActiveItemSubscCount;
 
   actionGuideRunAll.Enabled := (fActiveItemSubscCount > 0);
@@ -562,9 +556,12 @@ begin
   eventLogger.Flow('Form Created', kContext);
 
 {$REGION '  To be removed asap'}
-  fDataprovider := TOPPGuideAPIDataprovider.Create(self);
+  fDataprovider := TOPPGuideAPIDataProvider.Create(self);
   fDataprovider.ClientDataset := self.DataSetTreeView;
+  fDataprovider.ObjectConverter := TOPPGuideAPIObjectConverterStep.Create;
+
   TOPPGuideAPIContext.shared.SetDataprovider(fDataprovider);
+
 {$ENDREGION}
   actionHelp.Caption := Application.BuildNumber;
   self.Caption := TOPPGuideForm.GetApplicationTitle;
@@ -621,25 +618,24 @@ begin
   fPanelTriggerContainer.AddTrigger(dxDockPanel6);
 end;
 
-procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y:
-    Integer; State: TDragState; var Accept: Boolean);
+procedure TOPPGuideForm.cxDBTreeList1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   Accept := true;
 end;
 
-procedure TOPPGuideForm.DataSourceTreeViewDataChange(Sender: TObject; Field:
-    TField);
+procedure TOPPGuideForm.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
 begin
-  if DataSourceTreeView.State = dsBrowse then begin
-  cxDBTreeList1cxDBTreeListColumn1.Width := cxDBTreeList1.Width;
-  AfterScrollEnableScriptPanel;
-  AfterScrollLoadScript;
+  if DataSourceTreeView.State = dsBrowse then
+  begin
+    cxDBTreeList1cxDBTreeListColumn1.Width := cxDBTreeList1.Width;
+    AfterScrollEnableScriptPanel;
+    AfterScrollLoadScript;
   end;
 end;
 
 procedure TOPPGuideForm.DataSourceTreeViewStateChange(Sender: TObject);
 begin
-  actionScriptCompile.Enabled := true;//(DataSourceTreeView.State = dsEdit);
+  actionScriptCompile.Enabled := true; // (DataSourceTreeView.State = dsEdit);
 end;
 
 procedure TOPPGuideForm.DoUpdateStatusBarWidths;
@@ -655,21 +651,13 @@ begin
   dxStatusBar2.Panels[0].Width := 40 + dxStatusBar2.Canvas.TextWidth('9999:9999');
 end;
 
-function TOPPGuideForm.fIdentifiableClone(ADataset: TClientDataSet): IOPPGuideAPIIdentifiable;
-begin
-  result := nil;
-  if not assigned(ADataset) then
-    exit;
-  result := TOPPGuideAPIContextStep.WrapFromDataset1(ADataset);
-end;
-
 procedure TOPPGuideForm.fScriptRunCompletion(AState: TOPPGuideExecutorRunState);
 var
-  log: String;
+  Log: String;
 begin
-  log := AState.Description;
-  cxMemo1.Lines.Add(log);
-  eventLogger.Flow(log, 'GuideAPI');
+  Log := AState.Description;
+  cxMemo1.Lines.Add(Log);
+  eventLogger.Flow(Log, 'GuideAPI');
 end;
 
 class function TOPPGuideForm.GetApplicationTitle: String;
@@ -794,7 +782,7 @@ end;
 
 procedure TOPPTreeDatasetHelpler.swapValues(AFieldName, AIDFieldName: String; sourceId, destinationId: Variant);
 var
-  fSourceDS, fDestinationDS: TClientDataSet;
+  fSourceDS, fDestinationDS: TClientDataset;
   fSourceValue, fDestinatonValue: Variant;
 begin
   if length(AFieldName) = 0 then
@@ -806,10 +794,10 @@ begin
   if VarIsNull(destinationId) or VarIsEmpty(destinationId) then
     exit;
 
-  fSourceDS := TClientDataSet.Create(nil);
+  fSourceDS := TClientDataset.Create(nil);
   try
     fSourceDS.CloneCursor(self, false);
-    fDestinationDS := TClientDataSet.Create(nil);
+    fDestinationDS := TClientDataset.Create(nil);
     try
       fDestinationDS.CloneCursor(self, false);
 

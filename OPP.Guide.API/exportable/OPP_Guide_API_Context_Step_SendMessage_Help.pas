@@ -8,7 +8,7 @@ uses
   OPP_Guide_API,
   OPP_Guide_Executor_State,
   OPP_Guide_API_Context_Step,
-  Proxy_OPPHelpPredicate;
+  Proxy_OPPHelpPredicate, OPP_Guide_Executor_State_Helper;
 
 type
   TOPPGuideAPIContextStepSendMessageHelp = class(TOPPGuideAPIContextStep)
@@ -19,6 +19,7 @@ type
   public
     procedure SetPredicate(APredicate: TProxy_OPPHelpPredicate);
     procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); override;
+    property Predicate: TProxy_OPPHelpPredicate read fPredicate write SetPredicate;
     property TargetApplicationHandle: String read fHelpApplicationHandle write fHelpApplicationHandle;
   end;
 
@@ -118,7 +119,6 @@ procedure TOPPGuideAPIContextStepSendMessageHelp.Execute(AStepIdentifier: String
 begin
 
   try
-
     ValidateHandleOrThrow(AStepIdentifier, OnFlowExecute, callback);
   except
     on E: Exception do

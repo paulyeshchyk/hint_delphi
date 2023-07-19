@@ -8,7 +8,9 @@ uses
   System.Classes,
   OPP_Guide_Executor,
   OPP_Guide_Executor_State,
-  OPP_Guide_API;
+  OPP_Guide_API,
+  OPP_Guide_API_Identifiable,
+  OPP_Guide_API_Object_Converter;
 
 type
 
@@ -28,13 +30,13 @@ type
   TOPPGuideExecutor = class
   private
     class var fExecutor: TOPPGuideExecutor;
-    procedure GetScriptedStream(dataset: TClientDataset; AObject: IOPPGuideAPIIdentifiable; IdentifiableCallback: TOPPIdentifiableClone; completion: TOPPBlobToStreamCompletion);
+    procedure GetScriptedStream(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
     function BuildFilter(fieldName, pident: Variant): String;
   public
     class function shared: TOPPGuideExecutor; static;
-    function compile(dataset: TClientDataset; Identifiable: TOPPIdentifiableClone; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
-    function run(dataset: TClientDataset; AObject: IOPPGuideAPIIdentifiable; IdentifiableCallback: TOPPIdentifiableClone; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean; overload;
-    function runSubs(dataset: TClientDataset; AFilter: String; Scripter: IOPPGuideScripter; IdentifiableCallback: TOPPIdentifiableClone; completion: TOPPExecutorStateCallback): Boolean;
+    function compile(ADataprovider: IOPPGuideAPIDataprovider; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
+    function run(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean; overload;
+    function runSubs(ADataprovider: IOPPGuideAPIDataprovider; AFilter: String; Scripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
   end;
 
   TOPPStreamHelper = class helper for TStream
@@ -73,13 +75,13 @@ begin
   end;
 end;
 
-function TOPPGuideExecutor.compile(dataset: TClientDataset; Identifiable: TOPPIdentifiableClone; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
+function TOPPGuideExecutor.compile(ADataProvider: IOPPGuideAPIDataprovider; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
 var
   fObject: IOPPGuideAPIIdentifiable;
 begin
-  fObject := Identifiable(dataset);
+  fObject := ADataProvider.GetObjectConverter.GetObjectFromDataset(ADataprovider.GetDataset);
 
-  GetScriptedStream(dataset, fObject, Identifiable,
+  GetScriptedStream(ADataprovider, fObject,
     procedure(AStream: TStream; userInfo: IOPPGuideAPIIdentifiable)
     begin
       if Assigned(AStream) then
@@ -87,59 +89,57 @@ begin
     end);
 end;
 
-procedure TOPPGuideExecutor.GetScriptedStream(dataset: TClientDataset; AObject: IOPPGuideAPIIdentifiable; IdentifiableCallback: TOPPIdentifiableClone; completion: TOPPBlobToStreamCompletion);
+procedure TOPPGuideExecutor.GetScriptedStream(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
 var
   fFilter: String;
   fCDS: TClientDataset;
   fIdent, fIdentName: String;
-  Identifiable: IOPPGuideAPIIdentifiable;
 begin
-  Identifiable := AObject; // IdentifiableCallback(dataset);
-  if not Assigned(Identifiable) then
+  if not Assigned(AObject) then
   begin
     if Assigned(completion) then
       completion(nil, nil);
     exit;
   end;
 
-  try
+  fIdent := AObject.IdentifierValue;
+  fIdentName := AObject.IdentifierName;
 
-    fIdent := Identifiable.IdentifierValue;
-    fIdentName := Identifiable.IdentifierName;
-
-    if not((not Assigned(dataset)) or (VarIsNull(fIdent)) or (VarIsEmpty(fIdent))) then
-    begin
-      fFilter := BuildFilter(fIdentName, fIdent);
-      fCDS := TClientDataset.Create(nil);
-      try
-        fCDS.CloneCursor(dataset, false);
-        fCDS.Filter := fFilter;
-        fCDS.Filtered := true;
-        fCDS.BlobToStream('Script',
-          procedure(AStream: TStream)
-          begin
-            completion(AStream, Identifiable);
-          end);
-      finally
-        fCDS.Free;
-      end;
-    end;
-  finally
-    Identifiable := nil;
-  end;
-end;
-
-function TOPPGuideExecutor.run(dataset: TClientDataset; AObject: IOPPGuideAPIIdentifiable; IdentifiableCallback: TOPPIdentifiableClone; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
-begin
-  result := false;
-  if not Assigned(dataset) then
+  if ((not Assigned(ADataprovider)) or (VarIsNull(fIdent)) or (VarIsEmpty(fIdent))) then
   begin
     if Assigned(completion) then
-      completion(TOPPGuideExecutorRunState.error('', 'Dataset is nil'));
+      completion(nil, nil);
     exit;
   end;
 
-  GetScriptedStream(dataset, AObject, IdentifiableCallback,
+  fFilter := BuildFilter(fIdentName, fIdent);
+  fCDS := TClientDataset.Create(nil);
+  try
+    fCDS.CloneCursor(ADataprovider.GetDataset, false);
+    fCDS.Filter := fFilter;
+    fCDS.Filtered := true;
+    fCDS.BlobToStream('Script',
+      procedure(AStream: TStream)
+      begin
+        completion(AStream, AObject);
+      end);
+  finally
+    fCDS.Free;
+  end;
+
+end;
+
+function TOPPGuideExecutor.run(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
+begin
+  result := false;
+  if not Assigned(ADataprovider) then
+  begin
+    if Assigned(completion) then
+      completion(TOPPGuideExecutorRunState.error('', 'dataprovider is nil'));
+    exit;
+  end;
+
+  GetScriptedStream(ADataprovider, AObject,
     procedure(AStream: TStream; AIdentifiable: IOPPGuideAPIIdentifiable)
     begin
       if not Assigned(AStream) then
@@ -163,7 +163,7 @@ begin
                 if ArunSubs then
                 begin
                   fSubsFilter := BuildFilter(AObject.PIdentifierName, AObject.IdentifierValue);
-                  runSubs(dataset, fSubsFilter, AScripter, IdentifiableCallback, completion);
+                  runSubs(ADataprovider, fSubsFilter, AScripter, completion);
                 end;
               end;
           end;
@@ -172,34 +172,37 @@ begin
 
 end;
 
-function TOPPGuideExecutor.runSubs(dataset: TClientDataset; AFilter: String; Scripter: IOPPGuideScripter; IdentifiableCallback: TOPPIdentifiableClone; completion: TOPPExecutorStateCallback): Boolean;
+function TOPPGuideExecutor.runSubs(ADataprovider: IOPPGuideAPIDataprovider; AFilter: String; Scripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
 var
-  cloned: TClientDataset;
   fObject: IOPPGuideAPIIdentifiable;
+  fList: TOPPGuideAPIIdentifiableList;
 begin
   result := false;
-  if not Assigned(dataset) then
+  if not Assigned(ADataprovider) then
   begin
     if Assigned(completion) then
-      completion(TOPPGuideExecutorRunState.error('', 'Dataset is nil'));
+      completion(TOPPGuideExecutorRunState.error('', 'Dataprovider is nil'));
     exit;
   end;
-  cloned := TClientDataset.Create(nil);
-  try
-    cloned.CloneCursor(dataset, false);
-    cloned.Filter := AFilter;
-    cloned.Filtered := true;
-    cloned.IndexFieldNames := 'Order';
 
-    cloned.First;
-    while not cloned.Eof do
-    begin
-      fObject := IdentifiableCallback(cloned);
-      self.run(dataset, fObject, IdentifiableCallback, true, Scripter, completion);
-      cloned.Next;
-    end;
-  finally
-    cloned.Free;
+  if not Assigned(ADataprovider.GetObjectConverter) then
+  begin
+    if Assigned(completion) then
+      completion(TOPPGuideExecutorRunState.error('', 'Objectconverter is nil'));
+    exit;
+  end;
+
+  fList := ADataprovider.GetObjectConverter.GetObjectsFromDataset(ADataprovider.GetDataset, AFilter);
+  if not Assigned(fList) then
+  begin
+    if Assigned(completion) then
+      completion(TOPPGuideExecutorRunState.error('', 'ObjectList is nil'));
+    exit;
+  end;
+
+  for fObject in fList do
+  begin
+    self.run(ADataprovider, fObject, true, Scripter, completion);
   end;
 end;
 

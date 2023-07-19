@@ -126,7 +126,6 @@
         <DCCReference Include="exportable\OPP_Guide_API_Context_Step_SendMessage_Help.pas"/>
         <DCCReference Include="exportable\OPP_Help_System_Messaging_Pipe.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API_Context_Step_Process.pas"/>
-        <DCCReference Include="wrappers\OPP_Guide_API_Context_Step_Wrapper.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API_Dataprovider.pas"/>
         <DCCReference Include="common\OPP_Guide_Executor.pas"/>
         <DCCReference Include="exportable\OPP_Guide_Executor_State.pas"/>
@@ -134,6 +133,8 @@
         <DCCReference Include="exportable\OPP_Guide_Executor_State_Helper.pas"/>
         <DCCReference Include="test\teststep1.pas"/>
         <DCCReference Include="exportable\OPP_Guide_API_Context_Helper.pas"/>
+        <DCCReference Include="exportable\OPP_Guide_API_Object_Converter.pas"/>
+        <DCCReference Include="exportable\OPP_Guide_API_Identifiable.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   System.Classes,
   OPP_Guide_API,
+  OPP_Guide_API_Identifiable,
   OPP_Guide_Executor_State;
 
 type
@@ -20,6 +21,7 @@ type
     fIdentifier: String;
     fCaption: String;
     fNodeType: String;
+    fPIdentifier: String;
 
   protected
 
@@ -32,12 +34,14 @@ type
     function IdentifierName: String;
     function IdentifierValue: String;
     function PIdentifierName: String;
+    function PIdentifierValue: String;
 
     property Listener: IOPPGuideAPIContextStepListener read fListener write fListener;
     // ----------------
     property NodeType: String read fNodeType write fNodeType;
     property Caption: String read fCaption write fCaption;
     property Identifier: String read fIdentifier write fIdentifier;
+    property PIdentifier: String read fPIdentifier write fPIdentifier;
 
   end;
 
@@ -75,6 +79,11 @@ end;
 function TOPPGuideAPIContextStep.PIdentifierName: String;
 begin
   result := 'pidentifier';
+end;
+
+function TOPPGuideAPIContextStep.PIdentifierValue: String;
+begin
+  result := self.PIdentifier;
 end;
 
 procedure TOPPGuideAPIContextStep.Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);

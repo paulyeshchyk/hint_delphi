@@ -1,6 +1,7 @@
 object OPPGuideForm: TOPPGuideForm
   Left = 0
   Top = 0
+  ActiveControl = cxDBTreeList1
   Caption = 'OPPGuideForm'
   ClientHeight = 881
   ClientWidth = 1159
@@ -853,7 +854,7 @@ object OPPGuideForm: TOPPGuideForm
         44AE426082}
     end
     object dxBarButton6: TdxBarButton
-      Action = actionGuideRunSelected
+      Action = actionGuideRunSelectedDownstairs
       Category = 0
       Glyph.SourceDPI = 96
       Glyph.Data = {
@@ -1077,9 +1078,13 @@ object OPPGuideForm: TOPPGuideForm
       Caption = #1042#1089#1077
       OnExecute = actionGuideRunAllExecute
     end
-    object actionGuideRunSelected: TAction
-      Caption = #1042#1099#1073#1088#1072#1085#1085#1099#1081
-      OnExecute = actionGuideRunSelectedExecute
+    object actionGuideRunSelectedDownstairs: TAction
+      Caption = #1054#1090' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1074#1085#1080#1079
+      OnExecute = actionGuideRunSelectedDownstairsExecute
+    end
+    object actionGuideRunSelectedUpstairs: TAction
+      Caption = 'actionGuideRunSelectedUpstairs'
+      OnExecute = actionGuideRunSelectedUpstairsExecute
     end
     object actionFindPanelShow: TAction
       Caption = 'actionFindPanelShow'
@@ -1109,7 +1114,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 40
     Top = 88
     Bitmap = {
-      494C010103000800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101030008002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1642,7 +1647,7 @@ object OPPGuideForm: TOPPGuideForm
         Action = actionScriptRun
       end
       object actionRunSelected1: TMenuItem
-        Action = actionGuideRunSelected
+        Action = actionGuideRunSelectedDownstairs
       end
       object actionRunAll1: TMenuItem
         Action = actionGuideRunAll
@@ -1686,8 +1691,12 @@ object OPPGuideForm: TOPPGuideForm
         Caption = '-'
       end
       object N18: TMenuItem
-        Action = actionGuideRunSelected
+        Action = actionGuideRunSelectedDownstairs
         Caption = #1053#1072#1095#1072#1074' '#1086#1090' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1074#1085#1080#1079
+      end
+      object actionGuideRunSelectedUpstairs1: TMenuItem
+        Action = actionGuideRunSelectedUpstairs
+        Caption = #1057#1074#1077#1088#1093#1091', '#1079#1072#1082#1086#1085#1095#1080#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1084
       end
     end
   end

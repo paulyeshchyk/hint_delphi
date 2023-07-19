@@ -5,6 +5,7 @@ interface
 uses
   DBClient,
   OPP_Guide_API,
+  OPP_Guide_API_Identifiable,
   OPP_Guide_Executor_State;
 
 type
