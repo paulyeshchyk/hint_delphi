@@ -49,7 +49,6 @@ type
 
   TOPPGuideAPIContextStepSendMessageHelpHelper = class helper for TOPPGuideAPIContextStepSendMessageHelp
   public
-    procedure ValidateHandleOrThrow(AStepIdentifier: String; AFlowBlock: TOPPApplicationHandleValidatorCallback; ACompletion: TOPPGuideAPIContextStepResultCallback);
     procedure OnFlowExecute(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIContextStepResultCallback);
     function SendOpenPage(AProcessHandle: THandle; APredicate: IOPPHelpPredicate): TOPPMessagePipeSendResult;
     procedure OnValidHandleCompletion(AStepIdentifier: String; AHandle: Integer; exitBlock: TOPPGuideAPIContextStepResultCallback);
@@ -104,51 +103,35 @@ procedure TOPPGuideAPIContextStepSendMessageHelpHelper.OnFlowExecute(AStepIdenti
 var
   fResult: TOPPMessagePipeSendResult;
 begin
+  if not Assigned(callback) then
+    raise Exception.Create('Completion is not defined');
 
   fResult := SendOpenPage(AHandle, fPredicate);
 
   case fResult of
     psrSuccess:
-      callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
+      callback(TOPPGuideExecutorRunState.FinishState(AStepIdentifier, Format('Result:%d', [Integer(fResult)]), ''));
   else
-    callback(TOPPGuideExecutorRunState.FinishState(AStepIdentifier, Format('Result:%d', [Integer(fResult)]), ''));
+    callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
   end;
 end;
 
 procedure TOPPGuideAPIContextStepSendMessageHelp.Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
-begin
-
-  try
-    ValidateHandleOrThrow(AStepIdentifier, OnFlowExecute, callback);
-  except
-    on E: Exception do
-    begin
-      eventLogger.Error(E, kContext);
-    end;
-  end;
-end;
-
-procedure TOPPGuideAPIContextStepSendMessageHelp.SetPredicate(APredicate: TProxy_OPPHelpPredicate);
-begin
-  fPredicate := APredicate;
-end;
-
-procedure TOPPGuideAPIContextStepSendMessageHelpHelper.ValidateHandleOrThrow(AStepIdentifier: String; AFlowBlock: TOPPApplicationHandleValidatorCallback; ACompletion: TOPPGuideAPIContextStepResultCallback);
 var
   fHandle: Integer;
 begin
   if Length(self.TargetApplicationHandle) = 0 then
     raise Exception.Create('Handle is not defined');
-
   fHandle := StrToInt(self.TargetApplicationHandle);
   if fHandle = 0 then
     raise Exception.Create('Handle is equal to zero');
-  if not Assigned(AFlowBlock) then
-    raise Exception.Create('Flow is not defined');
-  if not Assigned(ACompletion) then
-    raise Exception.Create('Completion is not defined');
 
-  AFlowBlock(AStepIdentifier, fHandle, ACompletion);
+  OnFlowExecute(AStepIdentifier, fHandle, callback);
+end;
+
+procedure TOPPGuideAPIContextStepSendMessageHelp.SetPredicate(APredicate: TProxy_OPPHelpPredicate);
+begin
+  fPredicate := APredicate;
 end;
 
 end.

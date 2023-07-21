@@ -48,12 +48,11 @@ type
   IOPPGuideAPIDataprovider = interface(IUnknown)
     ['{5849F28F-9DFD-4D55-A54B-085A5CD68048}']
     function GetDataset: TClientDataset;
-    function GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
-    function GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
-    function AddChild(AParentIdentifier: String): IOPPGuideAPIContextStep;
-    function Add(): IOPPGuideAPIContextStep;
-    function SubsCount(AIdentifier: String): Integer;
-    function ActiveItem: IOPPGuideAPIContextStep;
+    function GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function AddChild(AParentIdentifier: String): IOPPGuideAPIIdentifiable;
+    function Add(): IOPPGuideAPIIdentifiable;
+    function ActiveItem: IOPPGuideAPIIdentifiable;
     function ActiveItemSubscCount: Integer;
     function GetObjectConverter: IOPPGuideObjectConverter;
   end;
@@ -63,7 +62,6 @@ type
     procedure Add(AChild: IOPPGuideAPIContext);
     procedure Remove(AChild: IOPPGuideAPIContext);
     procedure Clear;
-    // procedure Execute(const contextItem: IOPPGuideAPIContextStep);
     procedure PushStepState(const AResult: TOPPGuideExecutorRunState);
     function PullStepState(const AStepIdentifier: String): TOPPGuideExecutorRunState;
     procedure SetDataprovider(AValue: IOPPGuideAPIDataprovider);
@@ -75,7 +73,7 @@ type
 
   IOPPGuideAPIContextStep = interface(IUnknown)
     ['{610F0F2E-4034-4310-9F7C-D0D0FCBF9C29}']
-    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); // IOPPGuideAPIContext
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
   end;
 
 implementation
@@ -94,7 +92,7 @@ end;
 
 function TOPPGuideAPIContextStepResult.GetDescription: String;
 begin
-  result := fRecord.userInfo;
+  result := fRecord.executionResult;
 end;
 
 function TOPPGuideAPIContextStepResult.GetState: TOPPGuideExecutorRunState;
@@ -109,7 +107,7 @@ end;
 
 procedure TOPPGuideAPIContextStepResult.SetDescription(const value: String);
 begin
-  fRecord.userInfo := value;
+  //fRecord.userInfo := value;
 end;
 
 procedure TOPPGuideAPIContextStepResult.SetState(const value: TOPPGuideExecutorRunState);

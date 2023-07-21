@@ -8,7 +8,6 @@ type
   TOPPGuideExecutorRunState = record
     stepIdentifier: String;
     value: TOPPGuideExecutorRunStateValue;
-    userInfo: String;
     executionResult: String;
   end;
 

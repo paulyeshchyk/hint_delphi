@@ -24,12 +24,11 @@ type
     constructor Create(AOwner: TComponent); override;
 
     function GetDataset: TClientDataset;
-    function GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
-    function GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
-    function Add(): IOPPGuideAPIContextStep;
-    function AddChild(AParentIdentifier: String): IOPPGuideAPIContextStep;
-    function SubsCount(AIdentifier: String): Integer;
-    function ActiveItem: IOPPGuideAPIContextStep;
+    function GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function Add(): IOPPGuideAPIIdentifiable;
+    function AddChild(AParentIdentifier: String): IOPPGuideAPIIdentifiable;
+    function ActiveItem: IOPPGuideAPIIdentifiable;
     function ActiveItemSubscCount: Integer;
 
     procedure SaveToFile(AFilename: String);
@@ -38,7 +37,7 @@ type
 
     property ClientDataset: TClientDataset read GetDataset write fClientDataset;
     [weak]
-    property ObjectConverter : IOPPGuideObjectConverter read GetObjectConverter write SetObjectConverter;
+    property ObjectConverter: IOPPGuideObjectConverter read GetObjectConverter write SetObjectConverter;
   end;
 
 procedure Register;
@@ -53,68 +52,46 @@ uses
   Variants,
   System.SysUtils;
 
+type
+  TOPPGuideAPIStepFilterType = record helper for TOPPGuideAPIIdentifiableFilterType
+    class function PIdentifier(AIdentifier: String): TOPPGuideAPIIdentifiableFilterType; static;
+  end;
+
 const
   kContext: String = 'GuideAPIProvider';
 
   { TOPPGuideAPIDataprovider }
 
-function TOPPGuideAPIDataprovider.ActiveItem: IOPPGuideAPIContextStep;
+function TOPPGuideAPIDataprovider.ActiveItem: IOPPGuideAPIIdentifiable;
 begin
-  result := fObjectConverter.GetObjectFromDataset(fClientDataset) as IOPPGuideAPIContextStep;
+  result := fObjectConverter.GetObjectFromDataset(fClientDataset);
 end;
 
 function TOPPGuideAPIDataprovider.ActiveItemSubscCount: Integer;
 var
-  fObject : IOPPGuideAPIIdentifiable;
+  fObject: IOPPGuideAPIIdentifiable;
 begin
   result := 0;
   fObject := fObjectConverter.GetObjectFromDataset(fClientDataset);
   if (not Assigned(fObject)) then
     exit;
-  result := SubsCount(fObject.IdentifierValue);
+  result := fObjectConverter.DescendantsCount(fClientDataset, fObject.IdentifierValue);
 end;
 
-function TOPPGuideAPIDataprovider.Add: IOPPGuideAPIContextStep;
+function TOPPGuideAPIDataprovider.Add: IOPPGuideAPIIdentifiable;
 begin
   result := AddChild('');
 end;
 
-function TOPPGuideAPIDataprovider.AddChild(AParentIdentifier: String): IOPPGuideAPIContextStep;
-var
-  id: String;
-  fGUID: TGuid;
-  cnt: Integer;
+function TOPPGuideAPIDataprovider.AddChild(AParentIdentifier: String): IOPPGuideAPIIdentifiable;
 begin
-  if not fClientDataset.Active then
-  begin
-    result := nil;
-    exit;
-  end;
-
-  CreateGUID(fGUID);
-  id := GUIDToString(fGUID);
-
-  cnt := SubsCount(AParentIdentifier);
-
-  fClientDataset.Insert;
   try
-    try
-      fClientDataset.FieldByName('identifier').Value := id;
-      if Length(AParentIdentifier) = 0 then
-        fClientDataset.FieldByName('pidentifier').Value := null
-      else
-        fClientDataset.FieldByName('pidentifier').Value := AParentIdentifier;
-      fClientDataset.FieldByName('Caption').AsString := id;
-      fClientDataset.FieldByName('Order').AsInteger := cnt;
-      fClientDataset.FieldByName('NodeType').AsInteger := 0;
-    except
-      on E: Exception do
-      begin
-        eventLogger.Error(E, kContext);
-      end;
+    result := fObjectConverter.NewObject(fClientDataset, AParentIdentifier);
+  except
+    on E: Exception do
+    begin
+      eventLogger.Error(E, kContext);
     end;
-  finally
-    fClientDataset.Post;
   end;
 end;
 
@@ -134,7 +111,6 @@ begin
   finally
     fClientDataset.EnableControls;
   end;
-
 end;
 
 function TOPPGuideAPIDataprovider.GetDataset: TClientDataset;
@@ -152,11 +128,13 @@ begin
   fObjectConverter := Value;
 end;
 
-function TOPPGuideAPIDataprovider.GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
+function TOPPGuideAPIDataprovider.GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
 var
   fFilter: String;
   cloned: TClientDataset;
   fPIdentifier: String;
+  fList: TOPPGuideAPIIdentifiableList;
+  fItem: IOPPGuideAPIIdentifiable;
 begin
   result := nil;
 
@@ -169,24 +147,16 @@ begin
     exit;
   end;
 
-  fFilter := Format('identifier LIKE ''%s''', [AIdentifier]);
+  fFilter := fObjectConverter.FilterForIdentifier(AIdentifier);
 
-  cloned := TClientDataset.Create(nil);
-  try
-    cloned.CloneCursor(fClientDataset, false);
-    cloned.Filter := fFilter;
-    cloned.Filtered := true;
-    if cloned.RecordCount = 1 then
-    begin
-      fPIdentifier := cloned.FieldByName('pidentifier').AsString;
-      result := GetStepByIdentifier(fPIdentifier);
-    end;
-  finally
-    cloned.Free;
-  end;
+  fList := fObjectConverter.GetObjectsFromDataset(fClientDataset, fFilter);
+  if not(Assigned(fList) and (fList.Count = 1)) then
+    exit;
+  fItem := fList.First;
+  result := GetStepByIdentifier(fItem.PIdentifierValue);
 end;
 
-function TOPPGuideAPIDataprovider.GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIContextStep;
+function TOPPGuideAPIDataprovider.GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
 var
   fFilter: String;
   fList: TOPPGuideAPIIdentifiableList;
@@ -201,18 +171,19 @@ begin
     exit;
   end;
 
-  fFilter := Format('identifier LIKE ''%s''', [AIdentifier]);
-
+  fFilter := fObjectConverter.FilterForIdentifier(AIdentifier);
   fList := fObjectConverter.GetObjectsFromDataset(fClientDataset, fFilter);
-  if not Assigned(fList) then begin
+  if not Assigned(fList) then
+  begin
     exit;
   end;
 
-  if (fList.Count <> 1) then begin
+  if (fList.Count <> 1) then
+  begin
     exit;
   end;
 
-  result := fList.First as IOPPGuideAPIContextStep;
+  result := fList.First;
 end;
 
 procedure TOPPGuideAPIDataprovider.LoadFromFile(AFilename: String);
@@ -229,30 +200,15 @@ begin
   fClientDataset.SaveToFile(AFilename, dfXMLUTF8);
 end;
 
-function TOPPGuideAPIDataprovider.SubsCount(AIdentifier: String): Integer;
-var
-  fFilter: String;
-  fList: TOPPGuideAPIIdentifiableList;
-begin
-  result := 0;
-
-  if (VarIsNull(AIdentifier) or VarIsEmpty(AIdentifier)) then
-  begin
-    fFilter := Format('pidentifier IS NULL', []);
-  end else begin
-    fFilter := Format('pidentifier LIKE ''%s''', [AIdentifier]);
-  end;
-
-  fList := fObjectConverter.GetObjectsFromDataset(fClientDataset, fFilter);
-  if not Assigned(fList) then begin
-    exit;
-  end;
-
-  result := fList.Count;
-end;
-
 procedure Register;
 begin
+end;
+
+{ TOPPGuideAPIStepFilterType }
+
+class function TOPPGuideAPIStepFilterType.PIdentifier(AIdentifier: String): TOPPGuideAPIIdentifiableFilterType;
+begin
+  TOPPGuideAPIIdentifiableFilterType.Filter('PIdentifier',AIdentifier)
 end;
 
 end.

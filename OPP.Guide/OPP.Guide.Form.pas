@@ -187,7 +187,7 @@ type
     fSettings: IOPPGuideSettings;
     procedure BuildPanelTriggers(AMenuItem: TMenuItem);
     procedure DoUpdateStatusBarWidths;
-    procedure fScriptRunCompletion(AState: TOPPGuideExecutorRunState);
+    procedure OnScriptConsoleLogOutput(AState: TOPPGuideExecutorRunState);
     class function GetApplicationTitle: String; static;
     procedure LoadDatasetContent(AFilename: String);
     procedure ReadDefaults;
@@ -346,10 +346,9 @@ var
   fList: TOPPGuideAPIIdentifiableList;
 begin
 
-  fFilter := Format('pidentifier IS NULL', []);
-
   cxMemo1.Clear;
 
+  fFilter := fDataprovider.ObjectConverter.FilterForPIdentifier('');
   fList := fDataprovider.ObjectConverter.GetObjectsFromDataset(DataSetTreeView, fFilter);
   if not assigned(fList) then
   begin
@@ -358,7 +357,7 @@ begin
 
   for fObject in fList do
   begin
-    TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, fScriptRunCompletion);
+    TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, OnScriptConsoleLogOutput);
   end;
 end;
 
@@ -372,7 +371,7 @@ begin
   fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
   try
     try
-      TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, fScriptRunCompletion);
+      TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, OnScriptConsoleLogOutput);
     except
       on E: Exception do
       begin
@@ -406,7 +405,7 @@ procedure TOPPGuideForm.actionScriptCompileExecute(Sender: TObject);
 begin
   actionScriptSave.Execute;
 
-  TOPPGuideExecutor.shared.compile(fDataprovider, false, fScripter, self.fScriptRunCompletion);
+  TOPPGuideExecutor.shared.compile(fDataprovider, false, fScripter, self.OnScriptConsoleLogOutput);
 end;
 
 procedure TOPPGuideForm.actionScriptRunExecute(Sender: TObject);
@@ -418,7 +417,7 @@ begin
   try
     fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
     try
-      TOPPGuideExecutor.shared.run(fDataprovider, fObject, false, fScripter, fScriptRunCompletion);
+      TOPPGuideExecutor.shared.run(fDataprovider, fObject, false, fScripter, OnScriptConsoleLogOutput);
     except
       on E: Exception do
       begin
@@ -651,7 +650,7 @@ begin
   dxStatusBar2.Panels[0].Width := 40 + dxStatusBar2.Canvas.TextWidth('9999:9999');
 end;
 
-procedure TOPPGuideForm.fScriptRunCompletion(AState: TOPPGuideExecutorRunState);
+procedure TOPPGuideForm.OnScriptConsoleLogOutput(AState: TOPPGuideExecutorRunState);
 var
   Log: String;
 begin
