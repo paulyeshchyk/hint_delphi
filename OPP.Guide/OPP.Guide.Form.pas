@@ -149,7 +149,6 @@ type
     actionGuideRunSelectedUpstairs1: TMenuItem;
     procedure actionAddChildRecordExecute(Sender: TObject);
     procedure actionAddRecordExecute(Sender: TObject);
-    procedure actionClearRecentListExecute(Sender: TObject);
     procedure actionCloseExecute(Sender: TObject);
     procedure actionFindPanelShowExecute(Sender: TObject);
     procedure actionGuideExportAsExecute(Sender: TObject);
@@ -247,7 +246,6 @@ type
 
 procedure TOPPGuideForm.actionAddChildRecordExecute(Sender: TObject);
 var
-  pid: Variant;
   fActiveItem: IOPPGuideAPIIdentifiable;
 begin
 
@@ -285,11 +283,6 @@ begin
   finally
     cxDBTreeList1.EndUpdate;
   end;
-end;
-
-procedure TOPPGuideForm.actionClearRecentListExecute(Sender: TObject);
-begin
-  fSettings.ClearHierarchyFilenameRecentList;
 end;
 
 procedure TOPPGuideForm.actionCloseExecute(Sender: TObject);
@@ -341,7 +334,6 @@ end;
 procedure TOPPGuideForm.actionGuideRunAllExecute(Sender: TObject);
 var
   fFilter: String;
-  cloned: TClientDataset;
   fObject: IOPPGuideAPIIdentifiable;
   fList: TOPPGuideAPIIdentifiableList;
 begin
@@ -363,7 +355,6 @@ end;
 
 procedure TOPPGuideForm.actionGuideRunSelectedDownstairsExecute(Sender: TObject);
 var
-  fScriptResult: Variant;
   fObject: IOPPGuideAPIIdentifiable;
 begin
   cxMemo1.Clear;
@@ -813,6 +804,10 @@ begin
         fSourceDS.FieldByName(AFieldName).Value := fDestinatonValue;
         fSourceDS.Post;
       except
+        on E: Exception do
+        begin
+          eventLogger.Error(E, kContext);
+        end;
       end;
 
       try
@@ -820,6 +815,10 @@ begin
         fDestinationDS.FieldByName(AFieldName).Value := fSourceValue;
         fDestinationDS.Post;
       except
+        on E: Exception do
+        begin
+          eventLogger.Error(E, kContext);
+        end;
       end;
     finally
       fDestinationDS.Free;

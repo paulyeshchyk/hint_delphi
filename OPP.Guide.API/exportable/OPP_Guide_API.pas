@@ -16,6 +16,7 @@ type
   TOPPGuideAPIContextStepResultCallback = TProc<TOPPGuideExecutorRunState>;
 
   IOPPGuideScripter = interface
+    ['{795CF965-9560-43D0-B7A2-A5CCDAAABC24}']
     function RunScript(AStrings: TStrings): Variant; overload;
     function RunScript(AScriptText: String): Variant; overload;
     function RunScript(AStream: TMemoryStream; AIdentifiable: IOPPGuideAPIIdentifiable): Variant; overload;
@@ -23,6 +24,7 @@ type
   end;
 
   IOPPGuideAPIContextStepResult = interface(IUnknown)
+    ['{0E910822-6C7B-4B59-AF14-A8CCBC24AB1E}']
   end;
 
   TOPPGuideAPIContextStepResult = class
@@ -48,9 +50,9 @@ type
   IOPPGuideAPIDataprovider = interface(IUnknown)
     ['{5849F28F-9DFD-4D55-A54B-085A5CD68048}']
     function GetDataset: TClientDataset;
-    function GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
-    function GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
-    function AddChild(AParentIdentifier: String): IOPPGuideAPIIdentifiable;
+    function GetStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function GetParentStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function AddChild(const AParentIdentifier: String): IOPPGuideAPIIdentifiable;
     function Add(): IOPPGuideAPIIdentifiable;
     function ActiveItem: IOPPGuideAPIIdentifiable;
     function ActiveItemSubscCount: Integer;
@@ -87,7 +89,7 @@ end;
 
 constructor TOPPGuideAPIContextStepResult.Create;
 begin
-  //
+  inherited;
 end;
 
 function TOPPGuideAPIContextStepResult.GetDescription: String;
@@ -107,7 +109,7 @@ end;
 
 procedure TOPPGuideAPIContextStepResult.SetDescription(const value: String);
 begin
-  //fRecord.userInfo := value;
+  // fRecord.userInfo := value;
 end;
 
 procedure TOPPGuideAPIContextStepResult.SetState(const value: TOPPGuideExecutorRunState);

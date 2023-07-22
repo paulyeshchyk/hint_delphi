@@ -24,23 +24,21 @@ type
     constructor Create(AOwner: TComponent); override;
 
     function GetDataset: TClientDataset;
-    function GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
-    function GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function GetStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
+    function GetParentStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
     function Add(): IOPPGuideAPIIdentifiable;
-    function AddChild(AParentIdentifier: String): IOPPGuideAPIIdentifiable;
+    function AddChild(const AParentIdentifier: String): IOPPGuideAPIIdentifiable;
     function ActiveItem: IOPPGuideAPIIdentifiable;
     function ActiveItemSubscCount: Integer;
 
-    procedure SaveToFile(AFilename: String);
-    procedure LoadFromFile(AFilename: String);
+    procedure SaveToFile(const AFilename: String);
+    procedure LoadFromFile(const AFilename: String);
     procedure EmptyDataset;
 
     property ClientDataset: TClientDataset read GetDataset write fClientDataset;
     [weak]
     property ObjectConverter: IOPPGuideObjectConverter read GetObjectConverter write SetObjectConverter;
   end;
-
-procedure Register;
 
 implementation
 
@@ -83,7 +81,7 @@ begin
   result := AddChild('');
 end;
 
-function TOPPGuideAPIDataprovider.AddChild(AParentIdentifier: String): IOPPGuideAPIIdentifiable;
+function TOPPGuideAPIDataprovider.AddChild(const AParentIdentifier: String): IOPPGuideAPIIdentifiable;
 begin
   try
     result := fObjectConverter.NewObject(fClientDataset, AParentIdentifier);
@@ -128,7 +126,7 @@ begin
   fObjectConverter := Value;
 end;
 
-function TOPPGuideAPIDataprovider.GetParentStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
+function TOPPGuideAPIDataprovider.GetParentStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
 var
   fFilter: String;
   cloned: TClientDataset;
@@ -156,7 +154,7 @@ begin
   result := GetStepByIdentifier(fItem.PIdentifierValue);
 end;
 
-function TOPPGuideAPIDataprovider.GetStepByIdentifier(AIdentifier: String): IOPPGuideAPIIdentifiable;
+function TOPPGuideAPIDataprovider.GetStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
 var
   fFilter: String;
   fList: TOPPGuideAPIIdentifiableList;
@@ -186,22 +184,18 @@ begin
   result := fList.First;
 end;
 
-procedure TOPPGuideAPIDataprovider.LoadFromFile(AFilename: String);
+procedure TOPPGuideAPIDataprovider.LoadFromFile(const AFilename: String);
 begin
   if not Assigned(fClientDataset) then
     exit;
   fClientDataset.LoadFromFile(AFilename);
 end;
 
-procedure TOPPGuideAPIDataprovider.SaveToFile(AFilename: String);
+procedure TOPPGuideAPIDataprovider.SaveToFile(const AFilename: String);
 begin
   if not Assigned(fClientDataset) then
     exit;
   fClientDataset.SaveToFile(AFilename, dfXMLUTF8);
-end;
-
-procedure Register;
-begin
 end;
 
 { TOPPGuideAPIStepFilterType }

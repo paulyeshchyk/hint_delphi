@@ -596,13 +596,8 @@ object OPPGuideForm: TOPPGuideForm
     BarManager = dxBarManager1
   end
   object dxDockingManager1: TdxDockingManager
+    AutoHideMovingSize = 35
     Color = clBtnFace
-    DefaultFloatSiteProperties.Font.Charset = DEFAULT_CHARSET
-    DefaultFloatSiteProperties.Font.Color = clWindowText
-    DefaultFloatSiteProperties.Font.Height = -11
-    DefaultFloatSiteProperties.Font.Name = 'Segoe UI'
-    DefaultFloatSiteProperties.Font.Style = []
-    DefaultFloatSiteProperties.ManagerFont = False
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
     DefaultHorizContainerSiteProperties.ImageIndex = -1
@@ -613,14 +608,17 @@ object OPPGuideForm: TOPPGuideForm
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
+    DockZonesWidth = 35
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -19
     Font.Name = 'Segoe UI'
     Font.Style = []
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ResizeZonesWidth = 5
+    SelectionFrameWidth = 7
     Left = 456
     Top = 552
     PixelsPerInch = 96

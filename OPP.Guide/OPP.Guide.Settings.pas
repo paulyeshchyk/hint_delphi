@@ -21,6 +21,8 @@ type
   TOPPGuideOnFilenameWrite = reference to procedure(AFileName: String);
 
   IOPPGuideSettings = interface
+    ['{523662DF-A1C4-4E63-BD25-A0A8641A156C}']
+
     procedure Load;
 
     procedure OnFormFrameLoad(const Value: TOPPGuideOnFormFrameLoad);
@@ -35,7 +37,6 @@ type
     procedure OnHierarchyFileSave(const Value: TOPPGuideOnFilenameWrite);
 
     procedure SetDefaultHierarchyFilename(const AFileName: String);
-    procedure ClearHierarchyFilenameRecentList();
     procedure OnHierarchyFilenameRecentListLoad(const Value: TOPPGuideOnLoadStringList);
   end;
 
@@ -53,7 +54,6 @@ type
     fOnHierarchyFilenameRecentListLoad: TOPPGuideOnLoadStringList;
     procedure Save;
   public
-    constructor Create;
     destructor Destroy; override;
 
     procedure Load;
@@ -70,7 +70,6 @@ type
     procedure OnDockingFileSave(const Value: TOPPGuideOnFilenameWrite);
 
     procedure SetDefaultHierarchyFilename(const AFileName: String);
-    procedure ClearHierarchyFilenameRecentList();
     procedure OnHierarchyFilenameRecentListLoad(const Value: TOPPGuideOnLoadStringList);
   end;
 
@@ -82,8 +81,8 @@ type
     // fHierarchyFileNameRecentList: TStringList;
   public
 
-    class procedure Save(AFileName: String; AData: TOPPGuideSettingsData);
-    class procedure Load(AFileName: String; out AData: TOPPGuideSettingsData);
+    class procedure Save(Const AFileName: String; AData: TOPPGuideSettingsData);
+    class procedure Load(const AFileName: String; out AData: TOPPGuideSettingsData);
 
     constructor Create;
     destructor Destroy; override;
@@ -107,6 +106,8 @@ const
 
 constructor TOPPGuideSettingsData.Create;
 begin
+  inherited;
+
   fDockLayoutFileName := 'opp.guide.docking.ini';
   fHierarchyFileName := 'opp.guide.xml';
   fFormFrame := TRect.Create(TPoint.Create(0, 0), 1400, 1100);
@@ -119,7 +120,7 @@ begin
   inherited;
 end;
 
-class procedure TOPPGuideSettingsData.Load(AFileName: String; out AData: TOPPGuideSettingsData);
+class procedure TOPPGuideSettingsData.Load(const AFileName: String; out AData: TOPPGuideSettingsData);
 begin
   try
     TOPPCodableHelper<TOPPGuideSettingsData>.Decode(AFileName, AData);
@@ -132,7 +133,7 @@ begin
   end;
 end;
 
-class procedure TOPPGuideSettingsData.Save(AFileName: String; AData: TOPPGuideSettingsData);
+class procedure TOPPGuideSettingsData.Save(const AFileName: String; AData: TOPPGuideSettingsData);
 begin
   try
     TOPPCodableHelper<TOPPGuideSettingsData>.Encode(AFileName, AData);
@@ -145,15 +146,6 @@ begin
 end;
 
 { TOPPGuideSettings }
-
-procedure TOPPGuideSettings.ClearHierarchyFilenameRecentList;
-begin
-  //
-end;
-
-constructor TOPPGuideSettings.Create;
-begin
-end;
 
 destructor TOPPGuideSettings.Destroy;
 begin
@@ -208,7 +200,6 @@ end;
 
 procedure TOPPGuideSettings.Load;
 var
-  fResult: TOPPGuideSettingsData;
   fFilePath: String;
 begin
   fFilePath := TOPPHelpSystemFilesHelper.GetOPPSettingsPath(SOPPGuideSettingsFileName);
@@ -265,7 +256,7 @@ begin
       on E: Exception do
       begin
         eventLogger.Error(E, kContext);
-        raise E;
+        raise;
       end;
     end;
   end;
