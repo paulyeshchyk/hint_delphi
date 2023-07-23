@@ -11,6 +11,7 @@ uses
 type
 
   TOPPExecutorStateCallback = reference to procedure(AState: TOPPGuideExecutorRunState);
+  TOPPGuideExecutorCompletion = reference to procedure(AItem: IOPPGuideAPIIdentifiable; AState: TOPPGuideExecutorRunState);
 
   TOPPIdentifiableClone = reference to function(ADataset: TClientDataset): IOPPGuideAPIIdentifiable;
 

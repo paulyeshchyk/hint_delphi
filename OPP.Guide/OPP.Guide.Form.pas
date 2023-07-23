@@ -22,7 +22,7 @@ uses
   OPP.Help.Vcl.PanelTrigger,
   OPP.Guide.Settings,
   OPP.Help.System.Codable.FormSizeSettings,
-  OPP.Guide.Scripter, ScrMemo, ScrMps, Vcl.Menus;
+  OPP.Guide.Scripter, ScrMemo, ScrMps, Vcl.Menus, dxScrollbarAnnotations;
 
 type
   TOPPGuideForm = class(TForm)
@@ -219,7 +219,7 @@ uses
   OPP.Help.System.Files,
   OPP.Help.System.Application,
 
-  OPP.Guide.Scripter.TMS,
+  // OPP.Guide.Scripter.TMS,
   OPP.Guide.Scripter.DC,
 
   OPP_Guide_Executor_State_Helper,
@@ -349,7 +349,7 @@ begin
 
   for fObject in fList do
   begin
-    TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, OnScriptConsoleLogOutput);
+    TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndFromNodeToChildren, fScripter, OnScriptConsoleLogOutput);
   end;
 end;
 
@@ -362,7 +362,7 @@ begin
   fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
   try
     try
-      TOPPGuideExecutor.shared.run(fDataprovider, fObject, true, fScripter, OnScriptConsoleLogOutput);
+      TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndFromNodeToChildren, fScripter, OnScriptConsoleLogOutput);
     except
       on E: Exception do
       begin
@@ -375,8 +375,24 @@ begin
 end;
 
 procedure TOPPGuideForm.actionGuideRunSelectedUpstairsExecute(Sender: TObject);
+var
+  fObject: IOPPGuideAPIIdentifiable;
 begin
-  //
+  cxMemo1.Clear;
+
+  fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
+  try
+    try
+      TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndFromNodeToParent, fScripter, OnScriptConsoleLogOutput);
+    except
+      on E: Exception do
+      begin
+        eventLogger.Error(E, kContext);
+      end;
+    end;
+  finally
+    fObject := nil;
+  end;
 end;
 
 procedure TOPPGuideForm.actionHelpExecute(Sender: TObject);
@@ -408,7 +424,7 @@ begin
   try
     fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
     try
-      TOPPGuideExecutor.shared.run(fDataprovider, fObject, false, fScripter, OnScriptConsoleLogOutput);
+      TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndNodeOnly, fScripter, OnScriptConsoleLogOutput);
     except
       on E: Exception do
       begin
@@ -533,6 +549,7 @@ begin
 {$REGION '  To be removed asap'}
   TOPPGuideAPIContext.shared.SetDataprovider(nil);
 {$ENDREGION}
+
   fScripter := nil;
   fScriptPanelTrigger := nil;
   fSettings := nil;
@@ -541,7 +558,7 @@ end;
 procedure TOPPGuideForm.FormCreate(Sender: TObject);
 begin
 
-  dxDockingManager1.ScaleForPPI(96);
+  dxDockingManager1.ScaleForPPI(192);
 
   eventLogger.Flow('Form Created', kContext);
 

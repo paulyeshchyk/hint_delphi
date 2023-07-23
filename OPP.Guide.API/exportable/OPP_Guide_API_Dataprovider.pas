@@ -30,6 +30,9 @@ type
     function AddChild(const AParentIdentifier: String): IOPPGuideAPIIdentifiable;
     function ActiveItem: IOPPGuideAPIIdentifiable;
     function ActiveItemSubscCount: Integer;
+    function BuildFilter(fieldName, pident: Variant): String;
+    procedure ListOfNodes(AStartFrom: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; ACompletion: TOPPGuideChainOnAddItem);
+    procedure GetScriptedStream(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
 
     procedure SaveToFile(const AFilename: String);
     procedure LoadFromFile(const AFilename: String);
@@ -46,13 +49,20 @@ uses
   // remove asap
   OPP_Guide_API_Context_Step,
 
+  Data.DB,
   OPP.Help.Log,
   Variants,
-  System.SysUtils;
+  System.SysUtils, System.Generics.Collections;
 
 type
   TOPPGuideAPIStepFilterType = record helper for TOPPGuideAPIIdentifiableFilterType
     class function PIdentifier(AIdentifier: String): TOPPGuideAPIIdentifiableFilterType; static;
+  end;
+
+  TOPPBlobToStreamCompletion2 = reference to procedure(AStream: TStream);
+
+  TOPPClientDataSetHelper = class helper for TDataSet
+    procedure BlobToStream(AFieldName: String; completion: TOPPBlobToStreamCompletion2); overload;
   end;
 
 const
@@ -154,6 +164,45 @@ begin
   result := GetStepByIdentifier(fItem.PIdentifierValue);
 end;
 
+procedure TOPPGuideAPIDataprovider.GetScriptedStream(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
+var
+  fFilter: String;
+  fCDS: TClientDataset;
+  fIdent, fIdentName: String;
+begin
+  if not Assigned(AObject) then
+  begin
+    if Assigned(completion) then
+      completion(nil, nil);
+    exit;
+  end;
+
+  fIdent := AObject.IdentifierValue;
+  fIdentName := AObject.IdentifierName;
+
+  if ((VarIsNull(fIdent)) or (VarIsEmpty(fIdent))) then
+  begin
+    if Assigned(completion) then
+      completion(nil, nil);
+    exit;
+  end;
+
+  fFilter := self.BuildFilter(fIdentName, fIdent);
+  fCDS := TClientDataset.Create(nil);
+  try
+    fCDS.CloneCursor(self.GetDataset, false);
+    fCDS.Filter := fFilter;
+    fCDS.Filtered := true;
+    fCDS.BlobToStream('Script',
+      procedure(AStream: TStream)
+      begin
+        completion(AStream, AObject);
+      end);
+  finally
+    fCDS.Free;
+  end;
+end;
+
 function TOPPGuideAPIDataprovider.GetStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
 var
   fFilter: String;
@@ -184,6 +233,47 @@ begin
   result := fList.First;
 end;
 
+procedure TOPPGuideAPIDataprovider.ListOfNodes(AStartFrom: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; ACompletion: TOPPGuideChainOnAddItem);
+var
+  fSubsFilter: String;
+  fChild: IOPPGuideAPIIdentifiable;
+  fChildrenList: TList<IOPPGuideAPIIdentifiable>;
+begin
+  if not Assigned(AStartFrom) then
+    exit;
+  case ADirection of
+    ndNodeOnly:
+      begin
+        if Assigned(ACompletion) then
+          ACompletion(AStartFrom);
+      end;
+    ndFromNodeToChildren:
+      begin
+        if Assigned(ACompletion) then
+          ACompletion(AStartFrom);
+
+        fSubsFilter := self.BuildFilter(AStartFrom.PIdentifierName, AStartFrom.IdentifierValue);
+        fChildrenList := self.GetObjectConverter.GetObjectsFromDataset(self.GetDataset, fSubsFilter);
+
+        for fChild in fChildrenList do
+        begin
+          self.ListOfNodes(fChild, ADirection, ACompletion);
+        end;
+      end;
+    ndFromNodeToParent:
+      begin
+        fSubsFilter := self.BuildFilter(AStartFrom.IdentifierName, AStartFrom.PIdentifierValue);
+        fChildrenList := self.GetObjectConverter.GetObjectsFromDataset(Self.GetDataset, fSubsFilter);
+        for fChild in fChildrenList do
+        begin
+          self.ListOfNodes(fChild, ADirection, ACompletion);
+        end;
+        if Assigned(ACompletion) then
+          ACompletion(AStartFrom);
+      end;
+  end;
+end;
+
 procedure TOPPGuideAPIDataprovider.LoadFromFile(const AFilename: String);
 begin
   if not Assigned(fClientDataset) then
@@ -198,11 +288,59 @@ begin
   fClientDataset.SaveToFile(AFilename, dfXMLUTF8);
 end;
 
+function TOPPGuideAPIDataprovider.BuildFilter(fieldName, pident: Variant): String;
+begin
+  if VarIsNull(fieldName) or VarIsEmpty(fieldName) then
+  begin
+    result := '';
+    exit;
+  end;
+
+  if VarIsNull(pident) or VarIsEmpty(pident) then
+  begin
+    result := '';
+  end else begin
+    result := Format('%s LIKE ''%s''', [VarToStr(fieldName), VarToStr(pident)]);
+  end;
+end;
+
 { TOPPGuideAPIStepFilterType }
 
 class function TOPPGuideAPIStepFilterType.PIdentifier(AIdentifier: String): TOPPGuideAPIIdentifiableFilterType;
 begin
-  TOPPGuideAPIIdentifiableFilterType.Filter('PIdentifier',AIdentifier)
+  TOPPGuideAPIIdentifiableFilterType.Filter('PIdentifier', AIdentifier)
+end;
+
+{ TOPPClientDataSetHelper }
+
+procedure TOPPClientDataSetHelper.BlobToStream(AFieldName: String; completion: TOPPBlobToStreamCompletion2);
+var
+  fField: TField;
+  pBytes: TArray<Byte>;
+  fDataSize: Integer;
+  fStream: TStream;
+begin
+
+  if not Assigned(completion) then
+    exit;
+
+  fField := Fields.FieldByName(AFieldName);
+  if not Assigned(fField) then
+  begin
+    completion(nil);
+    exit;
+  end;
+  pBytes := fField.AsBytes;
+
+  fDataSize := Length(pBytes);
+  fStream := TMemoryStream.Create;
+  try
+    fStream.Write(fDataSize, SizeOf(fDataSize));
+    fStream.Write(pBytes, Length(pBytes));
+    completion(fStream);
+  finally
+    fStream.Free;
+  end;
 end;
 
 end.

@@ -9,11 +9,14 @@
         <Projects Include="OPP.Guide.API\OPP.Guide.API.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj">
+        <Projects Include="..\..\DreamControls\OPP.Guide.DC.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="D:\projects\OPP.Guide.DC\OPP.Guide.DC.API.dproj">
-            <Dependencies>OPP.Guide.API\OPP.Guide.API.dproj</Dependencies>
+        <Projects Include="..\..\DreamControls\OPP.Guide.DC.API.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj">
+            <Dependencies/>
         </Projects>
         <Projects Include="OPP.Help.Preview\OPPHelpPreview.dproj">
             <Dependencies/>
@@ -25,7 +28,7 @@
             <Dependencies/>
         </Projects>
         <Projects Include="OPP.Guide\OPP.Guide.dproj">
-            <Dependencies>D:\projects\OPP.Guide.DC\OPP.Guide.DC.API.dproj</Dependencies>
+            <Dependencies/>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -54,22 +57,31 @@
         <MSBuild Projects="OPP.Guide.API\OPP.Guide.API.dproj" Targets="Make"/>
     </Target>
     <Target Name="OPP_Guide_DC">
-        <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj"/>
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.dproj"/>
     </Target>
     <Target Name="OPP_Guide_DC:Clean">
-        <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.dproj" Targets="Clean"/>
     </Target>
     <Target Name="OPP_Guide_DC:Make">
-        <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.dproj" Targets="Make"/>
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPP_Guide_DC_API" DependsOnTargets="OPP.Guide.API">
-        <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.API.dproj"/>
+    <Target Name="OPP_Guide_DC_API">
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.API.dproj"/>
     </Target>
-    <Target Name="OPP_Guide_DC_API:Clean" DependsOnTargets="OPP.Guide.API:Clean">
-        <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.API.dproj" Targets="Clean"/>
+    <Target Name="OPP_Guide_DC_API:Clean">
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.API.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPP_Guide_DC_API:Make" DependsOnTargets="OPP.Guide.API:Make">
-        <MSBuild Projects="D:\projects\OPP.Guide.DC\OPP.Guide.DC.API.dproj" Targets="Make"/>
+    <Target Name="OPP_Guide_DC_API:Make">
+        <MSBuild Projects="..\..\DreamControls\OPP.Guide.DC.API.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OPP_Guide_TMS">
+        <MSBuild Projects="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj"/>
+    </Target>
+    <Target Name="OPP_Guide_TMS:Clean">
+        <MSBuild Projects="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OPP_Guide_TMS:Make">
+        <MSBuild Projects="..\..\OPP.Guide.TMS\OPP.Guide.TMS.dproj" Targets="Make"/>
     </Target>
     <Target Name="OPPHelpPreview">
         <MSBuild Projects="OPP.Help.Preview\OPPHelpPreview.dproj"/>
@@ -98,23 +110,23 @@
     <Target Name="OPP_BufferManager:Make">
         <MSBuild Projects="OPP.Buffer\OPP.BufferManager.dproj" Targets="Make"/>
     </Target>
-    <Target Name="OPP_Guide" DependsOnTargets="OPP.Guide.DC.API">
+    <Target Name="OPP_Guide">
         <MSBuild Projects="OPP.Guide\OPP.Guide.dproj"/>
     </Target>
-    <Target Name="OPP_Guide:Clean" DependsOnTargets="OPP.Guide.DC.API:Clean">
+    <Target Name="OPP_Guide:Clean">
         <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="OPP_Guide:Make" DependsOnTargets="OPP.Guide.DC.API:Make">
+    <Target Name="OPP_Guide:Make">
         <MSBuild Projects="OPP.Guide\OPP.Guide.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="OPPHelp;OPP_Guide_API;OPP_Guide_DC;OPP_Guide_DC_API;OPPHelpPreview;OPP_HelpEditor;OPP_BufferManager;OPP_Guide"/>
+        <CallTarget Targets="OPPHelp;OPP_Guide_API;OPP_Guide_DC;OPP_Guide_DC_API;OPP_Guide_TMS;OPPHelpPreview;OPP_HelpEditor;OPP_BufferManager;OPP_Guide"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="OPPHelp:Clean;OPP_Guide_API:Clean;OPP_Guide_DC:Clean;OPP_Guide_DC_API:Clean;OPPHelpPreview:Clean;OPP_HelpEditor:Clean;OPP_BufferManager:Clean;OPP_Guide:Clean"/>
+        <CallTarget Targets="OPPHelp:Clean;OPP_Guide_API:Clean;OPP_Guide_DC:Clean;OPP_Guide_DC_API:Clean;OPP_Guide_TMS:Clean;OPPHelpPreview:Clean;OPP_HelpEditor:Clean;OPP_BufferManager:Clean;OPP_Guide:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="OPPHelp:Make;OPP_Guide_API:Make;OPP_Guide_DC:Make;OPP_Guide_DC_API:Make;OPPHelpPreview:Make;OPP_HelpEditor:Make;OPP_BufferManager:Make;OPP_Guide:Make"/>
+        <CallTarget Targets="OPPHelp:Make;OPP_Guide_API:Make;OPP_Guide_DC:Make;OPP_Guide_DC_API:Make;OPP_Guide_TMS:Make;OPPHelpPreview:Make;OPP_HelpEditor:Make;OPP_BufferManager:Make;OPP_Guide:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

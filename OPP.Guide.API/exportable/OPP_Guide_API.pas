@@ -12,6 +12,8 @@ uses
   OPP_Guide_API_Object_Converter;
 
 type
+  TOPPGuideExecutionNodeDirection = (ndNodeOnly = 0, ndFromNodeToParent = 1, ndFromNodeToChildren = 2);
+  TOPPGuideChainOnAddItem = reference to procedure(AItem: IOPPGuideAPIIdentifiable);
 
   TOPPGuideAPIContextStepResultCallback = TProc<TOPPGuideExecutorRunState>;
 
@@ -47,6 +49,7 @@ type
 
   IOPPGuideAPIContextStep = interface;
 
+  TOPPBlobToStreamCompletion = reference to procedure(AStream: TStream; userInfo: IOPPGuideAPIIdentifiable);
   IOPPGuideAPIDataprovider = interface(IUnknown)
     ['{5849F28F-9DFD-4D55-A54B-085A5CD68048}']
     function GetDataset: TClientDataset;
@@ -57,6 +60,11 @@ type
     function ActiveItem: IOPPGuideAPIIdentifiable;
     function ActiveItemSubscCount: Integer;
     function GetObjectConverter: IOPPGuideObjectConverter;
+    procedure GetScriptedStream(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
+
+    function BuildFilter(fieldName, pident: Variant): String;
+
+    procedure ListOfNodes(AStartFrom: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; ACompletion: TOPPGuideChainOnAddItem);
   end;
 
   IOPPGuideAPIContext = interface(IUnknown)

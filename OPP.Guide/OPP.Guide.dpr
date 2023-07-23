@@ -6,7 +6,10 @@ uses
   OPP.Guide.Form in 'OPP.Guide.Form.pas' {OPPGuideForm},
   OPP.Guide.Executor in 'OPP.Guide.Executor.pas',
   OPP.Guide.Settings in 'OPP.Guide.Settings.pas',
-  OPP.Guide.API.ObjectConverter.Step in 'OPP.Guide.API.ObjectConverter.Step.pas';
+  OPP.Guide.API.ObjectConverter.Step in 'OPP.Guide.API.ObjectConverter.Step.pas',
+  OPP.Guide.Executor.RunState.Helper in 'OPP.Guide.Executor.RunState.Helper.pas',
+  OPP.Guide.Executor.Task in 'OPP.Guide.Executor.Task.pas',
+  OPP.Guide.Executor.Stream in 'OPP.Guide.Executor.Stream.pas';
 
 {$R *.res}
 begin
