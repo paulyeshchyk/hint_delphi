@@ -6,6 +6,7 @@ uses
   System.Classes,
   Vcl.Controls,
   Datasnap.DBClient,
+  OPP_Guide_API,
   OPP_Guide_API_Object_Converter,
   OPP_Guide_API_Identifiable,
   OPP_Guide_API_Dataprovider;
@@ -46,13 +47,11 @@ type
 implementation
 
 uses
-  // remove asap
-  OPP_Guide_API_Context_Step,
-
   Data.DB,
-  OPP.Help.Log,
-  Variants,
-  System.SysUtils, System.Generics.Collections;
+  System.Variants,
+  System.SysUtils,
+  System.Generics.Collections,
+  OPP.Help.Log;
 
 type
   TOPPGuideAPIStepFilterType = record helper for TOPPGuideAPIIdentifiableFilterType
@@ -83,7 +82,7 @@ begin
   fObject := fObjectConverter.GetObjectFromDataset(fClientDataset);
   if (not Assigned(fObject)) then
     exit;
-  result := fObjectConverter.DescendantsCount(fClientDataset, fObject.IdentifierValue);
+  result := fObjectConverter.DescendantsCount(fClientDataset, fObject.IdentifierFieldValue);
 end;
 
 function TOPPGuideAPIDataprovider.Add: IOPPGuideAPIIdentifiable;
@@ -161,7 +160,7 @@ begin
   if not(Assigned(fList) and (fList.Count = 1)) then
     exit;
   fItem := fList.First;
-  result := GetStepByIdentifier(fItem.PIdentifierValue);
+  result := GetStepByIdentifier(fItem.PIdentifierFieldValue);
 end;
 
 procedure TOPPGuideAPIDataprovider.GetScriptedStream(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
@@ -177,8 +176,8 @@ begin
     exit;
   end;
 
-  fIdent := AObject.IdentifierValue;
-  fIdentName := AObject.IdentifierName;
+  fIdent := AObject.IdentifierFieldValue;
+  fIdentName := AObject.IdentifierFieldName;
 
   if ((VarIsNull(fIdent)) or (VarIsEmpty(fIdent))) then
   begin
@@ -244,17 +243,20 @@ begin
   case ADirection of
     ndNodeOnly:
       begin
+        // send AStartFrom only, because no other nodes be computed
         if Assigned(ACompletion) then
           ACompletion(AStartFrom);
       end;
     ndFromNodeToChildren:
       begin
+        // send AStartFrom before other nodes be computed
         if Assigned(ACompletion) then
           ACompletion(AStartFrom);
 
-        fSubsFilter := self.BuildFilter(AStartFrom.PIdentifierName, AStartFrom.IdentifierValue);
+        fSubsFilter := self.BuildFilter(AStartFrom.PIdentifierFieldName, AStartFrom.IdentifierFieldValue);
         fChildrenList := self.GetObjectConverter.GetObjectsFromDataset(self.GetDataset, fSubsFilter);
 
+        // then send other nodes
         for fChild in fChildrenList do
         begin
           self.ListOfNodes(fChild, ADirection, ACompletion);
@@ -262,12 +264,15 @@ begin
       end;
     ndFromNodeToParent:
       begin
-        fSubsFilter := self.BuildFilter(AStartFrom.IdentifierName, AStartFrom.PIdentifierValue);
-        fChildrenList := self.GetObjectConverter.GetObjectsFromDataset(Self.GetDataset, fSubsFilter);
+        fSubsFilter := self.BuildFilter(AStartFrom.IdentifierFieldName, AStartFrom.PIdentifierFieldValue);
+        fChildrenList := self.GetObjectConverter.GetObjectsFromDataset(self.GetDataset, fSubsFilter);
+
+        // send other nodes before AStartFrom
         for fChild in fChildrenList do
         begin
           self.ListOfNodes(fChild, ADirection, ACompletion);
         end;
+        // then send AStartFrom
         if Assigned(ACompletion) then
           ACompletion(AStartFrom);
       end;

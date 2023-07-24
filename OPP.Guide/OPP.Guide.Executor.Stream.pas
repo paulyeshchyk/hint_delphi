@@ -12,8 +12,8 @@ uses
 
 type
   TOPPStreamHelper = class
-    class function CompileScript(AStream: TStream;AScripter: IOPPGuideScripter; userInfo: OLEVariant; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;static;
-    class function RunScript(AStream: TStream;AScripter: IOPPGuideScripter; stepInfo: IOPPGuideAPIIdentifiable; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;static;
+    class function CompileScript(AStream: TStream; AScripter: IOPPGuideScripter; userInfo: OLEVariant; ALogOutputCompletion: TOPPGuideAPIExecutionStateCallback): Boolean; static;
+    class function RunScript(AStream: TStream; AScripter: IOPPGuideScripter; stepInfo: IOPPGuideAPIIdentifiable; ALogOutputCompletion: TOPPGuideAPIExecutionStateCallback): Boolean; static;
   end;
 
 implementation
@@ -25,20 +25,20 @@ uses
 
 { TOPPStreamHelper }
 
-class function TOPPStreamHelper.CompileScript(AStream: TStream;AScripter: IOPPGuideScripter; userInfo: OLEVariant; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;
+class function TOPPStreamHelper.CompileScript(AStream: TStream; AScripter: IOPPGuideScripter; userInfo: OLEVariant; ALogOutputCompletion: TOPPGuideAPIExecutionStateCallback): Boolean;
 var
   ss: TStringStream;
   fScriptSize: Integer;
   fScriptExecutionResult: Variant;
-  fState: TOPPGuideExecutorRunState;
+  fState: TOPPGuideAPIExecutionState;
 begin
 
-  System.Assert(Assigned(AStream),'Stream is nil');
+  System.Assert(Assigned(AStream), 'Stream is nil');
 
   AStream.Position := 0;
   AStream.Read(fScriptSize, SizeOf(fScriptSize));
 
-  fState := TOPPGuideExecutorRunState.started(VarToStr(userInfo));
+  fState := TOPPGuideAPIExecutionState.started(VarToStr(userInfo));
 
   ss := TStringStream.Create;
   try
@@ -48,17 +48,17 @@ begin
       { --- }
       try
         fScriptExecutionResult := AScripter.CompileScript(ss);
-        fState := TOPPGuideExecutorRunState.finished('', VarToStr(fScriptExecutionResult));
+        fState := TOPPGuideAPIExecutionState.finished('', VarToStr(fScriptExecutionResult));
       except
         on E: Exception do
         begin
-          fState := TOPPGuideExecutorRunState.error('', E.Message);
+          fState := TOPPGuideAPIExecutionState.error('', E.Message);
         end;
       end;
       { --- }
     except
       on E: Exception do
-        fState := TOPPGuideExecutorRunState.error('', E.Message);
+        fState := TOPPGuideAPIExecutionState.error('', E.Message);
     end;
   finally
     ss.Free;
@@ -69,17 +69,17 @@ begin
   result := true;
 end;
 
-class function TOPPStreamHelper.RunScript(AStream: TStream;AScripter: IOPPGuideScripter; stepInfo: IOPPGuideAPIIdentifiable; ALogOutputCompletion: TOPPExecutorStateCallback): Boolean;
+class function TOPPStreamHelper.RunScript(AStream: TStream; AScripter: IOPPGuideScripter; stepInfo: IOPPGuideAPIIdentifiable; ALogOutputCompletion: TOPPGuideAPIExecutionStateCallback): Boolean;
 var
   ss: TStringStream;
   fScriptSize: Integer;
   fScriptExecutionResult: Variant;
-  fState: TOPPGuideExecutorRunState;
+  fState: TOPPGuideAPIExecutionState;
 begin
   AStream.Position := 0;
   AStream.Read(fScriptSize, SizeOf(fScriptSize));
 
-  fState := TOPPGuideExecutorRunState.started(stepInfo.IdentifierValue);
+  fState := TOPPGuideAPIExecutionState.started(stepInfo.IdentifierFieldValue);
 
   ss := TStringStream.Create;
   try
@@ -89,17 +89,17 @@ begin
       { --- }
       try
         fScriptExecutionResult := AScripter.RunScript(ss, stepInfo);
-        fState := TOPPGuideExecutorRunState.finished(stepInfo.IdentifierValue, VarToStr(fScriptExecutionResult));
+        fState := TOPPGuideAPIExecutionState.finished(stepInfo.IdentifierFieldValue, VarToStr(fScriptExecutionResult));
       except
         on E: Exception do
         begin
-          fState := TOPPGuideExecutorRunState.error(stepInfo.IdentifierValue, E.Message);
+          fState := TOPPGuideAPIExecutionState.error(stepInfo.IdentifierFieldValue, E.Message);
         end;
       end;
       { --- }
     except
       on E: Exception do
-        fState := TOPPGuideExecutorRunState.error(stepInfo.IdentifierValue, E.Message);
+        fState := TOPPGuideAPIExecutionState.error(stepInfo.IdentifierFieldValue, E.Message);
     end;
   finally
     if Assigned(ALogOutputCompletion) then

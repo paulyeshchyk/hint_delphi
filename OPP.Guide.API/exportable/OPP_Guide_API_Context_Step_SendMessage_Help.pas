@@ -17,7 +17,7 @@ type
     fPredicate: TProxy_OPPHelpPredicate;
   public
     procedure SetPredicate(APredicate: TProxy_OPPHelpPredicate);
-    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); override;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback); override;
     property Predicate: TProxy_OPPHelpPredicate read fPredicate write SetPredicate;
     property TargetApplicationHandle: String read fHelpApplicationHandle write fHelpApplicationHandle;
   end;
@@ -42,27 +42,27 @@ const
 
 type
 
-  TOPPApplicationHandleValidatorCallback = reference to procedure(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIContextStepResultCallback);
+  TOPPApplicationHandleValidatorCallback = reference to procedure(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIExecutionStateCallback);
 
   TOPPGuideAPIContextStepSendMessageHelpHelper = class helper for TOPPGuideAPIContextStepSendMessageHelp
   public
-    procedure OnFlowExecute(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIContextStepResultCallback);
+    procedure OnFlowExecute(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIExecutionStateCallback);
     function SendOpenPage(AProcessHandle: THandle; APredicate: IOPPHelpPredicate): TOPPMessagePipeSendResult;
-    procedure OnValidHandleCompletion(AStepIdentifier: String; AHandle: Integer; exitBlock: TOPPGuideAPIContextStepResultCallback);
+    procedure OnValidHandleCompletion(AStepIdentifier: String; AHandle: Integer; exitBlock: TOPPGuideAPIExecutionStateCallback);
   end;
 
   { TOPPGuideAPIContextStepOpenHelp }
 
-procedure TOPPGuideAPIContextStepSendMessageHelpHelper.OnValidHandleCompletion(AStepIdentifier: String; AHandle: Integer; exitBlock: TOPPGuideAPIContextStepResultCallback);
+procedure TOPPGuideAPIContextStepSendMessageHelpHelper.OnValidHandleCompletion(AStepIdentifier: String; AHandle: Integer; exitBlock: TOPPGuideAPIExecutionStateCallback);
 var
   fResult: TOPPMessagePipeSendResult;
 begin
   fResult := SendOpenPage(AHandle, fPredicate);
   case fResult of
     psrSuccess:
-      exitBlock(TOPPGuideExecutorRunState.error(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
+      exitBlock(TOPPGuideAPIExecutionState.error(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
   else
-    exitBlock(TOPPGuideExecutorRunState.finished(AStepIdentifier, Format('Result:%d', [Integer(fResult)])));
+    exitBlock(TOPPGuideAPIExecutionState.finished(AStepIdentifier, Format('Result:%d', [Integer(fResult)])));
   end;
 end;
 
@@ -96,7 +96,7 @@ begin
   end;
 end;
 
-procedure TOPPGuideAPIContextStepSendMessageHelpHelper.OnFlowExecute(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIContextStepResultCallback);
+procedure TOPPGuideAPIContextStepSendMessageHelpHelper.OnFlowExecute(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIExecutionStateCallback);
 var
   fResult: TOPPMessagePipeSendResult;
 begin
@@ -107,13 +107,13 @@ begin
 
   case fResult of
     psrSuccess:
-      callback(TOPPGuideExecutorRunState.finished(AStepIdentifier, Format('Result:%d', [Integer(fResult)])));
+      callback(TOPPGuideAPIExecutionState.finished(AStepIdentifier, Format('Result:%d', [Integer(fResult)])));
   else
-    callback(TOPPGuideExecutorRunState.error(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
+    callback(TOPPGuideAPIExecutionState.error(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
   end;
 end;
 
-procedure TOPPGuideAPIContextStepSendMessageHelp.Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
+procedure TOPPGuideAPIContextStepSendMessageHelp.Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
 var
   fHandle: Integer;
 begin

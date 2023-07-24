@@ -119,7 +119,7 @@ type
     procedure SetNavigatorStatusChangesCompletion(ACompletion: TOPPNavigatorStatusChangedCompletion);
     procedure SetPageIndex(AValue: Integer);
     procedure ShowPrintDialog(APrinterComponent: TCustomdxComponentPrinter);
-    procedure DoSearchIfPossible(APredicate: TOPPHelpPredicate; AInstanciator: TOPPHelpViewSearchInstanciator;ACompletion: TOPPHelpPreviewFormCompletion);
+    procedure DoSearchIfPossible(APredicate: TOPPHelpPredicate; AInstanciator: TOPPHelpViewSearchInstanciator; ACompletion: TOPPHelpPreviewFormCompletion);
     procedure LockUpdates;
     procedure UnlockUpdates;
 
@@ -193,7 +193,7 @@ begin
   EventListeners.add(AListener);
 end;
 
-procedure TOPPHelpViewFullScreen.DoSearchIfPossible(APredicate: TOPPHelpPredicate; AInstanciator: TOPPHelpViewSearchInstanciator;ACompletion: TOPPHelpPreviewFormCompletion);
+procedure TOPPHelpViewFullScreen.DoSearchIfPossible(APredicate: TOPPHelpPredicate; AInstanciator: TOPPHelpViewSearchInstanciator; ACompletion: TOPPHelpPreviewFormCompletion);
 begin
   if fProgressiveEventsCount > 0 then
   begin
@@ -324,11 +324,13 @@ begin
       if Assigned(AStream) then
       begin
         try
-          TThread.Synchronize(nil, procedure() begin
-          fPDFViewer.BeginUpdate;
-          fPDFViewer.LoadFromStream(AStream);
-          fPDFViewer.EndUpdate;
-          end);
+          TThread.Synchronize(nil,
+            procedure()
+            begin
+              fPDFViewer.BeginUpdate;
+              fPDFViewer.LoadFromStream(AStream);
+              fPDFViewer.EndUpdate;
+            end);
         except
           on E: Exception do
           begin

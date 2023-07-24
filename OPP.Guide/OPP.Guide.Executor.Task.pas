@@ -12,8 +12,7 @@ uses
   OPP_Guide_API_Scripter;
 
 type
-  TOPPExecutorStateCallback = TProc<TOPPGuideExecutorRunState>;
-  TOPPGuideExecutorCompletion = TProc<IOPPGuideAPIIdentifiable, TOPPGuideExecutorRunState>;
+  TOPPGuideExecutorCompletion = TProc<IOPPGuideAPIIdentifiable, TOPPGuideAPIExecutionState>;
 
   TOPPGuideExecutorTask = class(TTask)
   private
@@ -42,15 +41,15 @@ begin
       if not Assigned(AStream) then
       begin
         if Assigned(ACompletion) then
-          ACompletion(AObject, TOPPGuideExecutorRunState.error(AObject.IdentifierValue, 'stream is nil'));
+          ACompletion(AObject, TOPPGuideAPIExecutionState.error(AObject.IdentifierFieldValue, 'stream is nil'));
         exit;
       end;
 
       if Assigned(ACompletion) then
-        ACompletion(AObject, TOPPGuideExecutorRunState.started(AObject.IdentifierValue));
+        ACompletion(AObject, TOPPGuideAPIExecutionState.started(AObject.IdentifierFieldValue));
 
       TOPPStreamHelper.RunScript(AStream, AScripter, AIdentifiable,
-        procedure(AState: TOPPGuideExecutorRunState)
+        procedure(AState: TOPPGuideAPIExecutionState)
         begin
           if Assigned(ACompletion) then
             ACompletion(AObject, AState);

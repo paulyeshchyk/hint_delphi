@@ -4,6 +4,7 @@ interface
 
 uses
   System.Classes,
+  OPP_Guide_API,
   OPP_Guide_API_Identifiable;
 
 type

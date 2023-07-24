@@ -8,27 +8,27 @@ uses
 type
   TOPPGuideAPIContextStepResult = class
   private
-    fRecord: TOPPGuideExecutorRunState;
+    fRecord: TOPPGuideAPIExecutionState;
     function GetDescription: String;
-    function GetState: TOPPGuideExecutorRunState;
+    function GetState: TOPPGuideAPIExecutionState;
     function GetValue_str: String;
     procedure SetDescription(const value: String);
-    procedure SetState(const value: TOPPGuideExecutorRunState);
+    procedure SetState(const value: TOPPGuideAPIExecutionState);
     procedure SetValue_str(const value: String);
   public
     constructor Create(); overload;
-    constructor Create(ARecord: TOPPGuideExecutorRunState); overload;
-    property State: TOPPGuideExecutorRunState read GetState write SetState;
+    constructor Create(ARecord: TOPPGuideAPIExecutionState); overload;
+    property State: TOPPGuideAPIExecutionState read GetState write SetState;
     property Description: String read GetDescription write SetDescription;
     property Value_str: String read GetValue_str write SetValue_str;
-    property theRecord: TOPPGuideExecutorRunState read fRecord;
+    property theRecord: TOPPGuideAPIExecutionState read fRecord;
   end;
 
 implementation
 
 { TOPPGuideAPIContextStepResult }
 
-constructor TOPPGuideAPIContextStepResult.Create(ARecord: TOPPGuideExecutorRunState);
+constructor TOPPGuideAPIContextStepResult.Create(ARecord: TOPPGuideAPIExecutionState);
 begin
   fRecord := ARecord;
 end;
@@ -43,7 +43,7 @@ begin
   result := fRecord.executionResult;
 end;
 
-function TOPPGuideAPIContextStepResult.GetState: TOPPGuideExecutorRunState;
+function TOPPGuideAPIContextStepResult.GetState: TOPPGuideAPIExecutionState;
 begin
   result := fRecord;
 end;
@@ -58,7 +58,7 @@ begin
   // fRecord.userInfo := value;
 end;
 
-procedure TOPPGuideAPIContextStepResult.SetState(const value: TOPPGuideExecutorRunState);
+procedure TOPPGuideAPIContextStepResult.SetState(const value: TOPPGuideAPIExecutionState);
 begin
   fRecord := value;
 end;

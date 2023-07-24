@@ -5,46 +5,38 @@ interface
 uses
   System.Variants,
   System.Classes,
-  System.SysUtils,
-  OPP_Guide_API_Object_Converter,
-  OPP_Guide_API_Dataprovider,
-  OPP_Guide_API_Identifiable;
+  System.SysUtils;
 
 type
-  TOPPGuideExecutorRunStateValue = (rsvIdle = 0, rsvStarted = 1, rsvProgress = 2, rsvFinished = 3, rsvError = -1);
 
-  TOPPGuideExecutorRunState = record
+  TOPPGuideAPIExecutionValue = (rsvIdle = 0, rsvStarted = 1, rsvProgress = 2, rsvFinished = 3, rsvError = -1);
+
+  TOPPGuideAPIExecutionState = record
     stepIdentifier: String;
-    value: TOPPGuideExecutorRunStateValue;
+    value: TOPPGuideAPIExecutionValue;
     executionResult: String;
   end;
 
-  TOPPGuideAPIContextStepResultCallback = TProc<TOPPGuideExecutorRunState>;
+  TOPPGuideAPIExecutionStateCallback = TProc<TOPPGuideAPIExecutionState>;
 
-  IOPPGuideAPIContextStepResult = interface(IUnknown)
-    ['{0E910822-6C7B-4B59-AF14-A8CCBC24AB1E}']
+  IOPPGuideAPIIdentifiable = interface(IUnknown)
+    ['{0852EEAF-AB86-4F05-92D3-8DE1BA867417}']
+    function PIdentifierFieldName: String;
+    function PIdentifierFieldValue: String;
+    function IdentifierFieldName: String;
+    function IdentifierFieldValue: String;
   end;
 
-  IOPPGuideAPIContextStep = interface;
-
-  IOPPGuideAPIContext = interface(IUnknown)
-    ['{B319476E-98BB-4F45-B68F-9F701950C6C2}']
-    procedure Add(AChild: IOPPGuideAPIContext);
-    procedure Remove(AChild: IOPPGuideAPIContext);
-    procedure Clear;
-    procedure PushStepState(const AResult: TOPPGuideExecutorRunState);
-    function PullStepState(const AStepIdentifier: String): TOPPGuideExecutorRunState;
-    procedure SetDataprovider(AValue: IOPPGuideAPIDataprovider);
+  IOPPGuideAPIScriptable = interface(IUnknown)
+    ['{EFD8F0B6-9676-42FF-B332-42DD7D231546}']
+    function ScriptFieldName: String;
   end;
 
-  IOPPGuideAPIContextStepListener = interface(IUnknown)
-    ['{653FF953-BFBC-480B-9367-4499EE59D575}']
-  end;
-
-  IOPPGuideAPIContextStep = interface(IUnknown)
+  IOPPGuideAPIExecutable = interface(IUnknown)
     ['{610F0F2E-4034-4310-9F7C-D0D0FCBF9C29}']
-    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
   end;
+
 
 implementation
 

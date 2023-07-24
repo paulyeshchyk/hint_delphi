@@ -186,7 +186,7 @@ type
     fSettings: IOPPGuideSettings;
     procedure BuildPanelTriggers(AMenuItem: TMenuItem);
     procedure DoUpdateStatusBarWidths;
-    procedure OnScriptConsoleLogOutput(AState: TOPPGuideExecutorRunState);
+    procedure OnScriptConsoleLogOutput(AState: TOPPGuideAPIExecutionState);
     class function GetApplicationTitle: String; static;
     procedure LoadDatasetContent(AFilename: String);
     procedure ReadDefaults;
@@ -225,6 +225,7 @@ uses
   OPP_Guide_API_Identifiable,
   OPP_Guide_API_Context_Step,
   OPP_Guide_API_Context,
+  OPPGuideAPIContext,
   OPP.Guide.API.Executor.RunStateHelper,
 
   midaslib;
@@ -256,7 +257,7 @@ begin
   cxDBTreeList1.BeginUpdate;
   try
     try
-      fDataprovider.AddChild(fActiveItem.IdentifierValue);
+      fDataprovider.AddChild(fActiveItem.IdentifierFieldValue);
     except
       on E: Exception do
       begin
@@ -380,7 +381,7 @@ var
 begin
   cxMemo1.Clear;
 
-  fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
+  fObject := fDataprovider.ActiveItem;
   try
     try
       TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndFromNodeToParent, fScripter, OnScriptConsoleLogOutput);
@@ -657,7 +658,7 @@ begin
   dxStatusBar2.Panels[0].Width := 40 + dxStatusBar2.Canvas.TextWidth('9999:9999');
 end;
 
-procedure TOPPGuideForm.OnScriptConsoleLogOutput(AState: TOPPGuideExecutorRunState);
+procedure TOPPGuideForm.OnScriptConsoleLogOutput(AState: TOPPGuideAPIExecutionState);
 begin
   cxMemo1.Lines.Add(AState.Description);
 end;

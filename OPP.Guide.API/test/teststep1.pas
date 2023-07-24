@@ -6,7 +6,7 @@ implementation
 
 uses
   OPP_Guide_API_Context_Step_Process,
-  OPP_Guide_API_Context;
+  OPPGuideAPIContext;
 
 function Execute(AStepIdentifier: String): Integer;
 var

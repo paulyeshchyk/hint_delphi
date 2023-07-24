@@ -5,8 +5,7 @@ interface
 uses
   Datasnap.DBClient,
   System.Generics.Collections,
-
-  OPP_Guide_API_Identifiable;
+  OPP_Guide_API;
 
 type
   TOPPGuideAPIIdentifiableList = TList<IOPPGuideAPIIdentifiable>;

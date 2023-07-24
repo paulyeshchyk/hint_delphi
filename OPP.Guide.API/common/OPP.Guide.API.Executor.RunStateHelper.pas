@@ -5,22 +5,22 @@ interface
 uses OPP_Guide_API;
 
 type
-  TOPPGuideExecutorRunStateValueHelper = record helper for TOPPGuideExecutorRunStateValue
+  TOPPGuideExecutorRunStateValueHelper = record helper for TOPPGuideAPIExecutionValue
   private
     function GetDescription: String;
   public
     property Description: String read GetDescription;
   end;
 
-  TOPPGuideExecutorRunStateHelper = record helper for TOPPGuideExecutorRunState
+  TOPPGuideExecutorRunStateHelper = record helper for TOPPGuideAPIExecutionState
   private
     function GetDescription: String;
   public
-    class function error(const identifier: String; const text: String): TOPPGuideExecutorRunState; static;
-    class function finished(const identifier: String; const text: String = ''): TOPPGuideExecutorRunState; static;
-    class function idle(const identifier: String): TOPPGuideExecutorRunState; static;
-    class function progress(const identifier: String; const text: String = ''): TOPPGuideExecutorRunState; static;
-    class function started(const identifier: String; const text: String = ''): TOPPGuideExecutorRunState; static;
+    class function error(const identifier: String; const text: String): TOPPGuideAPIExecutionState; static;
+    class function finished(const identifier: String; const text: String = ''): TOPPGuideAPIExecutionState; static;
+    class function idle(const identifier: String): TOPPGuideAPIExecutionState; static;
+    class function progress(const identifier: String; const text: String = ''): TOPPGuideAPIExecutionState; static;
+    class function started(const identifier: String; const text: String = ''): TOPPGuideAPIExecutionState; static;
 
     property Description: String read GetDescription;
     function StateName: String;
@@ -51,14 +51,14 @@ end;
 
 { TOPPGuideExecutorRunStateHelper }
 
-class function TOPPGuideExecutorRunStateHelper.error(const identifier: String; const text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.error(const identifier: String; const text: String): TOPPGuideAPIExecutionState;
 begin
   result.stepIdentifier := identifier;
   result.value := rsvError;
   result.executionResult := StringReplace(text, 'Exception' + Chr(13) + Chr(10), '', [rfReplaceAll, rfIgnoreCase]);
 end;
 
-class function TOPPGuideExecutorRunStateHelper.finished(const identifier: String; const text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.finished(const identifier: String; const text: String): TOPPGuideAPIExecutionState;
 begin
   result.stepIdentifier := identifier;
   result.value := rsvFinished;
@@ -70,20 +70,20 @@ begin
   result := Format('Step [%s] has state [%s] and result [%s]',[self.stepIdentifier, self.value.Description, self.executionResult]);
 end;
 
-class function TOPPGuideExecutorRunStateHelper.idle(const identifier: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.idle(const identifier: String): TOPPGuideAPIExecutionState;
 begin
   result.stepIdentifier := identifier;
   result.value := rsvIdle;
 end;
 
-class function TOPPGuideExecutorRunStateHelper.progress(const identifier: String; const text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.progress(const identifier: String; const text: String): TOPPGuideAPIExecutionState;
 begin
   result.stepIdentifier := identifier;
   result.value := rsvProgress;
   result.executionResult := text;
 end;
 
-class function TOPPGuideExecutorRunStateHelper.started(const identifier: String; const text: String): TOPPGuideExecutorRunState;
+class function TOPPGuideExecutorRunStateHelper.started(const identifier: String; const text: String): TOPPGuideAPIExecutionState;
 begin
   result.stepIdentifier := identifier;
   result.value := rsvStarted;

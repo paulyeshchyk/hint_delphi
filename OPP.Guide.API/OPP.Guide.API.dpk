@@ -41,13 +41,14 @@ contains
   OPP_Guide_API_Context_Step_Process in 'exportable\OPP_Guide_API_Context_Step_Process.pas',
   Proxy_OPPHelpPredicate in 'exportable\Proxy_OPPHelpPredicate.pas',
   teststep1 in 'test\teststep1.pas',
-  OPP_Guide_API_Context_Helper in 'exportable\OPP_Guide_API_Context_Helper.pas',
   OPP_Guide_API_Object_Converter in 'exportable\OPP_Guide_API_Object_Converter.pas',
   OPP_Guide_API_Identifiable in 'exportable\OPP_Guide_API_Identifiable.pas',
   OPP_Guide_API_Context_Step_Result in 'exportable\OPP_Guide_API_Context_Step_Result.pas',
   OPP.Guide.API.Dataprovider in 'common\OPP.Guide.API.Dataprovider.pas',
   OPP_Guide_API_Dataprovider in 'exportable\OPP_Guide_API_Dataprovider.pas',
   OPP.Guide.API.Executor.RunStateHelper in 'common\OPP.Guide.API.Executor.RunStateHelper.pas',
-  OPP_Guide_API_Scripter in 'exportable\OPP_Guide_API_Scripter.pas';
+  OPP_Guide_API_Scripter in 'exportable\OPP_Guide_API_Scripter.pas',
+  OPPGuideAPIContext in 'exportable\OPPGuideAPIContext.pas',
+  OPPGuideAPIContextContainer in 'exportable\OPPGuideAPIContextContainer.pas';
 
 end.

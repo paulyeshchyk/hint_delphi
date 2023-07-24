@@ -5,8 +5,8 @@ interface
 uses
   Data.DB, Datasnap.DBClient,
 
+  OPP_Guide_API,
   OPP_Guide_API_Identifiable,
-  OPP_Guide_API_Context_Step,
   OPP_Guide_API_Object_Converter;
 
 type
@@ -25,7 +25,9 @@ implementation
 
 uses
   Variants,
-  System.SysUtils;
+  System.SysUtils,
+
+  OPP_Guide_API_Context_Step;
 
 { TOPPStepGuideAPIDataProvider }
 
@@ -75,8 +77,8 @@ begin
   fResult := TOPPGuideAPIContextStep.Create;
   fResult.NodeType := ADataset.FieldByName('NodeType').AsString;
   fResult.Caption := ADataset.FieldByName('Caption').AsString;
-  fResult.Identifier := ADataset.FieldByName('Identifier').AsString;
-  fResult.PIdentifier := ADataset.FieldByName('PIdentifier').AsString;
+  fResult.IdentifierValue := ADataset.FieldByName('Identifier').AsString;
+  fResult.PIdentifierValue := ADataset.FieldByName('PIdentifier').AsString;
   result := fResult;
 end;
 

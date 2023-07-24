@@ -5,8 +5,8 @@ interface
 uses
   System.Classes,
   Datasnap.DBClient,
-  OPP_Guide_API_Object_Converter,
-  OPP_Guide_API_Identifiable;
+  OPP_Guide_API,
+  OPP_Guide_API_Object_Converter;
 
 type
 
@@ -18,7 +18,9 @@ type
 
   IOPPGuideAPIDataprovider = interface(IUnknown)
     ['{5849F28F-9DFD-4D55-A54B-085A5CD68048}']
+
     function GetDataset: TClientDataset;
+
     function GetStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
     function GetParentStepByIdentifier(const AIdentifier: String): IOPPGuideAPIIdentifiable;
     function AddChild(const AParentIdentifier: String): IOPPGuideAPIIdentifiable;

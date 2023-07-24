@@ -55,7 +55,8 @@ begin
         ktSearch:
           begin
             fCurrentPageIndex := self.CurrentPageIndex;
-{$REGION 'DevEx feature fix'}
+
+{$REGION '            DevEx feature fix'}
             { the hack: devEx keeps previously searched expression in memory }
             { so, in order to repeat the search with the same expression you have to start another search with fake data, i.e. with ' 'space }
             { or, you can start searching using the the very first symbol of your expression, then, continue serarching using the the remaining characters of your expression }
@@ -63,6 +64,7 @@ begin
             { i.e: FWordIndex := -1; }
             self.Document.FindText(' ', TdxPDFDocumentTextSearchOptions.Default, fCurrentPageIndex);
 {$ENDREGION}
+
             fSearchResult := self.Document.FindText(APredicate.value, TdxPDFDocumentTextSearchOptions.Default, fCurrentPageIndex);
             self.CurrentPageIndex := fSearchResult.range.pageIndex;
             TThread.Synchronize(fCurrentThread,

@@ -25,8 +25,8 @@ type
     class function shared: TOPPGuideExecutor; static;
     constructor Create;
     destructor Destroy; override;
-    function Compile(ADataprovider: IOPPGuideAPIDataprovider; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
-    function Run(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; AScripter: IOPPGuideScripter; AOnScriptConsoleLogOutput: TOPPExecutorStateCallback): Boolean; overload;
+    function Compile(ADataprovider: IOPPGuideAPIDataprovider; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPGuideAPIExecutionStateCallback): Boolean;
+    function Run(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; AScripter: IOPPGuideScripter; AOnScriptConsoleLogOutput: TOPPGuideAPIExecutionStateCallback): Boolean; overload;
   end;
 
 implementation
@@ -65,7 +65,7 @@ begin
   inherited;
 end;
 
-function TOPPGuideExecutor.Compile(ADataprovider: IOPPGuideAPIDataprovider; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPExecutorStateCallback): Boolean;
+function TOPPGuideExecutor.Compile(ADataprovider: IOPPGuideAPIDataprovider; ArunSubs: Boolean; AScripter: IOPPGuideScripter; completion: TOPPGuideAPIExecutionStateCallback): Boolean;
 var
   fObject: IOPPGuideAPIIdentifiable;
 begin
@@ -75,12 +75,12 @@ begin
   ADataprovider.GetScriptedStream(fObject,
     procedure(AStream: TStream; userInfo: IOPPGuideAPIIdentifiable)
     begin
-      TOPPStreamHelper.CompileScript(AStream, AScripter, userInfo.IdentifierValue, completion);
+      TOPPStreamHelper.CompileScript(AStream, AScripter, userInfo.IdentifierFieldValue, completion);
     end);
   result := true;
 end;
 
-function TOPPGuideExecutor.Run(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; AScripter: IOPPGuideScripter; AOnScriptConsoleLogOutput: TOPPExecutorStateCallback): Boolean;
+function TOPPGuideExecutor.Run(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; AScripter: IOPPGuideScripter; AOnScriptConsoleLogOutput: TOPPGuideAPIExecutionStateCallback): Boolean;
 begin
   result := false;
 
@@ -90,7 +90,7 @@ begin
     procedure(fItem: IOPPGuideAPIIdentifiable)
     begin
       TOPPGuideExecutorTask.RunOnly(ADataprovider, fItem, AScripter,
-        procedure(AItem: IOPPGuideAPIIdentifiable; AState: TOPPGuideExecutorRunState)
+        procedure(AItem: IOPPGuideAPIIdentifiable; AState: TOPPGuideAPIExecutionState)
         begin
           if Assigned(AOnScriptConsoleLogOutput) then
             AOnScriptConsoleLogOutput(AState);

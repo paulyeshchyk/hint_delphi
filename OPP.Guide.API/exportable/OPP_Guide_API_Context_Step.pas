@@ -4,54 +4,36 @@ interface
 
 uses
   System.SysUtils,
-  System.Classes,
   OPP_Guide_API,
+  OPP_Guide_API_Context,
   OPP_Guide_API_Identifiable,
   OPP_Guide_API_Context_Step_Result;
 
 type
-
-  TOPPGuideAPIContextStep = class(TInterfacedObject, IOPPGuideAPIContextStep, IOPPGuideAPIIdentifiable)
+  TOPPGuideAPIContextStep = class(TOPPGuideAPIScriptContainer, IOPPGuideAPIExecutable)
   private
     fExecutionResult: TOPPGuideAPIContextStepResult;
 
-    [weak]
-    fListener: IOPPGuideAPIContextStepListener;
     fStateDescription: String;
     fIdentifier: String;
     fCaption: String;
     fNodeType: String;
     fPIdentifier: String;
 
-  protected
-
   public
+
     constructor Create;
     destructor Destroy; override;
 
-    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback); virtual;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback); virtual;
 
-    function IdentifierName: String;
-    function IdentifierValue: String;
-    function PIdentifierName: String;
-    function PIdentifierValue: String;
-
-    property Listener: IOPPGuideAPIContextStepListener read fListener write fListener;
     // ----------------
     property NodeType: String read fNodeType write fNodeType;
     property Caption: String read fCaption write fCaption;
-    property Identifier: String read fIdentifier write fIdentifier;
-    property PIdentifier: String read fPIdentifier write fPIdentifier;
 
   end;
 
 implementation
-
-uses
-  OPP.Help.System.Messaging,
-  System.Generics.Collections;
-
-{ TOPPTestObject }
 
 constructor TOPPGuideAPIContextStep.Create;
 begin
@@ -65,27 +47,7 @@ begin
   inherited;
 end;
 
-function TOPPGuideAPIContextStep.IdentifierName: String;
-begin
-  result := 'identifier';
-end;
-
-function TOPPGuideAPIContextStep.IdentifierValue: String;
-begin
-  result := self.Identifier;
-end;
-
-function TOPPGuideAPIContextStep.PIdentifierName: String;
-begin
-  result := 'pidentifier';
-end;
-
-function TOPPGuideAPIContextStep.PIdentifierValue: String;
-begin
-  result := self.PIdentifier;
-end;
-
-procedure TOPPGuideAPIContextStep.Execute(AStepIdentifier: String; callback: TOPPGuideAPIContextStepResultCallback);
+procedure TOPPGuideAPIContextStep.Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
 begin
 end;
 
