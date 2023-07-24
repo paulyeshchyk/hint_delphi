@@ -166,12 +166,6 @@ begin
   self.PushStepState(AResult);
 
   Application.ProcessMessages;
-  case AResult.value of
-    rsvError:
-      eventLogger.Error(AResult.Description, kContext);
-  else
-    eventLogger.Flow(AResult.Description, kContext);
-  end;
 end;
 
 procedure TOPPGuideAPIContext.Remove(AChild: IOPPGuideAPIContext);

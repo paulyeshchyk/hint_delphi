@@ -1,8 +1,9 @@
 program OPP.Guide;
 
 uses
-  midaslib,
   Vcl.Forms,
+  midaslib,
+
   OPP.Guide.Form in 'OPP.Guide.Form.pas' {OPPGuideForm},
   OPP.Guide.Executor in 'OPP.Guide.Executor.pas',
   OPP.Guide.Settings in 'OPP.Guide.Settings.pas',

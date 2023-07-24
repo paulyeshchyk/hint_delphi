@@ -36,9 +36,13 @@ uses
   Vcl.Forms,
   WinAPI.ShellAPI,
 
+  OPP.Guide.API.Executor.RunStateHelper,
   OPP.Guide.Executor.Stream,
   OPP.Help.System.Messaging,
   OPP.Help.Log;
+
+const
+  kContext: String = 'TOPPGuideExecutor';
 
 { TOPPGuideExecutor }
 
@@ -85,10 +89,22 @@ begin
   ADataprovider.ListOfNodes(AObject, ADirection,
     procedure(fItem: IOPPGuideAPIIdentifiable)
     begin
-      TOPPGuideExecutorTask.RunOnly(ADataprovider, fItem, AScripter, AOnScriptConsoleLogOutput,
+      TOPPGuideExecutorTask.RunOnly(ADataprovider, fItem, AScripter,
         procedure(AItem: IOPPGuideAPIIdentifiable; AState: TOPPGuideExecutorRunState)
         begin
-          //
+          if Assigned(AOnScriptConsoleLogOutput) then
+            AOnScriptConsoleLogOutput(AState);
+
+          case AState.value of
+            rsvError:
+              begin
+                eventLogger.Error(AState.Description, kContext);
+              end;
+          else
+            begin
+              eventLogger.Flow(AState.Description, kContext);
+            end;
+          end;
         end);
     end);
 end;

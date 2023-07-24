@@ -18,7 +18,7 @@ type
   TOPPGuideExecutorTask = class(TTask)
   private
   public
-    class function RunOnly(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; AOnScriptConsoleLogOutput: TOPPExecutorStateCallback; ACompletion: TOPPGuideExecutorCompletion): Boolean; static;
+    class function RunOnly(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; ACompletion: TOPPGuideExecutorCompletion): Boolean; static;
   end;
 
 implementation
@@ -33,7 +33,7 @@ uses
 
 { TOPPGuideExecutorTask }
 
-class function TOPPGuideExecutorTask.RunOnly(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; AOnScriptConsoleLogOutput: TOPPExecutorStateCallback; ACompletion: TOPPGuideExecutorCompletion): Boolean;
+class function TOPPGuideExecutorTask.RunOnly(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; ACompletion: TOPPGuideExecutorCompletion): Boolean;
 begin
 
   ADataprovider.GetScriptedStream(AObject,
@@ -41,22 +41,17 @@ begin
     begin
       if not Assigned(AStream) then
       begin
-        if Assigned(AOnScriptConsoleLogOutput) then
-          AOnScriptConsoleLogOutput(TOPPGuideExecutorRunState.error('', 'Stream is nil'));
         if Assigned(ACompletion) then
-          ACompletion(AObject, TOPPGuideExecutorRunState.error('', 'stream is nil'));
+          ACompletion(AObject, TOPPGuideExecutorRunState.error(AObject.IdentifierValue, 'stream is nil'));
         exit;
       end;
 
-      if Assigned(AOnScriptConsoleLogOutput) then
-        AOnScriptConsoleLogOutput(TOPPGuideExecutorRunState.started(AObject.IdentifierValue));
+      if Assigned(ACompletion) then
+        ACompletion(AObject, TOPPGuideExecutorRunState.started(AObject.IdentifierValue));
 
       TOPPStreamHelper.RunScript(AStream, AScripter, AIdentifiable,
         procedure(AState: TOPPGuideExecutorRunState)
         begin
-          if Assigned(AOnScriptConsoleLogOutput) then
-            AOnScriptConsoleLogOutput(AState);
-
           if Assigned(ACompletion) then
             ACompletion(AObject, AState);
         end);
