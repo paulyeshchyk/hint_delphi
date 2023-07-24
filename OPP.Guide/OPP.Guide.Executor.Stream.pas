@@ -7,7 +7,8 @@ uses
 
   OPP_Guide_API,
   OPP_Guide_API_Identifiable,
-  OPP_Guide_Executor;
+  OPP.Guide.Executor.Task,
+  OPP_Guide_API_Scripter;
 
 type
   TOPPStreamHelper = class
@@ -20,8 +21,7 @@ implementation
 uses
   System.SysUtils,
   Variants,
-  OPP_Guide_Executor_State,
-  OPP.Guide.Executor.RunState.Helper;
+  OPP.Guide.API.Executor.RunStateHelper;
 
 { TOPPStreamHelper }
 

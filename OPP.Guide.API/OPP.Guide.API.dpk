@@ -35,19 +35,19 @@ contains
   OPP_Guide_API_Context in 'exportable\OPP_Guide_API_Context.pas',
   OPP_Guide_API_Context_Map in 'exportable\OPP_Guide_API_Context_Map.pas',
   OPP_Guide_API_Context_Step in 'exportable\OPP_Guide_API_Context_Step.pas',
-  OPP.Guide.Scripter in 'common\OPP.Guide.Scripter.pas',
   OPP_Guide_API in 'exportable\OPP_Guide_API.pas',
   OPP_Guide_API_Context_Step_SendMessage_Help in 'exportable\OPP_Guide_API_Context_Step_SendMessage_Help.pas',
   OPP_Help_System_Messaging_Pipe in 'exportable\OPP_Help_System_Messaging_Pipe.pas',
   OPP_Guide_API_Context_Step_Process in 'exportable\OPP_Guide_API_Context_Step_Process.pas',
-  OPP_Guide_API_Dataprovider in 'exportable\OPP_Guide_API_Dataprovider.pas',
-  OPP_Guide_Executor in 'common\OPP_Guide_Executor.pas',
-  OPP_Guide_Executor_State in 'exportable\OPP_Guide_Executor_State.pas',
   Proxy_OPPHelpPredicate in 'exportable\Proxy_OPPHelpPredicate.pas',
-  OPP_Guide_Executor_State_Helper in 'exportable\OPP_Guide_Executor_State_Helper.pas',
   teststep1 in 'test\teststep1.pas',
   OPP_Guide_API_Context_Helper in 'exportable\OPP_Guide_API_Context_Helper.pas',
   OPP_Guide_API_Object_Converter in 'exportable\OPP_Guide_API_Object_Converter.pas',
-  OPP_Guide_API_Identifiable in 'exportable\OPP_Guide_API_Identifiable.pas';
+  OPP_Guide_API_Identifiable in 'exportable\OPP_Guide_API_Identifiable.pas',
+  OPP_Guide_API_Context_Step_Result in 'exportable\OPP_Guide_API_Context_Step_Result.pas',
+  OPP.Guide.API.Dataprovider in 'common\OPP.Guide.API.Dataprovider.pas',
+  OPP_Guide_API_Dataprovider in 'exportable\OPP_Guide_API_Dataprovider.pas',
+  OPP.Guide.API.Executor.RunStateHelper in 'common\OPP.Guide.API.Executor.RunStateHelper.pas',
+  OPP_Guide_API_Scripter in 'exportable\OPP_Guide_API_Scripter.pas';
 
 end.

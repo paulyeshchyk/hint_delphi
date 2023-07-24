@@ -3,12 +3,18 @@
 interface
 
 uses
-  System.Classes, System.Threading,
-  OPP_Guide_Executor,
+  System.Classes,
+  System.Threading,
+  System.SysUtils,
   OPP_Guide_API,
-  OPP_Guide_API_Identifiable;
+  OPP_Guide_API_Identifiable,
+  OPP_Guide_API_Dataprovider,
+  OPP_Guide_API_Scripter;
 
 type
+  TOPPExecutorStateCallback = TProc<TOPPGuideExecutorRunState>;
+  TOPPGuideExecutorCompletion = TProc<IOPPGuideAPIIdentifiable, TOPPGuideExecutorRunState>;
+
   TOPPGuideExecutorTask = class(TTask)
   private
   public
@@ -23,8 +29,7 @@ uses
 
   OPP.Help.Log,
   OPP.Guide.Executor.Stream,
-  OPP.Guide.Executor.RunState.Helper,
-  OPP_Guide_Executor_State;
+  OPP.Guide.API.Executor.RunStateHelper;
 
 { TOPPGuideExecutorTask }
 
@@ -43,19 +48,17 @@ begin
         exit;
       end;
 
+      if Assigned(AOnScriptConsoleLogOutput) then
+        AOnScriptConsoleLogOutput(TOPPGuideExecutorRunState.started(AObject.IdentifierValue));
+
       TOPPStreamHelper.RunScript(AStream, AScripter, AIdentifiable,
         procedure(AState: TOPPGuideExecutorRunState)
         begin
           if Assigned(AOnScriptConsoleLogOutput) then
             AOnScriptConsoleLogOutput(AState);
 
-          case AState.value of
-            rsvFinished, rsvError:
-              begin
-                if Assigned(ACompletion) then
-                  ACompletion(AObject, AState);
-              end;
-          end;
+          if Assigned(ACompletion) then
+            ACompletion(AObject, AState);
         end);
     end);
 

@@ -3,18 +3,13 @@ unit OPP_Guide_API_Object_Converter;
 interface
 
 uses
-  DBClient,
+  Datasnap.DBClient,
   System.Generics.Collections,
 
   OPP_Guide_API_Identifiable;
 
 type
   TOPPGuideAPIIdentifiableList = TList<IOPPGuideAPIIdentifiable>;
-
-  TOPPGuideAPIIdentifiableFilterType = record
-    Value: String;
-    class function Filter(const AFieldname: String; AFieldvalue: String): String;static;
-  end;
 
   IOPPGuideObjectConverter = interface(IUnknown)
     ['{CB5B833F-9658-4D6A-A25C-3548A01A1C6A}']
@@ -25,6 +20,11 @@ type
     function DescendantsCount(ADataset: TClientDataset; AParentIdentifier: String): Integer;
     function FilterForIdentifier(AIdentifier: String): String;
     function FilterForPIdentifier(AIdentifier: String): String;
+  end;
+
+  TOPPGuideAPIIdentifiableFilterType = record
+    Value: String;
+    class function Filter(const AFieldname: String; AFieldvalue: String): String;static;
   end;
 
 implementation

@@ -8,11 +8,12 @@ object OPPGuideForm: TOPPGuideForm
   Color = clBtnFace
   ParentFont = True
   Menu = MainMenu1
+  OldCreateOrder = True
   WindowState = wsMaximized
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 168
-  TextHeight = 30
+  TextHeight = 13
   object dxDockSite1: TdxDockSite
     Left = 0
     Top = 3
@@ -67,8 +68,6 @@ object OPPGuideForm: TOPPGuideForm
           Margins.Bottom = 6
           ManagerFont = False
           ParentFont = True
-          ExplicitWidth = 10
-          ExplicitHeight = 418
           DockingType = 0
           OriginalWidth = 525
           OriginalHeight = 350
@@ -88,8 +87,6 @@ object OPPGuideForm: TOPPGuideForm
           AllowFloating = True
           AutoHide = False
           CustomCaptionButtons.Buttons = <>
-          ExplicitLeft = 10
-          ExplicitHeight = 418
           DockingType = 3
           OriginalWidth = 561
           OriginalHeight = 245
@@ -178,7 +175,7 @@ object OPPGuideForm: TOPPGuideForm
             Left = 0
             Top = 0
             Width = 560
-            Height = 100
+            Height = 116
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -199,7 +196,6 @@ object OPPGuideForm: TOPPGuideForm
             LookAndFeel.SkinName = ''
             Navigator.Buttons.CustomButtons = <>
             OptionsBehavior.ImmediateEditor = False
-            OptionsBehavior.CopyCaptionsToClipboard = False
             OptionsBehavior.DragFocusing = True
             OptionsSelection.InvertSelect = False
             OptionsView.FixedSeparatorWidth = 6
@@ -210,12 +206,10 @@ object OPPGuideForm: TOPPGuideForm
             Preview.LeftIndent = 11
             Preview.RightIndent = 11
             RootValue = -1
-            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
             OnDragOver = cxDBTreeList1DragOver
             OnInitInsertingRecord = cxDBTreeList1InitInsertingRecord
             OnKeyDown = cxDBTreeList1KeyDown
-            ExplicitHeight = 99
             object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'Caption'
               MinWidth = 35
@@ -277,7 +271,7 @@ object OPPGuideForm: TOPPGuideForm
             Left = 0
             Top = 28
             Width = 560
-            Height = 48
+            Height = 64
             Cursor = crIBeam
             Margins.Left = 4
             Margins.Top = 4
@@ -344,6 +338,7 @@ object OPPGuideForm: TOPPGuideForm
               BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFB7BFBFB7B72525FDFDFD25BFBFBFBF
               BFBFBFBFBFB72525FDFD9A9ABFBFBFBFBFBFBFBFBFB725FDFDFDFD2525252525
               25252525252525FDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFDFD}
+            BorderColor = 15000546
             BorderStyle = bsSingle
             ClipboardFormats = [cfText]
             CodeFolding.Enabled = False
@@ -356,13 +351,14 @@ object OPPGuideForm: TOPPGuideForm
             Gutter.Font.Height = -12
             Gutter.Font.Name = 'Courier New'
             Gutter.Font.Style = []
+            Gutter.BorderColor = 15000546
             Gutter.GutterWidth = 41
             Gutter.GutterMargin = 41
-            Gutter.GutterColorTo = clBtnFace
-            Gutter.LineNumberTextColor = clWindowText
+            Gutter.GutterColor = 16250613
+            Gutter.GutterColorTo = 16250613
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
-            Font.Height = -19
+            Font.Height = -13
             Font.Name = 'Courier New'
             Font.Style = []
             HiddenCaret = False
@@ -410,7 +406,7 @@ object OPPGuideForm: TOPPGuideForm
           end
           object dxStatusBar2: TdxStatusBar
             Left = 0
-            Top = 76
+            Top = 92
             Width = 560
             Height = 24
             Margins.Left = 4
@@ -451,7 +447,7 @@ object OPPGuideForm: TOPPGuideForm
             Left = 0
             Top = 0
             Width = 560
-            Height = 100
+            Height = 116
             Margins.Left = 6
             Margins.Top = 6
             Margins.Right = 6
@@ -477,10 +473,8 @@ object OPPGuideForm: TOPPGuideForm
             OptionsData.Inserting = False
             Navigator.Buttons.CustomButtons = <>
             Navigator.InfoPanel.Visible = True
-            ScrollbarAnnotations.CustomAnnotations = <>
             TabOrder = 0
             DataController.DataSource = DataSourceTreeView
-            ExplicitHeight = 99
             Version = 1
             object cxDBVerticalGrid1DBEditorRow6: TcxDBEditorRow
               Properties.EditPropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -539,8 +533,6 @@ object OPPGuideForm: TOPPGuideForm
       Caption = 'Log'
       CustomCaptionButtons.Buttons = <>
       TabsProperties.CustomButtons.Buttons = <>
-      ExplicitTop = 418
-      ExplicitWidth = 1135
       DockingType = 4
       OriginalWidth = 326
       OriginalHeight = 434
@@ -564,8 +556,7 @@ object OPPGuideForm: TOPPGuideForm
         StyleHot.LookAndFeel.Kind = lfFlat
         StyleHot.LookAndFeel.SkinName = ''
         TabOrder = 0
-        ExplicitWidth = 1131
-        Height = 394
+        Height = 410
         Width = 1143
       end
     end
@@ -592,8 +583,6 @@ object OPPGuideForm: TOPPGuideForm
       end>
     ParentFont = True
     OnResize = dxStatusBar1Resize
-    ExplicitTop = 855
-    ExplicitWidth = 1135
   end
   object dxBarDockControl3: TdxBarDockControl
     Left = 0
@@ -607,7 +596,6 @@ object OPPGuideForm: TOPPGuideForm
     BarManager = dxBarManager1
   end
   object dxDockingManager1: TdxDockingManager
-    AutoHideMovingSize = 35
     Color = clBtnFace
     DefaultHorizContainerSiteProperties.CustomCaptionButtons.Buttons = <>
     DefaultHorizContainerSiteProperties.Dockable = True
@@ -619,20 +607,17 @@ object OPPGuideForm: TOPPGuideForm
     DefaultTabContainerSiteProperties.Dockable = True
     DefaultTabContainerSiteProperties.ImageIndex = -1
     DefaultTabContainerSiteProperties.TabsProperties.CustomButtons.Buttons = <>
-    DockZonesWidth = 35
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -19
+    Font.Height = -11
     Font.Name = 'Segoe UI'
     Font.Style = []
     LookAndFeel.Kind = lfFlat
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ResizeZonesWidth = 5
-    SelectionFrameWidth = 7
     Left = 456
     Top = 552
-    PixelsPerInch = 168
+    PixelsPerInch = 96
   end
   object DataSourceTreeView: TDataSource
     DataSet = DataSetTreeView
@@ -693,7 +678,7 @@ object OPPGuideForm: TOPPGuideForm
     UseSystemFont = False
     Left = 456
     Top = 472
-    PixelsPerInch = 168
+    PixelsPerInch = 96
     object dxBarManager1Bar2: TdxBar
       Caption = 'script'
       CaptionButtons = <>
@@ -707,7 +692,7 @@ object OPPGuideForm: TOPPGuideForm
       FloatClientHeight = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -3
+      Font.Height = -2
       Font.Name = 'Segoe UI'
       Font.Style = []
       ItemLinks = <
@@ -1122,7 +1107,7 @@ object OPPGuideForm: TOPPGuideForm
     Left = 40
     Top = 88
     Bitmap = {
-      494C010103000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1264,7 +1249,7 @@ object OPPGuideForm: TOPPGuideForm
   object cxStyleRepository1: TcxStyleRepository
     Left = 320
     Top = 480
-    PixelsPerInch = 168
+    PixelsPerInch = 96
     object cxStyle1: TcxStyle
       AssignedValues = [svTextColor]
       TextColor = clMenuHighlight

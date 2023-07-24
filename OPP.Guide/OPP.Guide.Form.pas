@@ -11,18 +11,18 @@ uses
   cxTextEdit, cxMemo, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit, dxStatusBar,
 
   OPP_Guide_API,
+  OPP_Guide_API_Scripter,
   OPP.Guide.API.ObjectConverter.Step,
-  OPP_Guide_API_Dataprovider,
-  OPP.Guide.executor,
-  OPP_Guide_Executor,
-  OPP_Guide_Executor_State,
+  OPP.Guide.API.Dataprovider,
+  OPP.Guide.Executor,
 
   OPP_Guide_API_Object_Converter,
+  OPP_Guide_API_Dataprovider,
 
   OPP.Help.Vcl.PanelTrigger,
   OPP.Guide.Settings,
   OPP.Help.System.Codable.FormSizeSettings,
-  OPP.Guide.Scripter, ScrMemo, ScrMps, Vcl.Menus, dxScrollbarAnnotations;
+  ScrMemo, ScrMps, Vcl.Menus;
 
 type
   TOPPGuideForm = class(TForm)
@@ -222,10 +222,10 @@ uses
   // OPP.Guide.Scripter.TMS,
   OPP.Guide.Scripter.DC,
 
-  OPP_Guide_Executor_State_Helper,
   OPP_Guide_API_Identifiable,
   OPP_Guide_API_Context_Step,
   OPP_Guide_API_Context,
+  OPP.Guide.API.Executor.RunStateHelper,
 
   midaslib;
 
@@ -549,7 +549,6 @@ begin
 {$REGION '  To be removed asap'}
   TOPPGuideAPIContext.shared.SetDataprovider(nil);
 {$ENDREGION}
-
   fScripter := nil;
   fScriptPanelTrigger := nil;
   fSettings := nil;
@@ -558,7 +557,7 @@ end;
 procedure TOPPGuideForm.FormCreate(Sender: TObject);
 begin
 
-  dxDockingManager1.ScaleForPPI(192);
+  dxDockingManager1.ScaleForPPI(96);
 
   eventLogger.Flow('Form Created', kContext);
 
@@ -659,12 +658,8 @@ begin
 end;
 
 procedure TOPPGuideForm.OnScriptConsoleLogOutput(AState: TOPPGuideExecutorRunState);
-var
-  Log: String;
 begin
-  Log := AState.Description;
-  cxMemo1.Lines.Add(Log);
-  eventLogger.Flow(Log, 'GuideAPI');
+  cxMemo1.Lines.Add(AState.Description);
 end;
 
 class function TOPPGuideForm.GetApplicationTitle: String;

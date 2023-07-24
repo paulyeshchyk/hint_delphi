@@ -9,7 +9,8 @@ uses
   System.Classes,
   OPP_Guide_API,
   OPP_Guide_API_Context,
-  OPP_Guide_API_Context_Step, OPP_Guide_API_Context_Step_SendMessage_Help;
+  OPP_Guide_API_Context_Step,
+  OPP_Guide_API_Context_Step_SendMessage_Help;
 
 type
   TOPPGuideAPIContextStepProcess = class(TOPPGuideAPIContextStep)
@@ -27,10 +28,10 @@ type
 implementation
 
 uses
-  OPP_Guide_Executor,
   OPP.Help.System.Messaging,
+  OPP.Guide.API.Executor.RunStateHelper,
   System.Generics.Collections,
-  OPP.Help.Log, OPP_Guide_Executor_State;
+  OPP.Help.Log;
 
 const
   kContext: String = 'StepProcess';
@@ -58,25 +59,25 @@ begin
 
       if Assigned(ARunResultType) then
       begin
-        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, ARunResultType.Message));
+        callback(TOPPGuideExecutorRunState.error(AStepIdentifier, ARunResultType.Message));
         exit;
       end;
 
       if AHandle = THandle(INVALID_HANDLE_VALUE) then
       begin
-        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, 'Invalid handle'));
+        callback(TOPPGuideExecutorRunState.error(AStepIdentifier, 'Invalid handle'));
         exit;
       end;
 
       fWindowClassHandleList := TOPPSystemMessageHelper.GetWindowClassHandleList(fWindowClassName);
       if (not Assigned(fWindowClassHandleList)) then
       begin
-        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Window Class not found:[%s]', [fWindowClassName])));
+        callback(TOPPGuideExecutorRunState.error(AStepIdentifier, Format('Window Class not found:[%s]', [fWindowClassName])));
         exit;
       end;
       if fWindowClassHandleList.Count = 0 then
       begin
-        callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Window List is empty for class:[%s]', [fWindowClassName])));
+        callback(TOPPGuideExecutorRunState.error(AStepIdentifier, Format('Window List is empty for class:[%s]', [fWindowClassName])));
         exit;
       end;
 
@@ -86,7 +87,7 @@ begin
       // end;
 //      self.SetCustomExecutionResult(osIdle, IntToStr(hwnd));
 //      fContext.PushContextItem(AStepIdentifier, self);
-      callback(TOPPGuideExecutorRunState.FinishState(AStepIdentifier, '', IntToStr(hwnd)));
+      callback(TOPPGuideExecutorRunState.finished(AStepIdentifier, IntToStr(hwnd)));
 
     end);
 end;

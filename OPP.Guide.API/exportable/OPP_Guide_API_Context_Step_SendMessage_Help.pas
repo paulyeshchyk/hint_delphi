@@ -6,9 +6,8 @@ uses
   System.SysUtils,
   OPP_Help_API,
   OPP_Guide_API,
-  OPP_Guide_Executor_State,
   OPP_Guide_API_Context_Step,
-  Proxy_OPPHelpPredicate, OPP_Guide_Executor_State_Helper;
+  Proxy_OPPHelpPredicate;
 
 type
   TOPPGuideAPIContextStepSendMessageHelp = class(TOPPGuideAPIContextStep)
@@ -30,12 +29,10 @@ uses
   System.Generics.Collections,
   Vcl.Forms,
 
-  OPP_Guide_Executor,
-
   OPP.Help.Log,
   OPP.Help.Predicate,
   OPP.Help.System.Types,
-
+  OPP.Guide.API.Executor.RunStateHelper,
   OPP.Help.System.Messaging.Pipe,
   OPP.Help.System.Messaging,
   OPP.Help.System.AppExecutor;
@@ -63,9 +60,9 @@ begin
   fResult := SendOpenPage(AHandle, fPredicate);
   case fResult of
     psrSuccess:
-      exitBlock(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
+      exitBlock(TOPPGuideExecutorRunState.error(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
   else
-    exitBlock(TOPPGuideExecutorRunState.FinishState(AStepIdentifier, Format('Result:%d', [Integer(fResult)]), ''));
+    exitBlock(TOPPGuideExecutorRunState.finished(AStepIdentifier, Format('Result:%d', [Integer(fResult)])));
   end;
 end;
 
@@ -110,9 +107,9 @@ begin
 
   case fResult of
     psrSuccess:
-      callback(TOPPGuideExecutorRunState.FinishState(AStepIdentifier, Format('Result:%d', [Integer(fResult)]), ''));
+      callback(TOPPGuideExecutorRunState.finished(AStepIdentifier, Format('Result:%d', [Integer(fResult)])));
   else
-    callback(TOPPGuideExecutorRunState.ErrorState(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
+    callback(TOPPGuideExecutorRunState.error(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
   end;
 end;
 

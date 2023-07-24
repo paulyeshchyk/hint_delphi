@@ -8,13 +8,13 @@ uses
   System.SysUtils,
   System.Threading,
   System.Generics.Collections,
-  OPP.Guide.Scripter,
   WinAPI.Windows,
-  OPP_Guide_Executor,
-  OPP_Guide_Executor_State,
+  OPP.Guide.Executor.Task,
+  OPP_Guide_API_Scripter,
   OPP_Guide_API,
   OPP_Guide_API_Identifiable,
-  OPP_Guide_API_Object_Converter;
+  OPP_Guide_API_Object_Converter,
+  OPP_Guide_API_Dataprovider;
 
 type
 
@@ -36,12 +36,9 @@ uses
   Vcl.Forms,
   WinAPI.ShellAPI,
 
-  OPP.Guide.Executor.Task,
   OPP.Guide.Executor.Stream,
-  OPP.Guide.Executor.RunState.Helper,
   OPP.Help.System.Messaging,
   OPP.Help.Log;
-
 
 { TOPPGuideExecutor }
 
@@ -68,6 +65,7 @@ function TOPPGuideExecutor.Compile(ADataprovider: IOPPGuideAPIDataprovider; Arun
 var
   fObject: IOPPGuideAPIIdentifiable;
 begin
+  System.Assert(Assigned(ADataprovider), 'Dataprovider is nil');
   fObject := ADataprovider.GetObjectConverter.GetObjectFromDataset(ADataprovider.GetDataset);
 
   ADataprovider.GetScriptedStream(fObject,
@@ -87,11 +85,11 @@ begin
   ADataprovider.ListOfNodes(AObject, ADirection,
     procedure(fItem: IOPPGuideAPIIdentifiable)
     begin
-          TOPPGuideExecutorTask.RunOnly(ADataprovider, fItem, AScripter, AOnScriptConsoleLogOutput,
-            procedure(AItem: IOPPGuideAPIIdentifiable; AState: TOPPGuideExecutorRunState)
-            begin
-              //
-            end);
+      TOPPGuideExecutorTask.RunOnly(ADataprovider, fItem, AScripter, AOnScriptConsoleLogOutput,
+        procedure(AItem: IOPPGuideAPIIdentifiable; AState: TOPPGuideExecutorRunState)
+        begin
+          //
+        end);
     end);
 end;
 

@@ -7,7 +7,7 @@ uses
   System.Classes,
   OPP_Guide_API,
   OPP_Guide_API_Identifiable,
-  OPP_Guide_Executor_State;
+  OPP_Guide_API_Context_Step_Result;
 
 type
 
@@ -48,7 +48,6 @@ type
 implementation
 
 uses
-  OPP_Guide_Executor,
   OPP.Help.System.Messaging,
   System.Generics.Collections;
 

@@ -7,12 +7,15 @@ uses
   OPP_Guide_API,
   OPP_Guide_API_Context_Step,
   OPP_Guide_API_Context_Map,
-  OPP_Guide_Executor_State;
+  OPP_Guide_API_Context_Step_Result,
+  OPP_Guide_API_Dataprovider;
 
 type
 
   TOPPGuideAPIContext = class(TInterfacedObject, IOPPGuideAPIContext, IOPPGuideAPIContextStepListener)
   private
+  class var
+    fContext: TOPPGuideAPIContext;
     fList: TOPPGuideAPIContextContainer;
 
     [weak]
@@ -22,7 +25,6 @@ type
 
     function GetMap: TOPPGuideAPIContextMap;
     property map: TOPPGuideAPIContextMap read GetMap;
-    class var fContext: TOPPGuideAPIContext;
     procedure onStepExecution(AResult: TOPPGuideExecutorRunState);
 
   protected
@@ -57,8 +59,7 @@ uses
   Windows,
   System.Variants,
   OPP.Help.Log,
-  OPP_Guide_Executor,
-  OPP_Guide_Executor_State_Helper;
+  OPP.Guide.API.Executor.RunStateHelper;
 
 const
   kContext: String = 'APIContext';
@@ -118,7 +119,6 @@ end;
 
 procedure TOPPGuideAPIContext.Execute(const contextItem: TOPPGuideAPIContextStep; AStepIdentifier: String);
 begin
-  eventLogger.Flow(Format('Started step [%s]', [AStepIdentifier]), kContext);
   contextItem.Execute(AStepIdentifier, onStepExecution);
 end;
 
@@ -176,7 +176,7 @@ end;
 
 procedure TOPPGuideAPIContext.Remove(AChild: IOPPGuideAPIContext);
 begin
-
+//
 end;
 
 procedure TOPPGuideAPIContext.SetDataprovider(AValue: IOPPGuideAPIDataprovider);
