@@ -33,7 +33,7 @@ type
     function ActiveItemSubscCount: Integer;
     function BuildFilter(fieldName, pident: Variant): String;
     procedure ListOfNodes(AStartFrom: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; ACompletion: TOPPGuideChainOnAddItem);
-    procedure GetScriptedStream(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
+    procedure LoadScriptContent(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
 
     procedure SaveToFile(const AFilename: String);
     procedure LoadFromFile(const AFilename: String);
@@ -43,6 +43,12 @@ type
     [weak]
     property ObjectConverter: IOPPGuideObjectConverter read GetObjectConverter write SetObjectConverter;
   end;
+
+
+  TOPPScriptedStream = class (TStream)
+
+  end;
+
 
 implementation
 
@@ -163,30 +169,19 @@ begin
   result := GetStepByIdentifier(fItem.PIdentifierFieldValue);
 end;
 
-procedure TOPPGuideAPIDataprovider.GetScriptedStream(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
+procedure TOPPGuideAPIDataprovider.LoadScriptContent(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
 var
   fFilter: String;
   fCDS: TClientDataset;
   fIdent, fIdentName: String;
 begin
-  if not Assigned(AObject) then
-  begin
-    if Assigned(completion) then
-      completion(nil, nil);
-    exit;
-  end;
+  System.Assert(Assigned(AObject),'IOPPGuideAPIIdentifiable is not defined');
 
   fIdent := AObject.IdentifierFieldValue;
   fIdentName := AObject.IdentifierFieldName;
 
-  if ((VarIsNull(fIdent)) or (VarIsEmpty(fIdent))) then
-  begin
-    if Assigned(completion) then
-      completion(nil, nil);
-    exit;
-  end;
-
   fFilter := self.BuildFilter(fIdentName, fIdent);
+
   fCDS := TClientDataset.Create(nil);
   try
     fCDS.CloneCursor(self.GetDataset, false);
@@ -294,19 +289,16 @@ begin
 end;
 
 function TOPPGuideAPIDataprovider.BuildFilter(fieldName, pident: Variant): String;
+var
+  fIsValidIdentifiable: Boolean;
 begin
-  if VarIsNull(fieldName) or VarIsEmpty(fieldName) then
-  begin
-    result := '';
-    exit;
-  end;
+  fIsValidIdentifiable := not( ((VarIsNull(fieldName)) or (VarIsEmpty(fieldName))) );
+  System.Assert(fIsValidIdentifiable,'FieldName is not valid');
 
-  if VarIsNull(pident) or VarIsEmpty(pident) then
-  begin
-    result := '';
-  end else begin
-    result := Format('%s LIKE ''%s''', [VarToStr(fieldName), VarToStr(pident)]);
-  end;
+  fIsValidIdentifiable := not( ((VarIsNull(pident)) or (VarIsEmpty(pident))) );
+  System.Assert(fIsValidIdentifiable,'FieldValue is not valid');
+
+  result := Format('%s LIKE ''%s''', [VarToStr(fieldName), VarToStr(pident)]);
 end;
 
 { TOPPGuideAPIStepFilterType }

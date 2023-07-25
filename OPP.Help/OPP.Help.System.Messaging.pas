@@ -183,8 +183,6 @@ begin
     completion(tmpProcessInformation.hProcess, nil);
 
   WinAPI.Windows.CloseHandle(tmpProcessInformation.hProcess);
-
-
 end;
 
 class function TOPPSystemMessageHelper.KillProcess(ExeFileName: string): Integer;

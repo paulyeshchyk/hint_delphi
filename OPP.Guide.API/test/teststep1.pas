@@ -14,7 +14,8 @@ var
   context: TOPPGuideAPIContext;
 begin
 
-  context := TOPPGuideAPIContext.Shared;
+  context := nil;//TOPPGuideAPIContext.Shared;
+  System.Assert(Assigned(context),'context is not defined');
 
   result := -1;
   step := TOPPGuideAPIContextStepProcess.Create;

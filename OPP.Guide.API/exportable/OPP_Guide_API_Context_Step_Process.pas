@@ -29,11 +29,10 @@ implementation
 
 uses
   OPP.Help.System.Messaging,
+  OPP.Help.Log,
   OPP.Guide.API.Executor.RunStateHelper,
   System.Generics.Collections,
-  OPPGuideAPIContext,
-  OPP.Help.Log,
-  Forms,
+  Vcl.Forms,
   WinAPI.Windows,
   System.Threading;
 
@@ -44,13 +43,11 @@ const
 
 procedure TOPPGuideAPIContextStepProcess.Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
 var
-  fContext: TOPPGuideAPIContext;
   fAppHandle: THandle;
   fAppName: String;
   ffWaitForSingleObjectInMS: Cardinal;
   ffWindowClassName: String;
 begin
-  fContext := TOPPGuideAPIContext.shared;
   fAppHandle := Application.Handle;
   fAppName := self.ApplicationName;
   ffWaitForSingleObjectInMS := self.WaitForSingleObjectInMS;
@@ -75,7 +72,6 @@ procedure TOPPGuideAPIContextStepProcess.OnExecutionComplete(AStepIdentifier: St
 var
   hwnd: THandle;
   fWindowClassHandleList: TList<THandle>;
-
 begin
 
   if not Assigned(ACallback) then

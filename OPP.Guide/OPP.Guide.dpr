@@ -3,7 +3,8 @@ program OPP.Guide;
 uses
   Vcl.Forms,
   midaslib,
-
+  OPPGuideAPIContext,
+  OPP.Guide.API.Dataprovider,
   OPP.Guide.Form in 'OPP.Guide.Form.pas' {OPPGuideForm},
   OPP.Guide.Executor in 'OPP.Guide.Executor.pas',
   OPP.Guide.Settings in 'OPP.Guide.Settings.pas',
@@ -12,10 +13,13 @@ uses
   OPP.Guide.Executor.Stream in 'OPP.Guide.Executor.Stream.pas';
 
 {$R *.res}
+
 begin
+
   Application.Title := TOPPGuideForm.ApplicationTitle;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TOPPGuideForm, OPPGuideForm);
   Application.Run;
+
 end.

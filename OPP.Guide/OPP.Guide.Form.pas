@@ -11,6 +11,7 @@ uses
   cxTextEdit, cxMemo, cxDBLookupComboBox, cxBlobEdit, cxDropDownEdit, cxDBEdit, dxStatusBar,
 
   OPP_Guide_API,
+  OPP_Guide_API_Context,  OPPGuideAPIContext,
   OPP_Guide_API_Scripter,
   OPP.Guide.API.ObjectConverter.Step,
   OPP.Guide.API.Dataprovider,
@@ -177,6 +178,8 @@ type
     procedure ScrMemo1CursorChange(Sender: TObject);
   private
     fDataprovider: TOPPGuideAPIDataProvider;
+    fExecutor: TOPPGuideExecutor;
+    fAPIContext: TOPPGuideAPIContext;
     fFilename: String;
     fPanelTriggerContainer: TOPPHelpVCLPanelTriggerContainer;
     fSaveActionIsInProgress: Boolean;
@@ -224,8 +227,6 @@ uses
 
   OPP_Guide_API_Identifiable,
   OPP_Guide_API_Context_Step,
-  OPP_Guide_API_Context,
-  OPPGuideAPIContext,
   OPP.Guide.API.Executor.RunStateHelper,
 
   midaslib;
@@ -343,14 +344,11 @@ begin
 
   fFilter := fDataprovider.ObjectConverter.FilterForPIdentifier('');
   fList := fDataprovider.ObjectConverter.GetObjectsFromDataset(DataSetTreeView, fFilter);
-  if not assigned(fList) then
-  begin
-    exit;
-  end;
+  System.Assert(Assigned(fList),'Dataprovider returns nothing');
 
   for fObject in fList do
   begin
-    TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndFromNodeToChildren, fScripter, OnScriptConsoleLogOutput);
+    fExecutor.FetchAllAndRun(fDataprovider, fObject, ndFromNodeToChildren, fScripter, OnScriptConsoleLogOutput);
   end;
 end;
 
@@ -360,19 +358,8 @@ var
 begin
   cxMemo1.Clear;
 
-  fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
-  try
-    try
-      TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndFromNodeToChildren, fScripter, OnScriptConsoleLogOutput);
-    except
-      on E: Exception do
-      begin
-        eventLogger.Error(E, kContext);
-      end;
-    end;
-  finally
-    fObject := nil;
-  end;
+  fObject := fDataprovider.ActiveItem;
+  fExecutor.FetchAllAndRun(fDataprovider, fObject, ndFromNodeToChildren, fScripter, OnScriptConsoleLogOutput);
 end;
 
 procedure TOPPGuideForm.actionGuideRunSelectedUpstairsExecute(Sender: TObject);
@@ -382,18 +369,7 @@ begin
   cxMemo1.Clear;
 
   fObject := fDataprovider.ActiveItem;
-  try
-    try
-      TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndFromNodeToParent, fScripter, OnScriptConsoleLogOutput);
-    except
-      on E: Exception do
-      begin
-        eventLogger.Error(E, kContext);
-      end;
-    end;
-  finally
-    fObject := nil;
-  end;
+  fExecutor.FetchAllAndRun(fDataprovider, fObject, ndFromNodeToParent, fScripter, OnScriptConsoleLogOutput);
 end;
 
 procedure TOPPGuideForm.actionHelpExecute(Sender: TObject);
@@ -413,7 +389,7 @@ procedure TOPPGuideForm.actionScriptCompileExecute(Sender: TObject);
 begin
   actionScriptSave.Execute;
 
-  TOPPGuideExecutor.shared.compile(fDataprovider, false, fScripter, self.OnScriptConsoleLogOutput);
+  fExecutor.Compile(fDataprovider, fScripter, self.OnScriptConsoleLogOutput);
 end;
 
 procedure TOPPGuideForm.actionScriptRunExecute(Sender: TObject);
@@ -422,19 +398,8 @@ var
 begin
   cxMemo1.Clear;
 
-  try
-    fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
-    try
-      TOPPGuideExecutor.shared.run(fDataprovider, fObject, ndNodeOnly, fScripter, OnScriptConsoleLogOutput);
-    except
-      on E: Exception do
-      begin
-        eventLogger.Error(E, kContext);
-      end;
-    end;
-  finally
-    fObject := nil;
-  end;
+  fObject := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
+  fExecutor.FetchAllAndRun(fDataprovider, fObject, ndNodeOnly, fScripter, OnScriptConsoleLogOutput);
 end;
 
 procedure TOPPGuideForm.actionScriptSaveExecute(Sender: TObject);
@@ -548,7 +513,8 @@ procedure TOPPGuideForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
 
 {$REGION '  To be removed asap'}
-  TOPPGuideAPIContext.shared.SetDataprovider(nil);
+  fAPIContext.RemoveListener(fExecutor);
+  fAPIContext.SetDataprovider(nil);
 {$ENDREGION}
   fScripter := nil;
   fScriptPanelTrigger := nil;
@@ -562,12 +528,17 @@ begin
 
   eventLogger.Flow('Form Created', kContext);
 
-{$REGION '  To be removed asap'}
+
+{$REGION '  VIPER'}
   fDataprovider := TOPPGuideAPIDataProvider.Create(self);
   fDataprovider.ClientDataset := self.DataSetTreeView;
   fDataprovider.ObjectConverter := TOPPGuideAPIObjectConverterStep.Create;
 
-  TOPPGuideAPIContext.shared.SetDataprovider(fDataprovider);
+  fExecutor := TOPPGuideExecutor.Create;
+  fAPIContext := TOPPGuideAPIContext.shared;
+
+  fAPIContext.AddListener(fExecutor);
+  fAPIContext.SetDataprovider(fDataProvider);
 
 {$ENDREGION}
   actionHelp.Caption := Application.BuildNumber;
@@ -631,6 +602,10 @@ begin
 end;
 
 procedure TOPPGuideForm.DataSourceTreeViewDataChange(Sender: TObject; Field: TField);
+var
+  hasParent: Boolean;
+  fActiveItem: IOPPGuideAPIIdentifiable;
+
 begin
   if DataSourceTreeView.State = dsBrowse then
   begin
@@ -638,6 +613,13 @@ begin
     AfterScrollEnableScriptPanel;
     AfterScrollLoadScript;
   end;
+
+  hasParent := false;
+  fActiveItem := fDataprovider.ActiveItem as IOPPGuideAPIIdentifiable;
+
+  if assigned(fActiveItem) then
+    hasParent := (Length(fActiveItem.PIdentifierFieldValue) > 0);
+  actionGuideRunSelectedUpstairs1.Enabled := hasParent;
 end;
 
 procedure TOPPGuideForm.DataSourceTreeViewStateChange(Sender: TObject);
@@ -660,6 +642,7 @@ end;
 
 procedure TOPPGuideForm.OnScriptConsoleLogOutput(AState: TOPPGuideAPIExecutionState);
 begin
+  System.Assert(TThread.Current.ThreadID = System.MainThreadID, 'Not main thread');
   cxMemo1.Lines.Add(AState.Description);
 end;
 
@@ -764,7 +747,7 @@ begin
   fFilename := Value;
 
   actionGuideExport.Enabled := false;
-  if length(self.Filename) = 0 then
+  if Length(self.Filename) = 0 then
   begin
     dxStatusBar1.Panels[0].text := 'New document';
   end else begin
@@ -788,9 +771,9 @@ var
   fSourceDS, fDestinationDS: TClientDataset;
   fSourceValue, fDestinatonValue: Variant;
 begin
-  if length(AFieldName) = 0 then
+  if Length(AFieldName) = 0 then
     exit;
-  if length(AIDFieldName) = 0 then
+  if Length(AIDFieldName) = 0 then
     exit;
   if VarIsNull(sourceId) or VarIsEmpty(sourceId) then
     exit;

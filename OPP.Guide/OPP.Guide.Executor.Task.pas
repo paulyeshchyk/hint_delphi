@@ -17,13 +17,12 @@ type
   TOPPGuideExecutorTask = class(TTask)
   private
   public
-    class function RunOnly(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; ACompletion: TOPPGuideExecutorCompletion): Boolean; static;
+    class function CreateTask(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; ACompletion: TOPPGuideExecutorCompletion): ITask; static;
   end;
 
 implementation
 
 uses
-
   OPP.Guide.Executor,
 
   OPP.Help.Log,
@@ -32,31 +31,31 @@ uses
 
 { TOPPGuideExecutorTask }
 
-class function TOPPGuideExecutorTask.RunOnly(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; ACompletion: TOPPGuideExecutorCompletion): Boolean;
+class function TOPPGuideExecutorTask.CreateTask(ADataprovider: IOPPGuideAPIDataprovider; AObject: IOPPGuideAPIIdentifiable; AScripter: IOPPGuideScripter; ACompletion: TOPPGuideExecutorCompletion): ITask;
 begin
 
-  ADataprovider.GetScriptedStream(AObject,
-    procedure(AStream: TStream; AIdentifiable: IOPPGuideAPIIdentifiable)
+  result := TTask.Create(
+    procedure()
     begin
-      if not Assigned(AStream) then
-      begin
-        if Assigned(ACompletion) then
-          ACompletion(AObject, TOPPGuideAPIExecutionState.error(AObject.IdentifierFieldValue, 'stream is nil'));
-        exit;
-      end;
-
-      if Assigned(ACompletion) then
-        ACompletion(AObject, TOPPGuideAPIExecutionState.started(AObject.IdentifierFieldValue));
-
-      TOPPStreamHelper.RunScript(AStream, AScripter, AIdentifiable,
-        procedure(AState: TOPPGuideAPIExecutionState)
+      ADataprovider.LoadScriptContent(AObject,
+        procedure(AStream: TStream; AIdentifiable: IOPPGuideAPIIdentifiable)
+        var
+          fScriptRunResult : TOPPGuideAPIExecutionState;
         begin
+          System.Assert(Assigned(AStream),'stream is nil');
+
           if Assigned(ACompletion) then
-            ACompletion(AObject, AState);
+            ACompletion(AObject, TOPPGuideAPIExecutionState.started(AObject.IdentifierFieldValue));
+
+          { --- }
+          fScriptRunResult := TOPPStreamHelper.RunScript(AStream, AScripter, AIdentifiable);
+          { --- }
+
+          if Assigned(ACompletion) then
+            ACompletion(AObject, fScriptRunResult);
+
         end);
     end);
-
-  result := true;
 end;
 
 end.

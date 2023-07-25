@@ -8,30 +8,32 @@ uses
   OPP_Guide_API_Context_Step,
   OPP_Guide_API_Context_Step_Result,
   OPP_Guide_API_Dataprovider,
+  OPP_Guide_API_Context_Listener_List,
   OPPGuideAPIContextContainer;
 
 type
 
   TOPPGuideAPIContext = class(TInterfacedObject, IOPPGuideAPIContext)
   private
-  class var
-    fContext: TOPPGuideAPIContext;
     fList: TOPPGuideAPIContextContainer;
+
+    class var fShared: TOPPGuideAPIContext;
 
     [weak]
     fParentContext: IOPPGuideAPIContext;
     fMap: TOPPGuideAPIContextMap;
     fDataprovider: IOPPGuideAPIDataprovider;
+    fListeners: TOPPGuideAPIContextListenerList;
 
     function GetMap: TOPPGuideAPIContextMap;
     property map: TOPPGuideAPIContextMap read GetMap;
 
   protected
-    constructor Create(AParentContext: IOPPGuideAPIContext = nil);
 
   public
     class function shared: TOPPGuideAPIContext; static;
 
+    constructor Create; overload;
     destructor Destroy; override;
 
     function GetParentStepResult(AStepIdentifier: String): TOPPGuideAPIContextStepResult;
@@ -46,6 +48,9 @@ type
     procedure Remove(AChild: IOPPGuideAPIContext);
     procedure Clear;
     procedure SetDataprovider(AValue: IOPPGuideAPIDataprovider);
+
+    procedure AddListener(AListener: IOPPGuideAPIContextListener);
+    procedure RemoveListener(AListener: IOPPGuideAPIContextListener);
   end;
 
 implementation
@@ -65,24 +70,11 @@ begin
   result := fMap;
 end;
 
-constructor TOPPGuideAPIContext.Create(AParentContext: IOPPGuideAPIContext);
-begin
-  inherited Create;
-
-  fMap := TOPPGuideAPIContextMap.Create();
-
-  fList := TOPPGuideAPIContextContainer.Create;
-
-  fParentContext := AParentContext;
-  if Assigned(fParentContext) then
-    fParentContext.Add(self);
-end;
-
 class function TOPPGuideAPIContext.shared: TOPPGuideAPIContext;
 begin
-  if not Assigned(fContext) then
-    fContext := TOPPGuideAPIContext.Create(nil);
-  result := fContext;
+  if not Assigned(fShared) then
+    fShared := TOPPGuideAPIContext.Create();
+  result := fShared;
 end;
 
 destructor TOPPGuideAPIContext.Destroy;
@@ -92,6 +84,9 @@ begin
     fMap.Clear;
     fMap.Free;
   end;
+
+  fListeners.Clear;
+  fListeners.Free;
 
   fList.Clear;
   fList.Free;
@@ -132,8 +127,14 @@ begin
 end;
 
 procedure TOPPGuideAPIContext.PushStepState(const AResult: TOPPGuideAPIExecutionState);
+var
+  fListener: IOPPGuideAPIContextListener;
 begin
   fMap.AddOrSetValue(AResult.stepIdentifier, AResult);
+  for fListener in fListeners do
+  begin
+    fListener.PushNewExecutionState(AResult);
+  end;
 end;
 
 function TOPPGuideAPIContext.PullStepState(const AStepIdentifier: String): TOPPGuideAPIExecutionState;
@@ -166,9 +167,32 @@ begin
   //
 end;
 
+procedure TOPPGuideAPIContext.AddListener(AListener: IOPPGuideAPIContextListener);
+begin
+  System.Assert(Assigned(AListener), 'Listener is not defined');
+  fListeners.Add(AListener);
+end;
+
+procedure TOPPGuideAPIContext.RemoveListener(AListener: IOPPGuideAPIContextListener);
+begin
+  System.Assert(Assigned(AListener), 'Listener is not defined');
+  fListeners.Remove(AListener);
+end;
+
 procedure TOPPGuideAPIContext.Clear;
 begin
   //
+end;
+
+constructor TOPPGuideAPIContext.Create;
+begin
+  inherited Create;
+
+  fMap := TOPPGuideAPIContextMap.Create();
+
+  fList := TOPPGuideAPIContextContainer.Create;
+
+  fListeners := TOPPGuideAPIContextListenerList.Create;
 end;
 
 procedure TOPPGuideAPIContext.SetDataprovider(AValue: IOPPGuideAPIDataprovider);

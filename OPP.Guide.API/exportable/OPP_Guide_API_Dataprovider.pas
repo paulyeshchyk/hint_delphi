@@ -29,7 +29,7 @@ type
     function ActiveItemSubscCount: Integer;
     function GetObjectConverter: IOPPGuideObjectConverter;
 
-    procedure GetScriptedStream(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
+    procedure LoadScriptContent(AObject: IOPPGuideAPIIdentifiable; completion: TOPPBlobToStreamCompletion);
     function BuildFilter(fieldName, pident: Variant): String;
     procedure ListOfNodes(AStartFrom: IOPPGuideAPIIdentifiable; ADirection: TOPPGuideExecutionNodeDirection; ACompletion: TOPPGuideChainOnAddItem);
   end;

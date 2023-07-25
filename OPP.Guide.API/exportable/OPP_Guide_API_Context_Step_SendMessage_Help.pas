@@ -46,7 +46,6 @@ type
 
   TOPPGuideAPIContextStepSendMessageHelpHelper = class helper for TOPPGuideAPIContextStepSendMessageHelp
   public
-    procedure OnFlowExecute(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIExecutionStateCallback);
     function SendOpenPage(AProcessHandle: THandle; APredicate: IOPPHelpPredicate): TOPPMessagePipeSendResult;
     procedure OnValidHandleCompletion(AStepIdentifier: String; AHandle: Integer; exitBlock: TOPPGuideAPIExecutionStateCallback);
   end;
@@ -96,14 +95,22 @@ begin
   end;
 end;
 
-procedure TOPPGuideAPIContextStepSendMessageHelpHelper.OnFlowExecute(AStepIdentifier: String; AHandle: Integer; callback: TOPPGuideAPIExecutionStateCallback);
+procedure TOPPGuideAPIContextStepSendMessageHelp.Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
 var
+  fHandle: Integer;
   fResult: TOPPMessagePipeSendResult;
 begin
+  if Length(self.TargetApplicationHandle) = 0 then
+    raise Exception.Create('Handle is not defined');
+
+  fHandle := StrToInt(self.TargetApplicationHandle);
+  if fHandle = 0 then
+    raise Exception.Create('Handle is equal to zero');
+
   if not Assigned(callback) then
     raise Exception.Create('Completion is not defined');
 
-  fResult := SendOpenPage(AHandle, fPredicate);
+  fResult := SendOpenPage(fHandle, fPredicate);
 
   case fResult of
     psrSuccess:
@@ -111,19 +118,6 @@ begin
   else
     callback(TOPPGuideAPIExecutionState.error(AStepIdentifier, Format('Code:%d', [Integer(fResult)])));
   end;
-end;
-
-procedure TOPPGuideAPIContextStepSendMessageHelp.Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
-var
-  fHandle: Integer;
-begin
-  if Length(self.TargetApplicationHandle) = 0 then
-    raise Exception.Create('Handle is not defined');
-  fHandle := StrToInt(self.TargetApplicationHandle);
-  if fHandle = 0 then
-    raise Exception.Create('Handle is equal to zero');
-
-  OnFlowExecute(AStepIdentifier, fHandle, callback);
 end;
 
 procedure TOPPGuideAPIContextStepSendMessageHelp.SetPredicate(APredicate: TProxy_OPPHelpPredicate);
