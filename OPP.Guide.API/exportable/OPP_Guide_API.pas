@@ -34,7 +34,8 @@ type
 
   IOPPGuideAPIExecutable = interface(IUnknown)
     ['{610F0F2E-4034-4310-9F7C-D0D0FCBF9C29}']
-    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
+    procedure Execute(AStepIdentifier: String);overload;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);overload;
   end;
 
 

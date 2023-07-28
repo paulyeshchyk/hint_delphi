@@ -5,7 +5,6 @@ interface
 uses
   System.SysUtils,
   OPP_Guide_API,
-  OPP_Guide_API_Context,
   OPP_Guide_API_Identifiable,
   OPP_Guide_API_Context_Step_Result;
 
@@ -25,7 +24,8 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback); virtual;
+    procedure Execute(AStepIdentifier: String);overload;
+    procedure Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback); overload;virtual;
 
     // ----------------
     property NodeType: String read fNodeType write fNodeType;
@@ -47,8 +47,14 @@ begin
   inherited;
 end;
 
+procedure TOPPGuideAPIContextStep.Execute(AStepIdentifier: String);
+begin
+
+end;
+
 procedure TOPPGuideAPIContextStep.Execute(AStepIdentifier: String; callback: TOPPGuideAPIExecutionStateCallback);
 begin
+//
 end;
 
 end.

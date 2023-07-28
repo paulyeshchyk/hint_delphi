@@ -107,13 +107,15 @@ begin
     procedure(fItem: IOPPGuideAPIIdentifiable)
     var
       fTask: ITask;
+      fThread: TThread;
     begin
+      fThread := TThread.Current;
 
       fTask := TOPPGuideExecutorTask.CreateTask(ADataprovider, fItem, AScripter,
         procedure(AItem: IOPPGuideAPIIdentifiable; AState: TOPPGuideAPIExecutionState)
         begin
 
-          TThread.Synchronize(nil,
+          TThread.Synchronize(fThread,
             procedure()
             begin
               if Assigned(AOnScriptConsoleLogOutput) then
