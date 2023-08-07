@@ -209,6 +209,8 @@
         <DCCReference Include="..\OPP.Help\OPP.Stream.Observer.pas"/>
         <DCCReference Include="..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas"/>
         <DCCReference Include="..\OPP.Help\OPP_Help_API.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.cxGrid.pas"/>
+        <DCCReference Include="..\OPP.Help\OPP.Help.cxTreeList.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

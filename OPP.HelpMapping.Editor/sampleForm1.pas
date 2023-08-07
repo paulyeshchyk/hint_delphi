@@ -243,7 +243,6 @@ type
     property SelectedHintMap: TOPPHelpMap read fSelectedHintMap write SetSelectedHintMap;
     property SelectedShortcutMap: TOPPHelpMap read fSelectedShortcutMap write SetSelectedShortcutMap;
     property NavigationState: TOPPNavigationState read fNavigationState write fNavigationState default [nsUnknown];
-    procedure GridAutoSize;
     property LayoutSettingsFileName: String read GetLayoutSettingsFileName;
     procedure customFilterText(AText: String);
 
@@ -295,6 +294,7 @@ uses
   OPP.Help.System.Files,
   OPP.Help.System.Hook.Keyboard,
   OPP.Help.System.Str,
+  OPP.Help.cxGrid,
   SampleFormStubsHelper,
   SampleOnly.Help.Hint.Setup,
   SampleOnly.Help.Meta.Extractor,
@@ -774,7 +774,7 @@ end;
 
 procedure TSampleForm.cxGrid1Resize(Sender: TObject);
 begin
-  GridAutoSize;
+  TOPPHelpCXGridHelper.SizeColumnToFitGrid(cxGrid1, cxGrid1DBTableView1, 0);
 end;
 
 procedure TSampleForm.DataSource1DataChange(Sender: TObject; Field: TField);
@@ -872,19 +872,6 @@ begin
   end;
 end;
 
-procedure TSampleForm.GridAutoSize;
-var
-  indicatorWidth: Integer;
-  scrollIndicatorWidth: Integer;
-begin
-  NavigationState := NavigationState - [nsLoad];
-  indicatorWidth := 0;
-  if cxGrid1DBTableView1.OptionsView.Indicator then
-    indicatorWidth := cxGrid1DBTableView1.OptionsView.indicatorWidth;
-  scrollIndicatorWidth := 0; // cxGrid1DBTableView1.Site.VScrollBar.Width;
-  cxGrid1DBTableView1Column2.Width := cxGrid1.Width - indicatorWidth - scrollIndicatorWidth - cxGrid1DBTableView1Column1.Width - cxGrid1DBTableView1Column3.Width;
-end;
-
 procedure TSampleForm.FindMapsById(ItemCaption: String);
 begin
 
@@ -979,7 +966,7 @@ begin
       ReloadListView(
         procedure
         begin
-          GridAutoSize;
+          //
         end);
     end);
 end;

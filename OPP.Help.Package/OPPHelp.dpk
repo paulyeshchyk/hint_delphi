@@ -100,7 +100,9 @@ contains
   OPP.Output.Console in '..\OPP.Help\OPP.Output.Console.pas',
   OPP.Stream.Observer in '..\OPP.Help\OPP.Stream.Observer.pas',
   OPP.Help.VCL.PanelTrigger in '..\OPP.Help\OPP.Help.VCL.PanelTrigger.pas',
-  OPP_Help_API in '..\OPP.Help\OPP_Help_API.pas';
+  OPP_Help_API in '..\OPP.Help\OPP_Help_API.pas',
+  OPP.Help.cxGrid in '..\OPP.Help\OPP.Help.cxGrid.pas',
+  OPP.Help.cxTreeList in '..\OPP.Help\OPP.Help.cxTreeList.pas';
 
 end.
 
